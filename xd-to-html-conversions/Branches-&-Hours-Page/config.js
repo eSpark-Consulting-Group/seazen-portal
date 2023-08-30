@@ -1,1 +1,0 @@
-IDRViewer.config = {"pagecount":1,"title":"","author":"","subject":"","keywords":"","creator":"","producer":"Adobe XD","creationdate":"","moddate":"","trapped":"","fileName":"Branches-&-Hours-Page.pdf","bounds":[[572,1355]],"bookmarks":[],"thumbnailType":"jpg","pageType":"html","pageLabels":[]};
