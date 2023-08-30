@@ -1,1 +1,0 @@
-IDRViewer.config = {"pagecount":1,"title":"","author":"","subject":"","keywords":"","creator":"","producer":"Adobe XD","creationdate":"","moddate":"","trapped":"","fileName":"Map-Out-of-Coverage.pdf","bounds":[[572,991]],"bookmarks":[],"thumbnailType":"jpg","pageType":"html","pageLabels":[]};

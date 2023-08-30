@@ -1,1 +1,0 @@
-IDRViewer.config = {"pagecount":1,"title":"","author":"","subject":"","keywords":"","creator":"","producer":"Adobe XD","creationdate":"","moddate":"","trapped":"","fileName":"Restaurant-Detail-Page-Product_Categories.pdf","bounds":[[572,1807]],"bookmarks":[],"thumbnailType":"jpg","pageType":"html","pageLabels":[]};

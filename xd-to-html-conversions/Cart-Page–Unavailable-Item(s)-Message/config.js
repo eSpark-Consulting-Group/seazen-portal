@@ -1,1 +1,0 @@
-IDRViewer.config = {"pagecount":1,"title":"","author":"","subject":"","keywords":"","creator":"","producer":"Adobe XD","creationdate":"","moddate":"","trapped":"","fileName":"Cart-Page–Unavailable-Item(s)-Message.pdf","bounds":[[574,2152]],"bookmarks":[],"thumbnailType":"jpg","pageType":"html","pageLabels":[]};
