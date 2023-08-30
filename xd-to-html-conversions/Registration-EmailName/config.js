@@ -1,0 +1,1 @@
+IDRViewer.config = {"pagecount":1,"title":"","author":"","subject":"","keywords":"","creator":"","producer":"Adobe XD","creationdate":"","moddate":"","trapped":"","fileName":"Registration-EmailName.pdf","bounds":[[574,1142]],"bookmarks":[],"thumbnailType":"jpg","pageType":"html","pageLabels":[]};

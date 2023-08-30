@@ -1,0 +1,1 @@
+IDRViewer.config = {"pagecount":1,"title":"","author":"","subject":"","keywords":"","creator":"","producer":"Adobe XD","creationdate":"","moddate":"","trapped":"","fileName":"Map-Location-Selection.pdf","bounds":[[572,991]],"bookmarks":[],"thumbnailType":"jpg","pageType":"html","pageLabels":[]};
