@@ -16,10 +16,10 @@ const Button = () => {
     <h2>Restaurant</h2>
     </div>
     <div className="app">
-      <CustomButton iconSrc="/assets/img/Dine_In.png" text="Dine In" />
-      <CustomButton iconSrc="/assets/img/Catering.png" text="Catering" />
-      <CustomButton iconSrc="/assets/img/Delivery.png" text="Delivery" />
-      <CustomButton iconSrc="/assets/img/Pickup.png" text="Pickup" />
+      <CustomButton iconSrc="/assets/img/Dinein.svg" text="Dine In" />
+      <CustomButton iconSrc="/assets/img/Catering.svg" text="Catering" />
+      <CustomButton iconSrc="/assets/img/Delivery.svg" text="Delivery" />
+      <CustomButton iconSrc="/assets/img/Pickup.svg" text="Pickup" />
     </div>
     </>
 

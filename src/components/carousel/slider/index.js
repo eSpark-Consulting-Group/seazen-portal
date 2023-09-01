@@ -5,6 +5,7 @@ import './style.css';
 
 const Slider = () => {
   return (
+    <div className="hover-slider">
     <Carousel
       dot={MyDot}
       responsiveLayout={[
@@ -32,7 +33,7 @@ const Slider = () => {
       </Carousel.Item>
       <Carousel.Item>
         <div className="carousel-item">
-          <img width="100%" src="/assets/img/1.png" alt="Slide 2" />
+          <img width="100%" src="/assets/img/2.png" alt="Slide 2" />
           <div className="caption">Order Now</div>
         </div>
       </Carousel.Item>
@@ -44,11 +45,12 @@ const Slider = () => {
       </Carousel.Item>
       <Carousel.Item>
         <div className="carousel-item">
-          <img width="100%" src="/assets/img/1.png" alt="Slide 4" />
+          <img width="100%" src="/assets/img/2.png" alt="Slide 4" />
           <div className="caption">Order Now</div>
         </div>
       </Carousel.Item>
     </Carousel>
+    </div>
   );
 };
 

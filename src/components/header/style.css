@@ -9,9 +9,9 @@
   .logo {
     font-size: 1.5rem;
     color: #0d0d0d;
-    padding-left: 50px;
-    
-  }
+    margin-left: 60px;
+    margin-top: 16px;
+    }
   
   .account{
     font-size: 1.3rem;
@@ -24,8 +24,7 @@
     padding: 8px; 
     width: 42px;
     height: 42px;
-    margin-left: 6px;
-  }
+    margin-left: -15px;  }
   
   .account-icon {
     padding-top: 8px;
@@ -40,7 +39,7 @@
   .shopping{
     font-size: 1.3rem;
     cursor: pointer;
-    margin-left: 15px;
+    margin-left: -17px;
     color: black; 
     border-radius: 50%; 
     background-color: white; 
@@ -59,7 +58,7 @@
     transition: width 0.3s ease; 
     font-size: 1.3rem;
     cursor: pointer;
-    margin-left: 10px;
+    margin-left: -18px;
     color: black; 
     border-radius: 50%; 
     background-color: white; 
@@ -68,6 +67,7 @@
     padding-bottom: 11px;
     color: black; /* Set icon color to black */
     background-color: white; /* White background */
+    margin-right: -15px;
   }
   
   .search-bar {
@@ -94,16 +94,18 @@
   
   .search-container.expanded {
     width: 250px; 
-    border-radius: 0%;
+    border-radius: 24px;
     padding-left: 17px;
     padding-top: 5px;
-    
+    height: 30px;
+
   }
   .search-container.expanded .search-icon{
     left: 3px;
     width: 26px;
     height: 26px;
     border-radius: 0%;
+    top: 9px;
 
   }
   
@@ -121,3 +123,56 @@
   .search-bar:focus {
     border: 1px solid #fdfcfc; /* Add your desired border color */
   }
+
+  /* style.css */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.element {
+  transition: all 0.3s;
+   /* Adjust as needed */
+}
+
+.search-expanded .element {
+  transform: translateX(-100%);
+  margin-left: 25px;
+  
+}
+
+.search-container {
+  top: 0;
+  right: 0;
+  transition: all 0.3s;
+  margin-left: -40px;
+}
+
+.search-expanded .account-icon img{
+  padding-right: 12px;
+}
+
+.search-expanded  .logo{
+  margin-left: -12px;
+}
+
+.search-expanded  .account{
+  margin-left: 50px;
+}
+
+.search-expanded .account img{
+  padding-right: 12px;
+}
+
+.search-expanded .shopping-icon img{
+  padding-right: 12px;
+}
+
+.search-wrapper.expanded {
+  display: flex;
+}
+
+/* Add other styles as needed */
