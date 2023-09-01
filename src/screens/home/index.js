@@ -3,6 +3,9 @@ import Navbar from '../../components/header/index';
 import Slider from '../../components/carousel/slider/index';
 import BasicCard from '../../components/cards';
 import '../../components/carousel/slider/style.css'
+import IconButton from '../../components/category/button';
+import Button from '../../components/category/button';
+import Collapsible from '../../components/category/button';
 
 const Home = () =>{
   return (
@@ -11,6 +14,7 @@ const Home = () =>{
         <div className="card-spacing">
         <Slider/>
         </div>
+        <Button/>
         < BasicCard/>
     </div>
   )

@@ -1,0 +1,57 @@
+.Title{
+    text-align: left;
+font: normal normal 600 18px/24px Titillium Web;
+letter-spacing: 0.36px;
+color: #1F2933;
+opacity: 1;
+padding-top: 5px;
+}
+
+.app {
+    display: flex;
+    justify-content: space-between;
+
+  }
+  
+  .custom-button {
+    display: flex;
+    align-items: center;
+    margin-right: 10px ;
+    color: white;
+    cursor: pointer;
+    width: 34%;
+    height: 36px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 24px 48px #314F7C14;
+    border: 1px solid #EBEEF0;
+    border-radius: 16px;
+    opacity: 1;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+
+  }
+  
+
+  
+  .button-text {
+    font: normal normal bold 9px/7px Titillium Web;
+    letter-spacing: 0.18px;
+    color: #323F4B;
+    opacity: 1;
+    font-size: 11px; /* Adjust the text size as needed */
+
+
+  }
+  
+  .custom-button:hover {
+    transform: scale(1.1); /* You can adjust the scale factor as needed */
+  }
+  
+  .button-icon {
+    width: 24px; /* Adjust the icon size as needed */
+    height: 24px; /* Adjust the icon size as needed */
+    margin-right: 8px; /* Add spacing between icon and text */
+  }
+  
