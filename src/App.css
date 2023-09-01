@@ -22,22 +22,15 @@
 .content-section {
   flex: 2;
   padding: 20px;
-  background-color: #7c7c7d;
-
+  background-image: url('/public/assets/img/images.jpeg');
+  background-size: cover; /* This property scales the image to cover the entire element */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  background-position: center; /* Centers the image within the element */
+    
+  
 }
 
-@media (max-width: 768px) {
-  .container {
-      flex-direction: column;
-      max-width: 375px;
-      
-  }
 
-  .design-section,
-  .content-section {
-      flex: initial;
-  }
-}
 
 .style{
   padding-top: 20px;
