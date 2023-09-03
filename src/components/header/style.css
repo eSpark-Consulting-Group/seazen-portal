@@ -65,8 +65,8 @@
     box-shadow: 0px 24px 48px #314F7C1F; 
     padding-left: 28px;
     padding-bottom: 11px;
-    color: black; /* Set icon color to black */
-    background-color: white; /* White background */
+    color: black; 
+    background-color: white;
     margin-right: -15px;
   }
   
@@ -117,14 +117,14 @@
   .search-bar {
     border: none;
     background-color: transparent;
-    outline: none; /* Remove the default focus outline */
+    outline: none; 
   }
 
   .search-bar:focus {
-    border: 1px solid #fdfcfc; /* Add your desired border color */
+    border: 1px solid #fdfcfc;
   }
 
-  /* style.css */
+ 
 
 .navbar {
   display: flex;
@@ -135,7 +135,7 @@
 
 .element {
   transition: all 0.3s;
-   /* Adjust as needed */
+   
 }
 
 .search-expanded .element {
@@ -175,4 +175,4 @@
   display: flex;
 }
 
-/* Add other styles as needed */
+

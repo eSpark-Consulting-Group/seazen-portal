@@ -6,6 +6,8 @@ import '../../components/carousel/slider/style.css'
 import IconButton from '../../components/category/button';
 import Button from '../../components/category/button';
 import Collapsible from '../../components/category/button';
+import DraggableSlider from '../../components/draggableSlider';
+import { Footer } from '../../components/footer';
 
 const Home = () =>{
   return (
@@ -16,6 +18,8 @@ const Home = () =>{
         </div>
         <Button/>
         < BasicCard/>
+        <DraggableSlider/>
+       <Footer/>
     </div>
   )
 }

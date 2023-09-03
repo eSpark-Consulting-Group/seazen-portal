@@ -40,18 +40,18 @@ opacity: 1;
     letter-spacing: 0.18px;
     color: #323F4B;
     opacity: 1;
-    font-size: 11px; /* Adjust the text size as needed */
+    font-size: 9px;
 
 
   }
   
   .custom-button:hover {
-    transform: scale(1.1); /* You can adjust the scale factor as needed */
+    transform: scale(1.1); 
   }
   
   .button-icon {
-    width: 24px; /* Adjust the icon size as needed */
-    height: 24px; /* Adjust the icon size as needed */
-    margin-right: 8px; /* Add spacing between icon and text */
+    width: 24px; 
+    height: 24px; 
+    margin-right: 8px; 
   }
   

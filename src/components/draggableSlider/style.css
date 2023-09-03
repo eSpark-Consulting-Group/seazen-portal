@@ -1,0 +1,103 @@
+
+
+.slider-tile{
+  text-align: left;
+font: normal normal 600 18px/24px Titillium Web;
+letter-spacing: 0.36px;
+color: #1F2933;
+opacity: 1;
+}
+
+body {
+    margin: 0;
+    
+  }
+  
+  
+  .box {
+    box-sizing: border-box;
+    width: 200px;
+    margin-left: 10px;
+    margin-right: -60px;
+    
+  }
+  
+  .items {
+    position: relative;
+    width: 500px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    transition: all 0.2s;
+    transform: scale(0.98);
+    will-change: transform;
+    user-select: none;
+    cursor: pointer;
+    padding: 0;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    display: grid;
+    grid-auto-flow: column;
+  }
+  
+  .items {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .items::-webkit-scrollbar {
+    display: none; 
+  }
+
+  .box-caption{
+  background: #fff ;
+  border-radius: 16px;
+  opacity: 1;    
+  width: 120px;
+  height: 172px;
+  margin-top: -60px;
+  margin-left: 10px;
+    
+}
+
+  .box-text{
+  padding-top: 10px;
+  text-align: center;
+  font: normal normal 600 14px/16px Titillium Web;
+  letter-spacing: 0px;
+  color: #40484E;
+  opacity: 1;
+}
+
+.caption-image{
+  padding-top: 70px;
+  padding-left: 16px;
+
+}
+
+.first-card-additional-text{
+  padding-top: 17px;
+}
+  
+  .text-style{
+  text-align: center;
+  font: normal normal bold 10px/12px Titillium Web;
+  letter-spacing: 0px;
+  color: #777777;
+  opacity: 1;
+  padding-right: 55px;
+
+}
+
+.inline-text{
+  margin-top: -22px;
+  text-align: center;
+  padding-left: 12px;
+  font: normal normal bold 18px/22px Titillium Web;
+  letter-spacing: 0px;
+  color: #1B6483;
+  opacity: 1;
+}
+
+.first-card-caption-image {
+  padding-top: 74px;
+}
