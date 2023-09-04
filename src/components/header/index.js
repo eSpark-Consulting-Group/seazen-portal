@@ -10,17 +10,14 @@ const Navbar = () => {
     };
 
     const closeSearch = (e) => {
-        // Check if the click target is outside of the search container
         if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
             setIsSearchOpen(false);
         }
     };
 
     useEffect(() => {
-        // Add a click event listener to the document to close the search bar
         document.addEventListener('click', closeSearch);
 
-        // Clean up the event listener when the component unmounts
         return () => {
             document.removeEventListener('click', closeSearch);
         };

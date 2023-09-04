@@ -1,10 +1,12 @@
-.Title{
-    text-align: left;
-font: normal normal 600 18px/24px Titillium Web;
-letter-spacing: 0.36px;
-color: #1F2933;
-opacity: 1;
 
+
+.Title{
+  text-align: left;
+  font: normal normal 600 18px/24px Titillium Web;
+  letter-spacing: 0.36px;
+  color: #1F2933;
+  opacity: 1;
+  
 }
 
 .app {
@@ -28,8 +30,8 @@ opacity: 1;
     justify-content: center;
     cursor: pointer;
     transform: scale(1.05); 
-    transition: all .2s ease-in-out;
-  }
+    transition: all 0.3s;
+    }
   
 
   
@@ -39,9 +41,16 @@ opacity: 1;
     color: #323F4B;
     opacity: 1;
     font-size: 9px;
-
+    
 
   }
+
+  .hide{
+    display: none;
+  }
+  
+
+
   
   .custom-button:hover {
     transform: scale(1.1); 
@@ -55,8 +64,15 @@ opacity: 1;
 
   .custom-button.expanded {
     border: 1px solid #758B9A;
-
+    font: normal normal bold 9px/7px Titillium Web;
+    letter-spacing: 0.18px;
+    color: #323F4B;
+    opacity: 1;
+    font-size: 9px;
   }
+
+
+  
 
 .button-style-one{
   background: #93694F 0% 0% no-repeat padding-box;

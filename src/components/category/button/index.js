@@ -28,7 +28,7 @@ const CustomButton = ({
       onClick={handleClick}
     >
       <img src={iconSrc} alt="Icon" className="button-icon" />
-      <span className="button-text">{text}</span>
+      <span className={`button-text ${expanded ? "show" : "hide"}`}>{text}</span>
       <span className="button-content">
         {expanded && (
           <div className="options">
@@ -44,6 +44,7 @@ const CustomButton = ({
 const Button = () => {
   const [expandedButton, setExpandedButton] = useState(null);
   const [cateringClicked, setCateringClicked] = useState(false);
+  
 
 
   const toggleButton = (index) => {
@@ -54,12 +55,12 @@ const Button = () => {
     }
   };
 
-  const handleCateringClick = () => {};
+
 
   return (
     <>
       <div className="Title">
-        <h2>Restaurant</h2>
+        <h4>Restaurants</h4>
       </div>
       <div className="app">
         <CustomButton

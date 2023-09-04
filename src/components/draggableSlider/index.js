@@ -5,21 +5,21 @@ export default function App() {
   const imageInfo = [
     {
       imageUrl: "/assets/img/7.png",
-      captionImage: "/assets/img/Group 16.png",
+      captionImage: "/assets/img/Group 15.svg",
       caption: "T Burger",
       additionalText: "KWD",
       inlineText: "6.450",
     },
     {
       imageUrl: "/assets/img/10.png",
-      captionImage: "/assets/img/Group 13.png",
+      captionImage: "/assets/img/Group 13.svg",
       caption: "Penne \nFettucine",
       additionalText: "KWD",
       inlineText: "6.450",
     },
     {
       imageUrl: "/assets/img/13.png",
-      captionImage: "/assets/img/Group 327.png",
+      captionImage: "/assets/img/Group 327.svg",
       caption: "Masgouf Fish",
       additionalText: "KWD",
       inlineText: "6.450",
@@ -34,20 +34,21 @@ export default function App() {
         <h3>Popular Dishes</h3>
       </div>
       <CustomCarousel imageInfo={imageInfo}>
-        {imageInfo.map((info, index) => {
-          return (
-            <Box
-              key={index}
-              imageUrl={info.imageUrl}
-              caption={info.caption}
-              captionImage={info.captionImage}
-              additionalText={info.additionalText}
-              inlineText={info.inlineText}
-              isFirstCard={index === 0}
-            />
-          );
-        })}
-      </CustomCarousel>
+  {imageInfo.map((info, index) => {
+    return (
+      <Box
+        key={index}
+        index={index} // Pass the index prop here
+        imageUrl={info.imageUrl}
+        caption={info.caption}
+        captionImage={info.captionImage}
+        additionalText={info.additionalText}
+        inlineText={info.inlineText}
+        isFirstCard={index === 0}
+      />
+    );
+  })}
+</CustomCarousel>
     </div>
   );
   }
@@ -114,11 +115,12 @@ function CustomCarousel(props) {
 
 function Box({ index, imageUrl, caption, captionImage, additionalText, inlineText, isFirstCard }) {
   const captionLines = caption.split('\n');
-  const captionImageClass = isFirstCard ? 'first-card-caption-image' : '';
+  const captionImageClass = isFirstCard ? 'first-card-caption-image' : (index === 2 ? 'third-card-caption-image' : '');
   const additionalTextClass = isFirstCard ? 'first-card-additional-text' : '';
 
 
-  return (<div className="box"> {index}
+  return (
+    <div className="box">
       <img src={imageUrl} alt="Image" className="box-image" />
       <div className="box-caption">
         <img src={captionImage} alt="Caption Image" className={`caption-image ${captionImageClass}`} />
@@ -137,10 +139,10 @@ function Box({ index, imageUrl, caption, captionImage, additionalText, inlineTex
         </div>
         <div className="inline-text">{inlineText}</div>
       </div>
-</div>
-  
+    </div>
   );
 }
+
 
 
 

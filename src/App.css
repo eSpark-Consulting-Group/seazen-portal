@@ -10,7 +10,6 @@
 
 .design-section {
   flex: 1;
-  background-color: #f6f7f9;
   color: #fff;
   padding: 20px;
   max-width: 375px;
@@ -18,6 +17,7 @@
   overflow: auto; 
   overflow-y: scroll; 
   overflow-x: hidden; 
+  background: #FFFFFF 0% 0% no-repeat padding-box;
   
 }
 

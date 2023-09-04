@@ -22,18 +22,18 @@
     background-color: white; 
     box-shadow: 0px 24px 48px #314F7C1F; 
     padding: 8px; 
-    width: 42px;
-    height: 42px;
+    width: 32px;
+    height: 32px;
     margin-left: -15px;  }
   
   .account-icon {
-    padding-top: 8px;
-    padding-left: 13px;
+    padding-top: 3px;
+    padding-left: 8px;
   }
   
   .shopping-icon{
-    padding-top: 8px;
-    padding-left: 8px;
+    padding-top: 3px;
+    padding-left: 3px;
   }
   
   .shopping{
@@ -44,8 +44,8 @@
     background-color: white; 
     box-shadow: 0px 24px 48px #314F7C1F; 
     padding: 8px; 
-    width: 42px;
-    height: 42px;
+    width: 32px;
+    height: 32px;
   }
   
   
@@ -53,19 +53,18 @@
     display: flex;
     align-items: center;
     position: relative;
-    overflow: hidden; 
+    overflow: hidden;
     font-size: 1.3rem;
     cursor: pointer;
     margin-left: -18px;
-    color: black; 
-    border-radius: 50%; 
-    background-color: white; 
-    box-shadow: 0px 24px 48px #314F7C1F; 
-    padding-left: 28px;
-    padding-bottom: 11px;
-    color: black; 
+    color: black;
+    border-radius: 50%;
     background-color: white;
+    box-shadow: 0px 24px 48px #314F7C1F;
     margin-right: -15px;
+    width: 32px;
+    height: 32px;
+    padding: 8px;
   }
   
   .search-bar {
@@ -79,8 +78,8 @@
   
   .search-icon {
     position: absolute;
-    top: 16px;
-    left: 17px;
+    top: 14px;
+    left: 13px;
     font-size: 1.2rem;
     color: #0d0d0d;
     cursor: pointer;
@@ -153,7 +152,7 @@
 }
 
 .search-expanded  .logo{
-  margin-left: -12px;
+  margin-left: -1px;
 }
 
 .search-expanded  .account{
