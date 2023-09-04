@@ -16,7 +16,13 @@
   max-width: 375px;
   height: 941px;
   overflow: auto; 
+  overflow-y: scroll; 
+  overflow-x: hidden; 
   
+}
+
+.design-section::-webkit-scrollbar {
+  display: none;
 }
 
 .content-section {

@@ -39,7 +39,6 @@
   .shopping{
     font-size: 1.3rem;
     cursor: pointer;
-    margin-left: -17px;
     color: black; 
     border-radius: 50%; 
     background-color: white; 
@@ -55,7 +54,6 @@
     align-items: center;
     position: relative;
     overflow: hidden; 
-    transition: width 0.3s ease; 
     font-size: 1.3rem;
     cursor: pointer;
     margin-left: -18px;
@@ -75,7 +73,6 @@
     border-radius: 4px;
     color: black;
     width: 0; 
-    transition: width 0.3s ease; 
     border: none;
     
   }

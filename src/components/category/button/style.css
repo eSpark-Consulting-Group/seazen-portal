@@ -19,7 +19,6 @@ opacity: 1;
     margin-right: 10px ;
     color: white;
     cursor: pointer;
-    width: 34%;
     height: 36px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
     box-shadow: 0px 24px 48px #314F7C14;
@@ -27,10 +26,9 @@ opacity: 1;
     border-radius: 16px;
     opacity: 1;
     justify-content: center;
-    border: none;
     cursor: pointer;
-    transition: transform 0.3s ease;
-
+    transform: scale(1.05); 
+    transition: all .2s ease-in-out;
   }
   
 
@@ -54,4 +52,67 @@ opacity: 1;
     height: 24px; 
     margin-right: 8px; 
   }
+
+  .custom-button.expanded {
+    border: 1px solid #758B9A;
+
+  }
+
+.button-style-one{
+  background: #93694F 0% 0% no-repeat padding-box;
+box-shadow: 0px 24px 48px #314F7C14;
+border: 1px solid #EBEEF0;
+border-radius: 16px;
+opacity: 1;
+text-align: center;
+font: normal normal 600 7px/6px Titillium Web;
+letter-spacing: 0.14px;
+color: #FFFFFF;
+opacity: 1;
+width: 83px;
+height: 16px;
+}
+
+.button-style-two{
+  background: #4F948A 0% 0% no-repeat padding-box;
+box-shadow: 0px 24px 48px #314F7C14;
+border: 1px solid #4F948A;
+border-radius: 16px;
+opacity: 1;
+width: 62px;
+height: 16px;
+text-align: center;
+font: normal normal 600 7px/6px Titillium Web;
+letter-spacing: 0.14px;
+color: #FFFFFF;
+opacity: 1;
+}
+
+.custom-button.clicked {
+  background: #93694F 0% 0% no-repeat padding-box;
   
+}
+
+.button-text.clicked{
+  color: white; 
+}
+
+.options {
+  display: flex;
+  margin-left: 10px;
+}
+
+.options span {
+  margin-right: 10px;
+  padding: 5px;
+  background-color: #f0f0f0;
+}
+
+
+
+
+
+
+
+
+
