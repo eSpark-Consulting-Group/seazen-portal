@@ -1,6 +1,6 @@
 
 
-.container {
+.container_main {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
