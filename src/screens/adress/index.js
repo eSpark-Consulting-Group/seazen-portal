@@ -37,7 +37,7 @@ const AddressForm = () => {
         )}
 
         <button type='submit' className='address-button'> {/* Use type='submit' to make it a submit button */}
-          <a href='#' className='button-text'>Save</a>
+          <a href='#' className='address-text'>Save</a>
         </button>
       </form>
     </div>

@@ -8,8 +8,8 @@ function App() {
   return (
     <div className="container_main">
       <div className="design-section">
-        {/* <Home /> */}
-        <AddressForm/>
+        <Home />
+        {/* <AddressForm/> */}
       </div>
       <div className="content-section"></div>
       
