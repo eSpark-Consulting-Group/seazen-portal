@@ -11,7 +11,6 @@
 .design-section {
   flex: 1;
   color: #fff;
-  padding: 20px;
   max-width: 375px;
   height: 941px;
   overflow: auto; 
