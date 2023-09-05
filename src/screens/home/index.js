@@ -8,10 +8,11 @@ import Button from '../../components/category/button';
 import Collapsible from '../../components/category/button';
 import DraggableSlider from '../../components/draggableSlider';
 import { Footer } from '../../components/footer';
+import './style.css'
 
 const Home = () =>{
   return (
-    <div>
+    <div className="home-styling">
         <Navbar/>
         <div className="card-spacing">
         <Slider/>
