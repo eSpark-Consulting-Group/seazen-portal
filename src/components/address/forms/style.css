@@ -1,0 +1,122 @@
+.form-style {
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  padding: 10px;
+  width: 309px;
+  margin-bottom: 10px;
+  height: 44px;
+  color: #959fa8;
+}
+
+.form-style:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+#required {
+  color: #e02020;
+}
+
+#required:focus {
+  border: 1px solid #e02020;
+  color: #e02020;
+}
+
+#required:focus::placeholder {
+  color: #e02020;
+}
+
+.form-style::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+}
+
+.style-text {
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  padding: 10px;
+  width: 262px;
+  margin-bottom: 10px;
+  height: 140px;
+}
+
+.style-text::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-bottom: 100px;
+}
+
+#AdditionalDirection {
+  resize: none;
+  padding-bottom: 50px;
+}
+
+.container-style {
+  margin-top: 20px;
+}
+
+.contact-style {
+  text-align: center;
+  font: normal normal bold 20px/24px Titillium Web;
+  letter-spacing: 0.4px;
+  color: #1f2933;
+  opacity: 1;
+  margin-top: 1px;
+  margin-left: -15px;
+}
+
+.country-code-input {
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  width: 78px;
+  height: 64px;
+  margin-right: 10px;
+}
+
+.phone-number-input {
+  width: 230px;
+  height: 64px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+}
+
+.country-code-input:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+.phone-number-input:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+.phone-number-input::placeholder {
+  text-align: left;
+  font: normal normal bold 14px/28px Montserrat;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 15px;
+}
+
+.country-code-input::placeholder {
+  text-align: center;
+  font: normal normal bold 14px/28px Montserrat;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+}
