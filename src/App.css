@@ -1,11 +1,11 @@
-
-
-.container {
+.container_main {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
   min-height: 100vh;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .design-section {

@@ -1,0 +1,127 @@
+.menu_card_list_outer_container {
+  width: 375px;
+  height: auto;
+  background-color: #f6f7f9;
+  display: flex;
+  justify-content: center;
+  padding: 26px 0;
+}
+
+.menu_card_list_inner_container {
+  width: 326px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.comment_button_container {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  background-color: transparent;
+}
+
+.comment_button_container button {
+  border: none;
+  background-color: transparent;
+}
+
+.card_list_title_search_container {
+  width: 326px;
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.card_list_title_search_container.expanded {
+  width: 326px;
+  height: 30px;
+  display: flex;
+  position: relative;
+}
+
+.card_list_title {
+  font-family: Titillium Web;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2933;
+}
+
+.card_list_search_container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Search Bar Fucntanility CSS */
+
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+  transition: width 0.3s ease;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.search-bar {
+  border-radius: 4px;
+  color: black;
+  width: 0;
+  transition: width 0.3s ease;
+  border: none;
+}
+
+.search-icon {
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+}
+
+.search-container.expanded {
+  position: absolute;
+  width: 326px;
+  height: 100%;
+  border-radius: 24px;
+  padding: 5px 0px;
+  height: 30px;
+  background-color: white;
+}
+.search-container.expanded .search-icon {
+  width: 25px;
+  height: 25px;
+  border-radius: 0%;
+  margin-top: 3px;
+}
+
+.search-container.expanded .search-bar {
+  width: 286px;
+  height: 30px;
+}
+
+.search-bar {
+  border: none;
+  background-color: transparent;
+  outline: none;
+}
+
+.search-bar:focus {
+  border: 1px solid #fdfcfc;
+}
+
+.element {
+  transition: all 0.3s;
+}
+
+.search-expanded .element {
+  transform: translateX(-100%);
+  margin-left: 25px;
+}
+
+.search-wrapper.expanded {
+  display: flex;
+  height: 30px;
+  margin: 10px 0px;
+}
