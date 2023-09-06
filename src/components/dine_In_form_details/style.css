@@ -1,0 +1,28 @@
+.dine_in_form_outer_container{
+    width: 100%;
+    padding-top: 30px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.dine_in_form_inner_container{
+    width: 326px;
+    height: 300px;
+    background-color: aqua;
+}
+
+.dine_in_form_heading_text{
+    font-size: 18px;
+    color: #1F2933;
+}
+
+.dine_in_form_divider_line{
+    height: 1.5px;
+    width: 266px;
+    background-color: #707070;
+    position: absolute;
+    left: 0px;
+    top: 95px;
+    z-index: 100;
+}
