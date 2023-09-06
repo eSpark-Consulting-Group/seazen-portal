@@ -76,7 +76,6 @@
   margin-left: 20px;
   margin-top: -50px;
   margin-bottom: 20px;
-
 }
 
 .address-button {
@@ -102,4 +101,47 @@
 
 .address-button:focus {
   outline: none;
+}
+
+.edit-container {
+  width: 327px;
+  height: 64px;
+  background: #dedede 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  margin-top: 20px;
+}
+
+.edit-button {
+  top: 220px;
+  left: 219px;
+  width: 123px;
+  height: 32px;
+  background: #986a4f 0% 0% no-repeat padding-box;
+  border-radius: 10px;
+  opacity: 1;
+  position: absolute;
+  border: none;
+}
+
+.edit-text {
+  text-align: right;
+  font: normal normal 600 16px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+.address-name {
+  width: 60px;
+  height: 16px;
+  text-align: left;
+  font: normal normal bold 16px/16px Titillium Web;
+  letter-spacing: 0px;
+  color: #40484e;
+  opacity: 1;
+  position: absolute;
+  top: 210px;
+  left: 44px;
 }
