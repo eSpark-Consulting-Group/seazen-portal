@@ -56,7 +56,7 @@
 
 /* Search Bar Fucntanility CSS */
 
-.search-container {
+.search_container {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -66,21 +66,24 @@
   border-radius: 50%;
 }
 
-.search-bar {
+.search_bar {
   border-radius: 4px;
-  color: black;
+  color:#959FA8;
+  font-family: Titillium Web;
+  font-size: 16px;
+  font-weight: 600;
   width: 0;
   transition: width 0.3s ease;
   border: none;
 }
 
-.search-icon {
+.search_icon {
   cursor: pointer;
   width: 25px;
   height: 25px;
 }
 
-.search-container.expanded {
+.search_container.expanded {
   position: absolute;
   width: 326px;
   height: 100%;
@@ -89,25 +92,25 @@
   height: 30px;
   background-color: white;
 }
-.search-container.expanded .search-icon {
+.search_container.expanded .search_icon {
   width: 25px;
   height: 25px;
   border-radius: 0%;
   margin-top: 3px;
 }
 
-.search-container.expanded .search-bar {
+.search_container.expanded .search_bar {
   width: 286px;
   height: 30px;
 }
 
-.search-bar {
+.search_bar {
   border: none;
   background-color: transparent;
   outline: none;
 }
 
-.search-bar:focus {
+.search_bar:focus {
   border: 1px solid #fdfcfc;
 }
 
@@ -120,7 +123,7 @@
   margin-left: 25px;
 }
 
-.search-wrapper.expanded {
+.search_wrapper.expanded {
   display: flex;
   height: 30px;
   margin: 10px 0px;

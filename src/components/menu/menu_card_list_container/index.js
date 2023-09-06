@@ -18,18 +18,18 @@ const MenuCardListConatiner = () => {
           }`}
         >
           <div className="card_list_title">Burrito in a Bowl</div>
-          <div className={`search-container ${isSearchOpen ? "expanded" : ""}`}>
-            <div className={`search-wrapper ${isSearchOpen ? "expanded" : ""}`}>
+          <div className={`search_container ${isSearchOpen ? "expanded" : ""}`}>
+            <div className={`search_wrapper ${isSearchOpen ? "expanded" : ""}`}>
               <img
                 src="/assets/img/Icon - Search.svg"
                 alt="search_icon"
-                className="search-icon"
+                className="search_icon"
                 onClick={toggleSearch}
               />
               <input
                 type="text"
                 placeholder="Search"
-                className={`search-bar ${isSearchOpen ? "expanded" : ""}`}
+                className={`search_bar ${isSearchOpen ? "expanded" : ""}`}
               />
             </div>
           </div>

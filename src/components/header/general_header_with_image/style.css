@@ -36,15 +36,15 @@
   width: 28px;
 }
 
-.shopping-icon {
+.shopping_icon {
   padding-bottom: 1px;
 }
 
-.shopping-icon img {
+.shopping_icon img {
   width: 27px;
 }
 
-.shopping {
+.shopping_container {
   cursor: pointer;
   margin-right: 20px;
   border-radius: 50%;
