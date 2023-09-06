@@ -3,7 +3,7 @@ import RouteProvider from "./routes/routes";
 
 function App() {
   return (
-    <div className="container">
+    <div className="container_main">
       <div className="design-section">
         <RouteProvider />
       </div>
