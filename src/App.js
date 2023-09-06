@@ -1,11 +1,11 @@
-import "./App.css";
 import RouteProvider from "./routes/routes";
+import "./App.css";
 
 function App() {
   return (
     <div className="container">
       <div className="design-section">
-        <RouteProvider />
+          <RouteProvider />
       </div>
       <div className="content-section"></div>
     </div>
