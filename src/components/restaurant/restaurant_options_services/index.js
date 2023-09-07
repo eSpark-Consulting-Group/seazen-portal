@@ -1,6 +1,6 @@
 import "./style.css";
-import RestaurantDetails from "../restaurant_details/index.js"
-import TabsDynamicConditionalCoponent from "../../tab_components/tabs_dynamic_conditional_component/index.js";
+import RestaurantDetails from "../details/index.js"
+import TabsDynamicConditionalCoponent from "../../tabs/tabsConditionalRenderingComponent/index.js";
 
 const RestaurantOptionsServicesContainer = () => {
   return (

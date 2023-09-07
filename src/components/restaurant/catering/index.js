@@ -1,4 +1,4 @@
-import ContactButton from "../contact_button";
+import ContactButton from "../../contact_button/index.js";
 import "./style.css"
 
 const CateringDetails = () => {

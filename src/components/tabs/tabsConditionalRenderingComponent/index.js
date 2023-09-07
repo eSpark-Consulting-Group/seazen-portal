@@ -1,11 +1,11 @@
-import IconPositionTabs from "../tabs/index.js";
-import DeliveryDetails from "../../restaurant/restaurant_delivery_details/index.js";
-import MenuItems from "../../menu/menu_items/index.js";
-import MenuCardListConatiner from "../../menu/menu_card_list_container/index.js";
-import PickupDetails from "../../pickup/index.js";
+import IconPositionTabs from "../tabComponent/index.js";
+import DeliveryDetails from "../../restaurant/delivery/deliveryDetails/index.js";
+import MenuItems from "../../restaurant/menu/menu_items/index.js";
+import MenuCardListConatiner from "../../restaurant/menu/menu_card_list_container/index.js";
+import PickupDetails from "../../restaurant/pickup/index.js";
 import { useState } from "react";
-import CateringDetails from "../../catering/index.js";
-import DineInForm from "../../dine_In_form_details/index.js";
+import CateringDetails from "../../restaurant/catering/index.js";
+import DineInForm from "../../restaurant/dineIn/dineInForm/index.js";
 
 const TabsDynamicConditionalCoponent = () => {
 
