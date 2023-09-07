@@ -40,11 +40,14 @@
     letter-spacing: 0.18px;
     color: #323F4B;
     opacity: 1;
-    font-size: 9px; 
+    font-size: 8px;
 
   }
 
-
+  .basic-card.expanded {
+    /* Add border styles when expanded */
+    border: 2px solid #000; /* You can adjust the border styles as needed */
+  }
   
   .custom-button:hover {
     transform: scale(1.1); 

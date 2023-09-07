@@ -16,7 +16,7 @@ const Home = () => {
         <Slider />
       </div>
       <Button />
-      <BasicCard />
+      {/* <BasicCard /> */}
       <DraggableSlider />
       <Footer />
     </div>

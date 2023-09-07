@@ -12,27 +12,26 @@ const bull = (
   </Box>
 );
 
-export default function BasicCard() {
+const BasicCard = ({ clickedButtonIndex }) => {
+  const getCardClassName = (index) => {
+    if (index >= 0 && index <= 5) {
+      return clickedButtonIndex !== null ? "card-with-border" : "card-no-border";
+    } else {
+      return "card-no-border";
+    }
+  };
+
   return (
     <div className="card-container">
-      <Card sx={{ width: 164, height: 76, borderRadius: 1 }} className="card">
-        <img src="/assets/img/15.png" alt="Card 1" />
-      </Card>
-      <Card sx={{ width: 164, height: 76, borderRadius: 1 }} className="card">
-        <img src="/assets/img/21.png" alt="Card 2" />
-      </Card>
-      <Card sx={{ width: 164, height: 76, borderRadius: 1 }} className="card">
-        <img src="/assets/img/17.png" alt="Card 3" />
-      </Card>
-      <Card sx={{ width: 164, height: 76, borderRadius: 1 }} className="card">
-        <img src="/assets/img/23.png" alt="Card 4" />
-      </Card>
-      <Card sx={{ width: 164, height: 76, borderRadius: 1 }} className="card">
-        <img src="/assets/img/19.png" alt="Card 5" />
-      </Card>
-      <Card sx={{ width: 164, height: 76, borderRadius: 1 }} className="card">
-        <img src="/assets/img/25.png" alt="Card 6" />
-      </Card>
+      {[0, 1, 2, 3, 4, 5].map((index) => (
+        <div key={index} className={`card ${getCardClassName(index)}`}>
+          <Card sx={{ width: 164, height: 76, borderRadius: 1 }} className="card">
+            <img src={`/assets/img/${15 + index * 2}.png`} alt={`Card ${index + 1}`} />
+          </Card>
+        </div>
+      ))}
     </div>
   );
-}
+};
+
+export default BasicCard;
