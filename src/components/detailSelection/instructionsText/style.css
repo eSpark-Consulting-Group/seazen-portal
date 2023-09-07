@@ -1,0 +1,29 @@
+.special-instructions{
+    top: 1003px;
+left: 24px;
+width: 327px;
+height: 114px;
+background: #FAFAFA 0% 0% no-repeat padding-box;
+border-radius: 16px;
+opacity: 1;
+border: none;
+resize: none;
+}
+
+.special-instructions:focus{
+    outline: none;
+}
+
+.special-instructions::placeholder{
+    top: 10px;
+left: 10px;
+width: 192px;
+height: 24px;
+text-align: left;
+letter-spacing: NaNpx;
+color: #959FA8;
+opacity: 1;
+font: normal normal  14px Titillium Web;
+position: absolute;
+
+}

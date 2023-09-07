@@ -1,0 +1,38 @@
+.content-heading {
+  top: 290px;
+  left: 24px;
+  width: 195px;
+  height: 60px;
+  text-align: left;
+  font: normal normal 600 22px/26px Titillium Web;
+  letter-spacing: 0px;
+  color: #1f2933;
+  opacity: 1;
+  position: absolute;
+}
+
+.content-paragraph {
+  top: 366px;
+  left: 24px;
+  width: 327px;
+  height: 65px;
+  text-align: left;
+  letter-spacing: 0.34px;
+  color: #6b7580;
+  opacity: 1;
+  position: absolute;
+  font-size: 12px;
+}
+
+.content-small {
+  top: 323px;
+  left: 302px;
+  width: 41px;
+  height: 10px;
+  text-align: right;
+  font: normal normal bold 10px/12px Titillium Web;
+  letter-spacing: 0px;
+  color: #026754;
+  opacity: 1;
+  position: absolute;
+}
