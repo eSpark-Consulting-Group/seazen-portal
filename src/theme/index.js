@@ -30,6 +30,12 @@ const theme = createTheme({
         sizeLarge: {
           fontSize: "1.125rem",
         },
+        sizeMedium: {
+          fontSize: "1rem",
+        },
+        sizeSmall: {
+          fontSize: "0.875rem",
+        },
       },
     },
   },

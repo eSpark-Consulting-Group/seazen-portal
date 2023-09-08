@@ -1,31 +1,39 @@
-import React, { useState } from 'react';
-import Modal from 'react-modal';
-import './style.css'
+import React, { useState } from "react";
+import Modal from "react-modal";
+import "./style.css";
 
+Modal.setAppElement("#root");
 
+export const Footer = (props) => {
+  const { showCommentOption } = props;
 
-Modal.setAppElement('#root');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [text, setText] = useState("");
 
-export const Footer = () => {
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [text, setText] = useState('');
-  
   const openModal = () => {
     setModalIsOpen(true);
-  }
+  };
 
   const closeModal = () => {
     setModalIsOpen(false);
-  }
+  };
 
   const handleTextChange = (e) => {
     setText(e.target.value);
-  }
+  };
   return (
-    <div className='footer-container'>
-        <h2 className='footer-style'>© 2023 Seazen Group Co.</h2>
-        <p className='terms-style'>Terms & Conditions | Privacy Policy</p>
-        <img className='text-box' src="/assets/img/Comment_Icon.png" alt="Image" onClick={openModal} />
+    <div className="footer-container">
+      <h2 className="footer-style">© 2023 Seazen Group Co.</h2>
+      <p className="terms-style">Terms & Conditions | Privacy Policy</p>
+
+      {showCommentOption && (
+        <img
+          className="text-box"
+          src="/assets/img/Comment_Icon.png"
+          onClick={openModal}
+          alt="add comment"
+        />
+      )}
 
       <Modal
         isOpen={modalIsOpen}
@@ -46,5 +54,9 @@ export const Footer = () => {
         <button onClick={closeModal}>Close</button>
       </Modal>
     </div>
-  )
-}
+  );
+};
+
+Footer.defaultProps = {
+  showCommentOption: true,
+};
