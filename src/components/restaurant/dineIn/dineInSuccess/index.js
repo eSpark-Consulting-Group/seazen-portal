@@ -1,7 +1,15 @@
-import ContactButton from "../../../../contact_button";
+import ContactButton from "../../../contact_button";
 import "./style.css"
 
-const DineInSuccess = () => {
+const DineInSuccess = ({
+    firstName,
+    lastName,
+    countryCode,
+    phoneNumber,
+    selectBranch,
+    seatingArea,
+    numberOfPersons
+}) => {
     return (<div className="dine_in_success_outer_container">
         <div className="dine_in_success_inner_container">
             <div className="dine_in_success_message_container">
@@ -22,27 +30,27 @@ const DineInSuccess = () => {
                     <div className="dine_in_guest_information_guestname_branch_text_container">
                         <div className="dine_in_guest_name_container">
                             <div className="dine_in_guest_name_heading">Guest name</div>
-                            <div className="dine_in_guest_name">John Doe</div>
+                            <div className="dine_in_guest_name">{`${firstName}`}</div>
                         </div>
                         <div className="dine_in_guest_branch_container">
                             <div className="dine_in_branch_heading">Branch</div>
-                            <div className="dine_in_branch_name">Trapani Avenue’s</div>
+                            <div className="dine_in_branch_name">{selectBranch}</div>
                         </div>
                     </div>
                     <div className="dine_in_guest_information_seatingarea_numberofpersons_text_container">
                         <div className="dine_in_seating_area_container">
                             <div className="dine_in_seating_area_heading">Seating area</div>
-                            <div className="dine_in_seating_area">Any</div>
+                            <div className="dine_in_seating_area">{seatingArea}</div>
                         </div>
                         <div className="dine_in_guest_numberofpersons_container">
                             <div className="dine_in_numberofpersons_heading">Number of Persons</div>
-                            <div className="dine_in_numberofpersons">02</div>
+                            <div className="dine_in_numberofpersons">{numberOfPersons}</div>
                         </div>
                     </div>
                     <div className="dine_in_guest_information_phone_number_text_container">
                         <div className="dine_in_phone_number_container">
                             <div className="dine_in_phone_number_heading">Phone Number</div>
-                            <div className="dine_in_phone_number">+965 11223344</div>
+                            <div className="dine_in_phone_number">{`${countryCode} ${phoneNumber}`}</div>
                         </div>
                     </div>
                 </div>  

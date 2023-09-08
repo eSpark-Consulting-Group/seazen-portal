@@ -5,7 +5,7 @@ import MenuCardListConatiner from "../../restaurant/menu/menu_card_list_containe
 import PickupDetails from "../../restaurant/pickup/index.js";
 import { useState } from "react";
 import CateringDetails from "../../restaurant/catering/index.js";
-import DineInForm from "../../restaurant/dineIn/dineInForm/index.js";
+import DineInCoditionalComponent from "../../restaurant/dineIn/dineInConditionalComponent/index.js";
 
 const TabsDynamicConditionalCoponent = () => {
 
@@ -15,7 +15,7 @@ const TabsDynamicConditionalCoponent = () => {
             case "dinein":
                 return (<div>
             <IconPositionTabs tabPosition={tabPosition} setTabPosition={setTabPosition}/>
-            <DineInForm />
+            <DineInCoditionalComponent />
           </div>);
             case "catering":
             return (<div>
