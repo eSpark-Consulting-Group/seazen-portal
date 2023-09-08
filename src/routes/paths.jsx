@@ -1,17 +1,20 @@
 import React from "react";
 import Home from "../screens/home";
 import CartPage from "../screens/cart";
+import OrderScreen from "../screens/order";
 
 export const paths = {
   home: "/",
   error: "*",
-  cart: "cart"
+  cart: "cart",
+  orderplace: "orderplace"
 };
 
 export const routes = {
   home: "/",
   error: "*",
-  cart: "cart"
+  cart: "cart",
+  orderplace: "orderplace"
 };
 
 export const publicRoutes = {
@@ -24,6 +27,11 @@ export const publicRoutes = {
     name: "Cart",
     path: routes.cart,
     component: <CartPage />,
+  },
+  [paths.orderplace]: {
+    name: "Orderplace",
+    path: routes.orderplace,
+    component: <OrderScreen />,
   },
 };
 

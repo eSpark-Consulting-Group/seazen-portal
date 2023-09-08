@@ -1,0 +1,247 @@
+@import url("https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600;700;900&display=swap");
+
+.order-screen {
+  background-color: #ffffff;
+  padding: 70px 40px;
+  box-sizing: border-box;
+  font-family: "Titillium Web", sans-serif;
+  position: relative;
+}
+
+#close-button {
+  position: absolute;
+  left: 80%;
+  top: 2%;
+}
+
+#close-btn-tag {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.header-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 45px;
+  line-height: 105%;
+  font-size: 16px;
+}
+
+.update-sec {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#text-for-arrival {
+  letter-spacing: 0.5px;
+  text-align: left;
+  font: normal normal 600 16px/18px Titillium Web;
+  letter-spacing: 0px;
+  color: #1f2933;
+  opacity: 1;
+}
+
+.current-time {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: right;
+  font: normal normal bold 20px/24px Titillium Web;
+  letter-spacing: 0.4px;
+  color: #1f2933;
+  opacity: 1;
+}
+
+.order-progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progress-bar {
+  width: 65px;
+  height: 5px;
+  background-color: #dcdfe3;
+}
+
+.address-section hr {
+  height: 1px;
+  background-color: #dcdfe3;
+  border: none;
+}
+
+#order-status-tag {
+  background-color: #f7b500;
+  border-radius: 7px;
+  width: 95px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 0.4px;
+  font-size: 15px;
+}
+
+.order-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: -8px;
+}
+
+#order-status-tag p {
+  font-weight: bold;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+}
+
+#confirm-text {
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #959fa8;
+}
+
+.address-text {
+  font-size: 14px;
+  line-height: 110%;
+}
+
+.order-id-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -8px;
+}
+
+#order-id-text {
+  font-size: 16px;
+  text-align: left;
+  font: normal normal 600 16px/18px Titillium Web;
+  letter-spacing: 0px;
+  color: #1f2933;
+  opacity: 1;
+}
+
+.orderid-with-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  position: relative;
+  top: -8px;
+}
+
+.orderid-with-tag p {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: right;
+  font: normal normal bold 20px/24px Titillium Web;
+  letter-spacing: 0.4px;
+  color: #1f2933;
+  opacity: 1;
+}
+
+#order-id-tag a {
+  font-weight: bold;
+  font-size: 12px;
+  color: white;
+  text-decoration: none;
+}
+
+#order-id-tag {
+  background-color: #98694e;
+  border-radius: 10px;
+  width: 88px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -10px;
+}
+
+.contact-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin: 50px 0 70px 0;
+}
+
+#call-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1b6482;
+  height: 28px;
+  width: 98px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  margin-left: -8px;
+}
+
+#call-tag a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+#whatsapp-tag {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 19px;
+  align-items: center;
+  width: 118px;
+  height: 27px;
+  background-color: #2fa124;
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+#whatsapp-tag a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.footer-section {
+  position: absolute;
+  left: 82%;
+  top: 97%;
+}
+
+#thanksnote {
+  text-align: left;
+  font: normal normal 600 16px/18px Titillium Web;
+  letter-spacing: 0px;
+  color: #1f2933;
+  opacity: 1;
+  position: absolute;
+  top: 67px;
+  left: 150px;
+  width: 146px;
+  height: 42px;
+}
+
+.formatted-address {
+  text-align: left;
+  letter-spacing: 0px;
+  color: #1f2933;
+  opacity: 1;
+}
+
+.address-text p {
+  text-align: left;
+  font: normal normal 600 14px/16px Titillium Web;
+  letter-spacing: 0px;
+  color: #1f2933;
+  margin-bottom: -12px;
+}
