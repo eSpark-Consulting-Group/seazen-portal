@@ -8,7 +8,9 @@ const DineInSuccess = ({
     phoneNumber,
     selectBranch,
     seatingArea,
-    numberOfPersons
+    numberOfPersons,
+    specialRequirements,
+    handleSpecialRequirementsChange,
 }) => {
     return (<div className="dine_in_success_outer_container">
         <div className="dine_in_success_inner_container">

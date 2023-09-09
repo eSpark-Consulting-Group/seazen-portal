@@ -17,6 +17,8 @@ const DineInForm = ({
     handleChangeSeatingArea,
     numberOfPersons,
     handleChangeNumberOfPersons,
+    specialRequirements,
+    handleSpecialRequirementsChange,
     handleSubmit}) => {
 
         const styles = {
@@ -162,7 +164,14 @@ const DineInForm = ({
                         )}
                     />
                 </div>
-                <textarea className="special_requirement_text_area" name="SpecialRequirement" id="SpecialRequirement" placeholder="Special requirement"></textarea>
+                <textarea
+                className="special_requirement_text_area"
+                name="SpecialRequirement"
+                id="SpecialRequirement"
+                placeholder="Special requirement"
+                value={specialRequirements}
+                onChange={handleSpecialRequirementsChange}
+                ></textarea>
             </form>
         </div>
         <button type="submit" className="dine_in_form_submit_button" onClick={handleSubmit}>Submit</button>      
