@@ -35,7 +35,7 @@
   justify-content: space-between;
 }
 
-.card_list_title_search_container.expanded_container {
+.card_list_title_search_container.expanded_search {
   width: 326px;
   height: 30px;
   display: flex;
@@ -54,9 +54,9 @@
   justify-content: flex-end;
 }
 
-/* Search Bar Fucntanility CSS */
 
-.search_container {
+
+.search {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -66,7 +66,7 @@
   border-radius: 50%;
 }
 
-.search_bar {
+.searchbar {
   border-radius: 4px;
   color:#959FA8;
   font-family: Titillium Web;
@@ -77,13 +77,13 @@
   border: none;
 }
 
-.search_icon {
+.searchicon {
   cursor: pointer;
   width: 25px;
   height: 25px;
 }
 
-.search_container.expanded_container {
+.search.expanded_search {
   position: absolute;
   width: 326px;
   height: 100%;
@@ -92,25 +92,25 @@
   height: 30px;
   background-color: white;
 }
-.search_container.expanded_container .search_icon {
+.search.expanded_search .searchicon {
   width: 25px;
   height: 25px;
   border-radius: 0%;
   margin-top: 3px;
 }
 
-.search_container.expanded_container .search_bar {
+.search.expanded_search .searchbar {
   width: 286px;
   height: 30px;
 }
 
-.search_bar {
+.searchbar {
   border: none;
   background-color: transparent;
   outline: none;
 }
 
-.search_bar:focus {
+.searchbar:focus {
   border: 1px solid #fdfcfc;
 }
 
@@ -123,7 +123,7 @@
   margin-left: 25px;
 } */
 
-.search_wrapper.expanded_container {
+.searchwrapper.expanded_search {
   display: flex;
   height: 30px;
   margin: 10px 0px;

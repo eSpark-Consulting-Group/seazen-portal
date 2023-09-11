@@ -48,7 +48,7 @@ export default function IconPositionTabs({tabPosition,
         />
         <Tab
           onClick={()=>{setTabPosition("catering")}}
-          icon={<img src="./assets/img/catering_icon.svg" alt="catering_icon" />}
+          icon={<img src="./assets/img/catering_icon.svg" alt="cateringicon" />}
           iconPosition="start"
           label="Catering"
           sx={{
@@ -63,7 +63,7 @@ export default function IconPositionTabs({tabPosition,
         />
         <Tab
           onClick={()=>{setTabPosition("delivery")}}
-          icon={<img src="./assets/img/delivery_icon.svg" alt="delivery_icon" />}
+          icon={<img src="./assets/img/delivery_icon.svg" alt="deliveryicon" />}
           iconPosition="start"
           label="Delivery"
           sx={{
@@ -78,7 +78,7 @@ export default function IconPositionTabs({tabPosition,
         />
         <Tab
           onClick={()=>{setTabPosition("pickup")}}
-          icon={<img src="./assets/img/pickup_icon.svg" alt="pickup_icon" />}
+          icon={<img src="./assets/img/pickup_icon.svg" alt="pickupicon" />}
           iconPosition="start"
           label="Pickup"
           sx={{
@@ -127,7 +127,7 @@ export default function IconPositionTabs({tabPosition,
         />
         <Tab
           onClick={()=>{setTabPosition("pickup")}}
-          icon={<img src="./assets/img/pickup_icon.svg" alt="pickup_icon" />}
+          icon={<img src="./assets/img/pickup_icon.svg" alt="pickupicon" />}
           iconPosition="start"
           label="Pickup"
           sx={{
@@ -173,7 +173,7 @@ export default function IconPositionTabs({tabPosition,
         />
         <Tab
           onClick={()=>{setTabPosition("catering")}}
-          icon={<img src="./assets/img/catering_icon.svg" alt="catering_icon" />}
+          icon={<img src="./assets/img/catering_icon.svg" alt="cateringicon" />}
           iconPosition="start"
           label="Catering"
           sx={{
@@ -188,7 +188,7 @@ export default function IconPositionTabs({tabPosition,
         />
         <Tab
           onClick={()=>{setTabPosition("delivery")}}
-          icon={<img src="./assets/img/delivery_icon.svg" alt="delivery_icon" />}
+          icon={<img src="./assets/img/delivery_icon.svg" alt="deliveryicon" />}
           iconPosition="start"
           label="Delivery"
           sx={{
@@ -203,7 +203,7 @@ export default function IconPositionTabs({tabPosition,
         />
         <Tab
           onClick={()=>{setTabPosition("pickup")}}
-          icon={<img src="./assets/img/pickup_icon.svg" alt="pickup_icon" />}
+          icon={<img src="./assets/img/pickup_icon.svg" alt="pickupicon" />}
           iconPosition="start"
           label="Pickup"
           sx={{
