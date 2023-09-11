@@ -20,7 +20,7 @@
   border-radius: 50%;
   background-color: white;
   box-shadow: 0px 24px 48px #314f7c1f;
-  padding: 8px;
+  /* padding: 8px; */
   width: 42px;
   height: 42px;
   display: flex;
@@ -50,7 +50,7 @@
   border-radius: 50%;
   background-color: white;
   box-shadow: 0px 24px 48px #314f7c1f;
-  padding: 8px;
+  /* padding: 8px; */
   width: 42px;
   height: 42px;
   display: flex;

@@ -24,8 +24,8 @@ const BasicCard = ({ clickedButtonIndex }) => {
   return (
     <div className="card-container">
       {[0, 1, 2, 3, 4, 5].map((index) => (
-        <div key={index} className={`card ${getCardClassName(index)}`}>
-          <Card sx={{ width: 164, height: 76, borderRadius: 1 }} className="card">
+        <div key={index} className={`cards ${getCardClassName(index)}`}>
+          <Card sx={{ width: 164, height: 76, borderRadius: 1, border: "none" }} className="card">
             <img src={`/assets/img/${15 + index * 2}.png`} alt={`Card ${index + 1}`} />
           </Card>
         </div>

@@ -63,7 +63,7 @@
     border: 1px solid #c0cdd7;
     border-radius: 12px;
     opacity: 1;
-    width: 155px;
+    width: 146px;
     height: 52px;
     padding-left: 15px;
   }
@@ -82,7 +82,7 @@
   }
 
   .last_name_input {
-    width: 155px;
+    width: 146px;
     height: 52px;
     background: #fafafa 0% 0% no-repeat padding-box;
     border: 1px solid #c0cdd7;
@@ -164,7 +164,7 @@
     border-radius: 12px;
     opacity: 1;
     padding: 10px;
-    width: 326px;
+    width: 308.5px;
     height: 104px;
     color: #959fa8;
     resize: none;
@@ -232,7 +232,7 @@
 
 
   .dine_in_form_submit_button{
-    width: 326px;
+    width: 318px;
     height: 56px;
     border: none;
     background-color: #026754;
@@ -255,4 +255,9 @@
     align-items: center;
     gap: 12px;
     padding: 30px 0px;
+  }
+
+
+  .dine_in_form_outer_container::-webkit-scrollbar {
+    display: none;
   }

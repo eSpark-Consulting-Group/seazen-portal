@@ -28,25 +28,25 @@ const Slider = () => {
       <Carousel.Item>
         <div className="carousel-item">
           <img width="100%" src="/assets/img/1.png" alt="Slide 1" />
-          <div className="caption">Order Now</div>
+          <div className="order-now">Order Now</div>
         </div>
       </Carousel.Item>
       <Carousel.Item>
         <div className="carousel-item">
           <img width="100%" src="/assets/img/2.png" alt="Slide 2" />
-          <div className="caption">Order Now</div>
+          <div className="order-now2">Order Now</div>
         </div>
       </Carousel.Item>
       <Carousel.Item>
         <div className="carousel-item">
           <img width="100%" src="/assets/img/1.png" alt="Slide 3" />
-          <div className="caption">Order Now</div>
+          <div className="order-now3">Order Now</div>
         </div>
       </Carousel.Item>
       <Carousel.Item>
         <div className="carousel-item">
           <img width="100%" src="/assets/img/2.png" alt="Slide 4" />
-          <div className="caption">Order Now</div>
+          <div className="order-now4">Order Now</div>
         </div>
       </Carousel.Item>
     </Carousel>

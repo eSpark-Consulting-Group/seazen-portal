@@ -7,6 +7,7 @@
 .carousel-item {
     border-radius: 20px;
     position: relative;
+    display: contents !important;
   }
   
   .carousel-item img {
@@ -20,9 +21,9 @@
     transform: scale(1.05); 
   }
   
-  .caption {
+  .order-now {
     position: absolute;
-    bottom: 6.5px;
+    bottom: 0.5px;
     right: 0px;
     padding: 5px 10px;
     background-color: #4D602B;
@@ -31,5 +32,42 @@
     border-bottom-right-radius: 15px;
     border-top-left-radius: 15px;
   }
+
+  .order-now2 {
+    position: absolute;
+    bottom: 0.5px;
+    right: -103%;
+    padding: 5px 10px;
+    background-color: #4D602B;
+    color: white;
+    font-weight: bold;
+    border-bottom-right-radius: 15px;
+    border-top-left-radius: 15px;
+  }
+  
+  .order-now3 {
+    position: absolute;
+    bottom: 0.5px;
+    right: -206.5%;
+    padding: 5px 10px;
+    background-color: #4D602B;
+    color: white;
+    font-weight: bold;
+    border-bottom-right-radius: 15px;
+    border-top-left-radius: 15px;
+  }
+  
+  .order-now4 {
+    position: absolute;
+    bottom: 0.5px;
+    right: -309.5%;
+    padding: 5px 10px;
+    background-color: #4D602B;
+    color: white;
+    font-weight: bold;
+    border-bottom-right-radius: 15px;
+    border-top-left-radius: 15px;
+  }
+  
   
   
