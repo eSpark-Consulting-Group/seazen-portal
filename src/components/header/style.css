@@ -37,6 +37,11 @@
   padding-left: 3px;
 }
 
+.shopping-icon img {
+  width: 24px;
+  height: 24px;
+}
+
 .shopping {
   font-size: 1.3rem;
   cursor: pointer;
