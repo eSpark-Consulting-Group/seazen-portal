@@ -18,7 +18,6 @@ function CurrentDateTime() {
         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
       ];
 
-      // Add leading zeros to minutes if they are less than 10
       const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 
       // Create the formatted date and time string
