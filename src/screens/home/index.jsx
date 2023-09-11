@@ -4,7 +4,7 @@ import Slider from "../../components/carousel/slider/index";
 import "../../components/carousel/slider/style.css";
 import Button from "../../components/category/button";
 import DraggableSlider from "../../components/draggableSlider";
-import { Footer } from "../../components/footer";
+import { Footer } from "../../components/footer/footerContent";
 import "./style.css";
 
 const Home = () => {

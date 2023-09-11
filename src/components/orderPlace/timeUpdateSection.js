@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import '../../screens/order/style.css'
 
-function CurrentDateTime() {
+
+const UpdateSection = () => {
   const [currentDateTime, setCurrentDateTime] = useState('');
 
   useEffect(() => {
@@ -35,12 +37,13 @@ function CurrentDateTime() {
     // Clear the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []);
-
   return (
-    <div>
-      <p className='current-time'>{currentDateTime}</p>
-    </div>
-  );
+          <div className='update-sec'>
+              <p id='text-for-arrival'>Estimated Arrival;</p>
+              <p className='current-time'>{currentDateTime}</p>
+              {/* <CurrentTime/> */}
+          </div>
+  )
 }
 
-export default CurrentDateTime;
+export default UpdateSection

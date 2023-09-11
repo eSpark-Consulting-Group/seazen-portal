@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../screens/order/style.css'
+import './style.css'
 
 
 

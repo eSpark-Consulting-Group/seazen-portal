@@ -2,6 +2,7 @@ import React from 'react'
 import '../../screens/order/style.css'
 
 function formatAddress(input) {
+  
   if (!input) {
     return ''; // Return an empty string if the input is undefined or empty
   }

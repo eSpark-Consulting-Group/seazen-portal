@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import './style.css'
-import ContactUs from '../../components/orderPlace/contact';
+import ContactUs from '../../components/contactButton/contact';
 import CloseButton from '../../components/orderPlace/closeButton';
 import HeaderSection from '../../components/orderPlace/headerSection';
-import UpdateSection from '../../components/orderPlace/updateSection';
+import UpdateSection from '../../components/orderPlace/timeUpdateSection';
 import AddressSection from '../../components/orderPlace/addressSection';
 import OrderIdSection from '../../components/orderPlace/orderIdSection';
-import FooterSection from '../../components/orderPlace/footerSection';
+import FooterSection from '../../components/footer/footerTextBox/footerSection';
 
 
 const OrderScreen = () => {

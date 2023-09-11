@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Navbar from "../../components/header";
 import Typography from "@mui/material/Typography";
 import { MuiOtpInput } from "mui-one-time-password-input";
-import { Footer } from "../../components/footer";
+import { Footer } from "../../components/footer/footerContent";
 import { paths } from "../../routes/paths";
 import InfoModal from "../../components/modal/InfoModal";
 
@@ -132,7 +132,7 @@ function PhoneNumberVerificationOTP() {
           </Button>
         </Stack>
 
-        <Footer showCommentOption={false} />
+        <Footer showFooterSection={false} />
       </Stack>
 
       <InfoModal
