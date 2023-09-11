@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { paths } from "../../routes/paths";
 import "./style.css";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef(null);
 
@@ -36,9 +39,14 @@ const Navbar = () => {
       <div className="element logo">
         <img src="/assets/img/Logo.png" alt="Logo" />
       </div>
-      <div className="element shopping">
+      <div
+        className="element shopping"
+        onClick={() => {
+          navigate(paths.cart);
+        }}
+      >
         <div className="shopping-icon">
-          <img src="/assets/img/Icon - Bag.png" alt="Shopping Icon" />
+          <img src="/assets/img/cart.svg" alt="Shopping Icon" />
         </div>
       </div>
       <div
