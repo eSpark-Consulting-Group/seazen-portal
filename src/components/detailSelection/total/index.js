@@ -1,6 +1,5 @@
-// PricingBox.js
 import React from "react";
-import { getFormattedPrice } from "../sizeSelection/index";
+import { getFormattedPrice } from "../sideSelection/index";
 
 export default function PricingBox({ total }) {
   return (

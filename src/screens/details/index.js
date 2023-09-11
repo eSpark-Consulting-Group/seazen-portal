@@ -9,14 +9,14 @@ import PricingBox from '../../components/detailSelection/total'
 
 export const Details = () => {
   return (
-    <div>
+    <div className="details-header">
     <DetailsHeader/>
-    <div className="detail"></div>
+    <div className="detail">
     <Content/>
     <CheckboxGroup/>
     <ToppingSelection/>
     <SideSelection/>
-    
+    </div>
     </div>
   )
 }

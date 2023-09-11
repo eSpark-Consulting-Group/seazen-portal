@@ -1,5 +1,5 @@
-.selection {
-  top: 452px;
+.size {
+  top: 160px;
   left: 12px;
   width: 351px;
   height: 40px;
@@ -9,7 +9,7 @@
   position: absolute;
 }
 
-.selection-title {
+.size-title {
   top: -8px;
   left: 13px;
   width: 110px;
@@ -21,7 +21,7 @@
   position: absolute;
 }
 
-.small-title {
+.size-small-title {
   top: 0px;
   left: 123px;
   width: 45px;
@@ -33,7 +33,7 @@
   position: absolute;
 }
 
-.title-required {
+.size-title-required {
   top: -5px;
   left: 274px;
   width: 63px;
@@ -46,8 +46,8 @@
   position: absolute;
 }
 
-.checkbox {
-  top: 506px;
+.checkbox-size {
+  top: 210px;
   left: 30px;
   width: 351px;
   height: 167px;
@@ -71,7 +71,7 @@ input[type="checkbox"]:checked {
   line-height: 12px;
 }
 
-.checkbox {
+.checkbox-size {
   border-radius: 4px;
   width: 300px;
   font-family: Arial, sans-serif;
@@ -132,7 +132,7 @@ input[type="checkbox"]:checked {
   position: absolute;
 }
 
-.left-section {
+.size-left-section {
   flex: 1;
   display: flex;
   align-items: center;
@@ -151,7 +151,7 @@ input[type="checkbox"] {
   margin-right: 8px;
 }
 
-.right-section {
+.size-right-section {
   font-weight: bold;
   font-size: 16px;
   text-align: right;
@@ -182,14 +182,13 @@ hr {
   transform: matrix(1, 0, 0, 1, 0, 0);
   border: 1px solid #ebeef0;
   opacity: 1;
+  margin-top: 10px;
 }
 
-.checkbox input[type="checkbox"] {
-  /* Increase the width and height of the checkbox */
+.checkbox-size input[type="checkbox"] {
   width: 20px; /* Adjust the size as needed */
   height: 20px; /* Adjust the size as needed */
 
-  /* You can also style the appearance of the checkbox */
   background-color: #fff; /* Background color of the checkbox */
   border: 2px solid #333; /* Border color and width */
   border-radius: 4px; /* Rounded corners */

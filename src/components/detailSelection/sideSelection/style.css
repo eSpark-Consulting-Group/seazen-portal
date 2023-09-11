@@ -1,4 +1,4 @@
-.side-selection {
+.side {
     left: 12px;
     width: 351px;
     height: 40px;
@@ -6,11 +6,11 @@
     border-radius: 16px;
     opacity: 1;
     position: absolute;
-    top: 839px;
+    top: 514px;
 
   }
   
-  .side-selection-title {
+  .side-title {
     top: -8px;
     left: 13px;
     width: 110px;
@@ -46,20 +46,20 @@
     position: absolute;
   }
   
-  .checkbox {
-    top: 506px;
-    left: 30px;
+  .side-check {
+    padding-top: 115px;
     width: 351px;
     height: 167px;
     opacity: 1;
-    position: absolute;
+    margin-left: 30px;
+
   }
   
   input[type="checkbox"] {
     accent-color: #2e9c6e;
   }
   
-  .checkbox label:before {
+  .side-check label:before {
     border-radius: 3px;
   }
   
@@ -71,7 +71,7 @@
     line-height: 12px;
   }
   
-  .checkbox {
+  .side-check {
     border-radius: 4px;
     width: 300px;
     font-family: Arial, sans-serif;
@@ -107,14 +107,14 @@
     letter-spacing: 0px;
     color: #ffffff;
     opacity: 1;
-    top: 716px;
-    left: 50px;
+    top: 892px;
+    left: 75px;
     position: absolute;
   }
   
   .pricing-icon {
-    top: 716px;
-    left: 7px;
+    top: 891px;
+    left: 37px;
     width: 24px;
     height: 24px;
     opacity: 1;
@@ -122,8 +122,8 @@
   }
   
   .calculation-section {
-    top: 716px;
-    left: 195px;
+    top: 893px;
+    left: 226px;
     width: 95px;
     height: 24px;
     text-align: right;
@@ -186,7 +186,7 @@
     opacity: 1;
   }
   
-  .checkbox input[type="checkbox"] {
+  .side-check input[type="checkbox"] {
     /* Increase the width and height of the checkbox */
     width: 20px; /* Adjust the size as needed */
     height: 20px; /* Adjust the size as needed */

@@ -36,3 +36,8 @@
   opacity: 1;
   position: absolute;
 }
+
+.information-style{
+position: absolute;
+top: -290px;
+}

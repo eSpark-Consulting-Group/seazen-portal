@@ -1,5 +1,5 @@
 .topping-selection {
-  top: 634px;
+  top: 331px;
   left: 12px;
   width: 351px;
   height: 40px;
@@ -47,8 +47,8 @@
 }
 
 .checkbox-counter {
-    top: 685px;
-    left: 13px;
+  top: 370px;
+  left: 13px;
   width: 351px;
   height: 167px;
   opacity: 1;
@@ -196,8 +196,8 @@ input[type="checkbox"]:checked {
 }
 
 input[type="checkbox"] {
-  margin-right: 8px;
-}
+   margin-right: 8px;
+} 
 
 .right-section-counter {
   font-weight: bold;
@@ -234,14 +234,12 @@ hr {
 }
 
 .checkbox-counter input[type="checkbox"] {
-  /* Increase the width and height of the checkbox */
-  width: 20px; /* Adjust the size as needed */
-  height: 20px; /* Adjust the size as needed */
+  width: 20px;
+  height: 20px; 
 
-  /* You can also style the appearance of the checkbox */
-  background-color: #fff; /* Background color of the checkbox */
-  border: 2px solid #333; /* Border color and width */
-  border-radius: 4px; /* Rounded corners */
+  background-color: #fff; 
+  border: 2px solid #333; 
+  border-radius: 4px; 
 }
 
 .disabled-text{

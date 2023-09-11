@@ -9,32 +9,31 @@ export default function ToppingSelection() {
     new Array(toppings.length).fill(false)
   );
 
-  const [counterState, setCounterState] = useState(
-    new Array(toppings.length).fill(0)
-  );
+  // Initialize the counterState as an object
+  const [counterState, setCounterState] = useState({});
 
   const [total, setTotal] = useState(0);
 
-  const handleIncrement = (position) => {
-    const updatedCounterState = [...counterState];
-    updatedCounterState[position] += 1;
+  const handleIncrement = (name) => {
+    const updatedCounterState = { ...counterState };
+    updatedCounterState[name] = (updatedCounterState[name] || 0) + 1;
     setCounterState(updatedCounterState);
     updateTotal(updatedCounterState);
   };
 
-  const handleDecrement = (position) => {
-    const updatedCounterState = [...counterState];
-    if (updatedCounterState[position] > 0) {
-      updatedCounterState[position] -= 1;
+  const handleDecrement = (name) => {
+    if (counterState[name] > 0) {
+      const updatedCounterState = { ...counterState };
+      updatedCounterState[name] -= 1;
       setCounterState(updatedCounterState);
       updateTotal(updatedCounterState);
     }
   };
 
   const updateTotal = (updatedCounterState) => {
-    const totalPrice = updatedCounterState.reduce((sum, count, index) => {
-      if (checkedState[index]) {
-        return sum + count * toppings[index].price;
+    const totalPrice = Object.keys(updatedCounterState).reduce((sum, name) => {
+      if (checkedState[toppings.findIndex((topping) => topping.name === name)]) {
+        return sum + updatedCounterState[name] * toppings.find((topping) => topping.name === name).price;
       }
       return sum;
     }, 0);
@@ -61,26 +60,31 @@ export default function ToppingSelection() {
       <div className="checkbox-counter">
         <ul className="toppings-list">
           {toppings.map(({ name, price }, index) => {
+            const adjustedIndex = index + 2000;
             const isLastItem = index === toppings.length - 1;
 
             return (
-              <li key={index}>
+              <li key={adjustedIndex}>
                 <div className="toppings-list-item">
                   <div className="right-section-counter">
                     <input
                       type="checkbox"
-                      id={`custom-checkbox-${index}`}
+                      id={`custom-checkbox-${adjustedIndex}`} // Use the adjusted index here
                       name={name}
                       value={name}
-                      checked={checkedState[index]}
-                      onChange={() => handleOnChange(index)}
+                      checked={checkedState[adjustedIndex]} // Use the adjusted index here
+                      onChange={() => handleOnChange(adjustedIndex)} // Use the adjusted index here
                       className="large-checkbox"
                       disabled={isLastItem}
                     />
-                    <span className={`custom-checkbox ${isLastItem ? "disabled" : ""}`}></span>
+                    <span
+                      className={`custom-checkbox ${isLastItem ? "disabled" : ""}`}
+                    ></span>
                     <label
-                      htmlFor={`custom-checkbox-${index}`}
-                      className={`large-checkbox ${isLastItem ? "disabled-text" : ""}`}
+                      htmlFor={`custom-checkbox-${adjustedIndex}`} // Use the adjusted index here
+                      className={`large-checkbox ${
+                        isLastItem ? "disabled-text" : ""
+                      }`}
                     >
                       {name}
                     </label>
@@ -88,14 +92,16 @@ export default function ToppingSelection() {
                   {!isLastItem && (
                     <div className="left-section-counter">
                       <button
-                        onClick={() => handleDecrement(index)}
+                        onClick={() => handleDecrement(name)} // Use the topping name here
                         className="counter-button-right"
                       >
                         <span className="counter-icon-left">-</span>
                       </button>
-                      <span className="counter-value">{counterState[index]}</span>
+                      <span className="counter-value">
+                        {counterState[name] || 0}
+                      </span>
                       <button
-                        onClick={() => handleIncrement(index)}
+                        onClick={() => handleIncrement(name)} // Use the topping name here
                         className="counter-button-left"
                       >
                         <span className="counter-icon-right">+</span>
@@ -108,8 +114,8 @@ export default function ToppingSelection() {
             );
           })}
         </ul>
+        
       </div>
-      
     </div>
   );
 }
