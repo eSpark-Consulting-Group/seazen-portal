@@ -14,12 +14,12 @@ const MenuCardListConatiner = () => {
       <div className="menu_card_list_inner_container">
         <div
           className={`card_list_title_search_container ${
-            isSearchOpen ? "expanded" : ""
+            isSearchOpen ? "expanded_container" : ""
           }`}
         >
           <div className="card_list_title">Burrito in a Bowl</div>
-          <div className={`search_container ${isSearchOpen ? "expanded" : ""}`}>
-            <div className={`search_wrapper ${isSearchOpen ? "expanded" : ""}`}>
+          <div className={`search_container ${isSearchOpen ? "expanded_container" : ""}`}>
+            <div className={`search_wrapper ${isSearchOpen ? "expanded_container" : ""}`}>
               <img
                 src="/assets/img/Icon - Search.svg"
                 alt="search_icon"
@@ -29,7 +29,7 @@ const MenuCardListConatiner = () => {
               <input
                 type="text"
                 placeholder="Search"
-                className={`search_bar ${isSearchOpen ? "expanded" : ""}`}
+                className={`search_bar ${isSearchOpen ? "expanded_container" : ""}`}
               />
             </div>
           </div>

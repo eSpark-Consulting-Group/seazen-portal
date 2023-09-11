@@ -9,7 +9,7 @@ const TabsDynamicConditionalCoponent = () => {
 
     const [tabPosition, setTabPosition] = useState("dinein");
     const [locationDeliver, setLocationDeliver] = useState(false);
-    const [deliveryAvailable, setDeliveryAvailable] = useState(false);
+    const [deliveryAvailable, setDeliveryAvailable] = useState(true);
 
         switch(tabPosition) {
             case "dinein":
