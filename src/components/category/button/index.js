@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./style.css";
-
+import BasicCard from "../../cards/index";
 
 const CustomButton = ({
   iconSrc,
@@ -41,21 +41,19 @@ const CustomButton = ({
   );
 };
 
-const Button = () => {
-  const [expandedButton, setExpandedButton] = useState(null);
-  const [cateringClicked, setCateringClicked] = useState(false);
-  
 
+const Button = () => {
+  const [clickedButtonIndex, setClickedButtonIndex] = useState(null);
 
   const toggleButton = (index) => {
-    if (index === expandedButton) {
-      setExpandedButton(null);
+    if (index === clickedButtonIndex) {
+      // If the same button is clicked again, remove the border
+      setClickedButtonIndex(null);
     } else {
-      setExpandedButton(index);
+      // If a different button is clicked, set the border for that button
+      setClickedButtonIndex(index);
     }
   };
-
-
 
   return (
     <>
@@ -66,7 +64,7 @@ const Button = () => {
         <CustomButton
           iconSrc="/assets/img/Dinein.svg"
           text="Dine In"
-          expanded={expandedButton === 0}
+          expanded={clickedButtonIndex === 0}
           toggleExpanded={() => toggleButton(0)}
           buttonOneText="Dine In Locations"
           buttonTwoText="Near Me"
@@ -75,28 +73,31 @@ const Button = () => {
         <CustomButton
           iconSrc="/assets/img/Catering.svg"
           text="Catering"
-          onClick={() => setCateringClicked(!cateringClicked)}
-          clicked={cateringClicked} // Pass the cateringClicked state as a prop
+          onClick={() => toggleButton(1)}
+          clicked={clickedButtonIndex === 1}
+          
         />
 
         <CustomButton
           iconSrc="/assets/img/Delivery.svg"
           text="Delivery"
-          expanded={expandedButton === 2}
+          expanded={clickedButtonIndex === 2}
           toggleExpanded={() => toggleButton(2)}
-          buttonOneText="Available to delivery"
-          buttonTwoText="Delivers to me"
+          buttonOneText="Available for Delivery"
+          buttonTwoText="Delivers to Me"
         />
 
         <CustomButton
           iconSrc="/assets/img/Pickup.svg"
           text="Pickup"
-          expanded={expandedButton === 3}
+          expanded={clickedButtonIndex === 3}
           toggleExpanded={() => toggleButton(3)}
-          buttonOneText="Available to Pickup"
+          buttonOneText="Available for Pickup"
           buttonTwoText="Near Me"
         />
       </div>
+      {/* Pass the clickedButtonIndex to BasicCard */}
+      <BasicCard clickedButtonIndex={clickedButtonIndex} />
     </>
   );
 };

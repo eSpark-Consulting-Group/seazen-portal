@@ -1,7 +1,6 @@
 import React from "react";
 import Navbar from "../../components/header/index";
 import Slider from "../../components/carousel/slider/index";
-import BasicCard from "../../components/cards";
 import "../../components/carousel/slider/style.css";
 import Button from "../../components/category/button";
 import DraggableSlider from "../../components/draggableSlider";
@@ -16,7 +15,7 @@ const Home = () => {
         <Slider />
       </div>
       <Button />
-      <BasicCard />
+      {/* <BasicCard /> */}
       <DraggableSlider />
       <Footer />
     </div>
