@@ -6,7 +6,7 @@ const ContactButton = ({color,text,icon_image,handleclick}) => {
             className="contact_button"
             onClick={handleclick}
             style={{backgroundColor: color}}>
-            <span><img src={icon_image} alt="icon_image" /></span>
+            <span className="contact_button_span"><img src={icon_image} alt="iconimage" /></span>
             {text}
         </button>);
 }

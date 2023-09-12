@@ -1,104 +1,108 @@
-.Title {
+
+
+.restaurant-title{
   text-align: left;
   font: normal normal 600 18px/24px Titillium Web;
   letter-spacing: 0.36px;
-  color: #1f2933;
+  color: #1F2933;
   opacity: 1;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  
 }
 
-.app {
-  display: flex;
-  justify-content: space-between;
+.orderType-button-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .custom-button {
+    display: flex;
+    align-items: center;
+    /* margin-right: 10px ; */
+    color: white;
+    cursor: pointer;
+    /* height: 36px; */
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 24px 48px #314F7C14;
+    border: 1px solid #EBEEF0;
+    border-radius: 16px;
+    opacity: 1;
+    justify-content: center;
+    cursor: pointer;
+    transform: scale(1.05); 
+    transition: all 0.3s;
+    }
+  
+
+  
+  .button-text {
+    font: normal normal bold 9px/7px Titillium Web;
+    letter-spacing: 0.18px;
+    color: #323F4B;
+    opacity: 1;
+    font-size: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .basic-card.expanded {
+    /* Add border styles when expanded */
+    border: 2px solid #000; /* You can adjust the border styles as needed */
+  }
+  
+  
+  .button-icon {
+    width: 24px; 
+    height: 24px; 
+    padding: 1px;
+    }
+
+  .custom-button.expanded {
+    border: 1px solid #758B9A;
+    font: normal normal bold 9px/7px Titillium Web;
+    letter-spacing: 0.18px;
+    color: #323F4B;
+    opacity: 1;
+    font-size: 9px;
+    padding: 1px;
+  }
+
+.button-style-one{
+  background: #93694F 0% 0% no-repeat padding-box;
+box-shadow: 0px 24px 48px #314F7C14;
+border: 1px solid #EBEEF0;
+border-radius: 16px;
+opacity: 1;
+text-align: center;
+font: normal normal 600 7px/6px Titillium Web;
+letter-spacing: 0.14px;
+color: #FFFFFF;
+opacity: 1;
+width: 83px;
+height: 16px;
 }
 
-.custom-button {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
-  color: white;
-  cursor: pointer;
-  height: 36px;
-  background: #ffffff 0% 0% no-repeat padding-box;
-  box-shadow: 0px 24px 48px #314f7c14;
-  border: 1px solid #ebeef0;
-  border-radius: 16px;
-  opacity: 1;
-  justify-content: center;
-  cursor: pointer;
-  transform: scale(1.05);
-  transition: all 0.3s;
-}
-
-.button-text {
-  font: normal normal bold 9px/7px Titillium Web;
-  letter-spacing: 0.18px;
-  color: #323f4b;
-  opacity: 1;
-  font-size: 8px;
-}
-
-.basic-card.expanded {
-  /* Add border styles when expanded */
-  border: 2px solid #000; /* You can adjust the border styles as needed */
-}
-
-.custom-button:hover {
-  transform: scale(1.1);
-}
-
-.button-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
-}
-
-.custom-button.expanded {
-  border: 1px solid #758b9a;
-  font: normal normal bold 9px/7px Titillium Web;
-  letter-spacing: 0.18px;
-  color: #323f4b;
-  opacity: 1;
-  font-size: 9px;
-}
-
-.button-style-one {
-  background: #93694f 0% 0% no-repeat padding-box;
-  box-shadow: 0px 24px 48px #314f7c14;
-  border: 1px solid #ebeef0;
-  border-radius: 16px;
-  opacity: 1;
-  text-align: center;
-  font: normal normal 600 7px/6px Titillium Web;
-  letter-spacing: 0.14px;
-  color: #ffffff;
-  opacity: 1;
-  width: 83px;
-  height: 16px;
-}
-
-.button-style-two {
-  background: #4f948a 0% 0% no-repeat padding-box;
-  box-shadow: 0px 24px 48px #314f7c14;
-  border: 1px solid #4f948a;
-  border-radius: 16px;
-  opacity: 1;
-  width: 62px;
-  height: 16px;
-  text-align: center;
-  font: normal normal 600 7px/6px Titillium Web;
-  letter-spacing: 0.14px;
-  color: #ffffff;
-  opacity: 1;
+.button-style-two{
+  background: #4F948A 0% 0% no-repeat padding-box;
+box-shadow: 0px 24px 48px #314F7C14;
+border: 1px solid #4F948A;
+border-radius: 16px;
+opacity: 1;
+width: 62px;
+height: 16px;
+text-align: center;
+font: normal normal 600 7px/6px Titillium Web;
+letter-spacing: 0.14px;
+color: #FFFFFF;
+opacity: 1;
 }
 
 .custom-button.clicked {
-  background: #93694f 0% 0% no-repeat padding-box;
+  background: #93694F 0% 0% no-repeat padding-box;
+  
 }
 
-.button-text.clicked {
-  color: white;
+.button-text.clicked{
+  color: white; 
 }
 
 .options {
@@ -111,3 +115,12 @@
   padding: 5px;
   background-color: #f0f0f0;
 }
+
+
+
+
+
+
+
+
+

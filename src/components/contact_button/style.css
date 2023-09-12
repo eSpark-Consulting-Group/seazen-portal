@@ -13,3 +13,7 @@
     font-weight: 700;
     border-radius: 14px;
 }
+
+.contact_button_span img{
+    padding-top: 3px;
+}
