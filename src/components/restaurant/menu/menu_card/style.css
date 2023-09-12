@@ -1,5 +1,4 @@
 .menu_card_outer_container {
-  width: 326px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,5 +88,4 @@
 
 .menu_card_add_to_cart_button img {
   width: 14px;
-  padding-bottom: 2px;
 }
