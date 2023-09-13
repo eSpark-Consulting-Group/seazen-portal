@@ -18,6 +18,12 @@ body {
   width: 200px;    
 }
 
+.box-image{
+  border-radius: 16px;
+  box-shadow: 0px 3px 6px #314F7C29;
+
+}
+
 .items {
   position: relative;
   overflow-x: scroll;
@@ -52,7 +58,7 @@ body {
   height: 172px;
   margin-top: -60px;
   margin-left: 10px;
-  box-shadow: 0px 16px 48px #314f7c29;
+  box-shadow: 0px 16px 15px #314f7c29;
 }
 
 .box-text {
