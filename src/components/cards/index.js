@@ -7,6 +7,8 @@ import deliveryIcon from "./delivery-icon.svg";
 import pickupIcon from "./pickup-icon.svg";
 import cateringIcon from "./catering-icon.svg";
 import dineInIcon from "./dinein-icon.svg";
+import { useNavigate } from "react-router";
+import { paths } from "../../routes/paths";
 
 const bull = (
   <Box
@@ -17,9 +19,10 @@ const bull = (
   </Box>
 );
 
-const icons = [deliveryIcon, pickupIcon, cateringIcon, dineInIcon ];
+const icons = [deliveryIcon, pickupIcon, cateringIcon, dineInIcon];
 
 const BasicCard = ({ clickedButtonIndex }) => {
+  const navigate = useNavigate();
   const captions = [
     icons,
     icons.slice(0, 3),
@@ -29,11 +32,15 @@ const BasicCard = ({ clickedButtonIndex }) => {
     icons.slice(1),
   ];
 
+  // const handleRestaurantClick = () => {
+  //   navigate(paths.menu)
+  // };
+
   const getCardClassName = (index) => {
     if (index >= 0 && index <= 5) {
       return clickedButtonIndex !== null ? "restaurantCard-with-border" : "restaurantCard-no-border";
     } else {
-      return "restaurantCard-with-border";
+      return "restaurantCard-no-border";
     }
   };
 
@@ -45,7 +52,7 @@ const BasicCard = ({ clickedButtonIndex }) => {
     <div className="restaurantCard-container">
       {[0, 1, 2, 3, 4, 5].map((index) => (
         <div key={index} className={`restaurantCards ${getCardClassName(index)}`}>
-          <Card sx={{ width: 164, borderRadius: 1 }} className="restaurantCards">
+          <Card sx={{ width: 164, borderRadius: 1 }} className="restaurantCards" onClick={() => navigate(paths.menu)}>
             <img
               className="restaurantCard-img"
               src={`/assets/img/${15 + index * 2}.png`}
