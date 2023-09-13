@@ -31,7 +31,9 @@ const Navbar = () => {
 
   return (
     <nav className={`header ${isSearchOpen ? "search-expanded" : ""}`}>
-      <div className="element account">
+      <div className="element account" onClick={() => {
+        navigate(paths.profile);
+      }}>
         <div className="account-icon">
           <img src="/assets/img/account.svg" alt="Account Icon" />
         </div>

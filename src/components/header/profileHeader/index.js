@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./style.css";
+import { useNavigate } from "react-router";
 
 const ProfileHeader = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isCountryPopupOpen, setIsCountryPopupOpen] = useState(false);
+  const navigate = useNavigate();
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -27,7 +29,7 @@ const ProfileHeader = () => {
 
   return (
     <nav>
-      <div className="profileHeaderaccount">
+      <div className="profileHeaderaccount" onClick={() => navigate(-1)}>
         <div className="profileHeaderaccount-icon">
           <img src="/assets/img/Group 330.svg" alt="Account Icon" />
         </div>
