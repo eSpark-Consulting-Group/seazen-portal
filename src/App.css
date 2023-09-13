@@ -11,12 +11,10 @@
 .design-section {
   flex: 1;
   color: #fff;
-  height: 941px;
   overflow: auto; 
   overflow-y: scroll; 
   overflow-x: hidden; 
   background: #FFFFFF 0% 0% no-repeat padding-box;
-  
 }
 
 .design-section::-webkit-scrollbar {
