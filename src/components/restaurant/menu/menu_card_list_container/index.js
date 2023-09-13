@@ -9,6 +9,12 @@ const MenuCardListConatiner = () => {
     setIsSearchOpen(!isSearchOpen);
   };
 
+  const foodItem = "Burrito Vegetarian in a Bowl (450 g)";
+  const foodIngredients = "rice, plate peppers, onion, red beans, …";
+  const foodCurrency = "KWD";
+  const foodPrice = 6.99;
+  const foodImage = "./assets/img/menu_card_image.png";
+
   return (
     <div className="menu_card_list_outer_container">
       <div className="menu_card_list_inner_container">
@@ -19,7 +25,11 @@ const MenuCardListConatiner = () => {
         >
           <div className="card_list_title">Burrito in a Bowl</div>
           <div className={`search ${isSearchOpen ? "expanded_search" : ""}`}>
-            <div className={`searchwrapper ${isSearchOpen ? "expanded_search" : ""}`}>
+            <div
+              className={`searchwrapper ${
+                isSearchOpen ? "expanded_search" : ""
+              }`}
+            >
               <img
                 src="/assets/img/Icon - Search.svg"
                 alt="search_icon"
@@ -34,9 +44,27 @@ const MenuCardListConatiner = () => {
             </div>
           </div>
         </div>
-        <MenuCard />
-        <MenuCard />
-        <MenuCard />
+        <MenuCard
+          foodItem={foodItem}
+          foodIngredients={foodIngredients}
+          foodCurrency={foodCurrency}
+          foodPrice={foodPrice}
+          foodImage={foodImage}
+        />
+        <MenuCard
+          foodItem={foodItem}
+          foodIngredients={foodIngredients}
+          foodCurrency={foodCurrency}
+          foodPrice={foodPrice}
+          foodImage={foodImage}
+        />
+        <MenuCard
+          foodItem={foodItem}
+          foodIngredients={foodIngredients}
+          foodCurrency={foodCurrency}
+          foodPrice={foodPrice}
+          foodImage={foodImage}
+        />
         <div className="comment_button_container">
           <button>
             <img src=".\assets\img\comment_icon.svg" alt="comment_icon" />
