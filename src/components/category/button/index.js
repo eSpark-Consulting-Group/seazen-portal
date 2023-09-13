@@ -31,13 +31,13 @@ const OrderTypeButtonExpandable = ({
         }`}
       onClick={handleClick}
     >
-      <img src={iconSrc} alt="Icon" className="button-icon" />
-      {((isButtonExpanded.expanded && isButtonExpanded.id === id) || !isButtonExpanded.expanded) && <span className={`button-text`}>{text}</span>}
-      <span className="button-content">
+      <img src={iconSrc} alt="Icon" className="orderTypebutton-icon" />
+      {((isButtonExpanded.expanded && isButtonExpanded.id === id) || !isButtonExpanded.expanded) && <span className={`orderTypebutton-text`}>{text}</span>}
+      <span className="orderTypebutton-content">
         {(isButtonExpanded.expanded && isButtonExpanded.id === id) && (
           <div className="options">
-            <button className="button-style-one">{buttonOneText}</button>
-            <button className="button-style-two">{buttonTwoText}</button>
+            <button className="orderTypebutton-style-one">{buttonOneText}</button>
+            <button className="orderTypebutton-style-two">{buttonTwoText}</button>
           </div>
         )}
       </span>
@@ -46,7 +46,7 @@ const OrderTypeButtonExpandable = ({
 };
 
 
-const Button = () => {
+const RestaurantsOrderTypeButton = () => {
   const [clickedButtonIndex, setClickedButtonIndex] = useState(null);
   const [isButtonExpanded, setIsButtonExpanded] = useState({ expanded: false, id: null });
 
@@ -117,4 +117,4 @@ const Button = () => {
   );
 };
 
-export default Button;
+export default RestaurantsOrderTypeButton;

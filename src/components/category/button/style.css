@@ -12,6 +12,7 @@
 .orderType-button-container {
     display: flex;
     justify-content: space-between;
+    margin-top: 10px;
   }
   
   .custom-button {
@@ -28,13 +29,13 @@
     opacity: 1;
     justify-content: center;
     cursor: pointer;
-    transform: scale(1.05); 
+    transform: scale(0.98); 
     transition: all 0.3s;
     }
   
 
   
-  .button-text {
+  .orderTypebutton-text {
     font: normal normal bold 9px/7px Titillium Web;
     letter-spacing: 0.18px;
     color: #323F4B;
@@ -47,10 +48,11 @@
   .basic-card.expanded {
     /* Add border styles when expanded */
     border: 2px solid #000; /* You can adjust the border styles as needed */
+
   }
   
   
-  .button-icon {
+  .orderTypebutton-icon {
     width: 24px; 
     height: 24px; 
     padding: 1px;
@@ -66,8 +68,8 @@
     padding: 1px;
   }
 
-.button-style-one{
-  background: #93694F 0% 0% no-repeat padding-box;
+.orderTypebutton-style-one{
+background: #93694F 0% 0% no-repeat padding-box;
 box-shadow: 0px 24px 48px #314F7C14;
 border: 1px solid #EBEEF0;
 border-radius: 16px;
@@ -81,7 +83,7 @@ width: 83px;
 height: 16px;
 }
 
-.button-style-two{
+.orderTypebutton-style-two{
   background: #4F948A 0% 0% no-repeat padding-box;
 box-shadow: 0px 24px 48px #314F7C14;
 border: 1px solid #4F948A;
@@ -101,7 +103,7 @@ opacity: 1;
   
 }
 
-.button-text.clicked{
+.orderTypebutton-text.clicked{
   color: white; 
 }
 

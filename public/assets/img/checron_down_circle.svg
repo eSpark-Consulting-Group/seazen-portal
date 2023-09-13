@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="58.617" height="58.617" viewBox="0 0 58.617 58.617">
+  <defs>
+    <filter id="Bg" x="0" y="0" width="58.617" height="58.617" filterUnits="userSpaceOnUse">
+      <feOffset dy="4" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feFlood flood-color="#748694" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <clipPath id="clip-path">
+      <rect id="Icon_-_Chevron_Background_Mask_" data-name="Icon - Chevron (Background/Mask)" width="7.963" height="7.963" transform="translate(7.963 0) rotate(90)" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="checron_down_circle" transform="translate(34.617 19.5) rotate(90)">
+    <g transform="matrix(0, -1, 1, 0, -19.5, 34.62)" filter="url(#Bg)">
+      <rect id="Bg-2" data-name="Bg" width="10.617" height="10.617" rx="5.309" transform="translate(34.62 20) rotate(90)" fill="#026754"/>
+    </g>
+    <g id="Icon_-_Chevron" data-name="Icon - Chevron" transform="translate(1.827 1.327)">
+      <g id="Icon_-_Chevron-2" data-name="Icon - Chevron" transform="translate(0 7.963) rotate(-90)" clip-path="url(#clip-path)">
+        <path id="Vector" d="M.1.566,1.853,2.323.1,4.079a.332.332,0,0,0,.469.469L2.557,2.557a.332.332,0,0,0,0-.469L.566.1A.332.332,0,0,0,.1.566Z" transform="translate(6.304 2.654) rotate(90)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>
