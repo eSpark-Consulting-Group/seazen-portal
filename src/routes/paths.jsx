@@ -1,6 +1,7 @@
 import React from "react";
 import Home from "../screens/home";
 import CartPage from "../screens/cart";
+import LocationPage from "../screens/location";
 import PhoneNumberVerificationIndex from "../screens/phone-verfication/PhoneNumberVerificationIndex";
 import PhoneNumberVerificationOTP from "../screens/phone-verfication/PhoneNumberVerificationOTP";
 
@@ -8,6 +9,7 @@ export const paths = {
   home: "/",
   error: "*",
   cart: "cart",
+  location: "/location",
   phone_verification_index: "phone-verification",
   phone_verification_otp: "/phone-verification/otp",
 };
@@ -16,6 +18,7 @@ export const routes = {
   home: "/",
   error: "*",
   cart: "/cart",
+  location: "/location",
   phone_verification_index: "/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
 };
@@ -30,6 +33,11 @@ export const publicRoutes = {
     name: "Cart",
     path: routes.cart,
     component: <CartPage />,
+  },
+  [paths.location]: {
+    name: "location",
+    path: routes.location,
+    component: <LocationPage />,
   },
   [paths.phone_verification_index]: {
     name: "Phone Verification Index",

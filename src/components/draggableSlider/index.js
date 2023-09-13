@@ -1,4 +1,8 @@
 import React, { useEffect, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import getAllPopularItems, {
+  GET_ALL_POPULAR_ITEMS_QUERY_KEY,
+} from "../../api/home/getAllPopularItems";
 import "./style.css";
 
 export default function App() {
@@ -24,9 +28,15 @@ export default function App() {
       additionalText: "KWD",
       inlineText: "6.450",
     },
-    
   ];
-  
+
+  const { data: poularDishes, isLoading, error, isError } = useQuery({
+    queryKey: [GET_ALL_POPULAR_ITEMS_QUERY_KEY],
+    queryFn: () => getAllPopularItems(),
+    onSuccess: (data) => {
+      console.log("data", data);
+    }
+  });
 
   return (
     <div className="App">
@@ -34,24 +44,24 @@ export default function App() {
         <h3>Popular Dishes</h3>
       </div>
       <CustomCarousel imageInfo={imageInfo}>
-  {imageInfo.map((info, index) => {
-    return (
-      <Box
-        key={index}
-        index={index} // Pass the index prop here
-        imageUrl={info.imageUrl}
-        caption={info.caption}
-        captionImage={info.captionImage}
-        additionalText={info.additionalText}
-        inlineText={info.inlineText}
-        isFirstCard={index === 0}
-      />
-    );
-  })}
-</CustomCarousel>
+        {imageInfo.map((info, index) => {
+          return (
+            <Box
+              key={index}
+              index={index} // Pass the index prop here
+              imageUrl={info.imageUrl}
+              caption={info.caption}
+              captionImage={info.captionImage}
+              additionalText={info.additionalText}
+              inlineText={info.inlineText}
+              isFirstCard={index === 0}
+            />
+          );
+        })}
+      </CustomCarousel>
     </div>
   );
-  }
+}
 
 function CustomCarousel(props) {
   const slider = useRef(null);
@@ -113,17 +123,32 @@ function CustomCarousel(props) {
   );
 }
 
-function Box({ index, imageUrl, caption, captionImage, additionalText, inlineText, isFirstCard }) {
-  const captionLines = caption.split('\n');
-  const captionImageClass = isFirstCard ? 'first-card-caption-image' : (index === 2 ? 'third-card-caption-image' : '');
-  const additionalTextClass = isFirstCard ? 'first-card-additional-text' : '';
-
+function Box({
+  index,
+  imageUrl,
+  caption,
+  captionImage,
+  additionalText,
+  inlineText,
+  isFirstCard,
+}) {
+  const captionLines = caption.split("\n");
+  const captionImageClass = isFirstCard
+    ? "first-card-caption-image"
+    : index === 2
+    ? "third-card-caption-image"
+    : "";
+  const additionalTextClass = isFirstCard ? "first-card-additional-text" : "";
 
   return (
     <div className="box">
       <img src={imageUrl} alt="Image" className="box-image" />
       <div className="box-caption">
-        <img src={captionImage} alt="Caption Image" className={`caption-image ${captionImageClass}`} />
+        <img
+          src={captionImage}
+          alt="Caption Image"
+          className={`caption-image ${captionImageClass}`}
+        />
         <div className="box-text">
           {captionLines.map((line, index) => (
             <React.Fragment key={index}>
@@ -133,17 +158,10 @@ function Box({ index, imageUrl, caption, captionImage, additionalText, inlineTex
           ))}
         </div>
         <div className="text-style">
-          <p className={additionalTextClass}>
-            {additionalText}
-          </p>
+          <p className={additionalTextClass}>{additionalText}</p>
         </div>
         <div className="inline-text">{inlineText}</div>
       </div>
     </div>
   );
 }
-
-
-
-
-

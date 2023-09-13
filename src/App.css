@@ -11,8 +11,8 @@
 .design-section {
   flex: 1;
   color: #fff;
-  max-width: 375px;
-  height: 941px;
+  min-width: 375px;
+  max-width: 768px;
   overflow: auto; 
   overflow-y: scroll; 
   overflow-x: hidden; 
