@@ -7,7 +7,7 @@ function App() {
       <div className="design-section">
           <RouteProvider />
       </div>
-      <div className="content-section"></div>
+      <div className="content-section d-none"></div>
     </div>
   );
 }
