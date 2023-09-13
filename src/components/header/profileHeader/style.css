@@ -31,6 +31,8 @@
   padding: 7px;
   opacity: 1;
   position: absolute;
+  border: 1px solid #C0CDD7;
+
 }
 
 .profileHeaderaccount-icon {
@@ -72,6 +74,7 @@
   padding: 8px;
   margin-left: -15px;
   position: absolute;
+  border: 1px solid #C0CDD7;
 }
 
 .profileHeaderoption-icon {
