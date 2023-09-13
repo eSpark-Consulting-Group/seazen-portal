@@ -121,7 +121,7 @@ function Box({ index, imageUrl, caption, captionImage, additionalText, inlineTex
 
   return (
     <div className="box">
-      <img src={imageUrl} alt="Image" className="box-image" />
+      <img className="box-image" src={imageUrl} alt="Image"  />
       <div className="box-caption">
         <img src={captionImage} alt="Caption Image" className={`caption-image ${captionImageClass}`} />
         <div className="box-text">

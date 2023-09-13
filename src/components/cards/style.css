@@ -8,7 +8,7 @@
   
 }
 .card-with-border {
-  border: 2px solid #93674E;
+  border: 2px solid #93674e;
   border-radius: 12px; /* You can adjust the border color and width */
 }
 
@@ -27,7 +27,6 @@
   height: 100%;
   object-fit: cover;
   margin-bottom: -8px;
-
 }
 
 .cards:hover {
@@ -37,35 +36,20 @@
 }
 
 .svg-container {
-  
-  
-position: relative; 
-
-
+  position: relative;
 }
 
-
-
-
-.icon-row{
+.icon-row {
   margin-bottom: -11px;
   opacity: 1;
-  
-
 }
 
-.inner-svg-container{
+.inner-svg-container {
   position: absolute;
   top: -75px;
   left: 154px;
-    
-    
 }
 
-.collapsed{
+.collapsed {
   display: none;
 }
-
-
- 
-
