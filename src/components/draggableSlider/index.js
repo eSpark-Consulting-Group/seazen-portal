@@ -142,7 +142,7 @@ function Box({
 
   return (
     <div className="box">
-      <img src={imageUrl} alt="Image" className="box-image" />
+      <img className="box-image" src={imageUrl} alt="Image"  />
       <div className="box-caption">
         <img
           src={captionImage}

@@ -1,6 +1,6 @@
 
 
-.Title{
+.restaurant-title{
   text-align: left;
   font: normal normal 600 18px/24px Titillium Web;
   letter-spacing: 0.36px;
@@ -9,19 +9,19 @@
   
 }
 
-.app {
+.orderType-button-container {
     display: flex;
     justify-content: space-between;
-
+    margin-top: 10px;
   }
   
   .custom-button {
     display: flex;
     align-items: center;
-    margin-right: 10px ;
+    /* margin-right: 10px ; */
     color: white;
     cursor: pointer;
-    height: 36px;
+    /* height: 36px; */
     background: #FFFFFF 0% 0% no-repeat padding-box;
     box-shadow: 0px 24px 48px #314F7C14;
     border: 1px solid #EBEEF0;
@@ -29,35 +29,34 @@
     opacity: 1;
     justify-content: center;
     cursor: pointer;
-    transform: scale(1.05); 
+    transform: scale(0.98); 
     transition: all 0.3s;
     }
   
 
   
-  .button-text {
+  .orderTypebutton-text {
     font: normal normal bold 9px/7px Titillium Web;
     letter-spacing: 0.18px;
     color: #323F4B;
     opacity: 1;
     font-size: 8px;
-
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   .basic-card.expanded {
     /* Add border styles when expanded */
     border: 2px solid #000; /* You can adjust the border styles as needed */
+
   }
   
-  .custom-button:hover {
-    transform: scale(1.1); 
-  }
   
-  .button-icon {
+  .orderTypebutton-icon {
     width: 24px; 
     height: 24px; 
-    margin-right: 8px; 
-  }
+    padding: 1px;
+    }
 
   .custom-button.expanded {
     border: 1px solid #758B9A;
@@ -66,13 +65,11 @@
     color: #323F4B;
     opacity: 1;
     font-size: 9px;
+    padding: 1px;
   }
 
-
-  
-
-.button-style-one{
-  background: #93694F 0% 0% no-repeat padding-box;
+.orderTypebutton-style-one{
+background: #93694F 0% 0% no-repeat padding-box;
 box-shadow: 0px 24px 48px #314F7C14;
 border: 1px solid #EBEEF0;
 border-radius: 16px;
@@ -86,7 +83,7 @@ width: 83px;
 height: 16px;
 }
 
-.button-style-two{
+.orderTypebutton-style-two{
   background: #4F948A 0% 0% no-repeat padding-box;
 box-shadow: 0px 24px 48px #314F7C14;
 border: 1px solid #4F948A;
@@ -106,7 +103,7 @@ opacity: 1;
   
 }
 
-.button-text.clicked{
+.orderTypebutton-text.clicked{
   color: white; 
 }
 

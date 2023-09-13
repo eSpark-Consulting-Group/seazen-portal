@@ -1,10 +1,10 @@
 import React from "react";
 import Navbar from "../../components/header/index";
 import Slider from "../../components/carousel/slider/index";
-import "../../components/carousel/slider/style.css";
-import Button from "../../components/category/button";
 import DraggableSlider from "../../components/draggableSlider";
 import { Footer } from "../../components/footer";
+import RestaurantsOrderTypeButton from "../../components/category/button";
+import "../../components/carousel/slider/style.css";
 import "./style.css";
 
 const Home = () => {
@@ -14,7 +14,8 @@ const Home = () => {
       <div className="card-spacing">
         <Slider />
       </div>
-      <Button />
+      <RestaurantsOrderTypeButton />
+      {/* <BasicCard /> */}
       <DraggableSlider />
       <Footer />
     </div>
