@@ -4,6 +4,7 @@ import Menu from "../screens/menu";
 import CartPage from "../screens/cart";
 import PhoneNumberVerificationIndex from "../screens/phone-verfication/PhoneNumberVerificationIndex";
 import PhoneNumberVerificationOTP from "../screens/phone-verfication/PhoneNumberVerificationOTP";
+import { Profile } from "../screens/profile";
 
 export const paths = {
   home: "/",
@@ -12,6 +13,7 @@ export const paths = {
   cart: "cart",
   phone_verification_index: "phone-verification",
   phone_verification_otp: "/phone-verification/otp",
+  profile: "profile",
 };
 
 export const routes = {
@@ -21,6 +23,7 @@ export const routes = {
   cart: "cart",
   phone_verification_index: "/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
+  profile: "profile",
 };
 
 export const publicRoutes = {
@@ -48,6 +51,11 @@ export const publicRoutes = {
     name: "Phone Verification OTP",
     path: routes.phone_verification_otp,
     component: <PhoneNumberVerificationOTP />,
+  },
+  [paths.profile]: {
+    name: "Profile",
+    path: routes.profile,
+    component: <Profile />,
   },
 };
 
