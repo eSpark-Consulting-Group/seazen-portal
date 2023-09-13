@@ -24,7 +24,7 @@
   display: none;
 }
 
-.content-section {
+.content-section{
   flex: 2;
   padding: 20px;
   background-image: url('/public/assets/img/images.jpeg');
@@ -37,4 +37,10 @@
 
 .style{
   padding-top: 20px;
+}
+
+@media screen and (max-width: 700px) {
+  .content-section {
+    display: none;
+  }
 }
