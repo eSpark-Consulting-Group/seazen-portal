@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.contact_button{
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    padding: 10px 16px;
+    border: none;
+    color: white;
+    width: 226px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 14px;
+}
+
+.contact_button_span img{
+    padding-top: 3px;
+}

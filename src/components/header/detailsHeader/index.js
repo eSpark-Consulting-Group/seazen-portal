@@ -3,16 +3,16 @@ import './style.css'
 
 export const DetailsHeader = () => {
     return (
-        <header className="header">
-          <div className="arrowicons-style" >
-            <img className="left-icons" src='/assets/img/Icon - Arrow.svg'></img>
+        <header className="detailsheaderheader">
+          <div className="detailsheaderarrowicons-style" >
+            <img className="detailsheaderleft-icons" src='/assets/img/Icon - Arrow.svg'></img>
           </div>
-          <div className="caption-container">
-            <p className="caption-text">KWD</p>
-          <div className="caption-price">6.990</div>
+          <div className="detailsheadercaption-container">
+            <p className="detailsheadercaption-text">KWD</p>
+          <div className="detailsheadercaption-price">6.990</div>
           </div>
-          <div className="icon-style" >
-          <img className="right-icons" src='/assets/img/Icon - Bag.svg'></img>
+          <div className="detailsheadericon-style" >
+          <img className="detailsheaderright-icons" src='/assets/img/Icon - Bag.svg'></img>
           </div>
         </header>
       );

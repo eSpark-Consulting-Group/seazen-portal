@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { side } from "../../../utils/side";
 import "./style.css";

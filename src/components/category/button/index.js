@@ -1,104 +1,120 @@
 import React, { useState } from "react";
 import "./style.css";
+import BasicCard from "../../cards/index";
 
-
-const CustomButton = ({
+const OrderTypeButtonExpandable = ({
   iconSrc,
   text,
-  expanded,
-  toggleExpanded,
+  handleButtonClickIndex,
   buttonOneText,
   buttonTwoText,
-  onClick,
+  setIsButtonExpanded,
+  isButtonExpanded,
   clicked,
+  id
 }) => {
+  const [expanded, setToggleExpanded] = useState(false);
+
   const handleClick = () => {
-    if (onClick) {
-      onClick();
-    } else {
-      toggleExpanded();
+    handleButtonClickIndex(id);
+    if (id !== 1) {
+      setToggleExpanded(!expanded);
+      setIsButtonExpanded({ expanded: !expanded, id: id })
+    }else{
+      setIsButtonExpanded({expanded:false})
     }
-  };
+  }
 
   return (
-    <button
-      className={`custom-button ${expanded ? "expanded" : ""} ${
-        clicked ? "clicked" : ""
-      }`}
+    <div
+      className={`custom-button ${isButtonExpanded.expanded && isButtonExpanded.id === id ? "expanded" : ""} ${clicked ? "clicked" : ""
+        }`}
       onClick={handleClick}
     >
-      <img src={iconSrc} alt="Icon" className="button-icon" />
-      <span className={`button-text ${expanded ? "show" : "hide"}`}>{text}</span>
-      <span className="button-content">
-        {expanded && (
+      <img src={iconSrc} alt="Icon" className="orderTypebutton-icon" />
+      {((isButtonExpanded.expanded && isButtonExpanded.id === id) || !isButtonExpanded.expanded) && <span className={`orderTypebutton-text`}>{text}</span>}
+      <span className="orderTypebutton-content">
+        {(isButtonExpanded.expanded && isButtonExpanded.id === id) && (
           <div className="options">
-            <button className="button-style-one">{buttonOneText}</button>
-            <button className="button-style-two">{buttonTwoText}</button>
+            <button className="orderTypebutton-style-one">{buttonOneText}</button>
+            <button className="orderTypebutton-style-two">{buttonTwoText}</button>
           </div>
         )}
       </span>
-    </button>
+    </div>
   );
 };
 
-const Button = () => {
-  const [expandedButton, setExpandedButton] = useState(null);
-  const [cateringClicked, setCateringClicked] = useState(false);
-  
 
+const RestaurantsOrderTypeButton = () => {
+  const [clickedButtonIndex, setClickedButtonIndex] = useState(null);
+  const [isButtonExpanded, setIsButtonExpanded] = useState({ expanded: false, id: null });
 
-  const toggleButton = (index) => {
-    if (index === expandedButton) {
-      setExpandedButton(null);
+  const handleButtonClickIndex = (index) => {
+    if (index === clickedButtonIndex) {
+      // If the same button is clicked again, remove the border
+      setClickedButtonIndex(null);
     } else {
-      setExpandedButton(index);
+      // If a different button is clicked, set the border for that button
+      setClickedButtonIndex(index);
     }
   };
 
-
-
+  const data = [
+    {
+      iconSrc: "/assets/img/Dinein.svg",
+      OrderType: "Dine In",
+      locations: "Dine In Locations",
+      where: "Near Me",
+    },
+    {
+      iconSrc: "/assets/img/Catering.svg",
+      OrderType: "Catering",
+      locations: "Dine In Locations",
+      where: "Near Me",
+    },
+    {
+      iconSrc: "/assets/img/Delivery.svg",
+      OrderType: "Delivery",
+      locations: "Available for Delivery",
+      where: "Delivers to Me"
+    },
+    {
+      iconSrc: "/assets/img/Pickup.svg",
+      OrderType: "Pickup",
+      locations: "Available for Pickup",
+      where: "Near Me",
+    },
+  ];
   return (
     <>
-      <div className="Title">
+      <div className="restaurant-title">
         <h4>Restaurants</h4>
       </div>
-      <div className="app">
-        <CustomButton
-          iconSrc="/assets/img/Dinein.svg"
-          text="Dine In"
-          expanded={expandedButton === 0}
-          toggleExpanded={() => toggleButton(0)}
-          buttonOneText="Dine In Locations"
-          buttonTwoText="Near Me"
-        />
-
-        <CustomButton
-          iconSrc="/assets/img/Catering.svg"
-          text="Catering"
-          onClick={() => setCateringClicked(!cateringClicked)}
-          clicked={cateringClicked} // Pass the cateringClicked state as a prop
-        />
-
-        <CustomButton
-          iconSrc="/assets/img/Delivery.svg"
-          text="Delivery"
-          expanded={expandedButton === 2}
-          toggleExpanded={() => toggleButton(2)}
-          buttonOneText="Available to delivery"
-          buttonTwoText="Delivers to me"
-        />
-
-        <CustomButton
-          iconSrc="/assets/img/Pickup.svg"
-          text="Pickup"
-          expanded={expandedButton === 3}
-          toggleExpanded={() => toggleButton(3)}
-          buttonOneText="Available to Pickup"
-          buttonTwoText="Near Me"
-        />
+      <div className="orderType-button-container">
+        {
+          data.map((item, index) => {
+            return (
+              <OrderTypeButtonExpandable
+                iconSrc={item.iconSrc}
+                text={item.OrderType}
+                key={index}
+                id={index}
+                handleButtonClickIndex={handleButtonClickIndex}
+                buttonOneText={item.locations}
+                buttonTwoText={item.where}
+                setIsButtonExpanded={setIsButtonExpanded}
+                isButtonExpanded={isButtonExpanded}
+                clicked={index === 1 ? clickedButtonIndex === 1 : false}
+              />
+            );
+          })
+        }
       </div>
+      {/* Pass the clickedButtonIndex to BasicCard */}
+      <BasicCard clickedButtonIndex={clickedButtonIndex} />
     </>
   );
 };
 
-export default Button;
+export default RestaurantsOrderTypeButton;

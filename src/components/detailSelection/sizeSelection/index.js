@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { size } from "../../../utils/size";
 import "./style.css";

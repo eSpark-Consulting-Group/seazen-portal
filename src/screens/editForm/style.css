@@ -1,0 +1,140 @@
+.edit-style h2 {
+  text-align: center;
+  font: normal normal bold 18px/24px Montserrat;
+  letter-spacing: 0.36px;
+  color: #1f2933;
+  opacity: 1;
+  position: absolute;
+  top: 100px;
+  left: 109px;
+}
+
+.form-style {
+  margin-top: 158px;
+}
+
+.left-name {
+  top: 160px;
+  left: 25px;
+  width: 154px;
+  height: 64px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.left-name::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 10px;
+}
+
+.right-name {
+  top: 160px;
+  left: 197px;
+  width: 154px;
+  height: 64px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.right-name::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 10px;
+}
+
+.email-style {
+  top: 241px;
+  left: 25px;
+  width: 327px;
+  height: 64px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.email-style::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 10px;
+}
+
+.right-number {
+  top: 325px;
+  left: 115px;
+  width: 237px;
+  height: 64px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.right-number::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 10px;
+}
+
+.left-code {
+  top: 325px;
+  left: 25px;
+  width: 80px;
+  height: 64px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.left-code::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 10px;
+}
+
+.edit-button {
+  top: 624px;
+  left: 19px;
+  width: 326px;
+  height: 56px;
+  background: #98694e 0% 0% no-repeat padding-box;
+  opacity: 1;
+  position: absolute;
+  border: none;
+  border-radius: 15px;
+}
+
+.edit-text {
+  text-align: center;
+  font: normal normal 600 22px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  cursor: pointer;
+}

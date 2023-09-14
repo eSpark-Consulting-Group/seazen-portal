@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { toppings } from "../../../utils/toppings";
 import "./style.css";
@@ -57,7 +58,7 @@ export default function ToppingSelection() {
         <p className="topping-small-title">(Choose up to 7)</p>
         <p className="topping-title-optional">(Optional)</p>
       </div>
-      <div className="checkbox-counter">
+      <div className="toppingSelectioncheckbox-counter">
         <ul className="toppings-list">
           {toppings.map(({ name, price }, index) => {
             const adjustedIndex = index + 2000;
