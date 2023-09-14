@@ -26,11 +26,6 @@ export const paths = {
   privacy_policy: "privacy-policy",
   terms: "terms",
   address: '/address'
-  profile: "profile",
-  guest_profile: "guest-profile",
-  privacy_policy: "privacy-policy",
-  terms: "terms",
-  address: '/address'
 };
 
 export const routes = {
