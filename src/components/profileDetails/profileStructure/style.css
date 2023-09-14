@@ -10,12 +10,6 @@
   position: absolute;
 }
 
-@media screen and (max-width: 450px) and (min-width: 375px) {
-  .profile-section {
-    width: 375px;
-  }
-}
-
 .profile-register {
   text-align: left;
   font: normal normal 600 14px/24px Titillium Web;

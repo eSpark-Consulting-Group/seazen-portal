@@ -17,11 +17,11 @@ const ProfileStructure = ({ name, phoneNumber, email, imageUrl, onEditClick }) =
           <img src="/assets/img/Group 106.svg"></img>
         </button>
       </div>
-      <div class="inline-container">
+      <div className="inline-container">
       <img className="map-style" src='/assets/img/map.svg'></img>
       <p>My Addresses</p>
       </div>
-      <div class="inline-container2">
+      <div className="inline-container2">
       <img className="box-style" src='/assets/img/box.svg'></img>
       <p>My Orders</p>
       </div>

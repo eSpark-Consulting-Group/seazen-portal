@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import Navbar from "../../components/header";
+import Navbar, { NavbarVariants } from "../../components/header";
 import Typography from "@mui/material/Typography";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { Footer } from "../../components/footer";
@@ -68,7 +68,7 @@ function PhoneNumberVerificationOTP() {
         justifyContent="space-between"
         spacing={2}
       >
-        <Navbar />
+        <Navbar variant={NavbarVariants.backWithProfile} />
         <Stack
           spacing={5}
           sx={{

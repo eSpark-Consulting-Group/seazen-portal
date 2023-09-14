@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
 import "./style.css";
 
-const Navbar = () => {
+export const NavbarVariants = {
+  backWithProfile: "backWithProfile",
+};
+
+const Navbar = (props) => {
+  const { variant, previousRoute } = props;
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef(null);
@@ -30,47 +35,90 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className={`header ${isSearchOpen ? "search-expanded" : ""}`}>
-      <div className="element account" onClick={() => {
-        navigate(paths.profile);
-      }}>
-        <div className="account-icon">
-          <img src="/assets/img/account.svg" alt="Account Icon" />
-        </div>
-      </div>
-      <div className="element logo">
-        <img src="/assets/img/Logo.png" alt="Logo" />
-      </div>
+    <nav className={"d-flex align-items-center justify-content-between"}>
       <div
-        className="element shopping"
-        onClick={() => {
-          navigate(paths.cart);
+        className="d-flex align-items-center"
+        style={{
+          columnGap: "10px",
         }}
       >
-        <div className="shopping-icon">
-          <img src="/assets/img/cart.svg" alt="Shopping Icon" />
-        </div>
+        {variant !== NavbarVariants.backWithProfile && (
+          <div
+            className="icon-btn"
+            onClick={() => {
+              navigate(paths.profile);
+            }}
+          >
+            <img src="/assets/img/account.svg" alt="Account Icon" />
+          </div>
+        )}
+
+        {variant === NavbarVariants.backWithProfile && (
+          <div
+            className="icon-btn"
+            onClick={() => {
+              navigate(previousRoute || -1);
+            }}
+          >
+            <img src="/assets/img/Icon - Arrow.svg" alt="go back" />
+          </div>
+        )}
       </div>
-      <div
-        ref={searchContainerRef}
-        className={`search-container ${isSearchOpen ? "expanded" : ""}`}
-      >
-        <div className={`search-wrapper ${isSearchOpen ? "expanded" : ""}`}>
-          <img
-            src="/assets/img/Icon - Search.svg"
-            className="search-icon"
-            onClick={toggleSearch}
-            alt="search icon"
-          />
-          <input
-            type="text"
-            placeholder="Search"
-            className={`search-bar ${isSearchOpen ? "expanded" : ""}`}
-          />
-        </div>
+      <div className="d-flex align-items-center logo">
+        <img src="/assets/img/Logo.png" alt="Logo" />
       </div>
+
+      {variant === NavbarVariants.backWithProfile && (
+        <div
+          className="icon-btn"
+          onClick={() => {
+            navigate(paths.cart);
+          }}
+        >
+          <img src="/assets/img/Group 256.svg" alt="Option Icon" />
+        </div>
+      )}
+      {variant !== NavbarVariants.backWithProfile && (
+        <div
+          className="d-flex align-items-center"
+          style={{
+            columnGap: "10px",
+          }}
+        >
+          <div
+            className="icon-btn"
+            onClick={() => {
+              navigate(paths.cart);
+            }}
+          >
+            <img src="/assets/img/cart.svg" alt="Shopping Icon" />
+          </div>
+
+          <div
+            ref={searchContainerRef}
+            className={`search-container ${isSearchOpen ? "expanded" : ""}`}
+          >
+            <div className={`icon-btn ${isSearchOpen ? "expanded" : ""}`}>
+              <img
+                src="/assets/img/Icon - Search.svg"
+                onClick={toggleSearch}
+                alt="search icon"
+              />
+              <input
+                type="text"
+                placeholder="Search"
+                className={`search-bar ${isSearchOpen ? "expanded" : ""}`}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
+};
+
+Navbar.defaultProps = {
+  variant: null,
 };
 
 export default Navbar;

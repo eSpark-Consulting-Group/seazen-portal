@@ -1,6 +1,7 @@
 // src/Navbar.js
 import { useNavigate } from "react-router";
 import "./style.css";
+import { paths } from "../../../routes/paths";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const Navbar = () => {
             <img alt="Arrow_Icon" src="/assets/img/Icon - Arrow.svg" />
           </div>
         </div>
-        <div className="shopping_container">
+        <div className="shopping_container pointer" onClick={() => navigate(paths.cart)}>
           <div className="shopping_icon">
             <img alt="Bag_Icon" src="/assets/img/Icon - Bag.svg" />
           </div>

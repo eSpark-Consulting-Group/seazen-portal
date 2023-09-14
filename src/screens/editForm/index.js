@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import FormHeader from "../../components/header/formHeader";
+import Stack from "@mui/material/Stack";
 import "./style.css";
+import Navbar, { NavbarVariants } from "../../components/header";
 
 export const EditForm = () => {
   // Initialize state variables for form fields
@@ -23,8 +24,12 @@ export const EditForm = () => {
     });
   };
   return (
-    <div>
-      <FormHeader />
+    <Stack
+      sx={{
+        p: 3,
+      }}
+    >
+      <Navbar variant={NavbarVariants.backWithProfile} />
       <div className="edit-style">
         <h2>Edit Your Profile</h2>
         <form className="form-style" onSubmit={handleSubmit}>
@@ -88,6 +93,6 @@ export const EditForm = () => {
           </button>
         </form>
       </div>
-    </div>
+    </Stack>
   );
 };
