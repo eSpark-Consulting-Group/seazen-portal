@@ -64,7 +64,7 @@ function PhoneNumberVerificationIndex() {
             />
           </Stack>
 
-          <Button size="large" variant="contained" fullWidth onClick={sendOTP}>
+          <Button size="large" variant="contained" onClick={sendOTP}>
             Continue
           </Button>
 

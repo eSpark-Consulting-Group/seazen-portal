@@ -11,6 +11,7 @@ import { PrivacyPolicy } from "../screens/privacyPolicy";
 import { Terms } from "../screens/terms";
 import CustomerRegistration from "../screens/customer/registration";
 import { EditForm } from "../screens/editForm";
+import AddressForm from "../screens/adress";
 
 export const paths = {
   home: "/",
@@ -26,12 +27,14 @@ export const paths = {
   guest_profile: "/guest-profile",
   privacy_policy: "/privacy-policy",
   terms: "/terms",
+  address: '/address'
 };
 
 export const routes = {
   home: "/",
   error: "*",
   menu: "/menu",
+  address: '/address',
   cart: "/cart",
   location: "/location",
   customer_registration: "/customer_registration",
@@ -49,6 +52,11 @@ export const publicRoutes = {
     name: "Home",
     path: routes.home,
     component: <Home />,
+  },
+  [paths.address]: {
+    name: "Address",
+    path: routes.address,
+    component: <AddressForm />,
   },
   [paths.cart]: {
     name: "Cart",
