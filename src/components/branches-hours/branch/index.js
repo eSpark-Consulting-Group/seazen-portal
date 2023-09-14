@@ -45,14 +45,20 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
   }, [weekdayHours, currentTime]);
 
   return (
+    <div className="branches-container">
     <div className="branch-info">
+      <div className="branches-heading">
       <h1>{name}</h1>
-      <div className="status-container">
+      </div>
+      <div className="status-section">
+    <div className="status-container">
         <div className={`status-tag ${status.toLowerCase()} ${status === 'Closed' ? 'closed' : status === 'Closing Soon' ? 'closing-soon' : status === 'Open Now' ? 'open-now' : ''}`}>
           {status.toUpperCase()}
         </div>
       </div>
-      <div className="hours">
+      </div>
+      <div>
+    <div className="hours">
         <div className="branch-timings">
           <strong className="branch-weekdays">Weekdays:</strong><span className="branch-weekdaysHours"> {weekdayHours}</span>
           <div>
@@ -60,10 +66,13 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
           </div>
         </div>
       </div>
+      </div>
       <div className="branch-icon">
         <img src="/assets/img/location-arrow.svg" alt={`${name} Location`} />
       </div>
     </div>
+    </div>
+    
   );
 };
 

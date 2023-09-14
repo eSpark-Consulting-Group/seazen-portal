@@ -32,6 +32,11 @@
   background-color: #f9f9f9;
 }
 
+.branches-container {
+  margin-top: 120px;
+  margin-left: 25px;
+}
+
 .branch-info {
   top: 226px;
   left: 24px;
@@ -41,7 +46,11 @@
   border: 1px solid #e5e9ed;
   border-radius: 12px;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
+  display: flex;
+  margin-bottom: -111px;
+  
+  
 }
 
 .branch-info h1 {
@@ -52,7 +61,13 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
+  margin-left: 14px;
+
+}
+
+.branches-heading{
+  margin-right: -20px;
 }
 
 .open-now {
@@ -63,7 +78,7 @@
   opacity: 1;
   top: 5px;
   left: 150px;
-  position: absolute;
+  /* position: absolute; */
   box-shadow: 0px 24px 48px #314f7c14;
   border: 1px solid #00d49b;
   border-radius: 16px;
@@ -81,7 +96,7 @@
   color: #e02020;
   top: 5px;
   left: 150px;
-  position: absolute;
+  /* position: absolute; */
   box-shadow: 0px 24px 48px #314f7c14;
   border: 1px solid #e02020;
   border-radius: 16px;
@@ -99,7 +114,7 @@
   color: #fa6400;
   top: 5px;
   left: 150px;
-  position: absolute;
+  /* position: absolute; */
   box-shadow: 0px 24px 48px #314f7c14;
   border: 1px solid #fa6400;
   border-radius: 16px;
@@ -117,7 +132,9 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
+  margin-top: 10px;
+
 }
 
 .branch-weekdaysHours {
@@ -127,7 +144,8 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
+  margin-top: 10px;
 }
 
 .branch-weekends {
@@ -138,7 +156,9 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
+  padding-left: 2px;
+
 }
 
 .branch-weekendsHours {
@@ -149,7 +169,7 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
 }
 
 .branch-icon {
@@ -159,12 +179,32 @@
   height: 27px;
   background: #98694e 0% 0% no-repeat padding-box;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
   border-radius: 50%;
+  margin-left: 55px;
+  margin-top: 9px;
 }
 
 .branch-icon img {
-  position: absolute;
-  left: 6px;
-  top: 4px;
+  margin-left: 5px;
+  margin-top: 4px;
 }
+
+.branch-timings{
+  display: flex; /* Display children side by side */
+  align-items: center;
+  margin-left: -115px;
+
+}
+
+.hours{
+  margin-top: 20px;
+}
+
+
+
+.status-section{
+  margin-left: 66px;
+  margin-top: 6px;
+}
+

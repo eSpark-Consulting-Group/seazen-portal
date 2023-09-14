@@ -1,42 +1,46 @@
-import React from 'react'
-import BranchHeader from '../../components/branches-hours/headerBranch'
-import BranchContent from '../../components/branches-hours/content'
-import RestaurantInfo from '../../components/branches-hours/branch'
+import React from "react";
+import BranchHeader from "../../components/branches-hours/headerBranch";
+import BranchContent from "../../components/branches-hours/content";
+import RestaurantInfo from "../../components/branches-hours/branch";
+import { Footer } from "../../components/footer";
+import './style.css'
 
 export const Branches = () => {
   const restaurantData = [
     {
       id: 1,
-      name: 'Restaurant 1',
-      weekdayHours: '10:00 AM - 8:00 PM',
-      weekendHours: '11:00 AM - 9:00 PM',
+      name: "Avenues Mall",
+      weekdayHours: "10:00 AM - 8:00 PM",
+      weekendHours: "11:00 AM - 9:00 PM",
     },
     {
       id: 2,
-      name: 'Restaurant 2',
-      weekdayHours: '9:00 AM - 7:00 PM',
-      weekendHours: '10:00 AM - 8:00 PM',
+      name: "Argan Al-Bida",
+      weekdayHours: "9:00 AM - 7:00 PM",
+      weekendHours: "10:00 AM - 8:00 PM",
     },
     {
       id: 3,
-      name: 'Restaurant 3',
-      weekdayHours: '9:00 AM - 7:00 PM',
-      weekendHours: '10:00 AM - 8:00 PM',
+      name: "AlKout Mall",
+      weekdayHours: "9:00 AM - 22:00 PM",
+      weekendHours: "10:00 AM - 8:00 PM",
+    },
+    {
+      id: 4,
+      name: "Khiran Mall",
+      weekdayHours: "9:00 AM - 22:00 PM",
+      weekendHours: "10:00 AM - 8:00 PM",
     },
     // Add more restaurant objects as needed
   ];
   return (
     <div>
-        <BranchHeader/>
-        <BranchContent/>
-
-        <RestaurantInfo restaurants={restaurantData} />;
-
-
-
-
-
-
+      <BranchHeader />
+      <BranchContent />
+      <RestaurantInfo restaurants={restaurantData} />;
+      <div className="branches-footer">
+      <Footer />
+      </div>
     </div>
-  )
-}
+  );
+};
