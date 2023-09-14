@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import DineInForm from "../dineInForm";
 import DineInSuccess from "../dineInSuccess";

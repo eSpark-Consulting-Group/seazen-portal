@@ -1,3 +1,4 @@
+import React from "react";
 import "./style.css"
 
 const ContactButton = ({color,text,icon_image,handleclick}) => {

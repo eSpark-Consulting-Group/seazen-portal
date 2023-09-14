@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css'
 import DetailsButton from '../../socialButtonTabs/detailsButtons';
-import { Footer } from '../../footer';
+import { Footer } from '../../footer/footerContent';
 
 const ProfileStructure = ({ name, phoneNumber, email, imageUrl, onEditClick }) => {
   return (

@@ -1,3 +1,4 @@
+import React from "react";
 import "./style.css";
 import RestaurantDetails from "../details/index.js"
 import TabsDynamicConditionalCoponent from "../../tabs/tabsConditionalRenderingComponent/index.js";

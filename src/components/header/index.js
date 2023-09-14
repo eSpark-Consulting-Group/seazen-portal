@@ -35,7 +35,7 @@ const Navbar = (props) => {
   }, []);
 
   return (
-    <nav className={"d-flex align-items-center justify-content-between"}>
+    <nav className={"d-flex align-items-center justify-content-between p-2"}>
       <div
         className="d-flex align-items-center"
         style={{
@@ -94,22 +94,8 @@ const Navbar = (props) => {
             <img src="/assets/img/cart.svg" alt="Shopping Icon" />
           </div>
 
-          <div
-            ref={searchContainerRef}
-            className={`search-container ${isSearchOpen ? "expanded" : ""}`}
-          >
-            <div className={`icon-btn ${isSearchOpen ? "expanded" : ""}`}>
-              <img
-                src="/assets/img/Icon - Search.svg"
-                onClick={toggleSearch}
-                alt="search icon"
-              />
-              <input
-                type="text"
-                placeholder="Search"
-                className={`search-bar ${isSearchOpen ? "expanded" : ""}`}
-              />
-            </div>
+          <div className="icon-btn">
+            <img src="/assets/img/Icon - Search.svg" alt="search icon" />
           </div>
         </div>
       )}

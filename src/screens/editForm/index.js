@@ -30,9 +30,9 @@ export const EditForm = () => {
       }}
     >
       <Navbar variant={NavbarVariants.backWithProfile} />
-      <div className="edit-style">
+      <div className="editProfile-style">
         <h2>Edit Your Profile</h2>
-        <form className="form-style" onSubmit={handleSubmit}>
+        <form className="editProfileform-style" onSubmit={handleSubmit}>
           <div>
             <input
               type="text"
@@ -41,7 +41,7 @@ export const EditForm = () => {
               onChange={(e) => setFirstName(e.target.value)}
               required
               placeholder="First Name"
-              className="left-name"
+              className="editProfileleft-name"
             />
           </div>
           <div>
@@ -52,7 +52,7 @@ export const EditForm = () => {
               onChange={(e) => setLastName(e.target.value)}
               required
               placeholder="Last Name"
-              className="right-name"
+              className="editProfileright-name"
             />
           </div>
           <div>
@@ -63,7 +63,7 @@ export const EditForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="test@gmail.com"
-              className="email-style"
+              className="editProfileemail-style"
             />
           </div>
           <div>
@@ -75,7 +75,7 @@ export const EditForm = () => {
               onChange={(e) => setPhone(e.target.value)}
               required
               placeholder="11223344"
-              className="right-number"
+              className="editProfileright-number"
             />
           </div>
           <div>
@@ -84,12 +84,12 @@ export const EditForm = () => {
               id="countryCode"
               value={countryCode}
               placeholder="965"
-              className="left-code"
+              className="editProfileleft-code"
               onChange={(e) => setCountryCode(e.target.value)}
             />
           </div>
-          <button className="edit-button" type="submit">
-            <span className="edit-text">Save Changes</span>
+          <button className="editProfile-button" type="submit">
+            <span className="editProfile-text">Save Changes</span>
           </button>
         </form>
       </div>

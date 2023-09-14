@@ -33,7 +33,7 @@ const ProfileHeader = (props) => {
     <nav className="profile-header">
       <div
         className="profileHeaderaccount"
-        onClick={() => navigate(paths.profile)}
+        onClick={() => navigate(paths.home)}
       >
         <div className="profileHeaderaccount-icon">
           <img src="/assets/img/Group 330.svg" alt="Account Icon" />

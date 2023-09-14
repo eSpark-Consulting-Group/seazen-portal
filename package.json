@@ -24,6 +24,7 @@
     "react-bootstrap": "^2.8.0",
     "react-dom": "^18.2.0",
     "react-google-autocomplete": "^2.7.3",
+    "react-icons": "^4.11.0",
     "react-modal": "^3.16.1",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.15.0",
@@ -58,6 +59,9 @@
     ]
   },
   "devDependencies": {
-    "@tanstack/eslint-plugin-query": "^4.34.1"
+    "@tanstack/eslint-plugin-query": "^4.34.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3"
   }
 }

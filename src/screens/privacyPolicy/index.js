@@ -1,6 +1,6 @@
 import React from 'react'
 import ProfileHeader from '../../components/header/profileHeader'
-import { Footer } from '../../components/footer'
+import { Footer } from '../../components/footer/footerContent'
 import "./style.css"
 
 export const PrivacyPolicy = () => {

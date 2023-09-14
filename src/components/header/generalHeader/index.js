@@ -1,4 +1,5 @@
 // src/Navbar.js
+import React from "react";
 import { useNavigate } from "react-router";
 import "./style.css";
 import { paths } from "../../../routes/paths";

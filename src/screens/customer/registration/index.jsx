@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Navbar, { NavbarVariants } from "../../../components/header";
-import { Footer } from "../../../components/footer";
+import { Footer } from "../../../components/footer/footerContent";
 
 const initialState = {
   first_name: "",

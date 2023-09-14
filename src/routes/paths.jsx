@@ -3,6 +3,7 @@ import Home from "../screens/home";
 import Menu from "../screens/menu";
 import CartPage from "../screens/cart";
 import LocationPage from "../screens/location";
+import OrderScreen from "../screens/order";
 import PhoneNumberVerificationIndex from "../screens/phone-verfication/PhoneNumberVerificationIndex";
 import PhoneNumberVerificationOTP from "../screens/phone-verfication/PhoneNumberVerificationOTP";
 import { Profile } from "../screens/profile";
@@ -19,6 +20,7 @@ export const paths = {
   menu: "/menu",
   cart: "/cart",
   location: "/location",
+  orderplace: "orderplace",
   customer_registration: "/customer_registration",
   phone_verification_index: "phone-verification",
   phone_verification_otp: "/phone-verification/otp",
@@ -37,6 +39,7 @@ export const routes = {
   address: '/address',
   cart: "/cart",
   location: "/location",
+  orderplace: "orderplace",
   customer_registration: "/customer_registration",
   phone_verification_index: "/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
@@ -72,6 +75,11 @@ export const publicRoutes = {
     name: "Menu",
     path: routes.menu,
     component: <Menu />,
+  },
+  [paths.orderplace]: {
+    name: "Orderplace",
+    path: routes.orderplace,
+    component: <OrderScreen />,
   },
   [paths.update_profile]: {
     name: "Update Profile",

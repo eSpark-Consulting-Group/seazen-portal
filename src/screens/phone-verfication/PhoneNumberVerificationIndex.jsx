@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Navbar, { NavbarVariants } from "../../components/header";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { Footer } from "../../components/footer";
+import { Footer } from "../../components/footer/footerContent";
 import { paths } from "../../routes/paths";
 
 function PhoneNumberVerificationIndex() {
@@ -73,7 +73,7 @@ function PhoneNumberVerificationIndex() {
           </Typography>
         </Stack>
 
-        <Footer showCommentOption={false} />
+        <Footer showFooterSection={false} />
       </Stack>
     </>
   );

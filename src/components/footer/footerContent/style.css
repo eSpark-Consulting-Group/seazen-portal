@@ -19,10 +19,9 @@
 }
 
 .text-box {
-  bottom: 57px;
-  position: relative;
-  left: 290px;
-  margin-bottom: -32px;
+  position: absolute;
+  left: 316px;
+  top: 139%;
 }
 
 .footer-container {

@@ -1,8 +1,10 @@
+import React from "react";
+
 const CateringIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      xlink="http://www.w3.org/1999/xlink"
+      xlinkHref="http://www.w3.org/1999/xlink"
       width="23"
       height="15.5"
       viewBox="0 0 20.632 14"
