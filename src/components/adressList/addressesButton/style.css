@@ -1,0 +1,21 @@
+.addresses-add-button {
+  top: 530px;
+  left: -1px;
+  width: 326px;
+  height: 56px;
+  background: #98694e 0% 0% no-repeat padding-box;
+  opacity: 1;
+  position: absolute;
+  border-radius: 16px;
+  border: none;
+  
+}
+
+.addresses-add-button-text {
+  text-align: center;
+  font: normal normal 600 22px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  cursor: pointer;
+}

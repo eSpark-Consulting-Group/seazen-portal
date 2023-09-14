@@ -1,0 +1,107 @@
+.addresses-container {
+  top: 90px;
+  left: 25px;
+  width: 327px;
+  height: 148px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 0px 48px #314f7c1f;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.addresses-card-icon {
+  top: 15px;
+  left: 16px;
+  width: 19px;
+  height: 17px;
+  opacity: 1;
+  position: absolute;
+}
+
+.addresses-home-title {
+  text-align: left;
+  font: normal normal bold 12px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #40484e;
+  opacity: 1;
+  position: absolute;
+  top: -9px;
+  left: 41px;
+}
+
+.addresses-home-title2 {
+  text-align: left;
+  font: normal normal normal 10px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #40484e;
+  opacity: 1;
+  position: absolute;
+  top: 6px;
+  left: 41px;
+}
+
+.addresses-delete-button {
+  top: 9px;
+  left: 170px;
+  width: 67px;
+  height: 26px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #e02020;
+  border-radius: 10px;
+  opacity: 1;
+  position: absolute;
+  cursor: pointer;
+
+}
+
+.addresses-edit-button {
+  top: 9px;
+  left: 245px;
+  width: 67px;
+  height: 26px;
+  background: #98694e 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 10px;
+  opacity: 1;
+  position: absolute;
+  cursor: pointer;
+
+}
+
+.addresses-button-section hr {
+  top: 34px;
+  left: 12px;
+  width: 298px;
+  height: 0px;
+  border: 1px dashed #b1b1b1;
+  opacity: 1;
+  position: absolute;
+}
+
+.addresses-map-section {
+  top: 52px;
+  left: 225px;
+  width: 83px;
+  height: 83px;
+  /* border: 1px solid #c0cdd7; */
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.addresses-name {
+  text-align: left;
+  font: normal normal normal 12px/14px Titillium Web;
+  letter-spacing: 0px;
+  color: #40484e;
+  opacity: 1;
+  margin-bottom: -13px;
+}
+
+.addresses-details {
+  top: 35px;
+  left: 12px;
+  position: absolute;
+}

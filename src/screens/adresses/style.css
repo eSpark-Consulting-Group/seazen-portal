@@ -1,0 +1,11 @@
+.edit-button {
+    background-color: #2196F3; /* Blue color for "Edit" button */
+    color: white; /* White text color */
+    margin-right: 8px; /* Add margin to the right for spacing */
+  }
+  
+  .delete-button {
+    background-color: #F44336; /* Red color for "Delete" button */
+    color: white; /* White text color */
+    margin-right: 8px; /* Add margin to the right for spacing */
+  }
