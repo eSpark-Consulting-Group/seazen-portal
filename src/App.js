@@ -3,7 +3,7 @@ import "./App.css";
 
 function App() {
   return (
-    <div className="container">
+    <div className="container_main">
       <div className="design-section">
           <RouteProvider />
       </div>

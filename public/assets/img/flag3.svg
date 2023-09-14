@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="41.465" height="41.465" viewBox="0 0 41.465 41.465">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_135" data-name="Rectangle 135" width="41.465" height="41.465" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Group_493" data-name="Group 493" clip-path="url(#clip-path)">
+    <path id="Path_1002" data-name="Path 1002" d="M46.8,1.443l2.76.844L42,4.59,49.557,6.9,42,9.2l7.561,2.309L42,13.816l7.561,2.3L42,18.43l7.561,2.3L42,23.043l7.561,2.3L42,27.657l7.561,2.3L42,32.271l7.561,2.3L42,36.874l7.561,2.312-2.753.838A20.732,20.732,0,1,0,46.8,1.443" transform="translate(-33.679)" fill="#752949" fill-rule="evenodd"/>
+    <path id="Path_1003" data-name="Path 1003" d="M13.125,45.87l2.753-.839L8.317,42.72l7.561-2.3-7.561-2.3,7.561-2.31L8.317,33.5l7.561-2.311-7.561-2.3,7.561-2.311-7.561-2.3,7.561-2.312-7.561-2.3,7.561-2.3L8.317,15.049l7.561-2.3L8.317,10.436l7.561-2.3-2.76-.844a20.741,20.741,0,0,0,.007,38.581" transform="translate(0 -5.846)" fill="#fefefe" fill-rule="evenodd"/>
+  </g>
+</svg>

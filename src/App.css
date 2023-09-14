@@ -1,30 +1,27 @@
-
-
-.container {
+.container_main {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
   min-height: 100vh;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .design-section {
   flex: 1;
   color: #fff;
-  max-width: 375px;
-  height: 941px;
   overflow: auto; 
   overflow-y: scroll; 
   overflow-x: hidden; 
   background: #FFFFFF 0% 0% no-repeat padding-box;
-  
 }
 
 .design-section::-webkit-scrollbar {
   display: none;
 }
 
-.content-section {
+.content-section{
   flex: 2;
   padding: 20px;
   background-image: url('/public/assets/img/images.jpeg');
@@ -38,3 +35,20 @@
 .style{
   padding-top: 20px;
 }
+
+@media screen and (max-width: 700px) {
+  .content-section {
+    display: none;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  all: unset;
+}
+
+@media screen and (min-width: 1000px){
+  .design-section{
+    max-width: 375px;
+  }
+}
+

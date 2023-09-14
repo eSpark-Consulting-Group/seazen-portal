@@ -1,0 +1,10 @@
+.options_services_outer_container {
+  width: 375px;
+  height: auto;
+  background-color: white;
+  padding-top: 30px;
+  border-top-right-radius: 18px;
+  border-top-left-radius: 18px;
+  position: absolute;
+  top: 215px;
+}
