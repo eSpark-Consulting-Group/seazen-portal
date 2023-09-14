@@ -9,6 +9,7 @@ import { Profile } from "../screens/profile";
 import { GuestProfile } from "../screens/guestProfile";
 import { PrivacyPolicy } from "../screens/privacyPolicy";
 import { Terms } from "../screens/terms";
+import AddressForm from "../screens/adress";
 
 export const paths = {
   home: "/",
@@ -22,12 +23,13 @@ export const paths = {
   guest_profile: "guest-profile",
   privacy_policy: "privacy-policy",
   terms: "terms",
-
+  address: '/address'
 };
 
 export const routes = {
   home: "/",
   error: "*",
+  address: '/address',
   menu: "menu",
   cart: "/cart",
   location: "/location",
@@ -37,7 +39,6 @@ export const routes = {
   guest_profile: "guest-profile",
   privacy_policy: "privacy-policy",
   terms: "terms",
-
 };
 
 export const publicRoutes = {
@@ -45,6 +46,11 @@ export const publicRoutes = {
     name: "Home",
     path: routes.home,
     component: <Home />,
+  },
+  [paths.address]: {
+    name: "Address",
+    path: routes.address,
+    component: <AddressForm />,
   },
   [paths.cart]: {
     name: "Cart",
