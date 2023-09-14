@@ -31,7 +31,7 @@
   padding: 7px;
   opacity: 1;
   position: absolute;
-  border: 1px solid #C0CDD7;
+  /* border: 1px solid #C0CDD7; */
 
 }
 
@@ -74,7 +74,7 @@
   padding: 8px;
   margin-left: -15px;
   position: absolute;
-  border: 1px solid #C0CDD7;
+  /* border: 1px solid #C0CDD7; */
 }
 
 .profileHeaderoption-icon {
@@ -111,13 +111,36 @@
 
 .profileHeaderpopup {
   position: inherit;
-  top: 446px;
+  top: 80px;
   transform: translateY(110%);
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   padding: 20px;
   border-radius: 17px;
   z-index: 2; /* Place above the overlay */
+}
+
+@media screen and (max-width:500px) and (min-width:360px) {
+  .profileHeaderpopup {
+  position: fixed;
+    top: 175px;
+  }
+}
+
+@media screen and (max-width:360px) and (min-width:330px) {
+  .profileHeaderpopup {
+    position: fixed;
+    top: 149px;
+    /* margin-bottom: 40px; */
+    height: 294px;
+  }
+}
+
+@media screen and (max-width:330px) {
+  .profileHeaderpopup {
+  position: fixed;
+  top: 275px;
+}
 }
 
 .profileHeaderpopup-overlay {
@@ -184,7 +207,6 @@
   margin: 0;
 }
 
-/* Add this CSS to your style.css or an appropriate stylesheet */
 
 .profileHeaderpopup2 {
   position: fixed;
@@ -199,6 +221,27 @@
   box-shadow: 0px 7px 58px #00000026;
   border-radius: 12px;
   opacity: 1;
+}
+
+@media screen and (max-width:450px) and (min-width:375px) {
+  .profileHeaderpopup2{
+    left: 212px;
+
+  }
+}
+
+@media screen and (max-width:375px) and (min-width:350px) {
+  .profileHeaderpopup2{
+    left: 185px;
+
+  }
+}
+
+@media screen and (max-width:330px) {
+  .profileHeaderpopup2{
+    left: 183px;
+
+  }
 }
 
 .profileHeaderpopup2 h2 {

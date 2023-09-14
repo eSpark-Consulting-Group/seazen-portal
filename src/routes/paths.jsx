@@ -6,6 +6,9 @@ import LocationPage from "../screens/location";
 import PhoneNumberVerificationIndex from "../screens/phone-verfication/PhoneNumberVerificationIndex";
 import PhoneNumberVerificationOTP from "../screens/phone-verfication/PhoneNumberVerificationOTP";
 import { Profile } from "../screens/profile";
+import { GuestProfile } from "../screens/guestProfile";
+import { PrivacyPolicy } from "../screens/privacyPolicy";
+import { Terms } from "../screens/terms";
 
 export const paths = {
   home: "/",
@@ -16,6 +19,10 @@ export const paths = {
   phone_verification_index: "phone-verification",
   phone_verification_otp: "/phone-verification/otp",
   profile: "profile",
+  guest_profile: "guest-profile",
+  privacy_policy: "privacy-policy",
+  terms: "terms",
+
 };
 
 export const routes = {
@@ -27,6 +34,10 @@ export const routes = {
   phone_verification_index: "/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
   profile: "profile",
+  guest_profile: "guest-profile",
+  privacy_policy: "privacy-policy",
+  terms: "terms",
+
 };
 
 export const publicRoutes = {
@@ -64,6 +75,21 @@ export const publicRoutes = {
     name: "Profile",
     path: routes.profile,
     component: <Profile />,
+  },
+  [paths.guest_profile]: {
+    name: "Guest Profile",
+    path: routes.guest_profile,
+    component: <GuestProfile />,
+  },
+  [paths.privacy_policy]: {
+    name: "Privacy Policy",
+    path: routes.privacy_policy,
+    component: <PrivacyPolicy />,
+  },
+  [paths.terms]: {
+    name: "Terms",
+    path: routes.terms,
+    component: <Terms />,
   },
 };
 

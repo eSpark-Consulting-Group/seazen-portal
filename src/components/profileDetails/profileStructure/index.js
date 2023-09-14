@@ -26,7 +26,7 @@ const ProfileStructure = ({ name, phoneNumber, email, imageUrl, onEditClick }) =
       <p>My Orders</p>
       </div>
       <DetailsButton/>
-      <Footer />
+      <Footer showCommentOption={false} />
     </div>
   );
 };

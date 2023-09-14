@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import "./style.css";
 import { useNavigate } from "react-router";
 
-const ProfileHeader = () => {
+const ProfileHeader = (props) => {
+  const { showFlagOption } = props;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isCountryPopupOpen, setIsCountryPopupOpen] = useState(false);
@@ -37,6 +38,7 @@ const ProfileHeader = () => {
       <div className="profileHeaderlogo">
         <img src="/assets/img/Group 143.svg" alt="Logo" />
       </div>
+      {showFlagOption && (
       <div className="profileHeaderflag-profile">
         <div className="profileHeadercircle-container" onClick={togglePopup}>
           <img src="/assets/img/flag1.svg" alt="Default Flag" />
@@ -61,7 +63,7 @@ const ProfileHeader = () => {
             </div>
           </div>
         )}
-      </div>
+      
 
       {selectedCountry && isCountryPopupOpen && (
         <div
@@ -104,7 +106,8 @@ const ProfileHeader = () => {
           </div>
         </div>
       )}
-
+</div>
+      )}
       <div className="profileHeaderoption">
         <div className="profileHeaderoption-icon">
           <img src="/assets/img/Group 256.svg" alt="Option Icon" />
@@ -115,3 +118,7 @@ const ProfileHeader = () => {
 };
 
 export default ProfileHeader;
+
+ProfileHeader.defaultProps = {
+  showFlagOption: true,
+};
