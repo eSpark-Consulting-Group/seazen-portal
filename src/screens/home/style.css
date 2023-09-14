@@ -1,11 +1,12 @@
 .home-styling {
-    padding: 20px !important;
+  padding: 20px !important;
 }
 
-img, svg {
-    vertical-align: inherit !important;
+img,
+svg {
+  vertical-align: inherit !important;
 }
 
-*, ::after, ::before {
-    box-sizing: content-box !important;
-  }
+.home-styling * {
+  box-sizing: content-box;
+}

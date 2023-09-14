@@ -14,7 +14,7 @@ export const paths = {
   home: "/",
   error: "*",
   menu: "/menu",
-  cart: "cart",
+  cart: "/cart",
   location: "/location",
   phone_verification_index: "phone-verification",
   phone_verification_otp: "/phone-verification/otp",
@@ -28,7 +28,7 @@ export const paths = {
 export const routes = {
   home: "/",
   error: "*",
-  menu: "menu",
+  menu: "/menu",
   cart: "/cart",
   location: "/location",
   phone_verification_index: "/phone-verification/",
