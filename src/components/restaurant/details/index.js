@@ -1,13 +1,16 @@
 import React from "react";
 import "./style.css";
 
-const RestaurantDetails = () => {
+const RestaurantDetails = ({restaurantDetail, restaurantBranchHours}) => {
+  const handleBranchHoursClick = () =>{
+    
+  }
   return (
     <div className="details_outer_container">
       <div className="details_inner_div">
         <div className="logo_info_container">
           <img src=".\assets\img\Trapani_logo.svg" alt="restaurant_logo" />
-          <div className="information_container">
+          <div className="information_container" onClick={()=>{handleBranchHoursClick}}>
             {"Branches & Hours "}
             <span>
               <img

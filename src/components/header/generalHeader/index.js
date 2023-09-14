@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import "./style.css";
 import { paths } from "../../../routes/paths";
 
-const Navbar = () => {
+const Navbar = ({restaurantDetail}) => {
   const navigate = useNavigate();
   return (
     <div className="Nav_Image_Container">

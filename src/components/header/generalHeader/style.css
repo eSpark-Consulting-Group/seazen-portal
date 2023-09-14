@@ -1,8 +1,6 @@
 .Nav_Image_Container {
-  width: 375px;
-  display: flex;
-  position: relative;
-  justify-content: center;
+  min-width: 375px;
+  position: absolute;
 }
 .upper_navigation {
   width: 375px;

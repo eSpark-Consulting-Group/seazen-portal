@@ -3,6 +3,9 @@ const API_ENDPOINTS = {
     GET_ALL_POPULAR_ITEMS: "/homepage/popular-items",
     GET_ALL_RESTAURANT: "/homepage/restaurants",
   },
+  RESTAURANT: {
+    GET_RESTAURANT_DETAIL: "/restaurant/",
+  },
 };
 
 export default API_ENDPOINTS;

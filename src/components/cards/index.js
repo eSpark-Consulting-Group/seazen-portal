@@ -52,7 +52,7 @@ const BasicCard = ({ clickedButtonIndex }) => {
     <div className="restaurantCard-container">
       {[0, 1, 2, 3, 4, 5].map((index) => (
         <div key={index} className={`restaurantCards ${getCardClassName(index)}`}>
-          <Card sx={{ width: 164, borderRadius: 1 }} className="restaurantCards" onClick={() => navigate(paths.menu)}>
+          <Card sx={{ width: 164, borderRadius: 1 }} className="restaurantCards" onClick={() => navigate(paths.menu, {state:{restaurantId: 1}})}>
             <img
               className="restaurantCard-img"
               src={`/assets/img/${15 + index * 2}.png`}
