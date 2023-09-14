@@ -1,0 +1,72 @@
+.receipt-nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 25px 15px;
+}
+.receipt-head{
+    color: #1F2933;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+}
+.receipt-head p{
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.receipt-info{
+    padding: 20px 40px;
+    background-color: #fafafa;
+    border-radius: 25px;
+    margin: 0 25px;
+}
+.receipt-info div{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+}
+#location-img, #clock-img{
+    margin-right:  20px;
+    width: 13px;
+    height: 13px;
+}
+#heading{
+    font-size: 20px;
+    font-weight: bold;
+    color: #40484E;
+    padding: 10px 0;
+
+}
+
+#heading-cont{
+    font-size: 16px;
+    color: #40484E;
+}
+
+.receipt-items{
+    color: #1F2933;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px 30px 0;
+}
+.receipt-items img{
+    width: 72px;
+    height: 72px;
+}
+.receipt-items-name{
+    width: 120px;
+    font-size: 14px;
+
+}
+.receipt-items-price{
+    width: 87px;
+    font-weight: 400;
+    font-size: 16;
+
+}
+.receipt-comment-section{
+    margin-left: 80%;
+}
