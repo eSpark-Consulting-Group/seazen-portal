@@ -82,9 +82,8 @@
   font-size: 15px;
   text-align: center;
   padding: 0px 10px;
-  padding-bottom: 2px;
-  height: 22px;
-  width: 76px;
+  height: 24px;
+  width: 96px;
   align-self: center;
 }
 
@@ -120,7 +119,6 @@
 .order-id-section {
   display: flex;
   justify-content: space-between;
-  margin-top: -8px;
 }
 
 #order-id-text {
@@ -137,7 +135,7 @@
   flex-direction: column;
   align-items: end;
   position: relative;
-  top: -8px;
+  top: -1px;
 }
 
 .orderid-with-tag p {
@@ -196,8 +194,8 @@
 
 #whatsapp-tag {
   display: flex;
-  justify-content: space-between;
-  padding: 0 19px;
+  justify-content: space-around;
+  padding:0 3px;
   align-items: center;
   width: 118px;
   height: 27px;

@@ -381,3 +381,7 @@
   color: #ffffff;
   opacity: 1;
 }
+
+.profile-header * {
+  box-sizing: content-box;
+}

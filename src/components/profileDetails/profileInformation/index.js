@@ -1,16 +1,20 @@
-import React from 'react';
-import ProfileStructure from '../profileStructure';
+import React from "react";
+import ProfileStructure from "../profileStructure";
+import { useNavigate } from "react-router-dom";
+import { paths } from "../../../routes/paths";
 
 function ProfileInformation() {
+  const navigate = useNavigate();
+
   const user = {
-    name: 'John Doe',
-    phoneNumber: '+965 1234 5678',
-    email: 'john@doe.com',
-    imageUrl: '/assets/img/profile image.svg',
+    name: "John Doe",
+    phoneNumber: "+965 1234 5678",
+    email: "john@doe.com",
+    imageUrl: "/assets/img/profile image.svg",
   };
 
   const handleEditClick = () => {
-    // Handle edit button click here
+    navigate(paths.update_profile)
   };
 
   return (

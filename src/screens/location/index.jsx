@@ -89,7 +89,6 @@ function LocationPage() {
       <Stack
         spacing={2}
         sx={{
-          boxSizing: "border-box",
           width: "100%",
           position: "absolute",
           zIndex: (theme) => theme.zIndex.appBar,
@@ -226,7 +225,6 @@ function LocationPage() {
           bottom: 0,
           width: "100%",
           p: 3,
-          boxSizing: "border-box",
           backgroundColor: "background.paper",
         }}
       >

@@ -10,38 +10,44 @@ import { Profile } from "../screens/profile";
 import { GuestProfile } from "../screens/guestProfile";
 import { PrivacyPolicy } from "../screens/privacyPolicy";
 import { Terms } from "../screens/terms";
+import CustomerRegistration from "../screens/customer/registration";
+import { EditForm } from "../screens/editForm";
 import AddressForm from "../screens/adress";
 
 export const paths = {
   home: "/",
   error: "*",
   menu: "/menu",
-  cart: "cart",
+  cart: "/cart",
   location: "/location",
   orderplace: "orderplace",
+  customer_registration: "/customer_registration",
   phone_verification_index: "phone-verification",
   phone_verification_otp: "/phone-verification/otp",
-  profile: "profile",
-  guest_profile: "guest-profile",
-  privacy_policy: "privacy-policy",
-  terms: "terms",
+  profile: "/profile",
+  update_profile: "/update_profile",
+  guest_profile: "/guest-profile",
+  privacy_policy: "/privacy-policy",
+  terms: "/terms",
   address: '/address'
 };
 
 export const routes = {
   home: "/",
   error: "*",
+  menu: "/menu",
   address: '/address',
-  menu: "menu",
   cart: "/cart",
   location: "/location",
   orderplace: "orderplace",
+  customer_registration: "/customer_registration",
   phone_verification_index: "/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
-  profile: "profile",
-  guest_profile: "guest-profile",
-  privacy_policy: "privacy-policy",
-  terms: "terms",
+  profile: "/profile",
+  update_profile: "/update_profile",
+  guest_profile: "/guest-profile",
+  privacy_policy: "/privacy-policy",
+  terms: "/terms",
 };
 
 export const publicRoutes = {
@@ -74,6 +80,16 @@ export const publicRoutes = {
     name: "Orderplace",
     path: routes.orderplace,
     component: <OrderScreen />,
+  },
+  [paths.update_profile]: {
+    name: "Update Profile",
+    path: routes.update_profile,
+    component: <EditForm />,
+  },
+  [paths.customer_registration]: {
+    name: "Customer Registration",
+    path: routes.customer_registration,
+    component: <CustomerRegistration />,
   },
   [paths.phone_verification_index]: {
     name: "Phone Verification Index",
