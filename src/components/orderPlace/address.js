@@ -36,12 +36,11 @@ function formatAddress(input) {
 }
 const Address = ({ address }) => {
   const formattedAddress = formatAddress(address);
-  console.log(formattedAddress);
 
   return (
-    <div className='address-text'>
+    <div className='orderaddress-text'>
         <p>Office - Seazen Ardia</p>
-        <pre className="formatted-address">{formattedAddress}</pre>
+        <pre className="orderformatted-address">{formattedAddress}</pre>
     </div>
   )
 }

@@ -24,12 +24,11 @@
   border-radius: 50%;
 }
 
-.header-section {
+.orderheader-section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 45px;
-  line-height: 105%;
+  padding: 0px 45px 20px 45px;
   font-size: 16px;
 }
 
@@ -48,7 +47,7 @@
   opacity: 1;
 }
 
-.current-time {
+.ordercurrent-time {
   font-size: 20px;
   font-weight: bold;
   text-align: right;
@@ -64,13 +63,13 @@
   justify-content: space-between;
 }
 
-.progress-bar {
+.orderprogress-bar {
   width: 65px;
   height: 5px;
   background-color: #dcdfe3;
 }
 
-.address-section hr {
+.orderaddress-section hr {
   height: 1px;
   background-color: #dcdfe3;
   border: none;
@@ -79,39 +78,41 @@
 #order-status-tag {
   background-color: #f7b500;
   border-radius: 7px;
-  width: 95px;
-  height: 28px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   letter-spacing: 0.4px;
   font-size: 15px;
+  text-align: center;
+  padding: 0px 10px;
+  padding-bottom: 2px;
+  height: 22px;
+  width: 76px;
+  align-self: center;
 }
 
 .order-status {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: -8px;
+  margin-top: 15px;
 }
 
 #order-status-tag p {
   font-weight: bold;
   font-size: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   color: #ffffff;
 }
 
-#confirm-text {
+#orderconfirm-text {
   font-weight: bold;
   font-size: 16px;
   letter-spacing: 0.5px;
   color: #959fa8;
 }
 
-.address-text {
+.orderconfirm-text-container{
+  margin-top: 15px;
+}
+
+.orderaddress-text {
   font-size: 14px;
   line-height: 110%;
 }
@@ -167,7 +168,7 @@
   margin-top: -10px;
 }
 
-.contact-section {
+.ordercontact-section {
   display: flex;
   justify-content: space-between;
   padding: 0 20px;
@@ -216,28 +217,27 @@
 
 #thanksnote {
   text-align: left;
-  font: normal normal 600 16px/18px Titillium Web;
+  font: normal normal 400 16px/18px Titillium Web;
   letter-spacing: 0px;
   color: #1f2933;
   opacity: 1;
   position: absolute;
-  top: 67px;
+  top: 77px;
   left: 150px;
   width: 146px;
   height: 42px;
 }
 
-.formatted-address {
+.orderformatted-address {
   text-align: left;
   letter-spacing: 0px;
   color: #1f2933;
   opacity: 1;
 }
 
-.address-text p {
+.orderaddress-text p {
   text-align: left;
   font: normal normal 600 14px/16px Titillium Web;
   letter-spacing: 0px;
   color: #1f2933;
-  margin-bottom: -12px;
 }

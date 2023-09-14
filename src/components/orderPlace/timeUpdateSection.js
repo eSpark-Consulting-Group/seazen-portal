@@ -40,7 +40,7 @@ const UpdateSection = () => {
   return (
           <div className='update-sec'>
               <p id='text-for-arrival'>Estimated Arrival;</p>
-              <p className='current-time'>{currentDateTime}</p>
+              <p className='ordercurrent-time'>{currentDateTime}</p>
               {/* <CurrentTime/> */}
           </div>
   )

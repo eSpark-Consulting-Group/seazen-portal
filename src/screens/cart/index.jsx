@@ -14,6 +14,7 @@ import CartItem from "../../components/shared/cart/CartItem";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { ReactComponent as DollarIcon } from "../../assets/icons/dollar.svg";
 import { ReactComponent as KNETIcon } from "../../assets/icons/knet.svg";
+import { paths } from "../../routes/paths";
 
 let CART_ITEMS = [
   {
@@ -121,7 +122,7 @@ function CartPage() {
             boxShadow: (theme) => theme.shadows[16],
           }}
           edge="start"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(paths.home)}
         >
           <ArrowBackRoundedIcon fontSize="medium" />
         </IconButton>
@@ -215,6 +216,7 @@ function CartPage() {
                   fontSize: "16px",
                 },
               }}
+              onClick={() => navigate(paths.location)}
             >
               Change
             </Button>

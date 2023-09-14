@@ -1,4 +1,4 @@
-.navbar {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -30,6 +30,8 @@
 .account-icon {
   padding-top: 3px;
   padding-left: 8px;
+  vertical-align: inherit;
+
 }
 
 .shopping-icon {
@@ -40,6 +42,8 @@
 .shopping-icon img {
   width: 24px;
   height: 24px;
+  vertical-align: inherit;
+
 }
 
 .shopping {
@@ -83,11 +87,13 @@
 
 .search-icon {
   position: absolute;
-  top: 14px;
+  top: 12px;
   left: 13px;
   font-size: 1.2rem;
   color: #0d0d0d;
   cursor: pointer;
+  width: 24px;
+height: 24px;
 }
 
 .search-container.expanded {
@@ -115,11 +121,16 @@
   outline: none;
 }
 
+.search-bar::placeholder {
+  font: normal normal normal 15px Titillium Web;
+}
+
+
 .search-bar:focus {
   border: 1px solid #fdfcfc;
 }
 
-.navbar {
+.header {
   display: flex;
   align-items: center;
   transition: all 0.3s;
@@ -144,6 +155,8 @@
 
 .search-expanded .account-icon img {
   padding-right: 12px;
+  vertical-align: inherit;
+
 }
 
 .search-expanded .logo {
@@ -156,12 +169,18 @@
 
 .search-expanded .account img {
   padding-right: 12px;
+  vertical-align: inherit;
+
 }
 
 .search-expanded .shopping-icon img {
   padding-right: 12px;
+  vertical-align: inherit;
+
 }
 
 .search-wrapper.expanded {
   display: flex;
 }
+
+

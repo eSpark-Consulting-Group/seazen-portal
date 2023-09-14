@@ -15,7 +15,7 @@ const ContactUs = () => {
 
 
   return (
-    <div className='contact-section'>
+    <div className='ordercontact-section'>
       <div id='call-tag'>
         <IoCall />
         <a href='tel:18185555'>18185555</a>

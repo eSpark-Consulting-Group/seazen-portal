@@ -30,10 +30,12 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className={`navbar ${isSearchOpen ? "search-expanded" : ""}`}>
-      <div className="element account">
+    <nav className={`header ${isSearchOpen ? "search-expanded" : ""}`}>
+      <div className="element account" onClick={() => {
+        navigate(paths.profile);
+      }}>
         <div className="account-icon">
-          <img src="/assets/img/Profile_Icon.png" alt="Account Icon" />
+          <img src="/assets/img/account.svg" alt="Account Icon" />
         </div>
       </div>
       <div className="element logo">
@@ -55,7 +57,7 @@ const Navbar = () => {
       >
         <div className={`search-wrapper ${isSearchOpen ? "expanded" : ""}`}>
           <img
-            src="/assets/img/Icon - Search.png"
+            src="/assets/img/Icon - Search.svg"
             className="search-icon"
             onClick={toggleSearch}
             alt="search icon"
