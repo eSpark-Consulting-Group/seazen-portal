@@ -10,7 +10,7 @@ const RestaurantDetails = ({restaurantDetail, restaurantBranchHours}) => {
       <div className="details_inner_div">
         <div className="logo_info_container">
           <img src=".\assets\img\Trapani_logo.svg" alt="restaurant_logo" />
-          <div className="information_container" onClick={()=>{handleBranchHoursClick}}>
+          <div className="information_container" onClick={()=>{handleBranchHoursClick}} style={{cursor:"pointer"}}>
             {"Branches & Hours "}
             <span>
               <img
