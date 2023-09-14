@@ -3,14 +3,14 @@ import './style.css'
 
 const AddressHeader = () => {
   return (
-    <header className="header">
-      <div className="left-icons">
+    <header className="addressheader">
+      <div className="addressHeaderleft-icons">
         <img src='/assets/img/Icon - Arrow.svg'></img>
       </div>
-      <div className="logo">
+      <div className="addressHeaderlogo">
         <h3>Add New Address</h3>
       </div>
-      <div className="right-icons">
+      <div className="addressHeaderright-icons">
       <img src='/assets/img/Group 256.svg'></img>
       </div>
     </header>

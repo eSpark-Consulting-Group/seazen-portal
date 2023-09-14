@@ -8,6 +8,22 @@ import { OfficeAdress } from "../../components/address/forms/officeForm";
 
 const AddressForm = () => {
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
+  const [countryCode, setCountryCode] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const handleCountryCodeChange = (event) => {
+    // Use regex to remove non-numeric characters
+    const numericValue = event.target.value.replace(/\D/g, "");
+    setCountryCode(numericValue);
+  };
+
+  const handlePhoneNumberChange = (event) => {
+    // Use regex to allow only digits and optional spaces or dashes
+    const regex = /^[0-9]*[-\s]?[0-9]*$/;
+    if (regex.test(event.target.value)) {
+      setPhoneNumber(event.target.value);
+    }
+  };
 
   const handleAddressTypeChange = (type) => {
     setAddressType(type);
@@ -38,6 +54,27 @@ const AddressForm = () => {
         {addressType === "house" && <HomeAdress />}
         {addressType === "appartment" && <AppartmentAdress />}
         {addressType === "office" && <OfficeAdress />}
+        <div className="contact-style">
+          <h3>Contact Details</h3>
+        </div>
+        <div className="contact-field">
+          <input
+            className="country-code-input"
+            type="text"
+            name="CountryCode"
+            placeholder="+956"
+            value={countryCode}
+            onChange={handleCountryCodeChange}
+          />
+          <input
+            className="phone-number-input"
+            type="text"
+            name="PhoneNumber"
+            placeholder="Alternative Phone Number"
+            value={phoneNumber}
+            onChange={handlePhoneNumberChange}
+          />
+        </div>
         <button type="submit" className="address-button">
           {" "}
           {/* Use type='submit' to make it a submit button */}

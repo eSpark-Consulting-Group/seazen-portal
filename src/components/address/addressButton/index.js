@@ -1,4 +1,5 @@
 import React from 'react';
+import "./style.css";
 
 const AddressTypeButton = ({ type, addressType, onClick }) => (
   <button
@@ -16,8 +17,8 @@ const AddressTypeButton = ({ type, addressType, onClick }) => (
 );
 
 const AddressTypeSelector = ({ addressType, handleAddressTypeChange }) => (
-  <div>
-    <h3>Select Address Type:</h3>
+  <div className='addressButtonContainer'>
+    {/* <h3>Select Address Type:</h3> */}
     <AddressTypeButton type="house" addressType={addressType} onClick={handleAddressTypeChange} />
     <AddressTypeButton type="appartment" addressType={addressType} onClick={handleAddressTypeChange} />
     <AddressTypeButton type="office" addressType={addressType} onClick={handleAddressTypeChange} />

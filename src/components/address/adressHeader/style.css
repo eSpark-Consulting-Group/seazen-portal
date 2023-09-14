@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Titillium+Web:wght@200;300;400;600;700;900&display=swap");
-.header {
+.addressheader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -11,7 +11,7 @@
   opacity: 1;
 }
 
-.left-icons img {
+.addressHeaderleft-icons img {
   width: 24px;
   height: 24px;
   opacity: 1;
@@ -20,7 +20,7 @@
   left: 32px;
 }
 
-.right-icons img {
+.addressHeaderright-icons img {
   width: 24px;
   height: 20px;
   opacity: 1;
@@ -29,8 +29,8 @@
   left: 325px;
 }
 
-.logo h3 {
-  top: 11px;
+.addressHeaderlogo h3 {
+  top: 30px;
   left: 101px;
   width: 174px;
   height: 22px;
