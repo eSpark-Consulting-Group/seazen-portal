@@ -7,7 +7,7 @@
   background-color: white;
   padding: 12px;
   border-radius: 12px;
-  box-shadow: 0px 4px 16px rgba(116, 134, 148, 0.16);
+  box-shadow: 0px 4px 16px rgba(116, 134, 148, 0.26);
   position: relative;
 }
 
@@ -20,6 +20,7 @@
   top: 0;
   border-bottom-left-radius: 12px;
   border-top-left-radius: 12px;
+  cursor: pointer;
 }
 
 .menu_card_inner_container {
@@ -87,9 +88,10 @@
 }
 
 .menu_card_buttons_quantity_container {
-  width: 36px;
+  width: 38px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: flex-end;
 }
 
@@ -98,6 +100,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 }
 
 .menu_card_qunatity_label {
@@ -129,4 +132,29 @@
 
 .menu_card_add_to_cart_button img {
   width: 14px;
+}
+
+
+.menu_card_dropdown_container{
+  width: 290px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.menu_card_dropdown_inner_container{
+  width: 270px;
+  margin-bottom: 10px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.menu_card_position_relative_container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
