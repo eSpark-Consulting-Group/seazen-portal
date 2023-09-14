@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import MenuCard from "../menu_card/index.js";
 import "./style.css";

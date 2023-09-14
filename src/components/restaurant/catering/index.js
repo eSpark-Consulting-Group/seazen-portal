@@ -1,3 +1,4 @@
+import React from "react";
 import ContactButton from "../../contact_button/index.js";
 import "./style.css"
 

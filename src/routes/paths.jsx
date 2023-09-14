@@ -3,6 +3,7 @@ import Home from "../screens/home";
 import Menu from "../screens/menu";
 import CartPage from "../screens/cart";
 import LocationPage from "../screens/location";
+import OrderScreen from "../screens/order";
 import PhoneNumberVerificationIndex from "../screens/phone-verfication/PhoneNumberVerificationIndex";
 import PhoneNumberVerificationOTP from "../screens/phone-verfication/PhoneNumberVerificationOTP";
 import { Profile } from "../screens/profile";
@@ -17,6 +18,7 @@ export const paths = {
   menu: "/menu",
   cart: "cart",
   location: "/location",
+  orderplace: "orderplace",
   phone_verification_index: "phone-verification",
   phone_verification_otp: "/phone-verification/otp",
   profile: "profile",
@@ -33,6 +35,7 @@ export const routes = {
   menu: "menu",
   cart: "/cart",
   location: "/location",
+  orderplace: "orderplace",
   phone_verification_index: "/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
   profile: "profile",
@@ -66,6 +69,11 @@ export const publicRoutes = {
     name: "Menu",
     path: routes.menu,
     component: <Menu />,
+  },
+  [paths.orderplace]: {
+    name: "Orderplace",
+    path: routes.orderplace,
+    component: <OrderScreen />,
   },
   [paths.phone_verification_index]: {
     name: "Phone Verification Index",
