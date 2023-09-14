@@ -1,7 +1,7 @@
 .content-heading {
-  top: 290px;
+  top: 295px;
   left: 24px;
-  width: 195px;
+  width: 194px;
   height: 60px;
   text-align: left;
   font: normal normal 600 22px/26px Titillium Web;
@@ -12,7 +12,7 @@
 }
 
 .content-paragraph {
-  top: 366px;
+  top: 350px;
   left: 24px;
   width: 327px;
   height: 65px;
@@ -25,7 +25,7 @@
 }
 
 .content-small {
-  top: 323px;
+  top: 300px;
   left: 302px;
   width: 41px;
   height: 10px;
@@ -39,5 +39,5 @@
 
 .information-style{
 position: absolute;
-top: -290px;
+top: -270px;
 }

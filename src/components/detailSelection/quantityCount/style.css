@@ -12,7 +12,7 @@
 .count {
   margin-left: 210px;
   position: absolute;
-  top: 841px;
+  top: 888px;
   left: 11px;
 }
 
@@ -23,7 +23,7 @@
   color: #ffffff;
   opacity: 1;
   position: absolute;
-  top: 844px;
+  top: 893px;
   left: 56px;
 }
 
@@ -32,10 +32,11 @@
   border-radius: 12px;
   opacity: 1;
   border: none;
-  width: 30px;
-  height: 30px;
+  width: 18px;
+  height: 25px;
   margin-left: -3px;
   margin-right: 10px;
+  
 }
 
 .pluss-button {
@@ -44,8 +45,8 @@
   border-radius: 12px;
   opacity: 1;
   border: none;
-  width: 30px;
-  height: 30px;
+  width: 18px;
+  height: 25px;
   margin-left: 10px;
 }
 

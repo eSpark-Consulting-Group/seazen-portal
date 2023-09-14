@@ -10,7 +10,7 @@
 }
 
 .size-title {
-  top: -8px;
+  top: 6px;
   left: 13px;
   width: 110px;
   height: 24px;
@@ -22,7 +22,7 @@
 }
 
 .size-small-title {
-  top: 0px;
+  top: 8px;
   left: 123px;
   width: 45px;
   height: 24px;
@@ -34,7 +34,7 @@
 }
 
 .size-title-required {
-  top: -5px;
+  top: 6px;
   left: 274px;
   width: 63px;
   height: 21px;
