@@ -11,7 +11,7 @@ export const paths = {
   cart: "cart",
   phone_verification_index: "phone-verification",
   phone_verification_otp: "/phone-verification/otp",
-  addresses: "/addresses",
+  addresses: "/my-addresses",
 
 };
 
@@ -21,7 +21,7 @@ export const routes = {
   cart: "/cart",
   phone_verification_index: "/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
-  addresses: "/addresses",
+  addresses: "/my-addresses",
 };
 
 export const publicRoutes = {

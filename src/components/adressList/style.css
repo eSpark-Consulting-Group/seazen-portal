@@ -1,4 +1,5 @@
 .addresses-container {
+  display: flex;
   top: 90px;
   left: 25px;
   width: 327px;
@@ -8,7 +9,9 @@
   border: 1px solid #c0cdd7;
   border-radius: 12px;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
+  margin-top: 10px;
+  margin-left: 22px;
 }
 
 .addresses-card-icon {
@@ -17,7 +20,9 @@
   width: 19px;
   height: 17px;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
+  margin-left: 15px;
+  margin-top: 13px;
 }
 
 .addresses-home-title {
@@ -26,9 +31,11 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
   top: -9px;
   left: 41px;
+  margin-top: -35px;
+  margin-left: 40px;
 }
 
 .addresses-home-title2 {
@@ -37,9 +44,11 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
   top: 6px;
   left: 41px;
+  margin-top: -27px;
+  margin-left: 40px;
 }
 
 .addresses-delete-button {
@@ -51,8 +60,10 @@
   border: 1px solid #e02020;
   border-radius: 10px;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
   cursor: pointer;
+  padding-top: 0px;
+  margin-right: 10px;
 
 }
 
@@ -65,9 +76,9 @@
   border: 1px solid #c0cdd7;
   border-radius: 10px;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
   cursor: pointer;
-
+  padding-top: 0px;
 }
 
 .addresses-button-section hr {
@@ -77,7 +88,40 @@
   height: 0px;
   border: 1px dashed #b1b1b1;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
+  margin-left: -60px;
+}
+
+.addresses-delete-text {
+  text-align: center;
+  font: normal normal bold 12px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #e02020;
+  opacity: 1;
+}
+
+.addresses-edit-text {
+  text-align: center;
+  font: normal normal bold 12px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+.addresses-details-and-map {
+  display: flex; /* Display children side by side */
+  align-items: center;
+}
+
+.addresses-content {
+  margin-left: -300px;
+  margin-top: 20px;
+  margin-top: 35px;
+}
+
+.addresses-button-container {
+  margin-left: 96px;
+  margin-top: 5px;
 }
 
 .addresses-map-section {
@@ -88,7 +132,9 @@
   /* border: 1px solid #c0cdd7; */
   border-radius: 12px;
   opacity: 1;
-  position: absolute;
+  /* position: absolute; */
+  padding-left: 217px;
+  margin-top: -36px;
 }
 
 .addresses-name {
@@ -103,5 +149,5 @@
 .addresses-details {
   top: 35px;
   left: 12px;
-  position: absolute;
+  /* position: absolute; */
 }

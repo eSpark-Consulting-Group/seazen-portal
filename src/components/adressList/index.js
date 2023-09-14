@@ -11,19 +11,25 @@ const Card = ({ title, title2, iconUrl, name, block, home, floor }) => {
         <p className="addresses-home-title2">{title2}</p>
       </div>
       <div className="addresses-button-section">
-        <button className="addresses-delete-button">Delete</button>
-        <button className="addresses-edit-button">Edit</button>
+        <div className="addresses-button-container">
+        <button className="addresses-delete-button"><span className="addresses-delete-text">Delete</span></button>
+        <button className="addresses-edit-button"><span className="addresses-edit-text">Edit</span></button>
+        </div>
         <hr/>
       </div>
-      <div className="card-content">
-        <div className="addresses-map-section">
-          <img src="/assets/img/map-image.svg" alt="Small Image" />
+      <div className="addresses-content">
+      <div className="addresses-details-and-map">
+      <div className="addresses-details">
+          <p className="addresses-name">{name}</p>
+          <p className="addresses-name">{block}</p>
+          <p className="addresses-name">{home}</p>
+          <p className="addresses-name">{floor}</p>
         </div>
-        <div className="addresses-details">
-          <p className="addresses-name">Name: {name}</p>
-          <p className="addresses-name">Block: {block}</p>
-          <p className="addresses-name">Home: {home}</p>
-          <p className="addresses-name">Floor: {floor}</p>
+        
+        
+      </div>
+      <div className="addresses-map-section">
+          <img src="/assets/img/map-image.svg" alt="Small Image" />
         </div>
       </div>
       <AddressesButton/>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Icon_-_Arrow_Background_Mask_" data-name="Icon - Arrow (Background/Mask)" width="24" height="24" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Icon_-_Arrow" data-name="Icon - Arrow" clip-path="url(#clip-path)">
+    <path id="Vector" d="M8.195.256a.992.992,0,0,0-1.331,0L.276,6.381a.832.832,0,0,0,0,1.237l6.588,6.125a.992.992,0,0,0,1.331,0,.832.832,0,0,0,0-1.237L3.213,7.875H15.059a.877.877,0,1,0,0-1.75H3.213L8.195,1.494A.832.832,0,0,0,8.195.256Z" transform="translate(4 5)" fill="#1f2933"/>
+  </g>
+</svg>
