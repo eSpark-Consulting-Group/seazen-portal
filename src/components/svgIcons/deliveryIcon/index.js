@@ -1,8 +1,10 @@
+import React from "react";
+
 const DeliveryIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      xlink="http://www.w3.org/1999/xlink"
+      xlinkHref="http://www.w3.org/1999/xlink"
       width="16.75"
       height="19.25"
       viewBox="0 0 14.107 18"

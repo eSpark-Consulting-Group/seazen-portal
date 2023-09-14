@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../profileDetails/profileStructure/style.css'
 import DetailsButton from '../../socialButtonTabs/detailsButtons';
-import { Footer } from '../../footer';
+import { Footer } from '../../footer/footerContent';
 
 const Structure = ({ name, register, imageUrl }) => {
   return (

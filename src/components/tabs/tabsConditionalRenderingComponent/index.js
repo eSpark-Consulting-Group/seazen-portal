@@ -1,3 +1,4 @@
+import React from "react";
 import IconPositionTabs from "../tabComponent/index.js";
 import { useState } from "react";
 import CateringDetails from "../../restaurant/catering/index.js";

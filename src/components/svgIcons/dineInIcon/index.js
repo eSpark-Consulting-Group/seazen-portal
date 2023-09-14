@@ -1,13 +1,15 @@
+import React from "react";
+
 const DineInIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      xlink="http://www.w3.org/1999/xlink"
+      xlinkHref="http://www.w3.org/1999/xlink"
       width="25.5"
       height="17.75"
       viewBox="0 0 26.908 18"
     >
-      <g id="Dine_In_Icon" clip-path="url(#clip-path)">
+      <g id="Dine_In_Icon" clipPath="url(#clip-path)">
         <path
           id="Path_45"
           data-name="Path 45"
