@@ -2,10 +2,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import Navbar from "../../components/header";
+import Navbar, { NavbarVariants } from "../../components/header";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { Footer } from "../../components/footer";
+import { Footer } from "../../components/footer/footerContent";
 import { paths } from "../../routes/paths";
 
 function PhoneNumberVerificationIndex() {
@@ -25,7 +25,7 @@ function PhoneNumberVerificationIndex() {
         justifyContent="space-between"
         spacing={2}
       >
-        <Navbar />
+        <Navbar variant={NavbarVariants.backWithProfile} />
         <Stack
           spacing={5}
           sx={{
@@ -64,7 +64,7 @@ function PhoneNumberVerificationIndex() {
             />
           </Stack>
 
-          <Button size="large" variant="contained" fullWidth onClick={sendOTP}>
+          <Button size="large" variant="contained" onClick={sendOTP}>
             Continue
           </Button>
 
@@ -73,7 +73,7 @@ function PhoneNumberVerificationIndex() {
           </Typography>
         </Stack>
 
-        <Footer showCommentOption={false} />
+        <Footer showFooterSection={false} />
       </Stack>
     </>
   );

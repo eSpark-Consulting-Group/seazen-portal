@@ -1,3 +1,4 @@
+import React from "react";
 import RouteProvider from "./routes/routes";
 import "./App.css";
 

@@ -12,6 +12,9 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: "#fff",
+          "&:hover": {
+            backgroundColor: "#fff",
+          },
           boxShadow: (theme) => theme.shadows[16],
         },
       },

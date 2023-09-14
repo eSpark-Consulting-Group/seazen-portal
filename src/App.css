@@ -11,12 +11,10 @@
 .design-section {
   flex: 1;
   color: #fff;
-  height: 941px;
   overflow: auto; 
   overflow-y: scroll; 
   overflow-x: hidden; 
   background: #FFFFFF 0% 0% no-repeat padding-box;
-  
 }
 
 .design-section::-webkit-scrollbar {
@@ -50,6 +48,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media screen and (min-width: 1000px){
   .design-section{
+    min-width: 375px;
     max-width: 375px;
   }
 }
