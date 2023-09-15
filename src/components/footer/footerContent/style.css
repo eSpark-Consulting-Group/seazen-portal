@@ -29,18 +29,23 @@
   margin-bottom: -32px;
 }
 
-@media screen and (max-width:500px) and (min-width:400px) {
+@media screen and (max-width: 500px) and (min-width: 400px) {
   .text-box {
     position: absolute;
-    top: 112%;
+    top: 116%;
     left: 355px;
   }
 }
 
-@media screen and (max-width:370px)  {
+@media screen and (max-width: 380px) and (min-width: 350px) {
   .text-box {
-    position: absolute;
-    top: 112%;
-    left: 355px;
+    top: 110%;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .text-box {
+    left: 262px;
+    top: 104%;
   }
 }

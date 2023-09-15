@@ -2,13 +2,13 @@ import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import "./style.css";
-
 import deliveryIcon from "./delivery-icon.svg";
 import pickupIcon from "./pickup-icon.svg";
 import cateringIcon from "./catering-icon.svg";
 import dineInIcon from "./dinein-icon.svg";
 import { useNavigate } from "react-router";
 import { paths } from "../../routes/paths";
+import { useMediaQuery } from "@mui/material";
 
 const bull = (
   <Box
@@ -53,9 +53,11 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
     icons.slice(1),
   ];
 
-  // const handleRestaurantClick = () => {
-  //   navigate(paths.menu)
-  // };
+  const isSmallScreen = useMediaQuery("(max-width: 500px) and (min-width: 380px)");
+  const isSmallerScreen = useMediaQuery("(max-width: 350px)");
+
+  // Adjust cardWidth to apply 120px width to screens less than 350px
+  const cardWidth = isSmallScreen ? (isSmallerScreen ? 145 : 190) : (isSmallerScreen ? 145 : 164);
 
   const getCardClassName = () => {
     if (orderTypeFilter) {
@@ -78,8 +80,15 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   return (
     <div className="restaurantCard-container">
       {[0, 1, 2, 3, 4, 5].map((index) => (
-        <div key={index} className={`restaurantCards ${getCardClassName()}`}>
-          <Card sx={{ width: 164, borderRadius: 1 }} className="restaurantCards" onClick={() => navigate(paths.menu)}>
+        <div key={index} className={`restaurantCards restaurantCard-${isSmallScreen ? 'small' : 'large'} ${getCardClassName()}`}>
+          <Card
+            sx={{
+              width: cardWidth,
+              borderRadius: 1
+            }}
+            className="restaurantCards"
+            onClick={() => navigate(paths.menu)}
+          >
             <img
               className="restaurantCard-img"
               src={`/assets/img/${15 + index * 2}.png`}

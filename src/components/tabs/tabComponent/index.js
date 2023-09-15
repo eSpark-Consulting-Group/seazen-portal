@@ -30,7 +30,7 @@ export default function IconPositionTabs({
           TabIndicatorProps={{ sx: { backgroundColor: "#323F4B" } }}
           sx={{
             backgroundColor: "#F0F6F5",
-            width: "375px",
+           
             padding: "0 20px",
             color: "#323F4B",
             minHeight: "40px",
