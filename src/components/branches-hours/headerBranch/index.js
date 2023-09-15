@@ -1,10 +1,13 @@
 import React from 'react';
 import "./style.css"
+import { useNavigate } from 'react-router';
 
 const BranchHeader = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="branch-header">
-      <div className="branch-left-icons">
+      <div className="branch-left-icons" onClick={()=>navigate(-1)}>
         <img src='/assets/img/Icon - Arrow.svg'></img>
       </div>
       <div className="branch-logo">

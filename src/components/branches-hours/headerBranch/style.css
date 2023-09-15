@@ -18,6 +18,7 @@
   position: absolute;
   top: 30px;
   left: 32px;
+  cursor: pointer;
 }
 
 .right-icons img {

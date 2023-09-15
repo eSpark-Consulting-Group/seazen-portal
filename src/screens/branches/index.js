@@ -34,7 +34,7 @@ export const Branches = () => {
     // Add more restaurant objects as needed
   ];
   return (
-    <div>
+    <div className="branches-screen-container">
       <BranchHeader />
       <BranchContent />
       <RestaurantInfo restaurants={restaurantData} />;

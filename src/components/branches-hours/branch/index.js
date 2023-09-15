@@ -46,33 +46,33 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
 
   return (
     <div className="branches-container">
-    <div className="branch-info">
-      <div className="branches-heading">
-      <h1>{name}</h1>
-      </div>
-      <div className="status-section">
-    <div className="status-container">
-        <div className={`status-tag ${status.toLowerCase()} ${status === 'Closed' ? 'closed' : status === 'Closing Soon' ? 'closing-soon' : status === 'Open Now' ? 'open-now' : ''}`}>
-          {status.toUpperCase()}
+      <div className="branch-info">
+        <div className="branches-heading">
+          <h1>{name}</h1>
         </div>
-      </div>
-      </div>
-      <div>
-    <div className="hours">
-        <div className="branch-timings">
-          <strong className="branch-weekdays">Weekdays:</strong><span className="branch-weekdaysHours"> {weekdayHours}</span>
-          <div>
-            <strong className="branch-weekends">Weekends:</strong><span className="branch-weekendsHours"> {weekendHours}</span>
+        <div className="branch-status-section">
+          <div className="branch-status-container">
+            <div className={`branch-status-tag ${status.toLowerCase()} ${status === 'Closed' ? 'branch-closed' : status === 'Closing Soon' ? 'branch-closing-soon' : status === 'Open Now' ? 'branch-open-now' : ''}`}>
+              {status.toUpperCase()}
+            </div>
           </div>
         </div>
-      </div>
-      </div>
-      <div className="branch-icon">
-        <img src="/assets/img/location-arrow.svg" alt={`${name} Location`} />
+        <div>
+          <div className="branch-hours">
+            <div className="branch-timings">
+              <strong className="branch-weekdays">Weekdays:</strong><span className="branch-weekdaysHours"> {weekdayHours}</span>
+              <div>
+                <strong className="branch-weekends">Weekends:</strong><span className="branch-weekendsHours"> {weekendHours}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="branch-icon">
+          <img src="/assets/img/location-arrow.svg" alt={`${name} Location`} />
+        </div>
       </div>
     </div>
-    </div>
-    
+
   );
 };
 
