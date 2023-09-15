@@ -9,3 +9,18 @@
   width: 100%;
   max-width: 375px;
 }
+
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .options_services_outer_container {
+    top: 260px !important;
+    width: 114% !important;
+  }
+}
+
+@media screen and (max-width: 350px) {
+.options_services_outer_container {
+  width: 321px;
+}
+}
+
+

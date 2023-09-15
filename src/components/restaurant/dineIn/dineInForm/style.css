@@ -271,3 +271,37 @@
 .dine_in_form_outer_container::-webkit-scrollbar {
   display: none;
 }
+
+@media screen and (max-width: 350px) {
+  .dine_in_form_inner_container {
+    width: 350px;
+  }
+  .dine_in_form_heading_text {
+    width: 320px;
+  }
+  .first_name_input {
+    width: 150px;
+  }
+  .last_name_input {
+    width: 135px;
+    margin-right: 32px;
+  }
+  .phone_number_input {
+    width: 238px;
+    margin-right: 31px;
+  }
+  .select_container {
+    width: 300px;
+    margin-right: 32px;
+  }
+  .special_requirement_text_area {
+    width: 300px;
+    margin-right: 32px;
+  }
+  .dine_in_form_submit_button {
+    width: 300px;
+  }
+  .dine_in_form_outer_container {
+    margin-left: 20px;
+  }
+}
