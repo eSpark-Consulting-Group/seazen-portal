@@ -21,9 +21,6 @@
   overflow-y: scroll;
   overflow-x: hidden;
   background: #ffffff 0% 0% no-repeat padding-box;
-  min-width: 375px;
-  width: 100%;
-  max-width: 768px;
 }
 
 .design-section::-webkit-scrollbar {
@@ -31,11 +28,12 @@
 }
 
 .content-section {
+  flex: 2;
+  padding: 20px;
   background-image: url("/public/assets/img/images.jpeg");
   background-size: cover;
   background-repeat: no-repeat;
-  height: inherit;
-  width: 100%;
+  background-position: center;
 }
 
 .style {
