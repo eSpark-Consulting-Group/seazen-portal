@@ -13,6 +13,7 @@ import { Terms } from "../screens/terms";
 import CustomerRegistration from "../screens/customer/registration";
 import { EditForm } from "../screens/editForm";
 import AddressForm from "../screens/adress";
+import { Details } from "../screens/details";
 
 export const paths = {
   home: "/",
@@ -26,16 +27,18 @@ export const paths = {
   phone_verification_otp: "/phone-verification/otp",
   profile: "/profile",
   update_profile: "/update_profile",
-  guest_profile: "/guest-profile",
-  privacy_policy: "/privacy-policy",
-  terms: "/terms",
-  address: '/address'
+  guest_profile: "guest-profile",
+  privacy_policy: "privacy-policy",
+  terms: "terms",
+  address: '/address',
+  details: "/details",
 };
 
 export const routes = {
   home: "/",
   error: "*",
   menu: "/menu",
+  details: "/details",
   address: '/address',
   cart: "/cart",
   location: "/location",
@@ -55,6 +58,11 @@ export const publicRoutes = {
     name: "Home",
     path: routes.home,
     component: <Home />,
+  },
+  [paths.details]: {
+    name: "Details",
+    path: routes.details,
+    component: <Details />,
   },
   [paths.address]: {
     name: "Address",

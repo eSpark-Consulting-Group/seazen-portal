@@ -1,0 +1,67 @@
+.count-container {
+  width: 280px;
+  height: 44px;
+  background: #026754 0% 0% no-repeat padding-box;
+  border-radius: 12px 12px 0px 0px;
+  opacity: 1;
+  margin-top: 20px;
+  margin-left: 10px;
+
+}
+
+.count {
+  margin-left: 210px;
+  position: absolute;
+  top: 888px;
+  left: 11px;
+}
+
+.quantity-label {
+  text-align: left;
+  font: normal normal normal 16px/22px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  position: absolute;
+  top: 893px;
+  left: 56px;
+}
+
+.minus-button {
+  background: #308979 0% 0% no-repeat padding-box;
+  border-radius: 12px;
+  opacity: 1;
+  border: none;
+  width: 18px;
+  height: 25px;
+  margin-left: -3px;
+  margin-right: 10px;
+  
+}
+
+.pluss-button {
+  background: #308979 0% 0% no-repeat padding-box;
+  box-shadow: 0px 4px 16px #74869429;
+  border-radius: 12px;
+  opacity: 1;
+  border: none;
+  width: 18px;
+  height: 25px;
+  margin-left: 10px;
+}
+
+.minus-style {
+  text-align: center;
+  font: normal normal normal 24px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+.pluss-style {
+  text-align: center;
+  font: normal normal normal 24px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
