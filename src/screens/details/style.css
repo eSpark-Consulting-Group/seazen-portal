@@ -11,6 +11,10 @@ padding-bottom: 205px;
 
 }
 
+.details-header{
+    position: relative;
+}
+
 .detail::-webkit-scrollbar {
     display: none;
   }

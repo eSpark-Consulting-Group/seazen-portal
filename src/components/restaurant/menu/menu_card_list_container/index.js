@@ -122,11 +122,11 @@ const MenuCardListContainer = () => {
           </Box>
         </Box>
 
-        <div className="comment_button_container">
+        {/* <div className="comment_button_container">
           <button>
             <img src="/assets/img/comment_icon.svg" alt="comment_icon" />
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

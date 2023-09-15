@@ -38,7 +38,7 @@ const Menu = () => {
   });
 
   return (
-    <div className="menu_outer_container">
+    <div >
       <Navbar restaurantDetail={restaurantDetail} />
       <RestaurantOptionsServicesContainer restaurantDetail={restaurantDetail} restaurantBranchHours={restaurantBranchHours}/>
     </div>

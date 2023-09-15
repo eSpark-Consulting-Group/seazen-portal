@@ -6,13 +6,14 @@
   opacity: 1;
   margin-top: 20px;
   margin-left: 10px;
+  position: relative;
 }
 
 .count {
   margin-left: 210px;
   position: absolute;
-  top: 880px;
-  left: 22px;
+  top: 10px;
+  left: -10px;
 }
 
 .quantity-label {
@@ -22,8 +23,8 @@
   color: #ffffff;
   opacity: 1;
   position: absolute;
-  top: 880px;
-  left: 56px;
+  top: 10px;
+  left: 18px;
 }
 
 .quantitycount-style {
@@ -76,10 +77,10 @@
   }
 
   .quantity-label {
-    left: 95px;
+    left: 20px;
   }
 
   .count {
-    left: 55px;
+    left: -12px;
   }
 }

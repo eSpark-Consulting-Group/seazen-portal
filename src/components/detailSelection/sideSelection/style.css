@@ -6,7 +6,7 @@
   border-radius: 16px;
   opacity: 1;
   position: absolute;
-  top: 533px;
+  top: 852px;
 }
 
 .side-title {
@@ -77,7 +77,7 @@ input[type="checkbox"]:checked {
 .side-list {
   list-style: none;
   padding: 0;
-  margin-top: 425px;
+  margin-top: 440px;
 }
 
 .side-list-item {
@@ -95,6 +95,7 @@ input[type="checkbox"]:checked {
   border-radius: 12px;
   opacity: 1;
   margin-left: -14px;
+  position: relative;
 }
 
 .pricing-section {
@@ -103,14 +104,14 @@ input[type="checkbox"]:checked {
   letter-spacing: 0px;
   color: #ffffff;
   opacity: 1;
-  top: 930px;
-  left: 75px;
+  top: 15px;
+  left: 66px;
   position: absolute;
 }
 
 .pricing-icon {
-  top: 930px;
-  left: 41px;
+  top: 15px;
+  left: 30px;
   width: 24px;
   height: 24px;
   opacity: 1;
@@ -118,8 +119,8 @@ input[type="checkbox"]:checked {
 }
 
 .calculation-section {
-  top: 930px;
-  left: 223px;
+  top: 15px;
+  left: 205px;
   width: 95px;
   height: 24px;
   text-align: right;
@@ -205,16 +206,16 @@ input[type="checkbox"] {
   }
 
   .calculation-section {
-    left: 265px;
+    left: 215px;
   }
 
   .pricing-section {
-    left: 110px;
+    left: 5=65px;
   }
   .pricing-icon {
-    left: 77px;
+    left: 32px;
   }
-  .pricing-box{
-    margin-left:-3px ;
+  .pricing-box {
+    margin-left: -3px;
   }
 }

@@ -1,5 +1,5 @@
 .size {
-  top: 160px;
+  top: 460px;
   left: 12px;
   width: 351px;
   height: 40px;
@@ -80,7 +80,7 @@ input[type="checkbox"]:checked {
 .size-list {
   list-style: none;
   padding: 0;
-  margin-top: 1px;
+  margin-top: 300px;
 }
 
 .size-list-item {

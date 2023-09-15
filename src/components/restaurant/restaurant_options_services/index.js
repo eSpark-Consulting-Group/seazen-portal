@@ -5,7 +5,8 @@ import TabsDynamicConditionalComponent from "../../tabs/tabsConditionalRendering
 
 const RestaurantOptionsServicesContainer = ({restaurantDetail, restaurantBranchHours}) => {
   return (
-    <div className="options_services_outer_container">
+    <div>
+    <div className="options_services_outer_container"></div>
       <RestaurantDetails restaurantDetail={restaurantDetail} restaurantBranchHours={restaurantBranchHours}/>
       <TabsDynamicConditionalComponent restaurantDetail={restaurantDetail}/>
     </div>

@@ -272,7 +272,7 @@
   display: none;
 }
 
-@media screen and (max-width: 350px) {
+/* @media screen and (max-width: 350px) {
   .dine_in_form_inner_container {
     width: 350px;
   }
@@ -304,4 +304,4 @@
   .dine_in_form_outer_container {
     margin-left: 20px;
   }
-}
+} */
