@@ -52,7 +52,7 @@ const MenuCard = ({
           position: "relative",
           pointer: "cursor",
           ...(menuCardDropdownOpen && {
-            borderLeft: "4px solid #FFD700",
+            borderLeft: "12px solid #026754",
           }),
         }}
         direction="row"
@@ -108,7 +108,7 @@ const MenuCard = ({
         <Stack
           spacing={1}
           sx={{
-            width: "75%",
+            width: "85%",
             backgroundColor: "common.white",
             p: 2,
             borderBottomLeftRadius: (theme) => theme.shape.borderRadius,
