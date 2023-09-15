@@ -17,7 +17,7 @@ const Home = () => {
       <RestaurantsOrderTypeButton />
       {/* <BasicCard /> */}
       <DraggableSlider />
-      <Footer />
+      <Footer showFooterSection={true}/>
     </div>
   );
 };
