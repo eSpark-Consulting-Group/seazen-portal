@@ -193,3 +193,19 @@ hr {
   border: 2px solid #333; /* Border color and width */
   border-radius: 4px; /* Rounded corners */
 }
+
+
+@media screen and (max-width:500px) and (min-width:400px) {
+  .size{
+    left: 36px;
+  }
+
+  .size-list{
+    margin-left: 20px;
+  }
+
+  .size-right-section{
+    margin-right: -45px;
+
+  }
+}

@@ -214,7 +214,7 @@ input[type="checkbox"] {
   font-weight: bold;
   font-size: 16px;
   text-align: right;
-  font: normal normal bold 16px/24px Titillium Web;
+  font: normal normal 600 16px/24px Titillium Web;
   letter-spacing: 0px;
   color: #323f4b;
   opacity: 1;
@@ -253,4 +253,16 @@ hr {
 
 .disabled-text {
   color: #c0c4c8;
+}
+
+@media screen and (max-width:500px) and (min-width:400px) {
+  .topping-selection{
+    left: 36px;
+  }
+
+  .toppings-list{
+    margin-left: 20px;
+  }
+
+  
 }

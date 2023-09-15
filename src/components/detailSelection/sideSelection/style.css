@@ -1,199 +1,220 @@
 .side {
-    left: 12px;
-    width: 351px;
-    height: 40px;
-    background: #F0F6F5 0% 0% no-repeat padding-box;
-    border-radius: 16px;
-    opacity: 1;
-    position: absolute;
-    top: 533px;
+  left: 12px;
+  width: 351px;
+  height: 40px;
+  background: #f0f6f5 0% 0% no-repeat padding-box;
+  border-radius: 16px;
+  opacity: 1;
+  position: absolute;
+  top: 533px;
+}
 
-  }
-  
-  .side-title {
-    top: 6px;
-    left: 13px;
-    width: 110px;
-    height: 24px;
-    text-align: left;
-    font: normal normal 600 16px/24px Titillium Web;
-    letter-spacing: 0px;
-    color: #1f2933;
-    position: absolute;
+.side-title {
+  top: 6px;
+  left: 13px;
+  width: 110px;
+  height: 24px;
+  text-align: left;
+  font: normal normal 600 16px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #1f2933;
+  position: absolute;
+}
 
-  }
-  
-  .side-small-title {
-    top: 8px;
-    left: 92px;
-    text-align: left;
-    font: normal normal 600 10px/24px Titillium Web;
-    letter-spacing: 0px;
-    color: #6b7580;
-    position: absolute;
-  }
-  
-  .side-title-optional {
-    top: 6px;
-    left: 274px;
-    width: 63px;
-    height: 21px;
-    text-align: right;
-    font: normal normal bold 14px/24px Titillium Web;
-    letter-spacing: 0px;
-    color: #6b7580;
-    opacity: 1;
-    position: absolute;
-  }
-  
-  .side-check {
-    padding-top: 115px;
-    width: 351px;
-    height: 167px;
-    opacity: 1;
-    margin-left: 30px;
+.side-small-title {
+  top: 8px;
+  left: 92px;
+  text-align: left;
+  font: normal normal 600 10px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #6b7580;
+  position: absolute;
+}
 
+.side-title-optional {
+  top: 6px;
+  left: 274px;
+  width: 63px;
+  height: 21px;
+  text-align: right;
+  font: normal normal bold 14px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #6b7580;
+  opacity: 1;
+  position: absolute;
+}
+
+.side-check {
+  padding-top: 115px;
+  width: 351px;
+  height: 167px;
+  opacity: 1;
+  margin-left: 30px;
+}
+
+input[type="checkbox"] {
+  accent-color: #2e9c6e;
+}
+
+.side-check label:before {
+  border-radius: 3px;
+}
+
+input[type="checkbox"]:checked {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+  line-height: 12px;
+}
+
+.side-check {
+  border-radius: 4px;
+  width: 300px;
+  font-family: Arial, sans-serif;
+}
+
+.side-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 425px;
+}
+
+.side-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.pricing-box {
+  width: 327px;
+  height: 56px;
+  background: #308979 0% 0% no-repeat padding-box;
+  box-shadow: 0px 4px 16px #30897929;
+  border-radius: 12px;
+  opacity: 1;
+  margin-left: -14px;
+}
+
+.pricing-section {
+  text-align: center;
+  font: normal normal 600 18px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  top: 930px;
+  left: 75px;
+  position: absolute;
+}
+
+.pricing-icon {
+  top: 930px;
+  left: 41px;
+  width: 24px;
+  height: 24px;
+  opacity: 1;
+  position: absolute;
+}
+
+.calculation-section {
+  top: 930px;
+  left: 223px;
+  width: 95px;
+  height: 24px;
+  text-align: right;
+  font: normal normal 600 16px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  position: absolute;
+}
+
+.side-left-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 38px;
+  height: 24px;
+  text-align: left;
+  font: normal normal 600 16px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #323f4b;
+  opacity: 1;
+  margin-left: -10px;
+}
+
+input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.side-right-section {
+  font-weight: bold;
+  font-size: 16px;
+  text-align: right;
+  font: normal normal bold 16px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #323f4b;
+  opacity: 1;
+  margin-right: -22px;
+}
+
+/* Style for the Total section */
+.side-list-item:last-child {
+  background-color: #fff;
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+/* Hover effect for list items */
+.side-list-item:hover {
+  background-color: #e6e6e6;
+  transition: background-color 0.2s ease-in-out;
+}
+
+hr {
+  width: 325px;
+  height: 0px;
+  transform: matrix(1, 0, 0, 1, 0, 0);
+  border: 1px solid #ebeef0;
+  opacity: 1;
+}
+
+.side-check input[type="checkbox"] {
+  /* Increase the width and height of the checkbox */
+  width: 20px; /* Adjust the size as needed */
+  height: 20px; /* Adjust the size as needed */
+
+  /* You can also style the appearance of the checkbox */
+  background-color: #fff; /* Background color of the checkbox */
+  border: 2px solid #333; /* Border color and width */
+  border-radius: 4px; /* Rounded corners */
+}
+
+@media screen and (max-width: 500px) and (min-width: 400px) {
+  .side {
+    left: 36px;
   }
-  
-  input[type="checkbox"] {
-    accent-color: #2e9c6e;
-  }
-  
-  .side-check label:before {
-    border-radius: 3px;
-  }
-  
-  input[type="checkbox"]:checked {
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-    font-size: 12px;
-    color: #fff;
-    text-align: center;
-    line-height: 12px;
-  }
-  
-  .side-check {
-    border-radius: 4px;
-    width: 300px;
-    font-family: Arial, sans-serif;
-  }
-  
+
   .side-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 425px;
+    margin-left: 20px;
   }
-  
-  .side-list-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-  
-  .pricing-box {
-    width: 327px;
-    height: 56px;
-    background: #308979 0% 0% no-repeat padding-box;
-    box-shadow: 0px 4px 16px #30897929;
-    border-radius: 12px;
-    opacity: 1;
-    margin-left: -14px;
 
-  }
-  
-  .pricing-section {
-    text-align: center;
-    font: normal normal 600 18px/24px Titillium Web;
-    letter-spacing: 0px;
-    color: #ffffff;
-    opacity: 1;
-    top: 945px;
-    left: 75px;
-    position: absolute;
-  }
-  
-  .pricing-icon {
-    top: 945px;
-    left: 41px;
-    width: 24px;
-    height: 24px;
-    opacity: 1;
-    position: absolute;
-  }
-  
-  .calculation-section {
-    top: 945px;
-    left: 223px;
-    width: 95px;
-    height: 24px;
-    text-align: right;
-    font: normal normal 600 16px/24px Titillium Web;
-    letter-spacing: 0px;
-    color: #ffffff;
-    opacity: 1;
-    position: absolute;
-  }
-  
-  .side-left-section {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    width: 38px;
-    height: 24px;
-    text-align: left;
-    font: normal normal 600 16px/24px Titillium Web;
-    letter-spacing: 0px;
-    color: #323f4b;
-    opacity: 1;
-    margin-left: -10px;
-  
-  }
-  
-  input[type="checkbox"] {
-    margin-right: 8px;
-  }
-  
   .side-right-section {
-    font-weight: bold;
-    font-size: 16px;
-    text-align: right;
-    font: normal normal bold 16px/24px Titillium Web;
-    letter-spacing: 0px;
-    color: #323f4b;
-    opacity: 1;
-    margin-right: -22px;
-  
+    margin-right: -45px;
   }
-  
-  /* Style for the Total section */
-  .side-list-item:last-child {
-    background-color: #fff;
-    padding-top: 8px;
-    margin-top: 8px;
+
+  .calculation-section {
+    left: 265px;
   }
-  
-  /* Hover effect for list items */
-  .side-list-item:hover {
-    background-color: #e6e6e6;
-    transition: background-color 0.2s ease-in-out;
+
+  .pricing-section {
+    left: 110px;
   }
-  
-  hr {
-    width: 325px;
-    height: 0px;
-    transform: matrix(1, 0, 0, 1, 0, 0);
-    border: 1px solid #ebeef0;
-    opacity: 1;
+  .pricing-icon {
+    left: 77px;
   }
-  
-  .side-check input[type="checkbox"] {
-    /* Increase the width and height of the checkbox */
-    width: 20px; /* Adjust the size as needed */
-    height: 20px; /* Adjust the size as needed */
-  
-    /* You can also style the appearance of the checkbox */
-    background-color: #fff; /* Background color of the checkbox */
-    border: 2px solid #333; /* Border color and width */
-    border-radius: 4px; /* Rounded corners */
+  .pricing-box{
+    margin-left:-3px ;
   }
-  
+}

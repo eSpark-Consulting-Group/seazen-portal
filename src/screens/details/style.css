@@ -7,7 +7,7 @@ opacity: 1;
 position: absolute;
 border-radius : 20px;
 overflow-x: hidden;
-padding-bottom: 90px;
+padding-bottom: 205px;
 
 }
 
@@ -15,4 +15,17 @@ padding-bottom: 90px;
     display: none;
   }
 
+@media screen and (max-width:500px) {
+    .detail{
+        padding-bottom: 445px;
+       
+
+    }
+}
+
+@media screen and (max-width:500px) and (min-width:400px)  {
+    .detail{
+        width: 426px;
+    }
+}
   

@@ -8,6 +8,12 @@
   overflow-x: hidden;
 }
 
+@media screen and (max-width:350px) {
+  .container_main {
+    margin-right: -56px;
+  }
+}
+
 .design-section {
   flex: 1;
   color: #fff;

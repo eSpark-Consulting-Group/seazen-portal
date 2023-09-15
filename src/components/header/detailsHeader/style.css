@@ -4,8 +4,19 @@
   align-items: center;
   color: #fff;
   opacity: 1;
-  background-image: url("/public/assets/img/image.png");
+  /* background-image: url("/public/assets/img/image.png"); */
   height: 309px;
+}
+
+
+@media screen and (max-width:500px) and (min-width:400px) {
+  .detailsHeaderBackground {
+    width: 423px;
+  }
+  .detailsheadericon-style{
+    left: 360px !important;
+
+  }
 }
 
 .detailsheaderleft-icons {

@@ -19,7 +19,7 @@ function CountContainer() {
       <span className="quantity-label">Quantity</span>
       <div className="count">
         <button className="minus-button" onClick={decrementCount}><span className="minus-style">-</span></button>
-        <span>{count}</span>
+        <span className="quantitycount-style">{count}</span>
         <button className="pluss-button" onClick={incrementCount}><span className="pluss-style">+</span></button>
       </div>
     </div>

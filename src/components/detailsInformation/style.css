@@ -41,3 +41,10 @@
 position: absolute;
 top: -270px;
 }
+
+@media screen and (max-width:500px) and (min-width:400px)  {
+  .information-style{
+    left: 30px;
+  }
+}
+

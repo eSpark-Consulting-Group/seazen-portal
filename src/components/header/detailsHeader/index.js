@@ -4,6 +4,7 @@ import './style.css'
 export const DetailsHeader = () => {
     return (
         <header className="detailsheaderheader">
+          <img className="detailsHeaderBackground" src="/assets/img/image.png"/>
           <div className="detailsheaderarrowicons-style" >
             <img className="detailsheaderleft-icons" src='/assets/img/Icon - Arrow.svg'></img>
           </div>
