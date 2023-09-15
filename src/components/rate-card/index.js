@@ -16,9 +16,10 @@ const RateCard = ({ isVisible, handleClose }) => {
             <Modal
                 open={isVisible}
                 onClose={() => handleClose(average)}
+
             >
                 <Slide direction="up" in={isVisible}>
-                    <div style={{ backgroundColor: "white" }} className='rate-screen'>
+                    <div style={{ backgroundColor: "white" , position:"absolute", bottom:"0"}} className='rate-screen'>
                         <div id='rate-head'>How satisfied are you with your order?</div>
                         <div className='rate-cat'>
                             <div id='rate-cat-text'>Overall Experience</div>
