@@ -15,6 +15,7 @@ import { EditForm } from "../screens/editForm";
 import AddressForm from "../screens/adress";
 import { Details } from "../screens/details";
 import { Branches } from "../screens/branches";
+import Addresses from "../screens/adresses";
 
 export const paths = {
   home: "/",
@@ -34,6 +35,7 @@ export const paths = {
   address: '/address',
   details: "/details",
   branches: "/branches",
+  addresses: "/my-addresses",
 };
 
 export const routes = {
@@ -54,6 +56,7 @@ export const routes = {
   privacy_policy: "/privacy-policy",
   terms: "/terms",
   branches: "/branches",
+  addresses: "/my-addresses",
 };
 
 export const publicRoutes = {
@@ -136,6 +139,11 @@ export const publicRoutes = {
     name: "branches",
     path: routes.branches,
     component: <Branches />,
+  },
+  [paths.addresses]: {
+    name: "addresses",
+    path: routes.addresses,
+    component: <Addresses />,
   },
 };
 
