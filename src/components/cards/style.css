@@ -1,0 +1,72 @@
+.restaurantCard-container {
+  display: grid;
+  grid-template-columns: repeat(2, 0.2fr);
+  gap: 10px;
+  justify-items: center;
+  padding-top: 20px;
+  margin-left: -5px;
+  
+}
+.restaurantCard-with-border {
+  border: 2px solid #93674E;
+  border-radius: 12px; /* You can adjust the border color and width */
+}
+
+/* Style for the cards without a border */
+.restaurantCard-no-border {
+  border: none;
+}
+
+.restaurantCards {
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.restaurantCard-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin-bottom: -8px;
+
+}
+
+.restaurantCards:hover {
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  
+}
+
+.svg-container {
+  
+  
+position: relative; 
+
+
+}
+
+
+
+
+.icon-row{
+  margin-bottom: -11px;
+  opacity: 1;
+  
+
+}
+
+.inner-svg-container{
+  position: absolute;
+  top: -75px;
+  left: 154px;
+    
+    
+}
+
+.collapsed{
+  display: none;
+}
+
+
+ 
+

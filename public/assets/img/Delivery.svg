@@ -1,0 +1,19 @@
+<svg id="Icon_Delivery" data-name="Icon/Delivery" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_3" data-name="Rectangle 3" width="12.171" height="15.53" fill="#758b9a"/>
+    </clipPath>
+  </defs>
+  <g id="Bg" fill="#fafafa" stroke="#ebeef0" stroke-width="1" stroke-dasharray="0 0">
+    <circle cx="12" cy="12" r="12" stroke="none"/>
+    <circle cx="12" cy="12" r="11.5" fill="none"/>
+  </g>
+  <g id="Group_269" data-name="Group 269" transform="translate(5.861 4.187)">
+    <g id="Group_4" data-name="Group 4" transform="translate(0 0)" clip-path="url(#clip-path)">
+      <path id="Path_3" data-name="Path 3" d="M6.085,0A6.092,6.092,0,0,0,0,6.085c0,3.2,4.649,9.444,6.085,9.444s6.086-6.245,6.086-9.444A6.093,6.093,0,0,0,6.085,0m0,14.986c-.869,0-5.542-5.645-5.542-8.9a5.542,5.542,0,0,1,11.084,0c0,3.255-4.673,8.9-5.542,8.9" transform="translate(0 0)" fill="#758b9a"/>
+      <path id="Path_4" data-name="Path 4" d="M14.349,11.248a.272.272,0,0,0-.272.272v1.844a.188.188,0,0,1-.188.188H12.376a.188.188,0,0,1-.188-.188V11.52a.272.272,0,1,0-.544,0v1.844a.732.732,0,0,0,.732.732h.485v4.013a.272.272,0,1,0,.544,0V14.1h.485a.732.732,0,0,0,.732-.732V11.52a.272.272,0,0,0-.272-.272" transform="translate(-8.479 -8.19)" fill="#758b9a"/>
+      <path id="Path_5" data-name="Path 5" d="M16.391,13.17a.272.272,0,0,0,.272-.272V11.52a.272.272,0,1,0-.544,0V12.9a.272.272,0,0,0,.272.272" transform="translate(-11.737 -8.19)" fill="#758b9a"/>
+      <path id="Path_6" data-name="Path 6" d="M25.537,11.247H25.46a.272.272,0,0,0-.272.272v6.589a.272.272,0,0,0,.544,0V16.054h.841a.689.689,0,0,0,.688-.688v-2.4a1.726,1.726,0,0,0-1.724-1.724m1.18,4.119a.145.145,0,0,1-.144.144h-.841v-3.7a1.179,1.179,0,0,1,.985,1.161Z" transform="translate(-18.341 -8.19)" fill="#758b9a"/>
+    </g>
+  </g>
+</svg>

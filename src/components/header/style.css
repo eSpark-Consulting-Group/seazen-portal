@@ -1,0 +1,64 @@
+.logo {
+  color: #0d0d0d;
+}
+
+.search-bar {
+  padding: 15px;
+  border-radius: 4px;
+  color: black;
+  width: 0;
+  border: none;
+}
+
+.search-container.expanded {
+  width: 250px;
+  border-radius: 24px;
+  padding-left: 17px;
+  padding-top: 5px;
+  height: 30px;
+}
+
+.search-container.expanded .search-bar {
+  width: 150%;
+}
+
+.search-bar {
+  border: none;
+  background-color: transparent;
+  outline: none;
+  display: none;
+}
+
+.search-bar::placeholder {
+  font: normal normal normal 15px Titillium Web;
+}
+
+.search-bar:focus {
+  border: 1px solid #fdfcfc;
+}
+
+.element {
+  transition: all 0.3s;
+}
+
+.search-expanded .element {
+  transform: translateX(-100%);
+}
+
+.icon-btn {
+  border-radius: 999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  box-shadow: 0px 24px 48px #314f7c1f;
+}
+
+.icon-btn img {
+  object-fit: contain;
+  width: 20px;
+  height: 20px;
+}

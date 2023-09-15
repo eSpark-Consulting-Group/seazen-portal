@@ -1,0 +1,12 @@
+.home-styling {
+  padding: 20px !important;
+}
+
+img,
+svg {
+  vertical-align: inherit !important;
+}
+
+.home-styling * {
+  box-sizing: content-box;
+}
