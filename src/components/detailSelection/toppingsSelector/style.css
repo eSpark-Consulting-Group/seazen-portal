@@ -240,6 +240,8 @@ hr {
   transform: matrix(1, 0, 0, 1, 0, 0);
   border: 1px solid #ebeef0;
   opacity: 1;
+  margin-top: 10px;
+
 }
 
 .toppingSelectioncheckbox-counter input[type="checkbox"] {

@@ -115,8 +115,7 @@
 
 .addresses-content {
   margin-left: -300px;
-  margin-top: 20px;
-  margin-top: 35px;
+  margin-top: 48px;
 }
 
 .addresses-button-container {
@@ -134,7 +133,7 @@
   opacity: 1;
   /* position: absolute; */
   padding-left: 217px;
-  margin-top: -36px;
+  margin-top: -54px;
 }
 
 .addresses-name {
@@ -143,7 +142,7 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  margin-bottom: -13px;
+  margin-bottom: 0px;
 }
 
 .addresses-details {

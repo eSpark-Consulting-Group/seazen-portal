@@ -176,7 +176,7 @@ input[type="checkbox"] {
   transition: background-color 0.2s ease-in-out;
 }
 
-hr {
+.size-list hr {
   width: 325px;
   height: 0px;
   transform: matrix(1, 0, 0, 1, 0, 0);

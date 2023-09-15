@@ -12,10 +12,10 @@ import { PrivacyPolicy } from "../screens/privacyPolicy";
 import { Terms } from "../screens/terms";
 import CustomerRegistration from "../screens/customer/registration";
 import { EditForm } from "../screens/editForm";
-import AddressForm from "../screens/adress";
+import AddressForm from "../screens/address";
 import { Details } from "../screens/details";
 import { Branches } from "../screens/branches";
-import Addresses from "../screens/adresses";
+import Addresses from "../screens/myAdresses";
 import MyOrderScreen from "../screens/myorder";
 import Receipt from "../screens/receipt";
 

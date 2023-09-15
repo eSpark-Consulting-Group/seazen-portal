@@ -4,10 +4,10 @@
     position: relative;
     }
     
-    hr{
+    /* hr{
         border-top: 1px dashed #707070;
         margin: 0 15px;
-    }
+    } */
     
     .my-orderscreen-nav{
         display: flex;
