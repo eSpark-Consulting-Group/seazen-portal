@@ -231,7 +231,7 @@ function LocationPage() {
         <Typography fontWeight="semi-bold" gutterBottom>
           Pinned Address: {placeDetails?.formatted_address}
         </Typography>
-        <Button size="large" fullWidth variant="contained">
+        <Button size="large" fullWidth variant="contained" onClick={()=>{navigate(paths.address)}}>
           Confirm Your Location
         </Button>
       </Stack>

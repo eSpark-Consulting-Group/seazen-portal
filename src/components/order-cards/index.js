@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Card, Rating } from '@mui/material';
-import '../../screens/order/style.css'
+import '../../screens/myorder/style.css'
 import RateCard from '../rate-card';
 
 
@@ -18,14 +18,14 @@ const OrderCard = ({ item, handleReorder, handleReceipt }) => {
         setAverage(value);
     }
 
-    const iconPath = `./assets/img/${item.icon}`;
+    const iconPath = `/assets/img/${item.icon}`;
 
     return (
         <Card style={{ border: "1px solid #C0CDD7", marginTop: "10px" }} >
             <div className='card-nav'>
-                <img src="./assets/img/Group 15.svg" alt="" />
+                <img src="/assets/img/Group 15.svg" alt="" />
                 <div className='card-nav-tags'>
-                    <div className='status-tag' style={{ backgroundColor: `${item.status.color}` }}><p>{item.status.text}</p></div>
+                    <div className='status-tag' style={{ backgroundColor: `${item.status.color}` }}>{item.status.text}</div>
                     <Button sx={{ p: 1, border: ' 1px solid #C0CDD7', color: '#40484E' }} variant='outlined' className='receipt-tag' onClick={handleReceipt}>Receipt</Button>
                 </div>
             </div>

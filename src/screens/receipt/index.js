@@ -1,12 +1,14 @@
 import React from 'react'
 import {Box, Button, IconButton, Stack, Typography} from '@mui/material';
-import './style.css'
 import ReceiptItem from '../../components/receipt-items';
 import { useState } from 'react';
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import { useNavigate } from 'react-router';
+import './style.css';
 
 const Receipt = () => {
+  const navigate = useNavigate();
   const [item, setTtem] = useState([1,2,3])
   const CART_ITEMS = [
     {
@@ -88,12 +90,12 @@ const Receipt = () => {
   return (
     <div>
         <div className='receipt-nav'>
-            <IconButton>
-                <img src="../assets/img/Arrow.png" alt="" />
+            <IconButton onClick={()=>navigate(-1)}>
+                <img src="/assets/img/Arrow.png" alt="" />
             </IconButton>
-              <img src="../assets/img/Logo.png" alt="" />
+              <img src="/assets/img/Logo.png" alt="" />
             <IconButton className='brand-logo'>
-                <img src="../assets/img/Group 259.png" alt="" />
+                <img src="/assets/img/Group 259.png" alt="" />
             </IconButton>
         </div>
         <div className='receipt-head'>
@@ -104,13 +106,13 @@ const Receipt = () => {
           <div id='heading'>Delivered to</div>
           <div>
             <div id="location-img">
-              <img  src="../assets/img/location.svg" alt="" />
+              <img  src="/assets/img/location.svg" alt="" />
             </div>
             <div id='heading-cont'>Ardia, Block 6</div>
           </div>
           <div>
             <div id="clock-img">
-              <img  src="../assets/img/clock.svg" alt="" />
+              <img  src="/assets/img/clock.svg" alt="" />
             </div>
             <div id='heading-cont'>{formattedDate}</div>
           </div>
@@ -153,7 +155,7 @@ const Receipt = () => {
         </Stack>
       </Stack>
       <div className='receipt-comment-section'>
-          <img src="../assets/img/Comment_Icon.png" alt="" />
+          <img src="/assets/img/Comment_Icon.png" alt="" />
       </div>
     </div>
   )

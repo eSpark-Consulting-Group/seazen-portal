@@ -1,14 +1,16 @@
 import React from 'react'
 import {Button} from '@mui/material';
-import '../order/style.css';
 import { useState } from 'react';
 import OrderCard from '../../components/order-cards';
 import RateCard from '../../components/rate-card';
 import OrderNavbar from '../../components/order-navbar';
+import { paths } from '../../routes/paths';
+import { useNavigate } from 'react-router';
+import '../order/style.css';
 
 
-const OrderScreen = () => {
-
+const MyOrderScreen = () => {
+    const navigate = useNavigate();
     const [category, setCategory] = useState([
         { type: "All", isActive: false },
         { type: "Delivery", isActive: false },
@@ -101,7 +103,7 @@ const OrderScreen = () => {
     }
 
     const handleReceipt = () =>{
-        alert(" Receipt ") ;
+        navigate(paths.receipt)
     }
     const handleRate = () => {}
     const handleReorder = () => {
@@ -126,7 +128,7 @@ const OrderScreen = () => {
                     : null)}
             </div>
                 <div className='comment-section'>
-                    <img src="./assets/img/Comment_Icon.png" alt="" />
+                    <img src="/assets/img/Comment_Icon.png" alt="" />
                 </div>
                     <RateCard/>
 
@@ -136,4 +138,4 @@ const OrderScreen = () => {
     )
 }
 
-export default OrderScreen
+export default MyOrderScreen;

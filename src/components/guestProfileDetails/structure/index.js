@@ -2,8 +2,11 @@ import React from 'react';
 import '../../profileDetails/profileStructure/style.css'
 import DetailsButton from '../../socialButtonTabs/detailsButtons';
 import { Footer } from '../../footer/footerContent';
+import { useNavigate } from 'react-router';
+import { paths } from '../../../routes/paths';
 
 const Structure = ({ name, register, imageUrl }) => {
+  const navigate = useNavigate();
   return (
     <div className="profile-section">
       <div className="left-section">
@@ -11,7 +14,7 @@ const Structure = ({ name, register, imageUrl }) => {
         <div className="profile-name">{name}</div>
         <div className="profile-register">{register}</div>
       <div>
-        <button className="guest-register-button" >
+        <button className="guest-register-button" onClick={()=> navigate(paths.phone_verification_index)} >
           <span className="guest-register-text">Register</span>
         </button>
       </div>
