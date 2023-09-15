@@ -1,9 +1,12 @@
 import React from 'react';
 import './style.css'
+import { useNavigate } from 'react-router';
+
 const MyAddresses = () => {
+  const navigate = useNavigate();
   return (
     <header className="header">
-      <div className="left-icons">
+      <div className="left-icons" onClick={()=>{navigate(-1)}}>
         <img src='/assets/img/Icon - Arrow.svg'></img>
       </div>
       <div className="logo">
