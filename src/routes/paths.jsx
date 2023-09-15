@@ -31,7 +31,7 @@ export const paths = {
   update_profile: "/update_profile",
   guest_profile: "guest-profile",
   privacy_policy: "privacy-policy",
-  terms: "terms",
+  terms: "/terms",
   address: '/address',
   details: "/details",
   branches: "/branches",

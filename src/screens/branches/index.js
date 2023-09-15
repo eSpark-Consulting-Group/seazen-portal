@@ -2,8 +2,8 @@ import React from "react";
 import BranchHeader from "../../components/branches-hours/headerBranch";
 import BranchContent from "../../components/branches-hours/content";
 import RestaurantInfo from "../../components/branches-hours/branch";
-import { Footer } from "../../components/footer";
-import './style.css'
+import "./style.css";
+import { Footer } from "../../components/footer/footerContent";
 
 export const Branches = () => {
   const restaurantData = [
@@ -39,7 +39,7 @@ export const Branches = () => {
       <BranchContent />
       <RestaurantInfo restaurants={restaurantData} />;
       <div className="branches-footer">
-      <Footer />
+        <Footer />
       </div>
     </div>
   );
