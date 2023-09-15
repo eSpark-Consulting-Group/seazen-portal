@@ -13,12 +13,16 @@ import { Terms } from "../screens/terms";
 import CustomerRegistration from "../screens/customer/registration";
 import { EditForm } from "../screens/editForm";
 import AddressForm from "../screens/adress";
+import MyOrderScreen from "../screens/myorder";
+import Receipt from "../screens/receipt";
 
 export const paths = {
   home: "/",
   error: "*",
   menu: "/menu",
   cart: "/cart",
+  myorder: "order",
+  receipt: "receipt",
   location: "/location",
   orderplace: "orderplace",
   customer_registration: "/customer_registration",
@@ -38,12 +42,14 @@ export const routes = {
   menu: "/menu",
   address: '/address',
   cart: "/cart",
+  myorder: "profile/order",
+  receipt: "profile/order/receipt",
   location: "/location",
   orderplace: "orderplace",
   customer_registration: "/customer_registration",
-  phone_verification_index: "/phone-verification/",
+  phone_verification_index: "guest-profile/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
-  profile: "/profile",
+  profile: "profile",
   update_profile: "/update_profile",
   guest_profile: "/guest-profile",
   privacy_policy: "/privacy-policy",
@@ -120,6 +126,16 @@ export const publicRoutes = {
     name: "Terms",
     path: routes.terms,
     component: <Terms />,
+  },
+  [paths.myorder]: {
+    name: "MyOrder",
+    path: routes.myorder,
+    component: <MyOrderScreen />,
+  },
+  [paths.receipt]: {
+    name: "Receipt",
+    path: routes.receipt,
+    component: <Receipt />,
   },
 };
 
