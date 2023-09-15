@@ -19,8 +19,10 @@
 .comment_button_container {
   display: flex;
   justify-content: end;
-  width: 100%;
   background-color: transparent;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 }
 
 .comment_button_container button {

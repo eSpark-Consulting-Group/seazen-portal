@@ -1,10 +1,11 @@
-import React from "react";
-import { useState } from "react";
-import "./style.css";
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import ExtraItems from "../extraItems";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
+import "./style.css";
+import { paths } from "../../../../routes/paths";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
@@ -35,6 +36,8 @@ const MenuCard = ({
   const [extraItemCount_1, setExtraItemCount_1] = useState(0);
   const [extraItemCount_2, setExtraItemCount_2] = useState(0);
 
+  const navigate = useNavigate();
+
   let conditionalIcon = foodItemQuantity < 2 ? trashIcon : minusIcon;
 
   return (
@@ -47,10 +50,10 @@ const MenuCard = ({
     >
       <Stack
         sx={{
-          p: 2,
+          p: 1.5,
           width: "100%",
           position: "relative",
-          pointer: "cursor",
+
           ...(menuCardDropdownOpen && {
             borderLeft: "12px solid #026754",
           }),
@@ -58,21 +61,28 @@ const MenuCard = ({
         direction="row"
         justifyContent="space-between"
         component={PaperCard}
-        onClick={() => {
-          setMenuCardDropdownOpen(!menuCardDropdownOpen);
-        }}
       >
         <Stack
           direction="row"
-          spacing={2}
+          spacing={1}
           sx={{
             minWidth: "75%",
           }}
         >
-          <div className="menu_card_image_container">
+          <div
+            className="menu_card_image_container pointer"
+            onClick={() => {
+              setMenuCardDropdownOpen(!menuCardDropdownOpen);
+            }}
+          >
             <img src={foodImage} alt="menu_card_image" />
           </div>
-          <div className="menu_card_price_text_container">
+          <div
+            className="menu_card_price_text_container pointer"
+            onClick={() => {
+              navigate(paths.details);
+            }}
+          >
             <div className="menu_card_heading_text">{foodItem}</div>
             <div className="menu_card_sub_text">{foodIngredients}</div>
             <div className="menu_card_price_add_to_cart_container">
@@ -85,6 +95,7 @@ const MenuCard = ({
         </Stack>
 
         <div className="menu_card_buttons_quantity_container">
+          <div className="menu_card_qunatity_label">{`${foodItemQuantity}x`}</div>
           <div className="menu_card_add_to_cart_button_container">
             <button
               onClick={handleClickAdd}
