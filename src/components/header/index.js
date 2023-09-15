@@ -1,7 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { paths } from "../../routes/paths";
 import "./style.css";
 
-const Navbar = () => {
+export const NavbarVariants = {
+  backWithProfile: "backWithProfile",
+};
+
+const Navbar = (props) => {
+  const { variant, previousRoute } = props;
+  const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef(null);
 
@@ -27,40 +35,76 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className={`navbar ${isSearchOpen ? "search-expanded" : ""}`}>
-      <div className="element account">
-        <div className="account-icon">
-          <img src="/assets/img/Profile_Icon.png" alt="Account Icon" />
-        </div>
+    <nav className={"d-flex align-items-center justify-content-between p-2"}>
+      <div
+        className="d-flex align-items-center"
+        style={{
+          columnGap: "10px",
+        }}
+      >
+        {variant !== NavbarVariants.backWithProfile && (
+          <div
+            className="icon-btn"
+            onClick={() => {
+              navigate(paths.profile);
+            }}
+          >
+            <img src="/assets/img/account.svg" alt="Account Icon" />
+          </div>
+        )}
+
+        {variant === NavbarVariants.backWithProfile && (
+          <div
+            className="icon-btn"
+            onClick={() => {
+              navigate(previousRoute || -1);
+            }}
+          >
+            <img src="/assets/img/Icon - Arrow.svg" alt="go back" />
+          </div>
+        )}
       </div>
-      <div className="element logo">
+      <div className="d-flex align-items-center logo">
         <img src="/assets/img/Logo.png" alt="Logo" />
       </div>
-      <div className="element shopping">
-        <div className="shopping-icon">
-          <img src="/assets/img/Icon - Bag.png" alt="Shopping Icon" />
+
+      {variant === NavbarVariants.backWithProfile && (
+        <div
+          className="icon-btn"
+          onClick={() => {
+            navigate(paths.cart);
+          }}
+        >
+          <img src="/assets/img/Group 256.svg" alt="Option Icon" />
         </div>
-      </div>
-      <div
-        ref={searchContainerRef}
-        className={`search-container ${isSearchOpen ? "expanded" : ""}`}
-      >
-        <div className={`search-wrapper ${isSearchOpen ? "expanded" : ""}`}>
-          <img
-            src="/assets/img/Icon - Search.png"
-            className="search-icon"
-            onClick={toggleSearch}
-            alt="search icon"
-          />
-          <input
-            type="text"
-            placeholder="Search"
-            className={`search-bar ${isSearchOpen ? "expanded" : ""}`}
-          />
+      )}
+      {variant !== NavbarVariants.backWithProfile && (
+        <div
+          className="d-flex align-items-center"
+          style={{
+            columnGap: "10px",
+          }}
+        >
+          <div
+            className="icon-btn"
+            onClick={() => {
+              navigate(paths.cart);
+            }}
+          >
+            <img src="/assets/img/cart.svg" alt="Shopping Icon" />
+          </div>
+
+          <div className="icon-btn">
+            <img src="/assets/img/Icon - Search.svg" alt="search icon" />
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
+};
+
+Navbar.defaultProps = {
+  variant: null,
 };
 
 export default Navbar;

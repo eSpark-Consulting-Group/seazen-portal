@@ -1,12 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap");
 
-
-.slider-tile{
+.slider-tile {
   text-align: left;
   font: normal normal 600 18px/24px Titillium Web;
   letter-spacing: 0.36px;
   color: #1F2933;
   opacity: 1;
+  margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 body {
@@ -17,6 +18,12 @@ body {
 .box {
   box-sizing: border-box;
   width: 200px;    
+}
+
+.box-image{
+  border-radius: 16px;
+  box-shadow: 0px 3px 6px #314F7C29;
+
 }
 
 .items {
@@ -31,7 +38,8 @@ body {
   padding: 0;
   display: flex;
   padding-bottom: 28px;
-  column-gap: 20px
+  column-gap: 20px;
+  margin-right: -20px;
 }
 
 .items {
@@ -46,12 +54,12 @@ body {
 .box-caption {
   background: #fff ;
   border-radius: 16px;
-  opacity: 1;    
+  opacity: 1;
   width: 120px;
   height: 172px;
   margin-top: -60px;
   margin-left: 10px;
-  box-shadow: 0px 16px 48px #314F7C29;  
+  box-shadow: 0px 16px 15px #314f7c29;
 }
 
 .box-text {
@@ -59,14 +67,13 @@ body {
   text-align: center;
   font: normal normal 600 14px/16px Titillium Web;
   letter-spacing: 0px;
-  color: #40484E;
+  color: #40484e;
   opacity: 1;
 }
 
 .caption-image {
   padding-top: 70px;
   padding-left: 16px;
-  
 }
 
 .caption-image img {
@@ -87,13 +94,13 @@ body {
   padding-right: 55px;
 }
 
-.inline-text{
+.inline-text {
   margin-top: -22px;
   text-align: center;
   padding-left: 17px;
   font: normal normal bold 18px/22px Titillium Web;
   letter-spacing: 0px;
-  color: #1B6483;
+  color: #1b6483;
   opacity: 1;
 }
 
@@ -101,7 +108,7 @@ body {
   padding-top: 74px;
 }
 
-.third-card-caption-image{
+.third-card-caption-image {
   padding-top: 60px;
   padding-left: 30px;
 }

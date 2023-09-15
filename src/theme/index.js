@@ -4,6 +4,7 @@ import shadows from "@mui/material/styles/shadows";
 const overridedShadows = shadows;
 
 overridedShadows[7] = "0px 7px 50px rgba(116, 134, 148, 0.15)";
+overridedShadows[16] = "0px 16px 50px rgba(49, 79, 124, 0.08)";
 
 const theme = createTheme({
   components: {
@@ -11,6 +12,10 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: "#fff",
+          "&:hover": {
+            backgroundColor: "#fff",
+          },
+          boxShadow: (theme) => theme.shadows[16],
         },
       },
     },
@@ -27,6 +32,12 @@ const theme = createTheme({
         },
         sizeLarge: {
           fontSize: "1.125rem",
+        },
+        sizeMedium: {
+          fontSize: "1rem",
+        },
+        sizeSmall: {
+          fontSize: "0.875rem",
         },
       },
     },
@@ -53,6 +64,9 @@ const theme = createTheme({
     fontWeightBold: 900,
     fontWeightMedium: 700,
     fontWeightRegular: 600,
+    body1: {
+      fontSize: "1rem",
+    },
   },
 });
 

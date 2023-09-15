@@ -116,7 +116,7 @@ const Receipt = () => {
           </div>
         </div>
         <div>
-          {item.map((el)=><ReceiptItem/>)}
+          {item.map((el, index)=><ReceiptItem key={index}/>)}
         </div>
         
         <Stack spacing={2} sx={{color:"#1F2933", padding: "20px 30px"}}>

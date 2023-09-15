@@ -1,247 +1,241 @@
+@import url("https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600;700;900&display=swap");
 
-.my-orderscreen{
-padding: 0 30px;
-position: relative;
-}
-
-hr{
-    border-top: 1px dashed #707070;
-    margin: 0 15px;
-}
-
-.my-orderscreen-nav{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 30px 0;
+.order-screen {
+  background-color: #ffffff;
+  padding: 70px 40px;
+  box-sizing: border-box;
+  font-family: "Titillium Web", sans-serif;
+  position: relative;
 }
 
-.brand-logo{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
+#close-button {
+  position: absolute;
+  left: 80%;
+  top: 2%;
+}
+
+#close-btn-tag {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.orderheader-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 45px 20px 45px;
+  font-size: 16px;
+}
+
+.update-sec {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#text-for-arrival {
+  letter-spacing: 0.5px;
+  text-align: left;
+  font: normal normal 600 16px/18px Titillium Web;
+  letter-spacing: 0px;
+  color: #1f2933;
+  opacity: 1;
+}
+
+.ordercurrent-time {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: right;
+  font: normal normal bold 20px/24px Titillium Web;
+  letter-spacing: 0.4px;
+  color: #1f2933;
+  opacity: 1;
+}
+
+.order-progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.orderprogress-bar {
+  width: 65px;
+  height: 5px;
+  background-color: #dcdfe3;
+}
+
+.orderaddress-section hr {
+  height: 1px;
+  background-color: #dcdfe3;
+  border: none;
+}
+
+#order-status-tag {
+  background-color: #f7b500;
+  border-radius: 7px;
+  letter-spacing: 0.4px;
+  font-size: 15px;
+  text-align: center;
+  padding: 0px 10px;
+  height: 24px;
+  width: 96px;
+  align-self: center;
+}
+
+.order-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+#order-status-tag p {
+  font-weight: bold;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+#orderconfirm-text {
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #959fa8;
+}
+
+.orderconfirm-text-container{
+  margin-top: 15px;
+}
+
+.orderaddress-text {
+  font-size: 14px;
+  line-height: 110%;
+}
+
+.order-id-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+#order-id-text {
+  font-size: 16px;
+  text-align: left;
+  font: normal normal 600 16px/18px Titillium Web;
+  letter-spacing: 0px;
+  color: #1f2933;
+  opacity: 1;
+}
+
+.orderid-with-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  position: relative;
+  top: -1px;
+}
+
+.orderid-with-tag p {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: right;
+  font: normal normal bold 20px/24px Titillium Web;
+  letter-spacing: 0.4px;
+  color: #1f2933;
+  opacity: 1;
+}
+
+#order-id-tag a {
+  font-weight: bold;
+  font-size: 12px;
+  color: white;
+  text-decoration: none;
+}
+
+#order-id-tag {
+  background-color: #98694e;
+  border-radius: 10px;
+  width: 88px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -10px;
+}
+
+.ordercontact-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin: 50px 0 70px 0;
+}
+
+#call-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1b6482;
+  height: 28px;
+  width: 98px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  margin-left: -8px;
+}
+
+#call-tag a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+#whatsapp-tag {
+  display: flex;
+  justify-content: space-around;
+  padding:0 3px;
+  align-items: center;
+  width: 118px;
+  height: 27px;
+  background-color: #2fa124;
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+#whatsapp-tag a {
+  color: #ffffff;
+  text-decoration: none;
 }
 
 
 
-.category-items{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 1px solid #C0CDD7;
-    border-radius: 14px;
-    padding: 4px;
-    background-color: #FAFAFA;
+#thanksnote {
+  text-align: left;
+  font: normal normal 400 16px/18px Titillium Web;
+  letter-spacing: 0px;
+  color: #1f2933;
+  opacity: 1;
+  position: absolute;
+  top: 77px;
+  left: 150px;
+  width: 146px;
+  height: 42px;
 }
 
-.cat-item{
-    width: 150px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #3F484E;
-    border: 1px solid #C0CDD7;
-    border-radius: 12px;
-    margin: 2px;
-    background-color: #FFFFFF;
-    font-size: 12px;
-    font-weight: bold;
-}
-.cat-item:hover{
-    background-color: gray;
-}
-.my-order-cards{
-margin-top: 10px;
+.orderformatted-address {
+  text-align: left;
+  letter-spacing: 0px;
+  color: #1f2933;
+  opacity: 1;
 }
 
-.card-nav{
-    padding: 8px 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #3F484E;
-}
-.card-nav-tags{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-.status-tag{
-    background-color: #4E948A;
-    width: 77px;
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 12px;
-    color: #FFFFFF;
-}
-
-.receipt-tag{
-    border: 1px solid #C0CDD7;
-    background-color: #FFFFFF;
-    border-radius: 12px;
-    color: #40484E;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-    width: 76px;
-    height: 22px;
-
-}
-.card-content{
-    color: #3F484E;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 15px;
-    height: 60px;
-}
-
-.card-content-left{
-    color: #3F484E;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    flex-direction: column;
-    padding: 10px 0;
-}
-.card-content-left-lt{
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    font-size: 12px;
-    font-weight: bold;
-}
-.card-content-left-lt img{
-    margin: 5px;
-}
-.card-content-left-text-regular{
-    font-size: 10px;
-    padding-left: 30px;
-}
-.card-content-right{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-
-#card-content-right-price{
-    font-size: 20px;
-    font-weight: bold;
-    color: #026754;
-}
-
-#card-content-right-unit{
-    font-size: 12px;
-    font-weight: bold;
-    color: #777777;    
-}
-
-.card-footer{
-    color: #3F484E;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 15px;
-    padding-bottom: 10px;
-}
-
-.card-single-footer{
-    color: #3F484E;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 15px;
-    padding-bottom: 10px;
-}
-
-.card-footer-rate{
-    width: 76px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #3F484E;
-    border: 1px solid #C0CDD7;
-    border-radius: 12px;
-    margin: 2px;
-    background-color: #FFFFFF;
-    font-size: 12px;
-    font-weight: bold;
-}
-.card-footer-reorder{
-    width: 76px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #3F484E;
-    border: 1px solid #C0CDD7;
-    border-radius: 12px;
-    margin: 2px;
-    background-color: #FFFFFF;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.comment-section{
-    padding-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.comment-section img{
-    width: 50px;
-    height: 50px;
-
-}
-
-.rate-screen{
-    display: flex;
-    flex-direction: column;
-    width: 374px;
-    height: 310px;
-    margin-top: 655px;
-    border-radius: 20px 20px 0 0;
-    border: 1px solid #C0CDD7;
-
-}
-.rate-cat{
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    padding: 7.5px 15px;
-
-}
-.rate-cat img{
-    width: 32px;
-    height: 32px;
-    margin: 0 3px;
-}
-
-#rate-head{
-    font-size: 14px;
-    font-weight: bold;
-    background-color: white;
-    text-align: center;
-    margin: 35px 35px 13px;
-}
-
-#rate-cat-text{
-    font-size: 12px;
-    font-weight: bold;
-    width: 80px;
-    line-height: 15px;
+.orderaddress-text p {
+  text-align: left;
+  font: normal normal 600 14px/16px Titillium Web;
+  letter-spacing: 0px;
+  color: #1f2933;
 }

@@ -1,0 +1,140 @@
+.editProfile-style h2 {
+  text-align: center;
+  font: normal normal bold 18px/24px Montserrat;
+  letter-spacing: 0.36px;
+  color: #1f2933;
+  opacity: 1;
+  position: absolute;
+  top: 100px;
+  left: 109px;
+}
+
+.editProfileform-style {
+  margin-top: 158px;
+}
+
+.editProfileleft-name {
+  top: 160px;
+  left: 25px;
+  width: 154px;
+  height: 64px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.editProfileleft-name::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 10px;
+}
+
+.editProfileright-name {
+  top: 160px;
+  left: 197px;
+  width: 154px;
+  height: 64px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.editProfileright-name::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 10px;
+}
+
+.editProfileemail-style {
+  top: 241px;
+  left: 25px;
+  width: 327px;
+  height: 64px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.editProfileemail-style::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 10px;
+}
+
+.editProfileright-number {
+  top: 325px;
+  left: 115px;
+  width: 237px;
+  height: 64px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.editProfileright-number::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 10px;
+}
+
+.editProfileleft-code {
+  top: 325px;
+  left: 25px;
+  width: 80px;
+  height: 64px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  position: absolute;
+}
+
+.editProfileleft-code::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 10px;
+}
+
+.editProfile-button {
+  top: 624px;
+  left: 19px;
+  width: 326px;
+  height: 56px;
+  background: #98694e 0% 0% no-repeat padding-box;
+  opacity: 1;
+  position: absolute;
+  border: none;
+  border-radius: 15px;
+}
+
+.editProfile-text {
+  text-align: center;
+  font: normal normal 600 22px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  cursor: pointer;
+}

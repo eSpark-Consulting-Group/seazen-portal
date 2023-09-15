@@ -1,139 +1,87 @@
-import React from 'react'
-import {Button} from '@mui/material';
-import '../order/style.css';
-import { useState } from 'react';
-import OrderCard from '../../components/order-cards';
-import RateCard from '../../components/rate-card';
-import OrderNavbar from '../../components/order-navbar';
-
+import React, { useEffect, useState } from "react";
+import "./style.css";
+import ContactUs from "../../components/contactButton/contact";
+import UpdateSection from "../../components/orderPlace/timeUpdateSection";
+import AddressSection from "../../components/orderPlace/addressSection";
+import OrderIdSection from "../../components/orderPlace/orderIdSection";
+import FooterSection from "../../components/footer/footerTextBox/footerSection";
 
 const OrderScreen = () => {
+  const [progress, setProgress] = useState([
+    { done: true },
+    { done: false },
+    { done: false },
+    { done: false },
+  ]);
 
-    const [category, setCategory] = useState([
-        { type: "All", isActive: false },
-        { type: "Delivery", isActive: false },
-        // { type: "Pick Up", isActive: false },
-        // { type: "Dine In", isActive: false },
-    ])
-    const randomPrice = (Math.random() * 10).toFixed(3);
-    const randomOrderId = Math.floor((Math.random() * 1000000));
+  const [updateStatus, setUpdateStatus] = useState([
+    { tag: "Submitted", text: "Confirming your order", tagColor: "#F7B500" },
+    { tag: "Preparing", text: "Preparing your order", tagColor: "#0091FF" },
+    { tag: "On the way", text: "Driver is on the way", tagColor: "#6236FF" },
+    { tag: "Delivered", text: "Your order is delivered", tagColor: "#4E948A" },
+  ]);
 
-    function formatDateToCustomFormat(date) {
-        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-        const formattedDate = date.toLocaleDateString('en-US', options);
-        return formattedDate;
-    }
+  const [count, setCount] = useState(0);
 
-    const currentDate = new Date();
-    const formattedDate = formatDateToCustomFormat(currentDate);
-    const [state, setState] = useState("Delivery");
+  useEffect(() => {
+    if (count < 4) StartProgress();
+  }, [count]);
 
-    const itemsList = [
-        {
-            status: { text: "Submitted", color: "#F7B500" },
-            type: "Delivery",
-            orderId: `Q${randomOrderId}`,
-            placeAt: formattedDate,
-            rateTag: { isActive: false, text: "Rate" },
-            reOrderTag: { isActive: false, text: "Re-Order" },
-            priceTag: randomPrice,
-            currency: "KWD",
-            icon: "DeliveryOrder.svg"
-        },
-        {
-            status: { text: "On the way", color: "#6236FF" },
-            type: "Delivery",
-            orderId: `Q${randomOrderId}`,
-            placeAt: formattedDate,
-            rateTag: { isActive: false, text: "Rate" },
-            reOrderTag: { isActive: false, text: "Re-Order" },
-            priceTag: randomPrice,
-            currency: "KWD",
-            icon: "DeliveryOrder.svg"
-        },
+  const StartProgress = () => {
+    setTimeout(() => {
+      if (count < progress.length - 1) {
+        const updateProgress = [...progress];
+        updateProgress[count + 1].done = true;
+        setCount(count + 1);
+        setProgress(updateProgress);
+      }
+    }, 3000);
+  };
 
-        {
-            status: { text: "Cancelled", color: "#E02020" },
-            type: "Delivery",
-            orderId: `Q${randomOrderId}`,
-            placeAt: formattedDate,
-            rateTag: { isActive: false, text: "Rate" },
-            reOrderTag: { isActive: true, text: "Re-Order" },
-            priceTag: randomPrice,
-            currency: "KWD",
-            icon: "DeliveryOrder.svg"
-
-        },
-        {
-            status: { text: "Preparing", color: "#0091FF" },
-            type: "Delivery",
-            orderId: `Q${randomOrderId}`,
-            placeAt: formattedDate ,
-            rateTag: { isActive: false, text: "Rate" },
-            reOrderTag: { isActive: false, text: "Re-Order" },
-            priceTag: randomPrice,
-            currency: "KWD",
-            icon: "DeliveryOrder.svg"
-
-        },
-        {
-            status: { text: "Delivered", color: "#4E948A" },
-            type: "Delivery",
-            orderId: `Q${randomOrderId}`,
-            placeAt: formattedDate ,
-            rateTag: { isActive: true, text: "Rate" },
-            reOrderTag: { isActive: true, text: "Re-Order" },
-            priceTag: randomPrice,
-            currency: "KWD",
-            icon: "DeliveryOrder.svg"
-        },
-    ];
-
-
-    const handleItems = (item, index) => {
-
-        setState(item.type);
-        const updateCategory = [...category];
-        updateCategory.map((item) => item.isActive = false);
-        updateCategory[index].isActive = true;
-        setCategory(updateCategory);
-
-    }
-
-    const handleReceipt = () =>{
-        alert(" Receipt ") ;
-    }
-    const handleRate = () => {}
-    const handleReorder = () => {
-        alert ("Reorder");
-    }
-
-    return (
-
-        <div className='my-orderscreen'>
-            <OrderNavbar/>
-            <div className='category-items'>
-                {category.map((item, index) => {
-                    return <Button variant='outlined' style={{ backgroundColor: item.isActive ? "#98694E"  : "white", color: item.isActive ? "white" : "black" , border: ' 1px solid #C0CDD7'}}
-                        onClick={() => handleItems(item, index)} key={index} className='cat-item'  sx={{ p: 1, border: ' 1px solid #C0CDD7',color: '#40484E' }}>{item.type}</Button>
-                })}
-            </div>
-            <div className='my-order-cards'>
-                {itemsList.map((item,index) => item.type === state
-                ? <OrderCard item={item} key={index} handleReceipt={handleReceipt} handleReorder ={handleReorder} handleRate={handleRate}/> 
-                : state === 'All' 
-                    ? <OrderCard item={item} key={index} handleReceipt={handleReceipt} handleReorder ={handleReorder} handleRate={handleRate} /> 
-                    : null)}
-            </div>
-                <div className='comment-section'>
-                    <img src="./assets/img/Comment_Icon.png" alt="" />
-                </div>
-                    <RateCard/>
-
+  return (
+    <div className="order-screen">
+      <div id="close-button">
+        <div id="close-btn-tag">
+          <p style={{ color: "#1F2933" }}>
+            <strong>᙭</strong>
+          </p>
         </div>
+      </div>{" "}
+      <div className="orderheader-section">
+        <img src="/assets/img/tick.png" alt="" />
+        <p id="thanksnote">
+          Thank you for placing<br></br>your order.
+        </p>
+      </div>{" "}
+      <UpdateSection />
+      <div className="order-progress-bar">
+        {progress.map((stage, index) => {
+          return (
+            <div
+              key={index}
+              style={{ backgroundColor: stage.done ? "#BEC2C7" : "#DCDFE3" }}
+              className="orderprogress-bar"
+            ></div>
+          );
+        })}
+      </div>
+      <div className="order-status">
+        <div
+          id="order-status-tag"
+          style={{ backgroundColor: updateStatus[count].tagColor }}
+        >
+          <p>{updateStatus[count].tag}</p>
+        </div>
+        <div className="orderconfirm-text-container">
+          <p id="orderconfirm-text"> {updateStatus[count].text}</p>
+        </div>
+      </div>
+      <AddressSection />
+      <OrderIdSection />
+      <ContactUs />
+      <FooterSection />
+    </div>
+  );
+};
 
-
-    )
-}
-
-export default OrderScreen
+export default OrderScreen;
