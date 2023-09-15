@@ -19,3 +19,4 @@ export const Footer = (props) => {
     </div>
   );
 };
+

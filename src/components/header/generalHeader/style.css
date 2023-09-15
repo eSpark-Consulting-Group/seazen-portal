@@ -1,9 +1,29 @@
 .Nav_Image_Container {
-  width: 375px;
   display: flex;
   position: relative;
   justify-content: center;
 }
+
+@media screen and (max-width:500px)  {
+  .Nav_Image_Container img {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width:500px) {
+  .Nav_Image_Container {
+    margin-right: -50px;
+  }
+}
+
+@media screen and (max-width:500px) {
+  .options_services_outer_container{
+    top: 260px !important;
+    width: 114% !important;
+
+  }
+}
+
 .upper_navigation {
   width: 375px;
   position: absolute;
