@@ -208,20 +208,22 @@
     
     }
 
-    @media only screen and (max-width: 700px) {
-        .rate-screen{
-            width: 374px;
-            height: 310px;
-        }
-      }
+   
 
     .rate-screen{
         
         border-radius: 20px 20px 0 0;
         border: 1px solid #C0CDD7;
-        width: 100%;
+        width: 374px;
+        height: 310px;
     
     }
+
+    @media (max-width: 700px) {
+        .rate-screen{
+            width: 100%;
+        }
+      }
 
     .rate-cat{
         display: flex;
