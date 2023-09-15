@@ -9,6 +9,7 @@
   border-radius: 12px;
   box-shadow: 0px 4px 16px rgba(116, 134, 148, 0.26);
   position: relative;
+  width: 100%;
 }
 
 .menu_card_active_indicator {
@@ -24,10 +25,10 @@
 }
 
 .menu_card_inner_container {
-  width: 305px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  width: 100%;
 }
 
 .menu_card_image_container {
@@ -36,7 +37,6 @@
 }
 
 .menu_card_price_text_container {
-  width: 112px;
   padding: 4px 0px;
   display: flex;
   flex-direction: column;

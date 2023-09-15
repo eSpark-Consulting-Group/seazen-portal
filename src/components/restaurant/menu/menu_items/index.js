@@ -2,10 +2,34 @@ import React from "react";
 import "./style.css";
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useSearchParams } from "react-router-dom";
+
+const menu_categories = [
+  "Burrito in a Bowl",
+  "Quesadilla",
+  "Burrito",
+  "Sides",
+  "Carne",
+  "Poultry",
+  "Pescheria",
+  "Pasta",
+  "Pizza",
+  "Dessert",
+  "Soft drinks",
+];
 
 const MenuItems = () => {
+  let [searchParams, setSearchParams] = useSearchParams();
+
+  const handleMenuItemClick = (category) => {
+    // set only the category in the search params on whatever the current location is
+    setSearchParams({
+      category: category,
+    });
+  };
+
   return (
-    <div className="menu_item_outer_container">
+    <div className="menu_item_outer_container px-3 px-sm-4">
       <div className="menu_item_inner_container">
         <div className="menu_dropdown_container">
           <Dropdown>
@@ -23,7 +47,7 @@ const MenuItems = () => {
               }}
             >
               <span className="dropdown_icon_container_menu">
-                <img src=".\assets\img\menu_Icon.svg" alt="chevron_down_icon" />
+                <img src="/assets/img/menu_Icon.svg" alt="chevron_down_icon" />
               </span>
             </Dropdown.Toggle>
 
@@ -37,24 +61,30 @@ const MenuItems = () => {
                 border: "none",
               }}
             >
-              <Dropdown.Item href="#/action-1">Burrito in a Bowl</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Quesadilla</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Burrito</Dropdown.Item>
-              <Dropdown.Item href="#/action-4">Carne</Dropdown.Item>
-              <Dropdown.Item href="#/action-5">Poultry</Dropdown.Item>
-              <Dropdown.Item href="#/action-6">Pescheria</Dropdown.Item>
-              <Dropdown.Item href="#/action-7">Pasta</Dropdown.Item>
-              <Dropdown.Item href="#/action-8">Pizza</Dropdown.Item>
-              <Dropdown.Item href="#/action-9">Dessert</Dropdown.Item>
-              <Dropdown.Item href="#/action-10">Soft drinks</Dropdown.Item>
+              {menu_categories.map((category, index) => (
+                <Dropdown.Item
+                  key={`menu_category_drop_${index}`}
+                  onClick={() => {
+                    handleMenuItemClick(category);
+                  }}
+                >
+                  {category}
+                </Dropdown.Item>
+              ))}
             </Dropdown.Menu>
           </Dropdown>
         </div>
         <div className="menu_itmes_text_container">
-          <button onClick={()=>{}}>Burrito in a Bowl</button>
-          <button onClick={()=>{}}>Quesadilla</button>
-          <button onClick={()=>{}}>Buritto</button>
-          <button onClick={()=>{}}>Sides</button>
+          {menu_categories.map((category, index) => (
+            <button
+              key={`menu_category_${index}`}
+              onClick={() => {
+                handleMenuItemClick(category);
+              }}
+            >
+              {category}
+            </button>
+          ))}
         </div>
       </div>
     </div>

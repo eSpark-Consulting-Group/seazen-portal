@@ -1,10 +1,12 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Stack } from "@mui/material";
 import MenuCard from "../menu_card/index.js";
 import "./style.css";
 
 const MenuCardListConatiner = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -14,17 +16,19 @@ const MenuCardListConatiner = () => {
   const foodIngredients = "rice, plate peppers, onion, red beans, …";
   const foodCurrency = "KWD";
   const foodPrice = 6.99;
-  const foodImage = "./assets/img/menu_card_image.png";
+  const foodImage = "/assets/img/menu_card_image.png";
 
   return (
-    <div className="menu_card_list_outer_container">
+    <div className="menu_card_list_outer_container p-3 p-sm-4">
       <div className="menu_card_list_inner_container">
         <div
           className={`card_list_title_search_container ${
             isSearchOpen ? "expanded_search" : ""
           }`}
         >
-          <div className="card_list_title">Burrito in a Bowl</div>
+          <div className="card_list_title">
+            {searchParams.get("category") || "Burrito in a Bowl"}
+          </div>
           <div className={`search ${isSearchOpen ? "expanded_search" : ""}`}>
             <div
               className={`searchwrapper ${
@@ -45,30 +49,34 @@ const MenuCardListConatiner = () => {
             </div>
           </div>
         </div>
-        <MenuCard
-          foodItem={foodItem}
-          foodIngredients={foodIngredients}
-          foodCurrency={foodCurrency}
-          foodPrice={foodPrice}
-          foodImage={foodImage}
-        />
-        <MenuCard
-          foodItem={foodItem}
-          foodIngredients={foodIngredients}
-          foodCurrency={foodCurrency}
-          foodPrice={foodPrice}
-          foodImage={foodImage}
-        />
-        <MenuCard
-          foodItem={foodItem}
-          foodIngredients={foodIngredients}
-          foodCurrency={foodCurrency}
-          foodPrice={foodPrice}
-          foodImage={foodImage}
-        />
+
+        <Stack spacing={1.5}>
+          <MenuCard
+            foodItem={foodItem}
+            foodIngredients={foodIngredients}
+            foodCurrency={foodCurrency}
+            foodPrice={foodPrice}
+            foodImage={foodImage}
+          />
+          <MenuCard
+            foodItem={foodItem}
+            foodIngredients={foodIngredients}
+            foodCurrency={foodCurrency}
+            foodPrice={foodPrice}
+            foodImage={foodImage}
+          />
+          <MenuCard
+            foodItem={foodItem}
+            foodIngredients={foodIngredients}
+            foodCurrency={foodCurrency}
+            foodPrice={foodPrice}
+            foodImage={foodImage}
+          />
+        </Stack>
+
         <div className="comment_button_container">
           <button>
-            <img src=".\assets\img\comment_icon.svg" alt="comment_icon" />
+            <img src="/assets/img/comment_icon.svg" alt="comment_icon" />
           </button>
         </div>
       </div>

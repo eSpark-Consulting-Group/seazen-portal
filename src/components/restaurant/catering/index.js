@@ -9,14 +9,14 @@ const CateringDetails = () => {
                 <div className="catering_text_container">Please contact us to arrange
                 your catering.</div>
                 <div className="catering_button_container">
-                    <ContactButton text={1818555} color={"#98694E"} icon_image=".\assets\img\Icon - Call.svg"/>
-                    <ContactButton text={"Live Chat"} color={"#1B6483"} icon_image=".\assets\img\Icon - Chat.svg"/>
-                    <ContactButton text={"Send Message"} color={"#2FA124"} icon_image=".\assets\img\Icon - Message.svg"/>
+                    <ContactButton text={1818555} color={"#98694E"} icon_image="/assets/img/Icon - Call.svg"/>
+                    <ContactButton text={"Live Chat"} color={"#1B6483"} icon_image="/assets/img/Icon - Chat.svg"/>
+                    <ContactButton text={"Send Message"} color={"#2FA124"} icon_image="/assets/img/Icon - Message.svg"/>
                 </div>
             </div>
             <div className="comment_button_container">
             <button>
-                <img src=".\assets\img\comment_icon.svg" alt="comment_icon" />
+                <img src="/assets/img/comment_icon.svg" alt="comment_icon" />
             </button>
         </div>
         </div>

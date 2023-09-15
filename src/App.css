@@ -8,7 +8,7 @@
   overflow-x: hidden;
 }
 
-@media screen and (max-width:350px) {
+@media screen and (max-width: 350px) {
   .container_main {
     margin-right: -56px;
   }
@@ -17,27 +17,28 @@
 .design-section {
   flex: 1;
   color: #fff;
-  overflow: auto; 
-  overflow-y: scroll; 
-  overflow-x: hidden; 
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  overflow: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  min-width: 375px;
+  width: 100%;
+  max-width: 768px;
 }
 
 .design-section::-webkit-scrollbar {
   display: none;
 }
 
-.content-section{
-  flex: 2;
-  padding: 20px;
-  background-image: url('/public/assets/img/images.jpeg');
-  background-size: cover; 
-  background-repeat: no-repeat; 
-  background-position: center; 
-  
+.content-section {
+  background-image: url("/public/assets/img/images.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: inherit;
+  width: 100%;
 }
 
-.style{
+.style {
   padding-top: 20px;
 }
 
@@ -47,14 +48,18 @@
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   all: unset;
 }
 
-@media screen and (min-width: 1000px){
-  .design-section{
+@media screen and (min-width: 1000px) {
+  .design-section {
     min-width: 375px;
     max-width: 375px;
   }
 }
-

@@ -1,9 +1,18 @@
 .Nav_Image_Container {
   min-width: 375px;
+  width: 100%;
+  max-width: 375px;
   position: absolute;
 }
+.Nav_Image_Container img {
+  width: 100%;
+  object-fit: cover;
+  height: auto;
+}
 .upper_navigation {
-  width: 375px;
+  min-width: 375px;
+  width: 100%;
+  max-width: 768px;
   position: absolute;
   display: flex;
   justify-content: space-between;

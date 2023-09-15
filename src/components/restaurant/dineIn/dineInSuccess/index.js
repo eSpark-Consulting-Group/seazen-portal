@@ -17,7 +17,7 @@ const DineInSuccess = ({
         <div className="dine_in_success_inner_container">
             <div className="dine_in_success_message_container">
                 <div className="dine_in_success_icon_container">
-                    <img src=".\assets\img\Icon - Succes.svg" alt="success_icon" />
+                    <img src="/assets/img/Icon - Succes.svg" alt="success_icon" />
                 </div>
                 <div className="dine_in_success_text_container">
                 Thank you!<br/>
@@ -61,9 +61,9 @@ const DineInSuccess = ({
             <div className="dine_in_contact_us_container">
                 <div className="dine_in_contact_us_heading">Contact Us</div>
                 <div className="dine_in_contact_us_buttons">
-                    <ContactButton text={1818555} color={"#98694E"} icon_image=".\assets\img\Icon - Call.svg"/>
-                    <ContactButton text={"Live Chat"} color={"#1B6483"} icon_image=".\assets\img\Icon - Chat.svg"/>
-                    <ContactButton text={"Send Message"} color={"#2FA124"} icon_image=".\assets\img\Icon - Message.svg"/>
+                    <ContactButton text={1818555} color={"#98694E"} icon_image="/assets/img/Icon - Call.svg"/>
+                    <ContactButton text={"Live Chat"} color={"#1B6483"} icon_image="/assets/img/Icon - Chat.svg"/>
+                    <ContactButton text={"Send Message"} color={"#2FA124"} icon_image="/assets/img/Icon - Message.svg"/>
                 </div>
             </div>
         </div>
