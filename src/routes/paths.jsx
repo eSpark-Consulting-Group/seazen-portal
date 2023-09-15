@@ -14,6 +14,7 @@ import CustomerRegistration from "../screens/customer/registration";
 import { EditForm } from "../screens/editForm";
 import AddressForm from "../screens/adress";
 import { Details } from "../screens/details";
+import { Branches } from "../screens/branches";
 
 export const paths = {
   home: "/",
@@ -32,6 +33,7 @@ export const paths = {
   terms: "terms",
   address: '/address',
   details: "/details",
+  branches: "/branches",
 };
 
 export const routes = {
@@ -51,6 +53,7 @@ export const routes = {
   guest_profile: "/guest-profile",
   privacy_policy: "/privacy-policy",
   terms: "/terms",
+  branches: "/branches",
 };
 
 export const publicRoutes = {
@@ -128,6 +131,11 @@ export const publicRoutes = {
     name: "Terms",
     path: routes.terms,
     component: <Terms />,
+  },
+  [paths.branches]: {
+    name: "branches",
+    path: routes.branches,
+    component: <Branches />,
   },
 };
 

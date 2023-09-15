@@ -1,0 +1,79 @@
+import React, { useState, useEffect } from 'react';
+import "./style.css"
+
+const RestaurantInfo = ({ restaurants }) => {
+  return (
+    <div>
+      {restaurants.map((restaurant) => (
+        <RestaurantCard key={restaurant.id} {...restaurant} />
+      ))}
+    </div>
+  );
+};
+
+const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
+  const [status, setStatus] = useState('');
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const updateStatus = () => {
+      const currentHour = currentTime.getHours();
+      const currentMinute = currentTime.getMinutes();
+      const [openHour, closeHour] = weekdayHours.split(' - ').map(time => parseInt(time.split(':')[0]));
+
+      if (currentHour < openHour) {
+        setStatus('Closed');
+      } else if (currentHour === openHour && currentMinute < 30) {
+        setStatus('Closed');
+      } else if (currentHour < closeHour) {
+        setStatus('Open Now');
+      } else if (currentHour === closeHour && currentMinute < 30) {
+        setStatus('Closing Soon');
+      } else {
+        setStatus('Closed');
+      }
+    };
+
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+      updateStatus();
+    }, 60000); // Update every minute
+
+    updateStatus();
+
+    return () => clearInterval(interval);
+  }, [weekdayHours, currentTime]);
+
+  return (
+    <div className="branches-container">
+    <div className="branch-info">
+      <div className="branches-heading">
+      <h1>{name}</h1>
+      </div>
+      <div className="status-section">
+    <div className="status-container">
+        <div className={`status-tag ${status.toLowerCase()} ${status === 'Closed' ? 'closed' : status === 'Closing Soon' ? 'closing-soon' : status === 'Open Now' ? 'open-now' : ''}`}>
+          {status.toUpperCase()}
+        </div>
+      </div>
+      </div>
+      <div>
+    <div className="hours">
+        <div className="branch-timings">
+          <strong className="branch-weekdays">Weekdays:</strong><span className="branch-weekdaysHours"> {weekdayHours}</span>
+          <div>
+            <strong className="branch-weekends">Weekends:</strong><span className="branch-weekendsHours"> {weekendHours}</span>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div className="branch-icon">
+        <img src="/assets/img/location-arrow.svg" alt={`${name} Location`} />
+      </div>
+    </div>
+    </div>
+    
+  );
+};
+
+export default RestaurantInfo;
