@@ -42,3 +42,14 @@
   padding-left: 27px;
 }
 
+.bEjuCR{
+  grid-template-columns: repeat(4,100%);
+
+}
+
+@media screen and (max-width: 767px){
+  .gZzsDe {
+    display: flex;
+}
+}
+

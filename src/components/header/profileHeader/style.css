@@ -345,10 +345,9 @@
     position: fixed;
     top: 235px;
   }
-  .profileHeaderpopup2 {
-    left: 220px;
-  }
+  
 }
+
 
 @media screen and (max-width: 360px) and (min-width: 330px) {
   .profileHeaderpopup {

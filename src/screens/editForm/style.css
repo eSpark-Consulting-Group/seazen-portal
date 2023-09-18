@@ -138,3 +138,27 @@
   opacity: 1;
   cursor: pointer;
 }
+
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .editProfile-style h2 {
+    left: 140px;
+  }
+  .editProfileleft-name {
+    left: 57px;
+  }
+  .editProfileright-name {
+    left: 224px;
+  }
+  .editProfileemail-style {
+    left: 53px;
+  }
+  .editProfileright-number {
+    left: 144px;
+  }
+  .editProfileleft-code {
+    left: 52px;
+  }
+  .editProfile-button {
+    left: 56px;
+  }
+}

@@ -1,12 +1,10 @@
-
 .branches-container {
   margin-top: 120px;
   margin-left: 25px;
 }
 
-.branch-status-container{
+.branch-status-container {
   margin-left: -35px;
-
 }
 
 .branch-info {
@@ -31,7 +29,7 @@
   margin-left: 14px;
 }
 
-.branches-heading{
+.branches-heading {
   margin-right: -20px;
 }
 
@@ -85,7 +83,6 @@
   color: #40484e;
   opacity: 1;
   margin-top: 10px;
-
 }
 
 .branch-weekdaysHours {
@@ -103,7 +100,6 @@
   color: #40484e;
   opacity: 1;
   padding-left: 2px;
-
 }
 
 .branch-weekendsHours {
@@ -129,21 +125,23 @@
   margin-top: 4px;
 }
 
-.branch-timings{
+.branch-timings {
   display: flex; /* Display children side by side */
   align-items: center;
   margin-left: -185px;
-
 }
 
-.branch-hours{
+.branch-hours {
   margin-top: 20px;
 }
 
-
-
-.branch-status-section{
+.branch-status-section {
   margin-left: 66px;
   margin-top: 6px;
 }
 
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .branches-container {
+    margin-left: 57px;
+  }
+}
