@@ -1,0 +1,67 @@
+.formStyle {
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  padding: 10px;
+  width: 329px;
+  margin-bottom: 10px;
+  height: 44px;
+  color: #959fa8;
+}
+
+.formStyle:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+#required {
+  color: #e02020;
+}
+
+#required:focus {
+  border: 1px solid #e02020;
+  color: #e02020;
+}
+
+#required:focus::placeholder {
+  color: #e02020;
+}
+
+.formStyle::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+}
+
+.style-text {
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  padding: 10px;
+  width: 262px;
+  margin-bottom: 10px;
+  height: 140px;
+}
+
+.style-text::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-bottom: 100px;
+}
+
+#AdditionalDirection {
+  resize: none;
+  overflow-y: hidden;
+  padding-bottom: 50px;
+}
+
+.containerStyle {
+  margin-top: 10px;
+}

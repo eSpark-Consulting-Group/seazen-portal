@@ -1,55 +1,55 @@
 import React, { useState } from "react";
-import "./style.css";
+import styles from "./forms.module.css";
 
 export const OfficeAdress = () => {
   return (
-    <form className="container-style">
+    <form className={styles.containerStyle}>
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Block"
         placeholder="Block"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Street"
         placeholder="Street"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Avenue"
         placeholder="Avenue (Optional)"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Building"
         placeholder="Building"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Floor"
         id="required"
         placeholder="Floor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Company Name"
         id="required"
         placeholder="Company Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Address Label"
         placeholder="Address Label (Optional)"
       />
       <textarea
-        className="form-style"
+        className={styles.formStyle}
         name="AdditionalDirection"
         id="AdditionalDirection"
         placeholder="Additional Direction"

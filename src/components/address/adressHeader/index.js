@@ -1,20 +1,23 @@
-import React from 'react';
-import './style.css'
-import { useNavigate } from 'react-router';
+import React from "react";
+import styles from "./adressHeader.module.css";
+import { useNavigate } from "react-router";
 
 const AddressHeader = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="addressheader">
-      <div className="addressHeaderleft-icons" onClick={()=>navigate(-1)}>
-        <img src='/assets/img/Icon - Arrow.svg'></img>
+    <header className={styles.addressheader}>
+      <div
+        className={styles.addressHeaderleftIcons}
+        onClick={() => navigate(-1)}
+      >
+        <img src="/assets/img/Icon - Arrow.svg"></img>
       </div>
-      <div className="addressHeaderlogo">
+      <div className={styles.addressHeaderlogo}>
         <h3>Add New Address</h3>
       </div>
-      <div className="addressHeaderright-icons">
-      <img src='/assets/img/Group 256.svg'></img>
+      <div className={styles.addressHeaderrightIcons}>
+        <img src="/assets/img/Group 256.svg"></img>
       </div>
     </header>
   );

@@ -1,54 +1,53 @@
 import React, { useState } from "react";
-import "./style.css";
-
+import styles from "./forms.module.css";
 export const AppartmentAdress = () => {
   return (
-    <form className="container-style">
+    <form className={styles.containerStyle}>
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Block"
         placeholder="Block"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Street"
         placeholder="Street"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Avenue"
         placeholder="Avenue (Optional)"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Building"
         id="required"
         placeholder="Building&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Floor"
         placeholder="Floor"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Appartment No"
         placeholder="Appartment No"
       />
       <input
-        className="form-style"
+        className={styles.formStyle}
         type="text"
         name="Address Label"
         placeholder="Address Label (Optional)"
       />
       <textarea
-        className="form-style"
+        className={styles.formStyle}
         name="AdditionalDirection"
         id="AdditionalDirection"
         placeholder="Additional Direction"

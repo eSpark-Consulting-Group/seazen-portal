@@ -1,4 +1,4 @@
-.addresses-container {
+.addressesContainer {
   display: flex;
   top: 90px;
   left: 25px;
@@ -14,7 +14,7 @@
   margin-left: 22px;
 }
 
-.addresses-card-icon {
+.addressesCardIcon {
   top: 15px;
   left: 16px;
   width: 19px;
@@ -25,7 +25,7 @@
   margin-top: 13px;
 }
 
-.addresses-home-title {
+.addressesHomeTitle {
   text-align: left;
   font: normal normal bold 12px/28px Titillium Web;
   letter-spacing: 0px;
@@ -38,7 +38,7 @@
   margin-left: 40px;
 }
 
-.addresses-home-title2 {
+.addressesHomeTitle2 {
   text-align: left;
   font: normal normal normal 10px/28px Titillium Web;
   letter-spacing: 0px;
@@ -51,7 +51,7 @@
   margin-left: 40px;
 }
 
-.addresses-delete-button {
+.addressesDeleteButton {
   top: 9px;
   left: 170px;
   width: 67px;
@@ -64,10 +64,9 @@
   cursor: pointer;
   padding-top: 0px;
   margin-right: 10px;
-
 }
 
-.addresses-edit-button {
+.addressesEditButton {
   top: 9px;
   left: 245px;
   width: 67px;
@@ -81,7 +80,7 @@
   padding-top: 0px;
 }
 
-.addresses-button-section hr {
+.addressesButtonSection hr {
   top: 34px;
   left: 12px;
   width: 298px;
@@ -92,7 +91,10 @@
   margin-left: -60px;
 }
 
-.addresses-delete-text {
+.addressesButtonContainer {
+  border: none;
+}
+.addressesDeleteText {
   text-align: center;
   font: normal normal bold 12px/28px Titillium Web;
   letter-spacing: 0px;
@@ -100,7 +102,7 @@
   opacity: 1;
 }
 
-.addresses-edit-text {
+.addressesEditText {
   text-align: center;
   font: normal normal bold 12px/28px Titillium Web;
   letter-spacing: 0px;
@@ -108,22 +110,22 @@
   opacity: 1;
 }
 
-.addresses-details-and-map {
+.addressesDetailsAndMap {
   display: flex; /* Display children side by side */
   align-items: center;
 }
 
-.addresses-content {
+.addressesContent {
   margin-left: -300px;
   margin-top: 48px;
 }
 
-.addresses-button-container {
+.addressesButtonContainer {
   margin-left: 96px;
   margin-top: 5px;
 }
 
-.addresses-map-section {
+.addressesMapSection {
   top: 52px;
   left: 225px;
   width: 83px;
@@ -136,7 +138,7 @@
   margin-top: -54px;
 }
 
-.addresses-name {
+.addressesName {
   text-align: left;
   font: normal normal normal 12px/14px Titillium Web;
   letter-spacing: 0px;
@@ -145,7 +147,7 @@
   margin-bottom: 0px;
 }
 
-.addresses-details {
+.addressesDetails {
   top: 35px;
   left: 12px;
   /* position: absolute; */

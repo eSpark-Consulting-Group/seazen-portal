@@ -6,18 +6,25 @@ import { Footer } from "../../components/footer/footerContent";
 import RestaurantsOrderTypeButton from "../../components/category/button";
 import "../../components/carousel/slider/style.css";
 import "./style.css";
+import AddressHeader from "../../components/address/adressHeader";
+import { AppartmentAdress } from "../../components/address/forms/appartmentForm";
+import { HomeAdress } from "../../components/address/forms/homeForm";
+import { OfficeAdress } from "../../components/address/forms/officeForm";
+import Card from "../../components/adressList";
 
 const Home = () => {
   return (
     <div className="home-styling">
-      <Navbar />
+      {/* <Navbar />
       <div className="card-spacing">
         <Slider />
-      </div>
-      <RestaurantsOrderTypeButton />
+      </div> */}
+      <AddressHeader />
+      <Card />
+      {/* <RestaurantsOrderTypeButton /> */}
       {/* <BasicCard /> */}
-      <DraggableSlider />
-      <Footer showFooterSection={true}/>
+      {/* <DraggableSlider /> */}
+      {/* <Footer showFooterSection={true} /> */}
     </div>
   );
 };

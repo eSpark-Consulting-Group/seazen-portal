@@ -1,38 +1,41 @@
-import React from 'react';
-import "./style.css"
-import { AddressesButton } from './addressesButton';
+import React from "react";
+import { AddressesButton } from "./addressesButton";
+import styles from "./adressList.module.css";
+// import "./style.css"
 
 const Card = ({ title, title2, iconUrl, name, block, home, floor }) => {
   return (
-    <div className="addresses-container">
+    <div className={styles.addressesContainer}>
       <div className="addresses-header">
-        <img className="addresses-card-icon" src={iconUrl} alt="Icon"  />
-        <p className="addresses-home-title">{title}</p>
-        <p className="addresses-home-title2">{title2}</p>
+        <img className={styles.addressesCardIcon} src={iconUrl} alt="Icon" />
+        <p className={styles.addressesHomeTitle}>{title}</p>
+        <p className={styles.addressesHomeTitle2}>{title2}</p>
       </div>
-      <div className="addresses-button-section">
-        <div className="addresses-button-container">
-        <button className="addresses-delete-button"><span className="addresses-delete-text">Delete</span></button>
-        <button className="addresses-edit-button"><span className="addresses-edit-text">Edit</span></button>
+      <div className={styles.addressesButtonSection}>
+        <div className={styles.addressesButtonContainer}>
+          <button className={styles.addressesDeleteButton}>
+            <span className={styles.addressesDeleteText}>Delete</span>
+          </button>
+          <button className={styles.addressesEditButton}>
+            <span className={styles.addressesEditText}>Edit</span>
+          </button>
         </div>
-        <hr/>
+        <hr />
       </div>
-      <div className="addresses-content">
-      <div className="addresses-details-and-map">
-      <div className="addresses-details">
-          <p className="addresses-name">{name}</p>
-          <p className="addresses-name">{block}</p>
-          <p className="addresses-name">{home}</p>
-          <p className="addresses-name">{floor}</p>
+      <div className={styles.addressesContent}>
+        <div className={styles.addressesDetailsAndMap}>
+          <div className={styles.addressesDetails}>
+            <p className={styles.addressesName}>{name}</p>
+            <p className={styles.addressesName}>{block}</p>
+            <p className={styles.addressesName}>{home}</p>
+            <p className={styles.addressesName}>{floor}</p>
+          </div>
         </div>
-        
-        
-      </div>
-      <div className="addresses-map-section">
+        <div className={styles.addressesMapSection}>
           <img src="/assets/img/map-image.svg" alt="Small Image" />
         </div>
       </div>
-      <AddressesButton/>
+      <AddressesButton />
     </div>
   );
 };
