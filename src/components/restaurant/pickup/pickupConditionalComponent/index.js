@@ -1,7 +1,7 @@
 import React from "react";
 import PickupDetails from "..";
 import ErrorInformation from "../../../errorInformation";
-import MenuCardListConatiner from "../../menu/menu_card_list_container";
+import MenuCardListContainer from "../../menu/menu_card_list_container";
 import MenuItems from "../../menu/menu_items";
 
 const PickupConditionalComponent = ({
@@ -17,20 +17,20 @@ const PickupConditionalComponent = ({
             return(<>
                 <PickupDetails />
                 <MenuItems />
-                <MenuCardListConatiner />
+                <MenuCardListContainer />
             </>);
         case false:
             return(<>
                 <PickupDetails />
                 <ErrorInformation errorMessage={errorMessage} />
                 <MenuItems />
-                <MenuCardListConatiner />
+                <MenuCardListContainer />
             </>);
         default:
             return(<>
                 <PickupDetails />
                 <MenuItems />
-                <MenuCardListConatiner />
+                <MenuCardListContainer />
             </>);
     }
     

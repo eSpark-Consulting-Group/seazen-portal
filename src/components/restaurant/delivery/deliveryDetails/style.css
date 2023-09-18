@@ -1,5 +1,4 @@
 .delivery_outer_container {
-  width: 375px;
   height: 48px;
   display: flex;
   justify-content: center;
@@ -7,7 +6,6 @@
 }
 
 .delivery_inner_container {
-  width: 326px;
   height: 100%;
   display: flex;
   color: #323f4b;

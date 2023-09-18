@@ -1,10 +1,16 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import MenuCard from "../menu_card/index.js";
 import "./style.css";
+import { paths } from "../../../../routes/paths.jsx";
 
-const MenuCardListConatiner = () => {
+const MenuCardListContainer = () => {
+  const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -14,17 +20,19 @@ const MenuCardListConatiner = () => {
   const foodIngredients = "rice, plate peppers, onion, red beans, …";
   const foodCurrency = "KWD";
   const foodPrice = 6.99;
-  const foodImage = "./assets/img/menu_card_image.png";
+  const foodImage = "/assets/img/menu_card_image.png";
 
   return (
-    <div className="menu_card_list_outer_container">
+    <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-0">
       <div className="menu_card_list_inner_container">
         <div
           className={`card_list_title_search_container ${
             isSearchOpen ? "expanded_search" : ""
           }`}
         >
-          <div className="card_list_title">Burrito in a Bowl</div>
+          <div className="card_list_title">
+            {searchParams.get("category") || "Burrito in a Bowl"}
+          </div>
           <div className={`search ${isSearchOpen ? "expanded_search" : ""}`}>
             <div
               className={`searchwrapper ${
@@ -45,35 +53,83 @@ const MenuCardListConatiner = () => {
             </div>
           </div>
         </div>
-        <MenuCard
-          foodItem={foodItem}
-          foodIngredients={foodIngredients}
-          foodCurrency={foodCurrency}
-          foodPrice={foodPrice}
-          foodImage={foodImage}
-        />
-        <MenuCard
-          foodItem={foodItem}
-          foodIngredients={foodIngredients}
-          foodCurrency={foodCurrency}
-          foodPrice={foodPrice}
-          foodImage={foodImage}
-        />
-        <MenuCard
-          foodItem={foodItem}
-          foodIngredients={foodIngredients}
-          foodCurrency={foodCurrency}
-          foodPrice={foodPrice}
-          foodImage={foodImage}
-        />
-        <div className="comment_button_container">
+
+        <Stack spacing={1.5}>
+          <MenuCard
+            foodItem={foodItem}
+            foodIngredients={foodIngredients}
+            foodCurrency={foodCurrency}
+            foodPrice={foodPrice}
+            foodImage={foodImage}
+          />
+          <MenuCard
+            foodItem={foodItem}
+            foodIngredients={foodIngredients}
+            foodCurrency={foodCurrency}
+            foodPrice={foodPrice}
+            foodImage={foodImage}
+          />
+          <MenuCard
+            foodItem={foodItem}
+            foodIngredients={foodIngredients}
+            foodCurrency={foodCurrency}
+            foodPrice={foodPrice}
+            foodImage={foodImage}
+          />
+        </Stack>
+
+        <Box
+          sx={{
+            cursor: "pointer",
+            bottom: 0,
+            px: 2,
+            py: 1.5,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            borderTopLeftRadius: (theme) => theme.spacing(2),
+            borderTopRightRadius: (theme) => theme.spacing(2),
+            backgroundColor: "#026754",
+          }}
+          onClick={() => {
+            navigate(paths.cart);
+          }}
+        >
+          <Stack direction="row" alignItems="center" spacing={1.5}>
+            <Box
+              sx={{
+                py: 0.5,
+                px: 2,
+                borderRadius: 1,
+                backgroundColor: "#308979",
+              }}
+            >
+              0
+            </Box>
+            <Typography>Your Cart</Typography>
+          </Stack>
+
+          <Box
+            sx={{
+              py: 0.5,
+              px: 2,
+              borderRadius: 1,
+              backgroundColor: "#308979",
+            }}
+          >
+            KWD 0.00
+          </Box>
+        </Box>
+
+        {/* <div className="comment_button_container">
           <button>
-            <img src=".\assets\img\comment_icon.svg" alt="comment_icon" />
+            <img src="/assets/img/comment_icon.svg" alt="comment_icon" />
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
 };
 
-export default MenuCardListConatiner;
+export default MenuCardListContainer;

@@ -5,11 +5,14 @@ import AddressHeader from "../../components/address/adressHeader";
 import AddressTypeSelector from "../../components/address/addressButton";
 import { AppartmentAdress } from "../../components/address/forms/appartmentForm";
 import { OfficeAdress } from "../../components/address/forms/officeForm";
+import { useNavigate } from "react-router";
+import { paths } from "../../routes/paths";
 
 const AddressForm = () => {
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
   const [countryCode, setCountryCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const navigate = useNavigate();
 
   const handleCountryCodeChange = (event) => {
     // Use regex to remove non-numeric characters
@@ -44,7 +47,7 @@ const AddressForm = () => {
 
       <div className="edit-container">
         <p className="address-name">Salmiya</p>
-        <button className="edit-button">
+        <button className="edit-button" onClick={() => navigate(paths.location)}>
           <span className="edit-text">Edit Location</span>
         </button>
       </div>
@@ -75,7 +78,7 @@ const AddressForm = () => {
             onChange={handlePhoneNumberChange}
           />
         </div>
-        <button type="submit" className="address-button">
+        <button type="submit" className="address-button" onClick={()=>{navigate(paths.addresses)}}>
           {" "}
           {/* Use type='submit' to make it a submit button */}
           <a href="#" className="address-text">

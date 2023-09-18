@@ -30,7 +30,7 @@ const DeliveryDetails = () => {
               {location}
               <span className="dropdown_icon_container">
                 <img
-                  src=".\assets\img\Add To Cart.svg"
+                  src="/assets/img/Add To Cart.svg"
                   alt="chevron_down_icon"
                 />
               </span>
@@ -72,7 +72,7 @@ const DeliveryDetails = () => {
               {"ASAP "}
               <span className="dropdown_icon_container">
                 <img
-                  src=".\assets\img\Add To Cart.svg"
+                  src="/assets/img/Add To Cart.svg"
                   alt="chevron_down_icon"
                 />
               </span>

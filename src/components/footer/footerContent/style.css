@@ -16,14 +16,36 @@
   color: #959fa8;
   opacity: 1;
   padding-left: 10px;
+  cursor: pointer;
 }
 
 .text-box {
   position: absolute;
-  left: 316px;
-  top: 139%;
+  left: 310px;
+  top: 126%;
 }
 
 .footer-container {
   margin-bottom: -32px;
+}
+
+@media screen and (max-width: 500px) and (min-width: 400px) {
+  .text-box {
+    position: absolute;
+    top: 116%;
+    left: 355px;
+  }
+}
+
+@media screen and (max-width: 380px) and (min-width: 350px) {
+  .text-box {
+    top: 110%;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .text-box {
+    left: 262px;
+    top: 104%;
+  }
 }

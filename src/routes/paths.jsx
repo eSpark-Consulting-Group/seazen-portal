@@ -12,13 +12,20 @@ import { PrivacyPolicy } from "../screens/privacyPolicy";
 import { Terms } from "../screens/terms";
 import CustomerRegistration from "../screens/customer/registration";
 import { EditForm } from "../screens/editForm";
-import AddressForm from "../screens/adress";
+import AddressForm from "../screens/address";
+import { Details } from "../screens/details";
+import { Branches } from "../screens/branches";
+import Addresses from "../screens/myAdresses";
+import MyOrderScreen from "../screens/myorder";
+import Receipt from "../screens/receipt";
 
 export const paths = {
   home: "/",
   error: "*",
   menu: "/menu",
   cart: "/cart",
+  myorder: "order",
+  receipt: "receipt",
   location: "/location",
   orderplace: "orderplace",
   customer_registration: "/customer_registration",
@@ -26,28 +33,36 @@ export const paths = {
   phone_verification_otp: "/phone-verification/otp",
   profile: "/profile",
   update_profile: "/update_profile",
-  guest_profile: "/guest-profile",
-  privacy_policy: "/privacy-policy",
+  guest_profile: "guest-profile",
+  privacy_policy: "privacy-policy",
   terms: "/terms",
-  address: '/address'
+  address: "/address",
+  details: "/details",
+  branches: "/branches",
+  addresses: "/my-addresses",
 };
 
 export const routes = {
   home: "/",
   error: "*",
-  menu: "/menu",
-  address: '/address',
+  menu: "/menu/:option?",
+  details: "/details",
+  address: "/address",
   cart: "/cart",
+  myorder: "profile/order",
+  receipt: "profile/order/receipt",
   location: "/location",
   orderplace: "orderplace",
   customer_registration: "/customer_registration",
-  phone_verification_index: "/phone-verification/",
+  phone_verification_index: "guest-profile/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
-  profile: "/profile",
+  profile: "profile",
   update_profile: "/update_profile",
   guest_profile: "/guest-profile",
   privacy_policy: "/privacy-policy",
   terms: "/terms",
+  branches: "/branches",
+  addresses: "/my-addresses",
 };
 
 export const publicRoutes = {
@@ -55,6 +70,11 @@ export const publicRoutes = {
     name: "Home",
     path: routes.home,
     component: <Home />,
+  },
+  [paths.details]: {
+    name: "Details",
+    path: routes.details,
+    component: <Details />,
   },
   [paths.address]: {
     name: "Address",
@@ -120,6 +140,26 @@ export const publicRoutes = {
     name: "Terms",
     path: routes.terms,
     component: <Terms />,
+  },
+  [paths.branches]: {
+    name: "branches",
+    path: routes.branches,
+    component: <Branches />,
+  },
+  [paths.addresses]: {
+    name: "addresses",
+    path: routes.addresses,
+    component: <Addresses />,
+  },
+  [paths.myorder]: {
+    name: "MyOrder",
+    path: routes.myorder,
+    component: <MyOrderScreen />,
+  },
+  [paths.receipt]: {
+    name: "Receipt",
+    path: routes.receipt,
+    component: <Receipt />,
   },
 };
 

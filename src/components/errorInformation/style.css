@@ -1,9 +1,7 @@
 .error_information_outer_container{
-    width: 375px;
-    padding: 5px 0px;
+    width: 100%;
     background-color: #FCEAEA;
     display: flex;
-    justify-content: center;
     align-items: center;
 }
 

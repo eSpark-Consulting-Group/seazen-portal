@@ -1,263 +1,307 @@
-.dine_in_form_outer_container{
-    width: 100%;
-    padding-top: 30px;
-    margin-bottom: 54px;
-    display: flex;
-    justify-content: center;
-    position: relative;
+.dine_in_form_outer_container {
+  width: 100%;
+  padding-top: 30px;
+  margin-bottom: 54px;
+  display: flex;
+  justify-content: center;
+  position: relative;
 }
 
-.dine_in_form_inner_container{
-    width: 326px;
+.dine_in_form_inner_container {
+  width: 326px;
 }
 
-.dine_in_form_heading_text{
-    font-family: Titillium Web;
-    font-size: 18px;
-    font-weight: 700;
-    color: #1F2933;
+.dine_in_form_heading_text {
+  font-family: Titillium Web;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2933;
 }
 
-.dine_in_form_divider_line{
-    height: 1.5px;
-    width: 266px;
-    background-color: #707070;
-    position: absolute;
-    left: 0px;
-    top: 100px;
-    z-index: 100;
+.dine_in_form_divider_line {
+  height: 1.5px;
+  width: 100%;
+  background-color: #707070;
+  position: absolute;
+  left: 0px;
+  top: 100px;
+  z-index: 100;
 }
 
-.dine_in_form_contact_details{
-    width: 326px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    padding-top: 30px;
-    padding-bottom: 30px;
+.dine_in_form_contact_details {
+  width: 326px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
-.dine_in_form_contact_details_form_container{
-    width: 326px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
+.dine_in_form_contact_details_form_container {
+  width: 326px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
 }
 
-.dine_in_form_contact_details_name_container{
-    width: 326px;
-    display: flex;
-    justify-content: space-between;
+.dine_in_form_contact_details_name_container {
+  width: 326px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.dine_in_form_contact_details_heading, .dine_in_form_queue_information_heading{
-    font-family: Titillium Web;
-    font-size: 18px;
-    font-weight: 700;
-    color: #1F2933;
+.dine_in_form_contact_details_heading,
+.dine_in_form_queue_information_heading {
+  font-family: Titillium Web;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2933;
 }
 
 .first_name_input {
-    background: #fafafa 0% 0% no-repeat padding-box;
-    border: 1px solid #c0cdd7;
-    border-radius: 12px;
-    opacity: 1;
-    width: 146px;
-    height: 52px;
-    padding-left: 15px;
-  }
-  
-  .first_name_input:focus {
-    outline: none;
-    color: #959fa8;
-  }
-  
-  .first_name_input::placeholder {
-    text-align: left;
-    font: normal normal bold 14px/28px Montserrat;
-    letter-spacing: 0px;
-    color: #959fa8;
-    opacity: 1;
-  }
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  height: 52px;
+  padding-left: 15px;
+  width: 160px;
+}
 
+.first_name_input:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+.first_name_input::placeholder {
+  text-align: left;
+  font: normal normal bold 14px/28px Montserrat;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+}
+
+.first_name_input:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+.first_name_input::placeholder {
+  text-align: left;
+  font: normal normal bold 14px/28px Montserrat;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+}
+
+.last_name_input {
+  width: 146px;
+  height: 52px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+}
+
+.last_name_input:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+.last_name_input::placeholder {
+  text-align: left;
+  font: normal normal bold 14px/28px Montserrat;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 15px;
+}
+
+.dine_in_form_contact_details_phonenumber_container {
+  width: 326px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.special_requirement_text_area {
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  padding: 10px;
+  width: 326px;
+  height: 104px;
+  color: #959fa8;
+  resize: none;
+}
+
+.country_code_input:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+.country_code_input::placeholder {
+  text-align: center;
+  font: normal normal bold 14px/28px Montserrat;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+}
+
+.phone_number_input {
+  width: 236px;
+  height: 52px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+}
+
+.phone_number_input:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+.phone_number_input::placeholder {
+  text-align: left;
+  font: normal normal bold 14px/28px Montserrat;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 15px;
+}
+
+.special_requirement_text_area {
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  padding: 10px;
+  width: 326px;
+  height: 104px;
+  color: #959fa8;
+  resize: none;
+}
+
+.special_requirement_text_area:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+.special_requirement_text_area::placeholder {
+  text-align: left;
+  font: normal normal bold 16px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+}
+
+.queue_information_form_select {
+  width: 326px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  height: 52px;
+  padding-left: 15px;
+  font-family: Titillium Web;
+  font-size: 16px;
+  font-weight: 700;
+  color: #959fa8;
+}
+
+.queue_information_form_select option {
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+  padding-left: 15px;
+  font-family: Titillium Web;
+  font-size: 16px;
+  font-weight: 700;
+  color: #959fa8;
+  border: none;
+}
+
+.queue_information_form_select:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+#required {
+  color: #e02020;
+}
+
+#required:focus {
+  border: 1px solid #e02020;
+  color: #e02020;
+}
+
+#required:focus::placeholder {
+  color: #e02020;
+}
+
+.dine_in_form_submit_button {
+  width: 318px;
+  height: 56px;
+  border: none;
+  background-color: #026754;
+  color: white;
+  border-radius: 14px;
+  font-family: Titillium Web;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.select_container {
+  width: 326px;
+  /* height: 52px; */
+}
+
+.dine_in_form_queue_information_form_container {
+  width: 326px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 30px 0px;
+}
+
+.dine_in_form_outer_container::-webkit-scrollbar {
+  display: none;
+}
+
+/* @media screen and (max-width: 350px) {
+  .dine_in_form_inner_container {
+    width: 350px;
+  }
+  .dine_in_form_heading_text {
+    width: 320px;
+  }
+  .first_name_input {
+    width: 150px;
+  }
   .last_name_input {
-    width: 146px;
-    height: 52px;
-    background: #fafafa 0% 0% no-repeat padding-box;
-    border: 1px solid #c0cdd7;
-    border-radius: 12px;
-    opacity: 1;
+    width: 135px;
+    margin-right: 32px;
   }
-  
-  .last_name_input:focus {
-    outline: none;
-    color: #959fa8;
-  }
-  
-  .last_name_input::placeholder {
-    text-align: left;
-    font: normal normal bold 14px/28px Montserrat;
-    letter-spacing: 0px;
-    color: #959fa8;
-    opacity: 1;
-    padding-left: 15px;
-  }
-
-  .dine_in_form_contact_details_phonenumber_container{
-    width: 326px;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .country_code_input {
-    background: #fafafa 0% 0% no-repeat padding-box;
-    border: 1px solid #c0cdd7;
-    border-radius: 12px;
-    opacity: 1;
-    width: 80px;
-    height: 52px;
-    margin-right: 10px;
-  }
-  
-  .country_code_input:focus {
-    outline: none;
-    color: #959fa8;
-  }
-  
-  .country_code_input::placeholder {
-    text-align: center;
-    font: normal normal bold 14px/28px Montserrat;
-    letter-spacing: 0px;
-    color: #959fa8;
-    opacity: 1;
-  }
-
   .phone_number_input {
-    width: 236px;
-    height: 52px;
-    background: #fafafa 0% 0% no-repeat padding-box;
-    border: 1px solid #c0cdd7;
-    border-radius: 12px;
-    opacity: 1;
+    width: 238px;
+    margin-right: 31px;
   }
-  
-  .phone_number_input:focus {
-    outline: none;
-    color: #959fa8;
+  .select_container {
+    width: 300px;
+    margin-right: 32px;
   }
-  
-  .phone_number_input::placeholder {
-    text-align: left;
-    font: normal normal bold 14px/28px Montserrat;
-    letter-spacing: 0px;
-    color: #959fa8;
-    opacity: 1;
-    padding-left: 15px;
-  }
-
-
-
   .special_requirement_text_area {
-    background: #fafafa 0% 0% no-repeat padding-box;
-    border: 1px solid #c0cdd7;
-    border-radius: 12px;
-    opacity: 1;
-    padding: 10px;
-    width: 308.5px;
-    height: 104px;
-    color: #959fa8;
-    resize: none;
+    width: 300px;
+    margin-right: 32px;
   }
-
-  .special_requirement_text_area:focus {
-    outline: none;
-    color: #959fa8;
+  .dine_in_form_submit_button {
+    width: 300px;
   }
-
-  .special_requirement_text_area::placeholder {
-    text-align: left;
-    font: normal normal bold 16px/28px Titillium Web;
-    letter-spacing: 0px;
-    color: #959fa8;
-    opacity: 1;
+  .dine_in_form_outer_container {
+    margin-left: 20px;
   }
-
-  .queue_information_form_select{
-    width: 326px;
-    background: #fafafa 0% 0% no-repeat padding-box;
-    border: 1px solid #c0cdd7;
-    border-radius: 12px;
-    opacity: 1;
-    height: 52px;
-    padding-left: 15px;
-    font-family: Titillium Web;
-    font-size: 16px;
-    font-weight: 700;
-    color: #959fa8;
-  }
-
-  .queue_information_form_select option{
-    background: #fafafa 0% 0% no-repeat padding-box;
-    border: 1px solid #c0cdd7;
-    border-radius: 12px;
-    opacity: 1;
-    padding-left: 15px;
-    font-family: Titillium Web;
-    font-size: 16px;
-    font-weight: 700;
-    color: #959fa8;
-    border: none;
-  }
-
-
-  .queue_information_form_select:focus {
-    outline: none;
-    color: #959fa8;
-  }
-
-
-  #required {
-    color: #e02020;
-  }
-  
-  #required:focus {
-    border: 1px solid #e02020;
-    color: #e02020;
-  }
-  
-  #required:focus::placeholder {
-    color: #e02020;
-  }
-
-
-  .dine_in_form_submit_button{
-    width: 318px;
-    height: 56px;
-    border: none;
-    background-color: #026754;
-    color: white;
-    border-radius: 14px;
-    font-family: Titillium Web;
-    font-size: 22px;
-    font-weight: 700;
-  }
-
-  .select_container{
-    width: 326px;
-    /* height: 52px; */
-  }
-
-  .dine_in_form_queue_information_form_container{
-    width: 326px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding: 30px 0px;
-  }
-
-
-  .dine_in_form_outer_container::-webkit-scrollbar {
-    display: none;
-  }
+} */

@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Titillium+Web:wght@200;300;400;600;700;900&display=swap");
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  height: 56px;
+  background: #ffffff00 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+.left-icons img {
+  width: 24px;
+  height: 24px;
+  opacity: 1;
+  position: absolute;
+  top: 30px;
+  left: 32px;
+}
+.right-icons img {
+  width: 24px;
+  height: 20px;
+  opacity: 1;
+  position: absolute;
+  top: 31px;
+  left: 325px;
+}
+.logo h3 {
+  top: 11px;
+  left: 101px;
+  width: 174px;
+  height: 22px;
+  text-align: center;
+  font: normal normal bold 18px/24px Montserrat;
+  letter-spacing: 0.36px;
+  color: #1F2933;
+  opacity: 1;
+  position: absolute;
+}
