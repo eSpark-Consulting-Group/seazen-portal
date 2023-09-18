@@ -1,0 +1,86 @@
+.count-container {
+  width: 280px;
+  height: 44px;
+  background: #026754 0% 0% no-repeat padding-box;
+  border-radius: 12px 12px 0px 0px;
+  opacity: 1;
+  margin-top: 20px;
+  margin-left: 10px;
+  position: relative;
+}
+
+.count {
+  margin-left: 210px;
+  position: absolute;
+  top: 10px;
+  left: -10px;
+}
+
+.quantity-label {
+  text-align: left;
+  font: normal normal normal 16px/22px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  position: absolute;
+  top: 10px;
+  left: 18px;
+}
+
+.quantitycount-style {
+  position: absolute;
+  top: 1px;
+  left: 30px;
+}
+
+.minus-button {
+  background: #308979 0% 0% no-repeat padding-box;
+  border-radius: 12px;
+  opacity: 1;
+  border: none;
+  width: 28px;
+  height: 26px;
+  margin-left: -3px;
+  margin-right: 10px;
+}
+
+.pluss-button {
+  background: #308979 0% 0% no-repeat padding-box;
+  box-shadow: 0px 4px 16px #74869429;
+  border-radius: 12px;
+  opacity: 1;
+  border: none;
+  width: 28px;
+  height: 26px;
+  margin-left: 10px;
+}
+
+.minus-style {
+  text-align: center;
+  font: normal normal normal 24px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+.pluss-style {
+  text-align: center;
+  font: normal normal normal 24px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+@media screen and (max-width: 500px) and (min-width: 400px) {
+  .count-container {
+    margin-left: 26px;
+  }
+
+  .quantity-label {
+    left: 20px;
+  }
+
+  .count {
+    left: -12px;
+  }
+}

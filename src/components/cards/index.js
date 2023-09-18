@@ -31,16 +31,16 @@ const icons = [
     image: pickupIcon,
   },
   {
-    id:1,
+    id: 1,
     orderType: "catering",
-    image: cateringIcon
+    image: cateringIcon,
   },
   {
-    id:0,
+    id: 0,
     orderType: "dineIn",
-    image: dineInIcon
-  }];
-
+    image: dineInIcon,
+  },
+];
 
 const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const navigate = useNavigate();
@@ -61,16 +61,24 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
 
   const getCardClassName = () => {
     if (orderTypeFilter) {
-      return orderTypeFilter === "delivery" ? "restaurantCard-border-delivery" : "restaurantCard-border-near"
+      return orderTypeFilter === "delivery"
+        ? "restaurantCard-border-delivery"
+        : "restaurantCard-border-near";
     } else {
       return "restaurantCard-no-border";
     }
   };
 
   const getClassNameAccordingToFilter = (orderTypeId) => {
-    if (orderTypeId === clickedButtonIndex && orderTypeFilter && orderTypeId !== 1) {
-      return orderTypeFilter === "delivery" ? "button-icons-styles-delivery" : "button-icons-styles-near"
-    } 
+    if (
+      orderTypeId === clickedButtonIndex &&
+      orderTypeFilter &&
+      orderTypeId !== 1
+    ) {
+      return orderTypeFilter === "delivery"
+        ? "button-icons-styles-delivery"
+        : "button-icons-styles-near";
+    }
   };
 
   // Define the width and height for the SVG icons
@@ -94,7 +102,11 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
               src={`/assets/img/${15 + index * 2}.png`}
               alt={`Card ${index + 1}`}
             />
-            <div className={`svg-container ${clickedButtonIndex !== null ? 'expanded' : 'collapsed'}`}>
+            <div
+              className={`svg-container ${
+                clickedButtonIndex !== null ? "expanded" : "collapsed"
+              }`}
+            >
               <div className="inner-svg-container">
                 {captions[index].map((icon, i) => {
                   return (
@@ -106,7 +118,7 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
                         style={{ width: iconWidth, height: iconHeight }}
                       />
                     </div>
-                  )
+                  );
                 })}
               </div>
             </div>

@@ -20,7 +20,7 @@
 
 .dine_in_form_divider_line {
   height: 1.5px;
-  width: 266px;
+  width: 100%;
   background-color: #707070;
   position: absolute;
   left: 0px;
@@ -64,9 +64,22 @@
   border: 1px solid #c0cdd7;
   border-radius: 12px;
   opacity: 1;
-  width: 170px;
   height: 52px;
   padding-left: 15px;
+  width: 160px;
+}
+
+.first_name_input:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+.first_name_input::placeholder {
+  text-align: left;
+  font: normal normal bold 14px/28px Montserrat;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
 }
 
 .first_name_input:focus {
@@ -111,14 +124,16 @@
   justify-content: space-between;
 }
 
-.country_code_input {
+.special_requirement_text_area {
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
   border-radius: 12px;
   opacity: 1;
-  width: 80px;
-  height: 52px;
-  margin-right: 10px;
+  padding: 10px;
+  width: 326px;
+  height: 104px;
+  color: #959fa8;
+  resize: none;
 }
 
 .country_code_input:focus {
@@ -257,7 +272,7 @@
   display: none;
 }
 
-@media screen and (max-width: 350px) {
+/* @media screen and (max-width: 350px) {
   .dine_in_form_inner_container {
     width: 350px;
   }
@@ -289,4 +304,4 @@
   .dine_in_form_outer_container {
     margin-left: 20px;
   }
-}
+} */

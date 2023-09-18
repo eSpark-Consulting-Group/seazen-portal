@@ -78,7 +78,7 @@ const AddressForm = () => {
             onChange={handlePhoneNumberChange}
           />
         </div>
-        <button type="submit" className="address-button">
+        <button type="submit" className="address-button" onClick={()=>{navigate(paths.addresses)}}>
           {" "}
           {/* Use type='submit' to make it a submit button */}
           <a href="#" className="address-text">

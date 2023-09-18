@@ -1,17 +1,29 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./style.css";
+import { paths } from "../../../routes/paths";
 
-const RestaurantDetails = () => {
+const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
+  const navigate = useNavigate();
+  const handleBranchHoursClick = () => {
+    navigate(paths.branches);
+  };
   return (
-    <div className="details_outer_container">
-      <div className="details_inner_div">
+    <div className="details_outer_container px-3 px-sm-4">
+      <div className="details_inner_div w-100">
         <div className="logo_info_container">
-          <img src=".\assets\img\Trapani_logo.svg" alt="restaurant_logo" />
-          <div className="information_container">
+          <img src="/assets/img/Trapani_logo.svg" alt="restaurant_logo" />
+          <div
+            className="information_container"
+            onClick={() => {
+              handleBranchHoursClick();
+            }}
+            style={{ cursor: "pointer" }}
+          >
             {"Branches & Hours "}
             <span>
               <img
-                src=".\assets\img\information_icon.svg"
+                src="/assets/img/information_icon.svg"
                 alt="information_icon"
               />
             </span>

@@ -21,7 +21,7 @@ const ProfileStructure = ({ name, phoneNumber, email, imageUrl, onEditClick }) =
           <img src="/assets/img/Group 106.svg"></img>
         </button>
       </div>
-      <div className="inline-container">
+      <div className="inline-container" onClick={()=>{navigate(paths.addresses)}}>
       <img className="map-style" src='/assets/img/map.svg'></img>
       <p>My Addresses</p>
       </div>

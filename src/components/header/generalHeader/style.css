@@ -9,28 +9,35 @@
     width: 100%;
   }
   .Nav_Image_Container {
-    margin-right: -50px;
+    margin-right: -50px !important;
+  }
+  .shopping_container {
+    margin-right: 65px !important;
   }
 }
 
 @media screen and (max-width: 350px) {
   .Nav_Image_Container img {
-    width: 91%;
+    width: 100%;
   }
 
   .shopping_container {
-    margin-right: 40px !important;
+    margin-right: 12px !important;
   }
   .Nav_Image_Container {
-    margin-left: -50px;
+    margin-left: -59px;
   }
   .back_button {
-    margin-left: 35px !important;
+    margin-left: 65px !important;
   }
 }
 
+
+
 .upper_navigation {
-  width: 375px;
+  min-width: 375px;
+  width: 100%;
+  max-width: 768px;
   position: absolute;
   display: flex;
   justify-content: space-between;

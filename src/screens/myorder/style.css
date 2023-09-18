@@ -4,10 +4,10 @@
     position: relative;
     }
     
-    hr{
+    /* hr{
         border-top: 1px dashed #707070;
         margin: 0 15px;
-    }
+    } */
     
     .my-orderscreen-nav{
         display: flex;
@@ -207,17 +207,24 @@
         height: 50px;
     
     }
-    
+
+   
+
     .rate-screen{
-        display: flex;
-        flex-direction: column;
-        width: 374px;
-        height: 310px;
-        margin-top: 655px;
+        
         border-radius: 20px 20px 0 0;
         border: 1px solid #C0CDD7;
+        width: 374px;
+        height: 310px;
     
     }
+
+    @media (max-width: 700px) {
+        .rate-screen{
+            width: 100%;
+        }
+      }
+
     .rate-cat{
         display: flex;
         align-items: center;
