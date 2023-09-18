@@ -150,3 +150,10 @@
   left: 12px;
   /* position: absolute; */
 }
+
+@media screen and (max-width:500px) and (min-width:380px) {
+  .addresses-container{
+    margin-left: 50px;
+  }
+  
+}

@@ -19,3 +19,10 @@
   opacity: 1;
   cursor: pointer;
 }
+
+@media screen and (max-width:500px) and (min-width:380px) {
+  .addresses-add-button{
+    left:55px;
+  }
+  
+}

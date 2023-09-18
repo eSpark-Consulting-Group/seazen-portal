@@ -9,6 +9,7 @@
   height: 56px;
   background: #ffffff00 0% 0% no-repeat padding-box;
   opacity: 1;
+  margin-bottom: 45px;
 }
 .left-icons img {
   width: 24px;
@@ -27,14 +28,14 @@
   left: 325px;
 }
 .logo h3 {
-  top: 11px;
+  top: 30px;
   left: 101px;
   width: 174px;
   height: 22px;
   text-align: center;
   font: normal normal bold 18px/24px Montserrat;
   letter-spacing: 0.36px;
-  color: #1F2933;
+  color: #1f2933;
   opacity: 1;
   position: absolute;
 }
