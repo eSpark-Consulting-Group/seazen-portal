@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import "./style.css";
@@ -42,6 +42,42 @@ const icons = [
   },
 ];
 
+export const restaurantThemeColor = {
+  "Restaurant 1": {
+    main: "#003964",
+    light: "#095371",
+  },
+  "Restaurant 2": {
+    main: "#424E1F",
+    light: "#596732",
+  },
+  "Restaurant 3": {
+    main: "#026754",
+    light: "#308979",
+    contrastText: "#fff",
+  },
+  "Restaurant 4": {
+    main: "#172931",
+    light: "#2E4A57",
+  },
+  "Restaurant 5": {
+    main: "#2A3549",
+    light: "#435067",
+  },
+  "Restaurant 6": {
+    main: "#0E1220",
+    light: "#293046",
+  },
+  // "Restaurant 7": {
+  //   main: "#101F4A",
+  //   light: "#101F4A",
+  // },
+  // "Restaurant 8": {
+  //   main: "#9C0B2A",
+  //   light: "#B51739",
+  // },
+};
+
 const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const navigate = useNavigate();
   const captions = [
@@ -53,11 +89,19 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
     icons.slice(1),
   ];
 
-  const isSmallScreen = useMediaQuery("(max-width: 500px) and (min-width: 380px)");
+  const isSmallScreen = useMediaQuery(
+    "(max-width: 500px) and (min-width: 380px)"
+  );
   const isSmallerScreen = useMediaQuery("(max-width: 350px)");
 
   // Adjust cardWidth to apply 120px width to screens less than 350px
-  const cardWidth = isSmallScreen ? (isSmallerScreen ? 145 : 190) : (isSmallerScreen ? 145 : 164);
+  const cardWidth = isSmallScreen
+    ? isSmallerScreen
+      ? 145
+      : 190
+    : isSmallerScreen
+    ? 145
+    : 164;
 
   const getCardClassName = () => {
     if (orderTypeFilter) {
@@ -85,17 +129,28 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const iconWidth = "7px";
   const iconHeight = "9px";
 
+  const goToRestaurantMenuPage = (restaurant) => {
+    navigate(paths.menu + `/${restaurant}`);
+  };
+
   return (
     <div className="restaurantCard-container">
-      {[0, 1, 2, 3, 4, 5].map((index) => (
-        <div key={index} className={`restaurantCards restaurantCard-${isSmallScreen ? 'small' : 'large'} ${getCardClassName()}`}>
+      {Object.keys(restaurantThemeColor).map((restaurant, index) => (
+        <div
+          key={index}
+          className={`restaurantCards restaurantCard-${
+            isSmallScreen ? "small" : "large"
+          } ${getCardClassName()}`}
+        >
           <Card
             sx={{
               width: cardWidth,
-              borderRadius: 1
+              borderRadius: 1,
             }}
             className="restaurantCards"
-            onClick={() => navigate(paths.menu)}
+            onClick={() => {
+              goToRestaurantMenuPage(restaurant);
+            }}
           >
             <img
               className="restaurantCard-img"

@@ -90,7 +90,7 @@ const MenuCardListContainer = () => {
             width: "100%",
             borderTopLeftRadius: (theme) => theme.spacing(2),
             borderTopRightRadius: (theme) => theme.spacing(2),
-            backgroundColor: "#026754",
+            backgroundColor: (theme) => theme.palette.themeColor.main,
           }}
           onClick={() => {
             navigate(paths.cart);
@@ -102,7 +102,7 @@ const MenuCardListContainer = () => {
                 py: 0.5,
                 px: 2,
                 borderRadius: 1,
-                backgroundColor: "#308979",
+                backgroundColor: (theme) => theme.palette.themeColor.light,
               }}
             >
               0
@@ -115,7 +115,7 @@ const MenuCardListContainer = () => {
               py: 0.5,
               px: 2,
               borderRadius: 1,
-              backgroundColor: "#308979",
+              backgroundColor: (theme) => theme.palette.themeColor.light,
             }}
           >
             KWD 0.00

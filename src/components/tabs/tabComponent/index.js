@@ -15,7 +15,7 @@ export default function IconPositionTabs({
 }) {
   const [value, setValue] = React.useState(0);
   const navigate = useNavigate();
-  const { option } = useParams();
+  const { restaurant, option } = useParams();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -24,7 +24,7 @@ export default function IconPositionTabs({
   const setTabPositionAndNavigate = (tabPosition) => {
     setTabPosition(tabPosition);
     navigate(
-      `/menu/${tabPosition}`,
+      `/menu/${restaurant}/${tabPosition}`,
       createSearchParams({
         locationDeliver: locationDeliver,
         deliveryAvailable: deliveryAvailable,
