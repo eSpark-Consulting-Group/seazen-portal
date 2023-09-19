@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import './style.css'
+import React, { useState } from "react";
+import "./style.css";
 
 function CountContainer() {
   const [count, setCount] = useState(0);
@@ -18,9 +18,13 @@ function CountContainer() {
     <div className="count-container">
       <span className="quantity-label">Quantity</span>
       <div className="count">
-        <button className="minus-button" onClick={decrementCount}><span className="minus-style">-</span></button>
+        <button className="minus-button" onClick={decrementCount}>
+          <span className="minus-style">-</span>
+        </button>
         <span className="quantitycount-style">{count}</span>
-        <button className="pluss-button" onClick={incrementCount}><span className="pluss-style">+</span></button>
+        <button className="pluss-button" onClick={incrementCount}>
+          <span className="pluss-style">+</span>
+        </button>
       </div>
     </div>
   );

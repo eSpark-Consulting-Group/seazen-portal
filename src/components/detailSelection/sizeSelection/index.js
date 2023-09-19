@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { size } from "../../../utils/size";
-import "./style.css";
+import styles from "./style.module.css";
 
 export const getFormattedPrice = (price) => `+KWD ${price.toFixed(3)}`;
 
@@ -34,21 +34,21 @@ export default function CheckboxGroup() {
 
   return (
     <div>
-      <div className="size">
-        <p className="size-title">Choose the size</p>
-        <p className="size-small-title">(Choose 1)</p>
-        <p className="size-title-required">(Required)</p>
+      <div className={styles.size}>
+        <p className={styles.sizeTitle}>Choose the size</p>
+        <p className={styles.sizeSmallTitle}>(Choose 1)</p>
+        <p className={styles.sizeTitleRequired}>(Required)</p>
       </div>
-      <div className="checkbox-size">
-        <ul className="size-list">
+      <div className={styles.checkboxSize}>
+        <ul className={styles.sizeList}>
           {size.map(({ name, price }, index) => {
             // Add an offset to the index to make it unique
             const adjustedIndex = index + 3000;
 
             return (
               <li key={adjustedIndex}>
-                <div className="size-list-item">
-                  <div className="size-left-section">
+                <div className={styles.sizeListItem}>
+                  <div className={styles.sizeLeftSection}>
                     <input
                       type="checkbox"
                       id={`custom-checkbox-${adjustedIndex}`} // Use the adjusted index here
@@ -56,18 +56,18 @@ export default function CheckboxGroup() {
                       value={name}
                       checked={checkedState[adjustedIndex]}
                       onChange={() => handleOnChange(adjustedIndex)} // Use the adjusted index here
-                      className="large-checkbox"
+                      className={styles.largeCheckbox}
                     />
-                    <span className="custom-checkbox"></span>
+                    <span className={styles.customCheckbox}></span>
                     <label
                       htmlFor={`custom-checkbox-${adjustedIndex}`} // Use the adjusted index here
-                      className="large-checkbox"
+                      className={styles.largeCheckbox}
                     >
                       {name}
                     </label>
                   </div>
                   {index > 0 && (
-                    <div className="size-right-section">
+                    <div className={styles.sizeRightSection}>
                       {getFormattedPrice(price)}
                     </div>
                   )}

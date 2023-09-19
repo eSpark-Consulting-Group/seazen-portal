@@ -1,4 +1,4 @@
-.special-instructions {
+.specialInstructions {
   top: 1003px;
   left: 24px;
   width: 327px;
@@ -12,11 +12,11 @@
   padding-top: 10px;
 }
 
-.special-instructions:focus {
+.specialInstructions:focus {
   outline: none;
 }
 
-.special-instructions::placeholder {
+.specialInstructions::placeholder {
   width: 192px;
   height: 24px;
   text-align: left;

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import './style.css'
+import React, { useState } from "react";
+import styles from "./style.module.css";
 
 function SpecialInstructions() {
   // State to store the user's special instructions
-  const [specialInstructions, setSpecialInstructions] = useState('');
+  const [specialInstructions, setSpecialInstructions] = useState("");
 
   // Function to handle changes in the textarea
   const handleInstructionsChange = (event) => {
@@ -12,7 +12,6 @@ function SpecialInstructions() {
 
   return (
     <div>
-      
       <textarea
         id="special-instructions"
         name="special_instructions"
@@ -20,8 +19,8 @@ function SpecialInstructions() {
         cols="50"
         value={specialInstructions}
         onChange={handleInstructionsChange}
-        className='special-instructions'
-        placeholder='Special Instructions (Optional)'
+        className={styles.specialInstructions}
+        placeholder="Special Instructions (Optional)"
       ></textarea>
     </div>
   );

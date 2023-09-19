@@ -1,4 +1,4 @@
-.topping-selection {
+.toppingSelection {
   top: 650px;
   left: 12px;
   width: 351px;
@@ -9,7 +9,7 @@
   position: absolute;
 }
 
-.topping-selection-title {
+.toppingSelectionTitle {
   top: 6px;
   left: 13px;
   width: 110px;
@@ -21,7 +21,7 @@
   position: absolute;
 }
 
-.topping-small-title {
+.toppingSmallTitle {
   top: 8px;
   left: 110px;
   width: 69px;
@@ -33,7 +33,7 @@
   position: absolute;
 }
 
-.topping-title-optional {
+.toppingTitleOptional {
   top: 6px;
   left: 274px;
   width: 60px;
@@ -77,7 +77,7 @@ input[type="checkbox"]:checked {
   font-family: Arial, sans-serif;
 }
 
-.toppings-list {
+.toppingsList {
   list-style: none;
   padding: 15px;
   margin-top: 340px;
@@ -87,14 +87,14 @@ input[type="checkbox"]:checked {
   left: 19px;
 }
 
-.toppings-list-item {
+.toppingsListItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.pricing-box {
+/* .pricing-box {
   width: 327px;
   height: 56px;
   background: #308979 0% 0% no-repeat padding-box;
@@ -134,9 +134,9 @@ input[type="checkbox"]:checked {
   color: #ffffff;
   opacity: 1;
   position: absolute;
-}
+} */
 
-.left-section-counter {
+.leftSectionCounter {
   flex: 1;
   display: flex;
   align-items: center;
@@ -151,7 +151,7 @@ input[type="checkbox"]:checked {
   left: 280px;
 }
 
-.counter-button-right {
+.counterButtonRight {
   /* width: 42px; */
   /* height: 20px; */
   background: #ffffff 0% 0% no-repeat padding-box;
@@ -163,10 +163,9 @@ input[type="checkbox"]:checked {
   position: absolute;
   right: 21px;
   top: 1px;
-
 }
 
-.counter-icon-right {
+.counterIconRight {
   top: -2px;
   left: 5px;
   width: 12px;
@@ -177,7 +176,7 @@ input[type="checkbox"]:checked {
   position: absolute;
 }
 
-.counter-icon-left {
+.counterIconLeft {
   top: -2px;
   left: 5px;
   width: 12px;
@@ -188,20 +187,20 @@ input[type="checkbox"]:checked {
   position: absolute;
 }
 
-.counter-button-left {
+.counterButtonLeft {
   /* width: 42px; */
-    /* height: 20px; */
-    background: #ffffff 0% 0% no-repeat padding-box;
-    border: 1px solid #dcdfe3;
-    border-radius: 100px;
-    opacity: 1;
-    padding: 11px;
-    margin-right: 4px;
-    position: absolute;
-    right: -23px;
+  /* height: 20px; */
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #dcdfe3;
+  border-radius: 100px;
+  opacity: 1;
+  padding: 11px;
+  margin-right: 4px;
+  position: absolute;
+  right: -23px;
 }
 
-.counter-value{
+.counterValue {
   right: 10px;
   position: absolute;
 }
@@ -210,7 +209,7 @@ input[type="checkbox"] {
   margin-right: 8px;
 }
 
-.right-section-counter {
+.rightSectionCounter {
   font-weight: bold;
   font-size: 16px;
   text-align: right;
@@ -222,29 +221,28 @@ input[type="checkbox"] {
 }
 
 /* Style for the Total section */
-.toppings-list-item:last-child {
+.toppingsListItem:last-child {
   background-color: #fff;
   padding-top: 8px;
   margin-top: 8px;
 }
 
 /* Hover effect for list items */
-.toppings-list-item:hover {
+.toppingsListItem:hover {
   background-color: #e6e6e6;
   transition: background-color 0.2s ease-in-out;
 }
 
-hr {
+.hr {
   width: 325px;
   height: 0px;
   transform: matrix(1, 0, 0, 1, 0, 0);
   border: 1px solid #ebeef0;
   opacity: 1;
   margin-top: 10px;
-
 }
 
-.toppingSelectioncheckbox-counter input[type="checkbox"] {
+.toppingSelectioncheckboxCounter input[type="checkbox"] {
   width: 20px;
   height: 20px;
 
@@ -253,18 +251,15 @@ hr {
   border-radius: 4px;
 }
 
-.disabled-text {
+.disabledText {
   color: #c0c4c8;
 }
 
-@media screen and (max-width:500px) and (min-width:400px) {
-  .topping-selection{
+@media screen and (max-width: 500px) and (min-width: 400px) {
+  .toppingSelection {
     left: 36px;
   }
-
-  .toppings-list{
+  .toppingsList {
     margin-left: 20px;
   }
-
-  
 }

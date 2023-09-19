@@ -1,0 +1,58 @@
+.pricingBox {
+  width: 327px;
+  height: 56px;
+  background: #308979 0% 0% no-repeat padding-box;
+  box-shadow: 0px 4px 16px #30897929;
+  border-radius: 12px;
+  opacity: 1;
+  margin-left: -14px;
+  position: relative;
+}
+
+.pricingSection {
+  text-align: center;
+  font: normal normal 600 18px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  top: 15px;
+  left: 66px;
+  position: absolute;
+}
+
+.pricingIcon {
+  top: 15px;
+  left: 30px;
+  width: 24px;
+  height: 24px;
+  opacity: 1;
+  position: absolute;
+}
+
+.calculationSection {
+  top: 15px;
+  left: 205px;
+  width: 95px;
+  height: 24px;
+  text-align: right;
+  font: normal normal 600 16px/24px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  position: absolute;
+}
+
+@media screen and (max-width: 500px) and (min-width: 400px) {
+  .calculationSection {
+    left: 215px;
+  }
+  .pricingSection {
+    left: 5=65px;
+  }
+  .pricingIcon {
+    left: 32px;
+  }
+  .pricingBox {
+    margin-left: -3px;
+  }
+}

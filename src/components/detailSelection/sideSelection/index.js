@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { side } from "../../../utils/side";
-import "./style.css";
+import styles from "./style.module.css";
 import PricingBox from "../total/index";
 import SpecialInstructions from "../instructionsText";
 import CountContainer from "../quantityCount";
@@ -25,7 +25,7 @@ export default function SideSelection() {
     const totalPrice = updatedCheckedState.reduce(
       (sum, currentState, index) => {
         if (currentState === true) {
-          return sum + side[index ].price;
+          return sum + side[index].price;
         }
         return sum;
       },
@@ -37,18 +37,18 @@ export default function SideSelection() {
 
   return (
     <div>
-      <div className="side">
-        <p className="side-title">Extra Sides</p>
-        <p className="side-small-title">(Choose up to 2)</p>
-        <p className="side-title-optional">(optional)</p>
+      <div className={styles.side}>
+        <p className={styles.sideTitle}>Extra Sides</p>
+        <p className={styles.sideSmallTitle}>(Choose up to 2)</p>
+        <p className={styles.sideTitleOptional}>(optional)</p>
       </div>
-      <div className="side-check">
-        <ul className="side-list">
+      <div className={styles.sideCheck}>
+        <ul className={styles.sideList}>
           {side.map(({ name, price }, index) => {
             return (
               <li key={index}>
-                <div className="side-list-item">
-                  <div className="side-left-section">
+                <div className={styles.sideListItem}>
+                  <div className={styles.sideLeftSection}>
                     <input
                       type="checkbox"
                       id={`custom-checkbox-${index}`} // Use the adjusted index here
@@ -56,17 +56,17 @@ export default function SideSelection() {
                       value={name}
                       checked={checkedState[index]}
                       onChange={() => handleOnChange(index)} // Use the adjusted index here
-                      className="large-checkbox"
+                      className={styles.largeCheckbox}
                     />
                     <span className="custom-checkbox"></span>
                     <label
                       htmlFor={`custom-checkbox-${index}`} // Use the adjusted index here
-                      className="large-checkbox"
+                      className={styles.largeCheckbox}
                     >
                       {name}
                     </label>
                   </div>
-                  <div className="side-right-section">
+                  <div className={styles.sideRightSection}>
                     {getFormattedPrice(price)}
                   </div>
                 </div>
@@ -74,13 +74,12 @@ export default function SideSelection() {
               </li>
             );
           })}
-         
-         <SpecialInstructions/>
-         <CountContainer/>
-         <PricingBox total={total} />
+
+          <SpecialInstructions />
+          <CountContainer />
+          <PricingBox total={total} />
         </ul>
       </div>
-      
     </div>
   );
 }

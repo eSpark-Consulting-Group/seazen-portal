@@ -11,10 +11,9 @@ import { AppartmentAdress } from "../../components/address/forms/appartmentForm"
 import { HomeAdress } from "../../components/address/forms/homeForm";
 import { OfficeAdress } from "../../components/address/forms/officeForm";
 import Card from "../../components/adressList";
-import RestaurantInfo from "../../components/branches-hours/branch";
-import BranchContent from "../../components/branches-hours/content";
-import BranchHeader from "../../components/branches-hours/headerBranch";
-import ContactUs from "../../components/contactButton/contact";
+import SideSelection from "../../components/detailSelection/sideSelection";
+import CheckboxGroup from "../../components/detailSelection/sizeSelection";
+import ToppingSelection from "../../components/detailSelection/toppingsSelector";
 
 const Home = () => {
   return (
@@ -23,7 +22,12 @@ const Home = () => {
       <div className="card-spacing">
         <Slider />
       </div> */}
-      <ContactUs />
+      {/* <SideSelection /> */}
+      {/* <CheckboxGroup /> */}
+      <ToppingSelection />
+      {/* <ContactUs /> */}
+      {/* <CountContainer /> */}
+
       {/* <BranchHeader /> */}
       {/* <RestaurantsOrderTypeButton /> */}
       {/* <BasicCard /> */}

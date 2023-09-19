@@ -1,4 +1,5 @@
-.side {
+.size {
+  top: 460px;
   left: 12px;
   width: 351px;
   height: 40px;
@@ -6,10 +7,9 @@
   border-radius: 16px;
   opacity: 1;
   position: absolute;
-  top: 852px;
 }
 
-.side-title {
+.sizeTitle {
   top: 6px;
   left: 13px;
   width: 110px;
@@ -21,9 +21,11 @@
   position: absolute;
 }
 
-.side-small-title {
+.sizeSmallTitle {
   top: 8px;
-  left: 92px;
+  left: 123px;
+  width: 45px;
+  height: 24px;
   text-align: left;
   font: normal normal 600 10px/24px Titillium Web;
   letter-spacing: 0px;
@@ -31,7 +33,7 @@
   position: absolute;
 }
 
-.side-title-optional {
+.sizeTitleRequired {
   top: 6px;
   left: 274px;
   width: 63px;
@@ -39,24 +41,25 @@
   text-align: right;
   font: normal normal bold 14px/24px Titillium Web;
   letter-spacing: 0px;
-  color: #6b7580;
+  color: #026754;
   opacity: 1;
   position: absolute;
 }
 
-.side-check {
-  padding-top: 115px;
+.checkboxSize {
+  top: 210px;
+  left: 30px;
   width: 351px;
   height: 167px;
   opacity: 1;
-  margin-left: 30px;
+  position: absolute;
 }
 
 input[type="checkbox"] {
   accent-color: #2e9c6e;
 }
 
-.side-check label:before {
+.checkbox label:before {
   border-radius: 3px;
 }
 
@@ -68,34 +71,32 @@ input[type="checkbox"]:checked {
   line-height: 12px;
 }
 
-.side-check {
+.checkboxSize {
   border-radius: 4px;
   width: 300px;
   font-family: Arial, sans-serif;
 }
 
-.side-list {
+.sizeList {
   list-style: none;
   padding: 0;
-  margin-top: 440px;
+  margin-top: 300px;
 }
 
-.side-list-item {
+.sizeListItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.pricing-box {
+/* .pricing-box {
   width: 327px;
   height: 56px;
   background: #308979 0% 0% no-repeat padding-box;
   box-shadow: 0px 4px 16px #30897929;
   border-radius: 12px;
   opacity: 1;
-  margin-left: -14px;
-  position: relative;
 }
 
 .pricing-section {
@@ -104,14 +105,14 @@ input[type="checkbox"]:checked {
   letter-spacing: 0px;
   color: #ffffff;
   opacity: 1;
-  top: 15px;
-  left: 66px;
+  top: 308px;
+  left: 56px;
   position: absolute;
 }
 
 .pricing-icon {
-  top: 15px;
-  left: 30px;
+  top: 307px;
+  left: 20px;
   width: 24px;
   height: 24px;
   opacity: 1;
@@ -119,8 +120,8 @@ input[type="checkbox"]:checked {
 }
 
 .calculation-section {
-  top: 15px;
-  left: 205px;
+  top: 309px;
+  left: 211px;
   width: 95px;
   height: 24px;
   text-align: right;
@@ -129,9 +130,9 @@ input[type="checkbox"]:checked {
   color: #ffffff;
   opacity: 1;
   position: absolute;
-}
+} */
 
-.side-left-section {
+.sizeLeftSection {
   flex: 1;
   display: flex;
   align-items: center;
@@ -149,7 +150,7 @@ input[type="checkbox"] {
   margin-right: 8px;
 }
 
-.side-right-section {
+.sizeRightSection {
   font-weight: bold;
   font-size: 16px;
   text-align: right;
@@ -161,61 +162,46 @@ input[type="checkbox"] {
 }
 
 /* Style for the Total section */
-.side-list-item:last-child {
+.sizeListItem:last-child {
   background-color: #fff;
   padding-top: 8px;
   margin-top: 8px;
 }
 
 /* Hover effect for list items */
-.side-list-item:hover {
+.sizeListItem:hover {
   background-color: #e6e6e6;
   transition: background-color 0.2s ease-in-out;
 }
 
-.side-list hr {
+.sizeList hr {
   width: 325px;
   height: 0px;
   transform: matrix(1, 0, 0, 1, 0, 0);
   border: 1px solid #ebeef0;
   opacity: 1;
+  margin-top: 10px;
 }
 
-.side-check input[type="checkbox"] {
-  /* Increase the width and height of the checkbox */
+.checkboxSize input[type="checkbox"] {
   width: 20px; /* Adjust the size as needed */
   height: 20px; /* Adjust the size as needed */
 
-  /* You can also style the appearance of the checkbox */
   background-color: #fff; /* Background color of the checkbox */
   border: 2px solid #333; /* Border color and width */
   border-radius: 4px; /* Rounded corners */
 }
 
 @media screen and (max-width: 500px) and (min-width: 400px) {
-  .side {
+  .size {
     left: 36px;
   }
 
-  .side-list {
+  .sizeList {
     margin-left: 20px;
   }
 
-  .side-right-section {
+  .sizeRightSection {
     margin-right: -45px;
-  }
-
-  .calculation-section {
-    left: 215px;
-  }
-
-  .pricing-section {
-    left: 5=65px;
-  }
-  .pricing-icon {
-    left: 32px;
-  }
-  .pricing-box {
-    margin-left: -3px;
   }
 }

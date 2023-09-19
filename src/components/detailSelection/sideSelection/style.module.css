@@ -1,5 +1,4 @@
-.size {
-  top: 460px;
+.side {
   left: 12px;
   width: 351px;
   height: 40px;
@@ -7,9 +6,10 @@
   border-radius: 16px;
   opacity: 1;
   position: absolute;
+  top: 852px;
 }
 
-.size-title {
+.sideTitle {
   top: 6px;
   left: 13px;
   width: 110px;
@@ -21,11 +21,9 @@
   position: absolute;
 }
 
-.size-small-title {
+.sideSmallTitle {
   top: 8px;
-  left: 123px;
-  width: 45px;
-  height: 24px;
+  left: 92px;
   text-align: left;
   font: normal normal 600 10px/24px Titillium Web;
   letter-spacing: 0px;
@@ -33,7 +31,7 @@
   position: absolute;
 }
 
-.size-title-required {
+.sideTitleOptional {
   top: 6px;
   left: 274px;
   width: 63px;
@@ -41,25 +39,24 @@
   text-align: right;
   font: normal normal bold 14px/24px Titillium Web;
   letter-spacing: 0px;
-  color: #026754;
+  color: #6b7580;
   opacity: 1;
   position: absolute;
 }
 
-.checkbox-size {
-  top: 210px;
-  left: 30px;
+.sideCheck {
+  padding-top: 115px;
   width: 351px;
   height: 167px;
   opacity: 1;
-  position: absolute;
+  margin-left: 30px;
 }
 
 input[type="checkbox"] {
   accent-color: #2e9c6e;
 }
 
-.checkbox label:before {
+.sideCheck label:before {
   border-radius: 3px;
 }
 
@@ -71,68 +68,26 @@ input[type="checkbox"]:checked {
   line-height: 12px;
 }
 
-.checkbox-size {
+.sideCheck {
   border-radius: 4px;
   width: 300px;
   font-family: Arial, sans-serif;
 }
 
-.size-list {
+.sideList {
   list-style: none;
   padding: 0;
-  margin-top: 300px;
+  margin-top: 440px;
 }
 
-.size-list-item {
+.sideListItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.pricing-box {
-  width: 327px;
-  height: 56px;
-  background: #308979 0% 0% no-repeat padding-box;
-  box-shadow: 0px 4px 16px #30897929;
-  border-radius: 12px;
-  opacity: 1;
-}
-
-.pricing-section {
-  text-align: center;
-  font: normal normal 600 18px/24px Titillium Web;
-  letter-spacing: 0px;
-  color: #ffffff;
-  opacity: 1;
-  top: 308px;
-  left: 56px;
-  position: absolute;
-}
-
-.pricing-icon {
-  top: 307px;
-  left: 20px;
-  width: 24px;
-  height: 24px;
-  opacity: 1;
-  position: absolute;
-}
-
-.calculation-section {
-  top: 309px;
-  left: 211px;
-  width: 95px;
-  height: 24px;
-  text-align: right;
-  font: normal normal 600 16px/24px Titillium Web;
-  letter-spacing: 0px;
-  color: #ffffff;
-  opacity: 1;
-  position: absolute;
-}
-
-.size-left-section {
+.sideLeftSection {
   flex: 1;
   display: flex;
   align-items: center;
@@ -144,14 +99,13 @@ input[type="checkbox"]:checked {
   color: #323f4b;
   opacity: 1;
   margin-left: -10px;
-
 }
 
 input[type="checkbox"] {
   margin-right: 8px;
 }
 
-.size-right-section {
+.sideRightSection {
   font-weight: bold;
   font-size: 16px;
   text-align: right;
@@ -160,52 +114,54 @@ input[type="checkbox"] {
   color: #323f4b;
   opacity: 1;
   margin-right: -22px;
-
 }
 
 /* Style for the Total section */
-.size-list-item:last-child {
+.sideListItem:last-child {
   background-color: #fff;
   padding-top: 8px;
   margin-top: 8px;
 }
 
 /* Hover effect for list items */
-.size-list-item:hover {
+.sideListItem:hover {
   background-color: #e6e6e6;
   transition: background-color 0.2s ease-in-out;
 }
 
-.size-list hr {
+.sideList hr {
   width: 325px;
   height: 0px;
   transform: matrix(1, 0, 0, 1, 0, 0);
   border: 1px solid #ebeef0;
   opacity: 1;
-  margin-top: 10px;
 }
 
-.checkbox-size input[type="checkbox"] {
+.sideCheck input[type="checkbox"] {
+  /* Increase the width and height of the checkbox */
   width: 20px; /* Adjust the size as needed */
   height: 20px; /* Adjust the size as needed */
 
+  /* You can also style the appearance of the checkbox */
   background-color: #fff; /* Background color of the checkbox */
   border: 2px solid #333; /* Border color and width */
   border-radius: 4px; /* Rounded corners */
 }
 
-
-@media screen and (max-width:500px) and (min-width:400px) {
-  .size{
+@media screen and (max-width: 500px) and (min-width: 400px) {
+  .side {
     left: 36px;
   }
 
-  .size-list{
+  .sideList {
     margin-left: 20px;
   }
 
-  .size-right-section{
+  .sideRightSection {
     margin-right: -45px;
+  }
 
+  .calculationSection {
+    left: 215px;
   }
 }
