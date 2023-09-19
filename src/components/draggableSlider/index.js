@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import getAllPopularItems, {
   GET_ALL_POPULAR_ITEMS_QUERY_KEY,
 } from "../../api/home/getAllPopularItems";
-import "./style.css";
+import styles from "./style.module.css";
 
 export default function App() {
   const imageInfo = [
@@ -30,17 +30,22 @@ export default function App() {
     },
   ];
 
-  const { data: poularDishes, isLoading, error, isError } = useQuery({
+  const {
+    data: poularDishes,
+    isLoading,
+    error,
+    isError,
+  } = useQuery({
     queryKey: [GET_ALL_POPULAR_ITEMS_QUERY_KEY],
     queryFn: () => getAllPopularItems(),
     onSuccess: (data) => {
       console.log("data", data);
-    }
+    },
   });
 
   return (
-    <div className="App">
-      <div className="slider-tile">
+    <div className={styles.App}>
+      <div className={styles.sliderTile}>
         <h3>Popular Dishes</h3>
       </div>
       <CustomCarousel imageInfo={imageInfo}>
@@ -117,7 +122,7 @@ function CustomCarousel(props) {
   }
 
   return (
-    <div className="items" ref={slider}>
+    <div className={styles.items} ref={slider}>
       {props.children}
     </div>
   );
@@ -134,22 +139,22 @@ function Box({
 }) {
   const captionLines = caption.split("\n");
   const captionImageClass = isFirstCard
-    ? "first-card-caption-image"
+    ? styles.firstCardCaptionImage
     : index === 2
-    ? "third-card-caption-image"
+    ? styles.thirdCardCaptionImage
     : "";
-  const additionalTextClass = isFirstCard ? "first-card-additional-text" : "";
+  const additionalTextClass = isFirstCard ? styles.firstCardAdditionalText : "";
 
   return (
-    <div className="box">
-      <img className="box-image" src={imageUrl} alt="Image"  />
-      <div className="box-caption">
+    <div className={styles.box}>
+      <img className={styles.boxImage} src={imageUrl} alt="Image" />
+      <div className={styles.boxCaption}>
         <img
           src={captionImage}
           alt="Caption Image"
-          className={`caption-image ${captionImageClass}`}
+          className={`${styles.captionImage} ${captionImageClass}`}
         />
-        <div className="box-text">
+        <div className={styles.boxText}>
           {captionLines.map((line, index) => (
             <React.Fragment key={index}>
               {line}
@@ -157,10 +162,10 @@ function Box({
             </React.Fragment>
           ))}
         </div>
-        <div className="text-style">
+        <div className={styles.textStyle}>
           <p className={additionalTextClass}>{additionalText}</p>
         </div>
-        <div className="inline-text">{inlineText}</div>
+        <div className={styles.inlineText}>{inlineText}</div>
       </div>
     </div>
   );

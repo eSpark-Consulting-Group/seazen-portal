@@ -15,6 +15,7 @@ import SideSelection from "../../components/detailSelection/sideSelection";
 import CheckboxGroup from "../../components/detailSelection/sizeSelection";
 import ToppingSelection from "../../components/detailSelection/toppingsSelector";
 import { Content } from "../../components/detailsInformation";
+import App from "../../components/draggableSlider";
 
 const Home = () => {
   return (
@@ -26,7 +27,8 @@ const Home = () => {
       {/* <SideSelection /> */}
       {/* <CheckboxGroup /> */}
       {/* <ToppingSelection /> */}
-      <Content />
+      {/* <Content /> */}
+      <App />
       {/* <ContactUs /> */}
       {/* <CountContainer /> */}
 

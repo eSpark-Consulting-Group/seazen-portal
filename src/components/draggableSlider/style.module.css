@@ -1,29 +1,27 @@
 @import url("https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap");
 
-.slider-tile {
+.sliderTile {
   text-align: left;
   font: normal normal 600 18px/24px Titillium Web;
   letter-spacing: 0.36px;
-  color: #1F2933;
+  color: #1f2933;
   opacity: 1;
   margin-top: 20px;
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 body {
   margin: 0;
 }
 
-
 .box {
   box-sizing: border-box;
-  width: 200px;    
+  width: 200px;
 }
 
-.box-image{
+.boxImage {
   border-radius: 16px;
-  box-shadow: 0px 3px 6px #314F7C29;
-
+  box-shadow: 0px 3px 6px #314f7c29;
 }
 
 .items {
@@ -48,11 +46,11 @@ body {
 }
 
 .items::-webkit-scrollbar {
-  display: none; 
+  display: none;
 }
 
-.box-caption {
-  background: #fff ;
+.boxCaption {
+  background: #fff;
   border-radius: 16px;
   opacity: 1;
   width: 120px;
@@ -62,7 +60,7 @@ body {
   box-shadow: 0px 16px 15px #314f7c29;
 }
 
-.box-text {
+.boxText {
   padding-top: 10px;
   text-align: center;
   font: normal normal 600 14px/16px Titillium Web;
@@ -71,21 +69,20 @@ body {
   opacity: 1;
 }
 
-.caption-image {
+.captionImage {
   padding-top: 70px;
   padding-left: 16px;
 }
 
-.caption-image img {
- border-radius: 50%;
-  
+.captionImage img {
+  border-radius: 50%;
 }
 
-.first-card-additional-text {
+.firstCardAdditionalText {
   padding-top: 17px;
 }
-  
-.text-style {
+
+.textStyle {
   text-align: center;
   font: normal normal bold 10px/12px Titillium Web;
   letter-spacing: 0px;
@@ -94,7 +91,7 @@ body {
   padding-right: 55px;
 }
 
-.inline-text {
+.inlineText {
   margin-top: -22px;
   text-align: center;
   padding-left: 17px;
@@ -104,11 +101,11 @@ body {
   opacity: 1;
 }
 
-.first-card-caption-image {
+.firstCardCaptionImage {
   padding-top: 74px;
 }
 
-.third-card-caption-image {
+.thirdCardCaptionImage {
   padding-top: 67px;
   padding-left: 38px;
 }
