@@ -1,4 +1,4 @@
-.restaurantCard-container {
+.restaurantCardContainer {
   display: grid;
   grid-template-columns: repeat(2, 0.2fr);
   gap: 10px;
@@ -6,17 +6,17 @@
   padding-top: 20px;
   margin-left: -5px;
 }
-.restaurantCard-border-delivery {
+.restaurantCardBorderDelivery {
   border: 2px solid #93674e;
   border-radius: 12px; /* You can adjust the border color and width */
 }
-.restaurantCard-border-near {
+.restaurantCardBorderNear {
   border: 2px solid #4f948a;
   border-radius: 12px; /* You can adjust the border color and width */
 }
 
 /* Style for the cards without a border */
-.restaurantCard-no-border {
+.restaurantCardNoBorder {
   border: none;
 }
 
@@ -25,7 +25,7 @@
   cursor: pointer;
 }
 
-.restaurantCard-img {
+.restaurantCardImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -38,28 +38,28 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.svg-container {
+.svgContainer {
   position: relative;
 }
 
-.icon-row {
+.iconRow {
   margin-bottom: -11px;
   opacity: 1;
 }
 
-.icon-row-selected {
+.iconRowSelected {
   margin-bottom: -11px;
   opacity: 1;
 }
 
-.button-icons-styles-delivery {
+.buttonIconsStylesDelivery {
   background-color: #93674e;
   padding: 1px 12px 1px 2px;
   margin-left: -2px;
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
 }
-.button-icons-styles-near {
+.buttonIconsStylesNear {
   background-color: #4f948a;
   padding: 1px 12px 1px 2px;
   margin-left: -2px;
@@ -67,7 +67,7 @@
   border-bottom-left-radius: 2px;
 }
 
-.inner-svg-container {
+.innerSvgContainer {
   position: absolute;
   top: -75px;
   left: 154px;

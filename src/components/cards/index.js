@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import "./style.css";
+import styles from "./style.module.css";
 import deliveryIcon from "./delivery-icon.svg";
 import pickupIcon from "./pickup-icon.svg";
 import cateringIcon from "./catering-icon.svg";
@@ -53,19 +53,27 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
     icons.slice(1),
   ];
 
-  const isSmallScreen = useMediaQuery("(max-width: 500px) and (min-width: 380px)");
+  const isSmallScreen = useMediaQuery(
+    "(max-width: 500px) and (min-width: 380px)"
+  );
   const isSmallerScreen = useMediaQuery("(max-width: 350px)");
 
   // Adjust cardWidth to apply 120px width to screens less than 350px
-  const cardWidth = isSmallScreen ? (isSmallerScreen ? 145 : 190) : (isSmallerScreen ? 145 : 164);
+  const cardWidth = isSmallScreen
+    ? isSmallerScreen
+      ? 145
+      : 190
+    : isSmallerScreen
+    ? 145
+    : 164;
 
   const getCardClassName = () => {
     if (orderTypeFilter) {
       return orderTypeFilter === "delivery"
-        ? "restaurantCard-border-delivery"
-        : "restaurantCard-border-near";
+        ? styles.restaurantCardBorderDelivery
+        : styles.restaurantCardBorderNear;
     } else {
-      return "restaurantCard-no-border";
+      return styles.restaurantCardNoBorder;
     }
   };
 
@@ -76,8 +84,8 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
       orderTypeId !== 1
     ) {
       return orderTypeFilter === "delivery"
-        ? "button-icons-styles-delivery"
-        : "button-icons-styles-near";
+        ? styles.buttonIconsStylesDelivery
+        : styles.buttonIconsStylesNear;
     }
   };
 
@@ -86,31 +94,36 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const iconHeight = "9px";
 
   return (
-    <div className="restaurantCard-container">
+    <div className={styles.restaurantCardContainer}>
       {[0, 1, 2, 3, 4, 5].map((index) => (
-        <div key={index} className={`restaurantCards restaurantCard-${isSmallScreen ? 'small' : 'large'} ${getCardClassName()}`}>
+        <div
+          key={index}
+          className={`${styles.restaurantCards} ${styles.restaurantCards}${
+            isSmallScreen ? "small" : "large"
+          } ${getCardClassName()}`}
+        >
           <Card
             sx={{
               width: cardWidth,
-              borderRadius: 1
+              borderRadius: 1,
             }}
-            className="restaurantCards"
+            className={styles.restaurantCards}
             onClick={() => navigate(paths.menu)}
           >
             <img
-              className="restaurantCard-img"
+              className={styles.restaurantCardImg}
               src={`/assets/img/${15 + index * 2}.png`}
               alt={`Card ${index + 1}`}
             />
             <div
-              className={`svg-container ${
+              className={`${styles.svgContainer} ${
                 clickedButtonIndex !== null ? "expanded" : "collapsed"
               }`}
             >
-              <div className="inner-svg-container">
+              <div className={styles.innerSvgContainer}>
                 {captions[index].map((icon, i) => {
                   return (
-                    <div key={i} className="icon-row">
+                    <div key={i} className={styles.iconRow}>
                       <img
                         className={getClassNameAccordingToFilter(icon.id)}
                         src={icon.image}
