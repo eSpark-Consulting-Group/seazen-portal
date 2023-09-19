@@ -1,4 +1,4 @@
-.content-heading {
+.contentHeading {
   top: 295px;
   left: 24px;
   width: 194px;
@@ -11,7 +11,7 @@
   position: absolute;
 }
 
-.content-paragraph {
+.contentParagraph {
   top: 350px;
   left: 24px;
   width: 327px;
@@ -24,7 +24,7 @@
   font-size: 12px;
 }
 
-.content-small {
+.contentSmall {
   top: 300px;
   left: 302px;
   width: 41px;
@@ -37,14 +37,13 @@
   position: absolute;
 }
 
-.information-style{
-position: absolute;
-top: 30px;
+.informationStyle {
+  position: absolute;
+  top: 30px;
 }
 
-@media screen and (max-width:500px) and (min-width:400px)  {
-  .information-style{
+@media screen and (max-width: 500px) and (min-width: 400px) {
+  .informationStyle {
     left: 30px;
   }
 }
-

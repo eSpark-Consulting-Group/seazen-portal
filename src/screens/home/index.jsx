@@ -14,6 +14,7 @@ import Card from "../../components/adressList";
 import SideSelection from "../../components/detailSelection/sideSelection";
 import CheckboxGroup from "../../components/detailSelection/sizeSelection";
 import ToppingSelection from "../../components/detailSelection/toppingsSelector";
+import { Content } from "../../components/detailsInformation";
 
 const Home = () => {
   return (
@@ -24,7 +25,8 @@ const Home = () => {
       </div> */}
       {/* <SideSelection /> */}
       {/* <CheckboxGroup /> */}
-      <ToppingSelection />
+      {/* <ToppingSelection /> */}
+      <Content />
       {/* <ContactUs /> */}
       {/* <CountContainer /> */}
 
