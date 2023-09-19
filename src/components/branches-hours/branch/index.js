@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import "./style.css"
+import React, { useState, useEffect } from "react";
+import styles from "./style.module.css";
 
 const RestaurantInfo = ({ restaurants }) => {
   return (
@@ -12,25 +12,27 @@ const RestaurantInfo = ({ restaurants }) => {
 };
 
 const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState("");
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const updateStatus = () => {
       const currentHour = currentTime.getHours();
       const currentMinute = currentTime.getMinutes();
-      const [openHour, closeHour] = weekdayHours.split(' - ').map(time => parseInt(time.split(':')[0]));
+      const [openHour, closeHour] = weekdayHours
+        .split(" - ")
+        .map((time) => parseInt(time.split(":")[0]));
 
       if (currentHour < openHour) {
-        setStatus('Closed');
+        setStatus("Closed");
       } else if (currentHour === openHour && currentMinute < 30) {
-        setStatus('Closed');
+        setStatus("Closed");
       } else if (currentHour < closeHour) {
-        setStatus('Open Now');
+        setStatus("Open Now");
       } else if (currentHour === closeHour && currentMinute < 30) {
-        setStatus('Closing Soon');
+        setStatus("Closing Soon");
       } else {
-        setStatus('Closed');
+        setStatus("Closed");
       }
     };
 
@@ -45,34 +47,51 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
   }, [weekdayHours, currentTime]);
 
   return (
-    <div className="branches-container">
-      <div className="branch-info">
-        <div className="branches-heading">
+    <div className={styles.branchesContainer}>
+      <div className={styles.branchInfo}>
+        <div className={styles.branchesHeading}>
           <h1>{name}</h1>
         </div>
-        <div className="branch-status-section">
-          <div className="branch-status-container">
-            <div className={`branch-status-tag ${status.toLowerCase()} ${status === 'Closed' ? 'branch-closed' : status === 'Closing Soon' ? 'branch-closing-soon' : status === 'Open Now' ? 'branch-open-now' : ''}`}>
+        <div className={styles.branchStatusSection}>
+          <div className={styles.branchStatusContainer}>
+            <div
+              className={`branch-status-tag ${status.toLowerCase()} ${
+                status === "Closed"
+                  ? styles.branchClosed
+                  : status === "Closing Soon"
+                  ? styles.branchClosingSoon
+                  : status === "Open Now"
+                  ? styles.branchOpenNow
+                  : ""
+              }`}
+            >
               {status.toUpperCase()}
             </div>
           </div>
         </div>
         <div>
-          <div className="branch-hours">
-            <div className="branch-timings">
-              <strong className="branch-weekdays">Weekdays:</strong><span className="branch-weekdaysHours"> {weekdayHours}</span>
+          <div className={styles.branchHours}>
+            <div className={styles.branchTimings}>
+              <strong className={styles.branchWeekdays}>Weekdays:</strong>
+              <span className={styles.branchWeekdaysHours}>
+                {" "}
+                {weekdayHours}
+              </span>
               <div>
-                <strong className="branch-weekends">Weekends:</strong><span className="branch-weekendsHours"> {weekendHours}</span>
+                <strong className={styles.branchWeekends}>Weekends:</strong>
+                <span className={styles.branchWeekendsHours}>
+                  {" "}
+                  {weekendHours}
+                </span>
               </div>
             </div>
           </div>
         </div>
-        <div className="branch-icon">
+        <div className={styles.branchIcon}>
           <img src="/assets/img/location-arrow.svg" alt={`${name} Location`} />
         </div>
       </div>
     </div>
-
   );
 };
 

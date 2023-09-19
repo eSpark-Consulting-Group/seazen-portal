@@ -1,10 +1,9 @@
-
-.branches-container {
+.branchesContainer {
   margin-top: 120px;
   margin-left: 25px;
 }
 
-.branch-info {
+.branchInfo {
   width: 327px;
   height: 45px;
   background: #ffffff 0% 0% no-repeat padding-box;
@@ -15,7 +14,7 @@
   margin-bottom: -111px;
 }
 
-.branch-info h1 {
+.branchInfo h1 {
   text-align: left;
   font: normal normal 600 12px/8px Titillium Web;
   letter-spacing: 0px;
@@ -25,11 +24,11 @@
   margin-left: 14px;
 }
 
-.branches-heading{
+.branchesHeading {
   margin-right: -20px;
 }
 
-.branch-open-now {
+.branchOpenNow {
   padding-top: 3px;
   text-align: center;
   width: 68px;
@@ -43,7 +42,7 @@
   border-radius: 16px;
 }
 
-.branch-closed {
+.branchClosed {
   padding-top: 3px;
   text-align: center;
   font: 600 6px/8px Montserrat;
@@ -58,7 +57,7 @@
   height: 16px;
 }
 
-.branch-closing-soon {
+.branchClosingSoon {
   padding-top: 3px;
   text-align: center;
   font: 600 6px/8px Montserrat;
@@ -72,17 +71,16 @@
   height: 16px;
 }
 
-.branch-weekdays {
+.branchWeekdays {
   text-align: center;
   font: normal normal normal 6px/8px Titillium Web;
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
   margin-top: 10px;
-
 }
 
-.branch-weekdaysHours {
+.branchWeekdaysHours {
   font: normal normal normal 6px/8px Titillium Web;
   letter-spacing: 0px;
   color: #40484e;
@@ -90,17 +88,16 @@
   margin-top: 10px;
 }
 
-.branch-weekends {
+.branchWeekends {
   text-align: center;
   font: normal normal normal 6px/8px Titillium Web;
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
   padding-left: 2px;
-
 }
 
-.branch-weekendsHours {
+.branchWeekendsHours {
   text-align: center;
   font: normal normal normal 6px/8px Titillium Web;
   letter-spacing: 0px;
@@ -108,7 +105,7 @@
   opacity: 1;
 }
 
-.branch-icon {
+.branchIcon {
   width: 27px;
   height: 27px;
   background: #98694e 0% 0% no-repeat padding-box;
@@ -118,26 +115,22 @@
   margin-top: 9px;
 }
 
-.branch-icon img {
+.branchIcon img {
   margin-left: 5px;
   margin-top: 4px;
 }
 
-.branch-timings{
+.branchTimings {
   display: flex; /* Display children side by side */
   align-items: center;
   margin-left: -115px;
-
 }
 
-.branch-hours{
+.branchHours {
   margin-top: 20px;
 }
 
-
-
-.branch-status-section{
+.branchStatusSection {
   margin-left: 66px;
   margin-top: 6px;
 }
-

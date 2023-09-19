@@ -11,6 +11,9 @@ import { AppartmentAdress } from "../../components/address/forms/appartmentForm"
 import { HomeAdress } from "../../components/address/forms/homeForm";
 import { OfficeAdress } from "../../components/address/forms/officeForm";
 import Card from "../../components/adressList";
+import RestaurantInfo from "../../components/branches-hours/branch";
+import BranchContent from "../../components/branches-hours/content";
+import BranchHeader from "../../components/branches-hours/headerBranch";
 
 const Home = () => {
   return (
@@ -19,8 +22,8 @@ const Home = () => {
       <div className="card-spacing">
         <Slider />
       </div> */}
-      <AddressHeader />
-      <Card />
+
+      <BranchHeader />
       {/* <RestaurantsOrderTypeButton /> */}
       {/* <BasicCard /> */}
       {/* <DraggableSlider /> */}

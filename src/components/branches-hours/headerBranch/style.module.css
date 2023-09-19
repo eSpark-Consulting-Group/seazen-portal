@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Titillium+Web:wght@200;300;400;600;700;900&display=swap");
-.branch-header {
+.branchHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -11,7 +11,7 @@
   opacity: 1;
 }
 
-.branch-left-icons img {
+.brancLeftIcons img {
   width: 24px;
   height: 24px;
   opacity: 1;
@@ -21,7 +21,7 @@
   cursor: pointer;
 }
 
-.right-icons img {
+.rightIcons img {
   width: 24px;
   height: 20px;
   opacity: 1;
@@ -30,7 +30,7 @@
   left: 325px;
 }
 
-.branch-logo h3 {
+.branchLogo h3 {
   top: 30px;
   left: 101px;
   width: 174px;

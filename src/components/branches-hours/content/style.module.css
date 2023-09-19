@@ -1,4 +1,4 @@
-.branch-img {
+.branchImg {
   position: absolute; 
   top: 90px; 
   left: 126px;
@@ -7,7 +7,7 @@
   opacity: 1;
 }
 
-.branch-content p {
+.branchContent p {
   top: 145px;
   left: 39px;
   width: 298px;
