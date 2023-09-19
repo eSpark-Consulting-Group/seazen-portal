@@ -1,0 +1,44 @@
+.ordercontactSection {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin: 50px 0 70px 0;
+}
+
+.callTag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1b6482;
+  height: 28px;
+  width: 98px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  margin-left: -8px;
+}
+
+.callTag a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.whatsappTag {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 3px;
+  align-items: center;
+  width: 118px;
+  height: 27px;
+  background-color: #2fa124;
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.whatsappTag a {
+  color: #ffffff;
+  text-decoration: none;
+}

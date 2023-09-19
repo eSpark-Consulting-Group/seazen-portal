@@ -14,6 +14,7 @@ import Card from "../../components/adressList";
 import RestaurantInfo from "../../components/branches-hours/branch";
 import BranchContent from "../../components/branches-hours/content";
 import BranchHeader from "../../components/branches-hours/headerBranch";
+import ContactUs from "../../components/contactButton/contact";
 
 const Home = () => {
   return (
@@ -22,7 +23,7 @@ const Home = () => {
       <div className="card-spacing">
         <Slider />
       </div> */}
-      <Slider />
+      <ContactUs />
       {/* <BranchHeader /> */}
       {/* <RestaurantsOrderTypeButton /> */}
       {/* <BasicCard /> */}
