@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -15,6 +15,11 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { ReactComponent as DollarIcon } from "../../assets/icons/dollar.svg";
 import { ReactComponent as KNETIcon } from "../../assets/icons/knet.svg";
 import { paths } from "../../routes/paths";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import CloseIcon from "@mui/icons-material/Close";
 
 let CART_ITEMS = [
   {
@@ -94,6 +99,25 @@ function CartPage() {
       Number(getDiscountAmount()) +
       Number(getDeliveryCharge())
     ).toFixed(3);
+  };
+  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
+  const [selectedSchedule, setSelectedSchedule] = useState(
+    "14 August 2023, ASAP"
+  );
+
+  const scheduleOptions = [
+    "14 August 2023, ASAP",
+    "12 August 2023, 11:00 pm - 11:30 pm",
+    "12 August 2023, 11:30 pm - 12:00 am",
+    "12 August 2023, 12:00 am - 12:30 am",
+    "12 August 2023, 12:30 am - 01:00 am",
+    "12 August 2023, 01:00 am - 01:30 am",
+    "12 August 2023, 01:30 am - 02:00 am",
+  ];
+
+  const handleScheduleOptionClick = (option) => {
+    setSelectedSchedule(option);
+    setOpenSchedulePopup(false); // Close the dialog after selecting an option
   };
 
   return (
@@ -275,8 +299,17 @@ function CartPage() {
                     </Typography>
                   </Stack>
                 </Typography>
-                <Typography variant="h5" sx={{ color: "#026754" }}>
-                  14 August, ASAP
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: "#026754",
+                    fontFamily: "Titillium Web, sans-serif", // Set the font family
+                    fontWeight: 600, // Set the font weight
+                    fontSize: "14px", // Set the font size
+                    lineHeight: "24px", // Set the line height
+                  }}
+                >
+                  {selectedSchedule}
                 </Typography>
               </Stack>
             </Stack>
@@ -301,10 +334,64 @@ function CartPage() {
                   fontSize: "16px",
                 },
               }}
+              onClick={() => setOpenSchedulePopup(true)}
             >
               Schedule
             </Button>
           </Stack>
+
+          <Dialog
+            open={openSchedulePopup}
+            onClose={() => setOpenSchedulePopup(false)}
+            sx={{
+              position: "fixed",
+              left: "0",
+              bottom: "-68%",
+              margin: "0",
+              textAlign: "center",
+            }}
+            PaperProps={{
+              sx: {
+                overflow: "visible",
+                width: "700px",
+                margin: "0",
+              },
+            }}
+          >
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={() => setOpenSchedulePopup(false)}
+              sx={{
+                position: "absolute",
+                top: "-16px",
+                right: "18px",
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <DialogTitle>Select time</DialogTitle>
+            <DialogContent
+              sx={{
+                fontFamily: "Titillium Web, sans-serif", // Set the font family
+                fontWeight: 600, // Set the font weight
+              }}
+            >
+              {scheduleOptions.map((option, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleScheduleOptionClick(option)}
+                  style={{
+                    cursor: "pointer",
+                    
+                    color: selectedSchedule === option ? "#026754" : "inherit",
+                  }}
+                >
+                  {option}
+                </div>
+              ))}
+            </DialogContent>
+          </Dialog>
 
           <Stack spacing={2}>
             <Typography variant="h5">

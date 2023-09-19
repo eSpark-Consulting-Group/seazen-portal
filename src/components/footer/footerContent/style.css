@@ -20,16 +20,17 @@
 }
 
 .text-box {
-  position: absolute;
-  left: 310px;
-  top: 126%;
+  display: flex;
+  float: right;
+  margin-top: -60px;
 }
 
 .footer-container {
   margin-bottom: -32px;
+  
 }
 
-@media screen and (max-width: 500px) and (min-width: 400px) {
+/* @media screen and (max-width: 500px) and (min-width: 400px) {
   .text-box {
     position: absolute;
     top: 109%;
@@ -48,4 +49,4 @@
     left: 315px;
     top: 104%;
   }
-}
+} */

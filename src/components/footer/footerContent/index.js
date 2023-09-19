@@ -9,7 +9,9 @@ export const Footer = (props) => {
   const navigate = useNavigate();
   return (
     <div className="footer-container">
+      <div className="footer-text">
       <h2 className="footer-style">© 2023 Seazen Group Co.</h2>
+      </div>
       <p className="terms-style"><span onClick={() => {navigate(paths.terms)}}>Terms & Conditions</span> | <span onClick={() => {navigate(paths.privacy_policy)}}>Privacy Policy</span></p>
       {showFooterSection && (
         <div className="text-box">
