@@ -1,4 +1,4 @@
-.footer-style {
+.footerStyle {
   text-align: left;
   font: normal normal 600 16px Titillium Web !important;
   letter-spacing: 0px;
@@ -9,7 +9,7 @@
   padding-left: 10px;
 }
 
-.terms-style {
+.termsStyle {
   text-align: left;
   font: normal normal 600 10px/20px Titillium Web;
   letter-spacing: 0px;
@@ -19,13 +19,13 @@
   cursor: pointer;
 }
 
-.text-box {
+.textBox {
   position: absolute;
   left: 310px;
   top: 126%;
 }
 
-.footer-container {
+.footerContainer {
   margin-bottom: -32px;
 }
 

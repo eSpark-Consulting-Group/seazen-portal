@@ -1,5 +1,5 @@
 import React from "react";
-import "./style.css";
+import styles from "./style.module.css";
 import FooterSection from "../footerTextBox/footerSection";
 import { useNavigate } from "react-router";
 import { paths } from "../../../routes/paths";
@@ -8,15 +8,30 @@ export const Footer = (props) => {
   const { showFooterSection } = props;
   const navigate = useNavigate();
   return (
-    <div className="footer-container">
-      <h2 className="footer-style">© 2023 Seazen Group Co.</h2>
-      <p className="terms-style"><span onClick={() => {navigate(paths.terms)}}>Terms & Conditions</span> | <span onClick={() => {navigate(paths.privacy_policy)}}>Privacy Policy</span></p>
+    <div className={styles.footerContainer}>
+      <h2 className={styles.footerStyle}>© 2023 Seazen Group Co.</h2>
+      <p className={styles.termsStyle}>
+        <span
+          onClick={() => {
+            navigate(paths.terms);
+          }}
+        >
+          Terms & Conditions
+        </span>{" "}
+        |{" "}
+        <span
+          onClick={() => {
+            navigate(paths.privacy_policy);
+          }}
+        >
+          Privacy Policy
+        </span>
+      </p>
       {showFooterSection && (
-        <div className="text-box">
+        <div className={styles.textBox}>
           <FooterSection />
         </div>
       )}
     </div>
   );
 };
-
