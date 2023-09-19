@@ -16,6 +16,7 @@ import CheckboxGroup from "../../components/detailSelection/sizeSelection";
 import ToppingSelection from "../../components/detailSelection/toppingsSelector";
 import { Content } from "../../components/detailsInformation";
 import App from "../../components/draggableSlider";
+import ErrorInformation from "../../components/errorInformation";
 
 const Home = () => {
   return (
@@ -29,6 +30,7 @@ const Home = () => {
       {/* <ToppingSelection /> */}
       {/* <Content /> */}
       <App />
+      <ErrorInformation errorMessage={"error message"} />
       {/* <ContactUs /> */}
       {/* <CountContainer /> */}
 

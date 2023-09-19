@@ -1,15 +1,21 @@
 import React from "react";
-import "./style.css"
+import styles from "./style.module.css";
 
-const ErrorInformation = ({errorMessage}) => {
-    return ( <div className="error_information_outer_container p-2 px-3 px-sm-4">
-        <div className="error_information_inner_container">
-            <div className="error_information_icon_container">
-                <img src="/assets/img/Icon - Error.svg" alt="error_icon" />
-            </div>
-            <div className="error_information_text_container">{errorMessage}</div>
+const ErrorInformation = ({ errorMessage }) => {
+  return (
+    <div
+      className={`${styles.errorInformationOuterContainer} p-2 px-3 px-sm-4`}
+    >
+      <div className={styles.errorInformationInnerContainer}>
+        <div className={styles.errorInformationIconContainer}>
+          <img src="/assets/img/Icon - Error.svg" alt="error_icon" />
         </div>
-    </div> );
-}
- 
+        <div className={styles.errorInformationTextContainer}>
+          {errorMessage}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default ErrorInformation;
