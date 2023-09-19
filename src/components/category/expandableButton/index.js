@@ -1,5 +1,6 @@
-// import React, { useState } from 'react';
-// import Category from './Category';
+// import React, { useState } from "react";
+// import Category from "./Category";
+// import styles from "./style.module.css";
 
 // const CategoryContainer = () => {
 //   const [expandedCategory, setExpandedCategory] = useState(null);
@@ -9,22 +10,22 @@
 //   };
 
 //   return (
-//     <div className="category-container">
+//     <div className={styles.categoryContainer}>
 //       <Category
 //         iconPath="/assets/img/Catering.png"
 //         categoryName="Category 1"
-//         expandCategory={() => handleExpandCategory('Category 1')}
+//         expandCategory={() => handleExpandCategory("Category 1")}
 //       />
 //       <Category
 //         iconPath="/assets/img/Catering.png"
 //         categoryName="Category 2"
-//         expandCategory={() => handleExpandCategory('Category 2')}
+//         expandCategory={() => handleExpandCategory("Category 2")}
 //       />
-//       <div className="expanded-category">
+//       <div className={styles.expandedCategory}>
 //         {expandedCategory && (
-//           <div className="category-buttons">
-//             <button className="category-button">Button 1</button>
-//             <button className="category-button">Button 2</button>
+//           <div className={styles.categoryButtons}>
+//             <button className={styles.categoryButton}>Button 1</button>
+//             <button className={styles.categoryButton}>Button 2</button>
 //           </div>
 //         )}
 //       </div>
