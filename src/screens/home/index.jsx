@@ -4,7 +4,7 @@ import Slider from "../../components/carousel/slider/index";
 import DraggableSlider from "../../components/draggableSlider";
 import { Footer } from "../../components/footer/footerContent";
 import RestaurantsOrderTypeButton from "../../components/category/button";
-import "../../components/carousel/slider/style.css";
+import "../../components/carousel/slider//style.module.css";
 import "./style.css";
 import AddressHeader from "../../components/address/adressHeader";
 import { AppartmentAdress } from "../../components/address/forms/appartmentForm";
@@ -22,8 +22,8 @@ const Home = () => {
       <div className="card-spacing">
         <Slider />
       </div> */}
-
-      <BranchHeader />
+      <Slider />
+      {/* <BranchHeader /> */}
       {/* <RestaurantsOrderTypeButton /> */}
       {/* <BasicCard /> */}
       {/* <DraggableSlider /> */}
