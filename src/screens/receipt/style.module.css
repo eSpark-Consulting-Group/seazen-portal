@@ -1,0 +1,79 @@
+.receiptNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px 25px 15px;
+}
+
+.receiptHead {
+  color: #1f2933;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+}
+
+.receiptHead p {
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.receiptInfo {
+  padding: 20px 40px;
+  background-color: #fafafa;
+  border-radius: 25px;
+  margin: 0 25px;
+}
+
+.receiptInfo div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.locationImg,
+.clockImg {
+  margin-right: 20px;
+  width: 13px;
+  height: 13px;
+}
+
+.heading {
+  font-size: 20px;
+  font-weight: bold;
+  color: #40484e;
+  padding: 10px 0;
+}
+
+.headingCont {
+  font-size: 16px;
+  color: #40484e;
+}
+
+.receiptItems {
+  color: #1f2933;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 15px 30px 0;
+}
+
+.receiptItems img {
+  width: 72px;
+  height: 72px;
+}
+
+.receiptItemsName {
+  width: 120px;
+  font-size: 14px;
+}
+
+.receiptItemsPrice {
+  width: 87px;
+  font-weight: 400;
+  font-size: 16;
+}
+
+.receiptCommentSection {
+  margin-left: 80%;
+}
