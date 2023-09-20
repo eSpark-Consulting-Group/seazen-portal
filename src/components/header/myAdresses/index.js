@@ -1,21 +1,29 @@
-import React from 'react';
-import './style.css'
-import { useNavigate } from 'react-router';
+import React from "react";
+import styles from "./style.module.css"; // Import the module CSS file
+import { useNavigate } from "react-router";
 
 const MyAddresses = () => {
   const navigate = useNavigate();
   return (
-    <header className="header">
-      <div className="left-icons" onClick={()=>{navigate(-1)}}>
-        <img src='/assets/img/Icon - Arrow.svg'></img>
+    <header className={styles.header}>
+      <div
+        className={styles.leftIcons}
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        <img src="/assets/img/Icon - Arrow.svg" alt="Arrow Icon" />
       </div>
-      <div className="logo">
+      <div className={styles.logo}>
+        {" "}
         <h3>Your Addresses</h3>
       </div>
-      <div className="right-icons">
-      <img src='/assets/img/options icon.svg'></img>
+      <div className={styles.rightIcons}>
+        {" "}
+        <img src="/assets/img/options icon.svg" alt="Options Icon" />
       </div>
     </header>
   );
 };
+
 export default MyAddresses;

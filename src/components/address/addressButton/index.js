@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./addressButton.module.css";
+import styles from "./style.module.css";
 const AddressTypeButton = ({ type, addressType, onClick }) => (
   <button
     onClick={() => onClick(type)}

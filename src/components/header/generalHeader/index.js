@@ -1,22 +1,25 @@
 // src/Navbar.js
 import React from "react";
 import { useNavigate } from "react-router";
-import "./style.css";
+import styles from "./style.module.css";
 import { paths } from "../../../routes/paths";
 
-const Navbar = ({restaurantDetail}) => {
+const Navbar = ({ restaurantDetail }) => {
   const navigate = useNavigate();
   return (
-    <div className="Nav_Image_Container">
+    <div className={styles.navImageContainer}>
       <img alt="background_image" src="\assets\img\menu_background_image.png" />
-      <nav className="upper_navigation">
-        <div className="back_button" onClick={() => navigate(paths.home)}>
-          <div className="back_button-icon">
+      <nav className={styles.upperNavigation}>
+        <div className={styles.backButton} onClick={() => navigate(paths.home)}>
+          <div className={styles.backButtonIcon}>
             <img alt="Arrow_Icon" src="/assets/img/Icon - Arrow.svg" />
           </div>
         </div>
-        <div className="shopping_container pointer" onClick={() => navigate(paths.cart)}>
-          <div className="shopping_icon">
+        <div
+          className={`${styles.shoppingContainer} ${styles.pointer}`}
+          onClick={() => navigate(paths.cart)}
+        >
+          <div className={styles.shoppingIcon}>
             <img alt="Bag_Icon" src="/assets/img/Icon - Bag.svg" />
           </div>
         </div>

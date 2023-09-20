@@ -36,7 +36,7 @@
   opacity: 1;
 }
 
-.style-text {
+.styleText {
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
   border-radius: 12px;
@@ -47,7 +47,7 @@
   height: 140px;
 }
 
-.style-text::placeholder {
+.styleText::placeholder {
   text-align: left;
   font: normal normal bold 16px/28px Titillium Web;
   letter-spacing: 0px;

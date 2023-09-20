@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "./forms.module.css";
+import styles from "./style.module.css";
 export const HomeAdress = () => {
   return (
     <form className={styles.containerStyle}>

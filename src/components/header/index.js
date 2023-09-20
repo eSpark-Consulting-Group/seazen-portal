@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
-import "./style.css";
+import styles from "./style.module.css"; // Import the CSS module
 
 export const NavbarVariants = {
   backWithProfile: "backWithProfile",
@@ -35,16 +35,18 @@ const Navbar = (props) => {
   }, []);
 
   return (
-    <nav className={"d-flex align-items-center justify-content-between p-2"}>
+    <nav
+      className={`${styles.nav} d-flex align-items-center justify-content-between p-2`}
+    >
       <div
-        className="d-flex align-items-center"
+        className={`d-flex align-items-center ${styles.iconBtnContainer}`}
         style={{
           columnGap: "10px",
         }}
       >
         {variant !== NavbarVariants.backWithProfile && (
           <div
-            className="icon-btn"
+            className={styles.iconBtn}
             onClick={() => {
               navigate(paths.profile);
             }}
@@ -55,7 +57,7 @@ const Navbar = (props) => {
 
         {variant === NavbarVariants.backWithProfile && (
           <div
-            className="icon-btn"
+            className={styles.iconBtn}
             onClick={() => {
               navigate(previousRoute || -1);
             }}
@@ -64,13 +66,13 @@ const Navbar = (props) => {
           </div>
         )}
       </div>
-      <div className="d-flex align-items-center logo">
+      <div className={`d-flex align-items-center ${styles.logo}`}>
         <img src="/assets/img/Logo.png" alt="Logo" />
       </div>
 
       {variant === NavbarVariants.backWithProfile && (
         <div
-          className="icon-btn"
+          className={styles.iconBtn}
           onClick={() => {
             navigate(paths.cart);
           }}
@@ -80,13 +82,13 @@ const Navbar = (props) => {
       )}
       {variant !== NavbarVariants.backWithProfile && (
         <div
-          className="d-flex align-items-center"
+          className={`d-flex align-items-center ${styles.iconBtnContainer}`}
           style={{
             columnGap: "10px",
           }}
         >
           <div
-            className="icon-btn"
+            className={styles.iconBtn}
             onClick={() => {
               navigate(paths.cart);
             }}
@@ -94,7 +96,7 @@ const Navbar = (props) => {
             <img src="/assets/img/cart.svg" alt="Shopping Icon" />
           </div>
 
-          <div className="icon-btn">
+          <div className={styles.iconBtn}>
             <img src="/assets/img/Icon - Search.svg" alt="search icon" />
           </div>
         </div>

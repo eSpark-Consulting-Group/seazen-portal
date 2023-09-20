@@ -1,40 +1,38 @@
-.Nav_Image_Container {
+.navImageContainer {
   display: flex;
   position: relative;
   justify-content: center;
 }
 
 @media screen and (max-width: 500px) and (min-width: 380px) {
-  .Nav_Image_Container img {
+  .navImageContainer img {
     width: 100%;
   }
-  .Nav_Image_Container {
+  .navImageContainer {
     margin-right: -50px !important;
   }
-  .shopping_container {
+  .shoppingContainer {
     margin-right: 65px !important;
   }
 }
 
 @media screen and (max-width: 350px) {
-  .Nav_Image_Container img {
+  .navImageContainer img {
     width: 100%;
   }
 
-  .shopping_container {
+  .shoppingContainer {
     margin-right: 12px !important;
   }
-  .Nav_Image_Container {
+  .navImageContainer {
     margin-left: -59px;
   }
-  .back_button {
+  .backButton {
     margin-left: 65px !important;
   }
 }
 
-
-
-.upper_navigation {
+.upperNavigation {
   min-width: 375px;
   width: 100%;
   max-width: 768px;
@@ -46,7 +44,7 @@
   color: white;
 }
 
-.back_button {
+.backButton {
   cursor: pointer;
   margin-left: 20px;
   border-radius: 50%;
@@ -60,23 +58,23 @@
   justify-content: center;
 }
 
-.back_button-icon {
+.backButtonIcon {
   padding-top: 1px;
 }
 
-.back_button-icon img {
+.backButtonIcon img {
   width: 28px;
 }
 
-.shopping_icon {
+.shoppingIcon {
   padding-bottom: 1px;
 }
 
-.shopping_icon img {
+.shoppingIcon img {
   width: 27px;
 }
 
-.shopping_container {
+.shoppingContainer {
   cursor: pointer;
   margin-right: 20px;
   border-radius: 50%;

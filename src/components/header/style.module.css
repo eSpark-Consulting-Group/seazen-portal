@@ -1,8 +1,10 @@
+/* .logo */
 .logo {
   color: #0d0d0d;
 }
 
-.search-bar {
+/* .searchBar */
+.searchBar {
   padding: 15px;
   border-radius: 4px;
   color: black;
@@ -10,7 +12,8 @@
   border: none;
 }
 
-.search-container.expanded {
+/* .searchContainer.expanded */
+.searchContainer.expanded {
   width: 250px;
   border-radius: 24px;
   padding-left: 17px;
@@ -18,34 +21,41 @@
   height: 30px;
 }
 
-.search-container.expanded .search-bar {
+/* .searchContainer.expanded .searchBar */
+.searchContainer.expanded .searchBar {
   width: 150%;
 }
 
-.search-bar {
+/* .searchBar */
+.searchBar {
   border: none;
   background-color: transparent;
   outline: none;
   display: none;
 }
 
-.search-bar::placeholder {
+/* .searchBarPlaceholder */
+.searchBarPlaceholder {
   font: normal normal normal 15px Titillium Web;
 }
 
-.search-bar:focus {
+/* .searchBarFocus */
+.searchBarFocus {
   border: 1px solid #fdfcfc;
 }
 
+/* .element */
 .element {
   transition: all 0.3s;
 }
 
-.search-expanded .element {
+/* .searchExpanded.element */
+.searchExpandedElement {
   transform: translateX(-100%);
 }
 
-.icon-btn {
+/* .iconBtn */
+.iconBtn {
   border-radius: 999px;
   display: flex;
   justify-content: center;
@@ -57,7 +67,8 @@
   box-shadow: 0px 24px 48px #314f7c1f;
 }
 
-.icon-btn img {
+/* .iconBtnImg */
+.iconBtn img {
   object-fit: contain;
   width: 20px;
   height: 20px;

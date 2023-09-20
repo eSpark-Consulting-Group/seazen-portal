@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import "./style.css";
+import React, { useState } from "react";
+import styles from "./style.module.css";
 import { useNavigate } from "react-router";
 import { paths } from "../../../routes/paths";
 
@@ -16,7 +16,7 @@ const ProfileHeader = (props) => {
 
   const toggleCountryPopup = (country) => {
     setSelectedCountry(country);
-    setIsPopupOpen(false); // Close the first popup
+    setIsPopupOpen(false);
     setIsCountryPopupOpen(!isCountryPopupOpen);
   };
 
@@ -30,41 +30,46 @@ const ProfileHeader = (props) => {
   ];
 
   return (
-    <nav className="profile-header">
+    <nav className={styles.profileHeader}>
       <div
-        className="profileHeaderaccount"
+        className={styles.profileHeaderAccount}
         onClick={() => navigate(paths.home)}
       >
-        <div className="profileHeaderaccount-icon">
+        <div className={styles.profileHeaderAccountIcon}>
           <img src="/assets/img/Group 330.svg" alt="Account Icon" />
         </div>
       </div>
-      <div className="profileHeaderlogo">
+      <div className={styles.profileHeaderLogo}>
         <img src="/assets/img/Group 143.svg" alt="Logo" />
       </div>
       {showFlagOption && (
-        <div className="profileHeaderflag-profile">
-          <div className="profileHeadercircle-container" onClick={togglePopup}>
+        <div className={styles.profileHeaderFlagProfile}>
+          <div
+            className={styles.profileHeaderCircleContainer}
+            onClick={togglePopup}
+          >
             <img src="/assets/img/flag1.svg" alt="Default Flag" />
           </div>
           {isPopupOpen && (
             <div
-              className="profileHeaderpopup-overlay"
+              className={styles.profileHeaderPopupOverlay}
               onClick={togglePopup}
             ></div>
           )}
           {isPopupOpen && (
-            <div className="profileHeaderpopup">
+            <div className={styles.profileHeaderPopup}>
               <h2>Select which country to order from</h2>
-              <div className="profileHeadercountry-list">
+              <div className={styles.profileHeaderCountryList}>
                 {countries.map((country, index) => (
                   <div
-                    className="profileHeadercountry"
+                    className={styles.profileHeaderCountry}
                     key={index}
                     onClick={() => toggleCountryPopup(country)}
                   >
                     <img src={country.flag} alt={country.name} />
-                    <p className="profileHeadercountry-name">{country.name}</p>
+                    <p className={styles.profileHeaderCountryName}>
+                      {country.name}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -73,57 +78,61 @@ const ProfileHeader = (props) => {
 
           {selectedCountry && isCountryPopupOpen && (
             <div
-              className="profileHeaderpopup-overlay2"
+              className={styles.profileHeaderPopupOverlay2}
               onClick={() => setIsCountryPopupOpen(false)}
             ></div>
           )}
           {selectedCountry && isCountryPopupOpen && (
-            <div className="profileHeaderpopup2">
+            <div className={styles.profileHeaderPopup2}>
               <img
-                className="profileHeadersymbol"
+                className={styles.profileHeaderSymbol}
                 src="/assets/img/exclaim.svg"
+                alt="Exclaim Symbol"
               ></img>
-              <p className="profileHeaderchange-country">
+              <p className={styles.profileHeaderChangeCountry}>
                 You are about to change country
               </p>
-              <div className="profileHeaderselected-country">
-                <div className="profileHeadercountry-info">
+              <div className={styles.profileHeaderSelectedCountry}>
+                <div className={styles.profileHeaderCountryInfo}>
                   <img src="/assets/img/flag1.svg" alt="Default Flag" />
                   <h2>Kuwait</h2>
                 </div>
                 <img
-                  className="profileHeadergreater-sign"
+                  className={styles.profileHeaderGreaterSign}
                   src="/assets/img/sign.svg"
+                  alt="Greater Than Sign"
                 ></img>
-                <div className="profileHeadercountry-info">
+                <div className={styles.profileHeaderCountryInfo}>
                   <img src={selectedCountry.flag} alt={selectedCountry.name} />
                   <h2>{selectedCountry.name}</h2>
                 </div>
               </div>
               <br></br>
-              <p className="profileHeadercart-clear">
+              <p className={styles.profileHeaderCartClear}>
                 Please note that any item in your cart will be cleared!
               </p>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <button
-                  className="profileHeaderbutton-cancel"
+                  className={styles.profileHeaderButtonCancel}
                   onClick={() => setIsCountryPopupOpen(false)}
                 >
-                  <span className="profileHeadercancel-text">Cancel</span>
+                  <span className={styles.profileHeaderCancelText}>Cancel</span>
                 </button>
                 <button
-                  className="profileHeaderbutton-confirm"
+                  className={styles.profileHeaderButtonConfirm}
                   onClick={() => setIsCountryPopupOpen(false)}
                 >
-                  <span className="profileHeaderconfirm-text">Confirm</span>
+                  <span className={styles.profileHeaderConfirmText}>
+                    Confirm
+                  </span>
                 </button>
               </div>
             </div>
           )}
-        </div>  
+        </div>
       )}
-      <div className="profileHeaderoption">
-        <div className="profileHeaderoption-icon">
+      <div className={styles.profileHeaderOption}>
+        <div className={styles.profileHeaderOptionIcon}>
           <img src="/assets/img/Group 256.svg" alt="Option Icon" />
         </div>
       </div>

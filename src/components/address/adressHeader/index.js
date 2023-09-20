@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./adressHeader.module.css";
+import styles from "./style.module.css";
 import { useNavigate } from "react-router";
 
 const AddressHeader = () => {
