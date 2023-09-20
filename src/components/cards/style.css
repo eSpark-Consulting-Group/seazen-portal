@@ -76,3 +76,9 @@
 .collapsed {
   display: none;
 }
+
+@media screen and (max-width: 500px) and (min-width: 400px) {
+  .inner-svg-container{
+    left: 178px;
+  }
+}

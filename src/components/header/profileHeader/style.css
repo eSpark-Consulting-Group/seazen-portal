@@ -32,7 +32,6 @@
   opacity: 1;
   position: absolute;
   /* border: 1px solid #C0CDD7; */
-
 }
 
 .profileHeaderaccount-icon {
@@ -120,29 +119,6 @@
   z-index: 2; /* Place above the overlay */
 }
 
-@media screen and (max-width:500px) and (min-width:360px) {
-  .profileHeaderpopup {
-  position: fixed;
-    top: 175px;
-  }
-}
-
-@media screen and (max-width:360px) and (min-width:330px) {
-  .profileHeaderpopup {
-    position: fixed;
-    top: 149px;
-    /* margin-bottom: 40px; */
-    height: 294px;
-  }
-}
-
-@media screen and (max-width:330px) {
-  .profileHeaderpopup {
-  position: fixed;
-  top: 275px;
-}
-}
-
 .profileHeaderpopup-overlay {
   position: fixed;
   top: 0;
@@ -207,7 +183,6 @@
   margin: 0;
 }
 
-
 .profileHeaderpopup2 {
   position: fixed;
   transform: translate(-50%, -50%);
@@ -221,27 +196,6 @@
   box-shadow: 0px 7px 58px #00000026;
   border-radius: 12px;
   opacity: 1;
-}
-
-@media screen and (max-width:450px) and (min-width:375px) {
-  .profileHeaderpopup2{
-    left: 212px;
-
-  }
-}
-
-@media screen and (max-width:375px) and (min-width:350px) {
-  .profileHeaderpopup2{
-    left: 185px;
-
-  }
-}
-
-@media screen and (max-width:330px) {
-  .profileHeaderpopup2{
-    left: 183px;
-
-  }
 }
 
 .profileHeaderpopup2 h2 {
@@ -384,4 +338,48 @@
 
 .profile-header * {
   box-sizing: content-box;
+}
+
+@media screen and (max-width: 500px) and (min-width: 360px) {
+  .profileHeaderpopup {
+    position: fixed;
+    top: 235px;
+  }
+  
+}
+
+
+@media screen and (max-width: 360px) and (min-width: 330px) {
+  .profileHeaderpopup {
+    position: fixed;
+    top: 149px;
+    /* margin-bottom: 40px; */
+    height: 294px;
+  }
+  .profileHeaderpopup2 {
+    left: 185px;
+  }
+}
+
+@media screen and (max-width: 330px) {
+  .profileHeaderpopup {
+    position: fixed;
+    top: 390px;
+  }
+  .profileHeaderpopup2 {
+    left: 183px;
+  }
+}
+
+
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .profileHeaderlogo {
+    left: 185px;
+  }
+  .profileHeadercircle-container {
+    left: 300px;
+  }
+  .profileHeaderoption {
+    left: 370px;
+  }
 }

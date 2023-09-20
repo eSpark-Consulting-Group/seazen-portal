@@ -95,13 +95,7 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const isSmallerScreen = useMediaQuery("(max-width: 350px)");
 
   // Adjust cardWidth to apply 120px width to screens less than 350px
-  const cardWidth = isSmallScreen
-    ? isSmallerScreen
-      ? 145
-      : 190
-    : isSmallerScreen
-    ? 145
-    : 164;
+  const cardWidth = isSmallScreen ? (isSmallerScreen ? 170 : 190) : (isSmallerScreen ? 170 : 164);
 
   const getCardClassName = () => {
     if (orderTypeFilter) {

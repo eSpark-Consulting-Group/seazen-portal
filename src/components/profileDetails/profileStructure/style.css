@@ -169,3 +169,32 @@
   left: 10px;
   top: 8px;
 }
+
+.profile-footer {
+  margin-top: 70px;
+}
+
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .profile-section {
+    width: 380px;
+  }
+  .profile-edit-button {
+    left: 325px;
+  }
+  .profile-footer {
+    margin-top: 220px;
+  }
+}
+
+@media screen and (max-width: 379px) and (min-width: 350px) {
+  .profile-footer {
+    margin-top: 220px;
+  }
+}
+
+@media screen and (max-width: 340px) {
+  .profile-footer {
+    margin-top: 370px;
+  }
+}
+
