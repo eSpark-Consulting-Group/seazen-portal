@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 const MyAddresses = () => {
   const navigate = useNavigate();
   return (
-    <header className="header">
+    <header className="header container-fluid">
       <div className="left-icons" onClick={()=>{navigate(-1)}}>
         <img src='/assets/img/Icon - Arrow.svg'></img>
       </div>

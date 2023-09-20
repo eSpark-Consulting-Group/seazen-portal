@@ -23,7 +23,8 @@ const MenuCardListContainer = () => {
   const foodImage = "/assets/img/menu_card_image.png";
 
   return (
-    <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-0">
+    <div>
+    <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-5">
       <div className="menu_card_list_inner_container">
         <div
           className={`card_list_title_search_container ${
@@ -78,7 +79,16 @@ const MenuCardListContainer = () => {
           />
         </Stack>
 
-        <Box
+        
+
+        {/* <div className="comment_button_container">
+          <button>
+            <img src="/assets/img/comment_icon.svg" alt="comment_icon" />
+          </button>
+        </div> */}
+      </div>
+    </div>
+    <Box
           sx={{
             cursor: "pointer",
             bottom: 0,
@@ -121,14 +131,7 @@ const MenuCardListContainer = () => {
             KWD 0.00
           </Box>
         </Box>
-
-        {/* <div className="comment_button_container">
-          <button>
-            <img src="/assets/img/comment_icon.svg" alt="comment_icon" />
-          </button>
-        </div> */}
-      </div>
-    </div>
+        </div>
   );
 };
 

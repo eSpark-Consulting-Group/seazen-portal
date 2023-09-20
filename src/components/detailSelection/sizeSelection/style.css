@@ -171,10 +171,10 @@ input[type="checkbox"] {
 }
 
 /* Hover effect for list items */
-.size-list-item:hover {
+/* .size-list-item:hover {
   background-color: #e6e6e6;
   transition: background-color 0.2s ease-in-out;
-}
+} */
 
 .size-list hr {
   width: 325px;

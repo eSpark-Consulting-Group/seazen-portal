@@ -7,6 +7,14 @@ import SpecialInstructions from "../instructionsText";
 import CountContainer from "../quantityCount";
 import { styled } from "@mui/material/styles"; // Import styled from MUI
 import { lighten } from "@mui/material/styles";
+import { Checkbox } from "@mui/material";
+import { useTheme } from "@mui/material/styles"; // Import useTheme from MUI
+
+const StyledTextColor = styled("div")(({ theme }) => ({
+  color: theme.palette.themeColor.main, // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
+
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.92), // Apply the background color
@@ -16,6 +24,8 @@ const StyledOuterContainer = styled("div")(({ theme }) => ({
 export const getFormattedPrice = (price) => `+KWD ${price.toFixed(3)}`;
 
 export default function SideSelection() {
+  const theme = useTheme();
+
   const [checkedState, setCheckedState] = useState(
     new Array(side.length).fill(false)
   );
@@ -41,6 +51,15 @@ export default function SideSelection() {
 
     setTotal(totalPrice);
   };
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  const checkboxStyle = {
+    color: isChecked ? theme.palette.themeColor.main : '',
+  };
 
   return (
     <div>
@@ -54,16 +73,18 @@ export default function SideSelection() {
           {side.map(({ name, price }, index) => {
             return (
               <li key={index}>
-                <div className="side-list-item">
+                <div
+                  className="side-list-item"
+                  onChange={() => handleOnChange(index)}
+                >
                   <div className="side-left-section">
-                    <input
-                      type="checkbox"
-                      id={`custom-checkbox-${index}`} // Use the adjusted index here
+                    <Checkbox
+                      id={`custom-checkbox-${index}`}
                       name={name}
-                      value={name}
-                      checked={checkedState[index]}
-                      onChange={() => handleOnChange(index)} // Use the adjusted index here
+                      checked={isChecked[index]}
                       className="large-checkbox"
+                      onChange={handleCheckboxChange}
+                      style={checkboxStyle}
                     />
                     <span className="custom-checkbox"></span>
                     <label
@@ -74,7 +95,7 @@ export default function SideSelection() {
                     </label>
                   </div>
                   <div className="side-right-section">
-                    {getFormattedPrice(price)}
+                    <StyledTextColor>{getFormattedPrice(price)}</StyledTextColor>
                   </div>
                 </div>
                 <hr />

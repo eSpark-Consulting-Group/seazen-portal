@@ -89,14 +89,24 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
     icons.slice(1),
   ];
 
+  const isMediumScreen = useMediaQuery(
+    "(max-width: 400px) and (min-width: 385px)"
+  );
   const isSmallScreen = useMediaQuery(
-    "(max-width: 500px) and (min-width: 380px)"
+    "(max-width: 500px) and (min-width: 385px)"
   );
   const isSmallerScreen = useMediaQuery("(max-width: 350px)");
 
   // Adjust cardWidth to apply 120px width to screens less than 350px
-  const cardWidth = isSmallScreen ? (isSmallerScreen ? 170 : 190) : (isSmallerScreen ? 170 : 164);
-
+  const cardWidth = isSmallScreen
+    ? isMediumScreen
+      ? 180
+      : isSmallerScreen
+      ? 170
+      : 190
+    : isSmallerScreen
+    ? 170
+    : 164;
   const getCardClassName = () => {
     if (orderTypeFilter) {
       return orderTypeFilter === "delivery"
