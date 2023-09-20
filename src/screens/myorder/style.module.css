@@ -1,0 +1,245 @@
+.myOrderscreen {
+  padding: 0 30px;
+  position: relative;
+}
+
+/* hr{
+        border-top: 1px dashed #707070;
+        margin: 0 15px;
+    } */
+
+.myOrderscreenNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 30px 0;
+}
+
+.brandLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.categoryItems {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #c0cdd7;
+  border-radius: 14px;
+  padding: 4px;
+  background-color: #fafafa;
+}
+
+.catItem {
+  width: 150px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3f484e;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  margin: 2px;
+  background-color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+}
+.catItem:hover {
+  background-color: gray;
+}
+.myOrderCards {
+  margin-top: 10px;
+}
+
+.cardNav {
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #3f484e;
+}
+.cardNavTags {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.statusTag {
+  background-color: #4e948a;
+  width: 77px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 12px;
+  color: #ffffff;
+}
+
+.receiptTag {
+  border: 1px solid #c0cdd7;
+  background-color: #ffffff;
+  border-radius: 12px;
+  color: #40484e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  width: 76px;
+  height: 22px;
+}
+.cardContent {
+  color: #3f484e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  height: 60px;
+}
+
+.cardContentLeft {
+  color: #3f484e;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px 0;
+}
+.cardContentLeftLt {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 12px;
+  font-weight: bold;
+}
+.cardContentLeftLt img {
+  margin: 5px;
+}
+.cardContentLeftTextRegular {
+  font-size: 10px;
+  padding-left: 30px;
+}
+.cardContentRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+#cardContentRightPrice {
+  font-size: 20px;
+  font-weight: bold;
+  color: #026754;
+}
+
+#cardContentRightUnit {
+  font-size: 12px;
+  font-weight: bold;
+  color: #777777;
+}
+
+.cardFooter {
+  color: #3f484e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  padding-bottom: 10px;
+}
+
+.cardSingleFooter {
+  color: #3f484e;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 15px;
+  padding-bottom: 10px;
+}
+
+.cardFooterRate {
+  width: 76px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3f484e;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  margin: 2px;
+  background-color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.cardFooterReorder {
+  width: 76px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3f484e;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  margin: 2px;
+  background-color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.commentSection {
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.commentSection img {
+  width: 50px;
+  height: 50px;
+}
+
+.rateScreen {
+  border-radius: 20px 20px 0 0;
+  border: 1px solid #c0cdd7;
+  width: 374px;
+  height: 310px;
+}
+
+@media (max-width: 700px) {
+  .rateScreen {
+    width: 100%;
+  }
+}
+
+.rateCat {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 7.5px 15px;
+}
+.rateCat img {
+  width: 32px;
+  height: 32px;
+  margin: 0 3px;
+}
+
+.rateHead {
+  font-size: 14px;
+  font-weight: bold;
+  background-color: white;
+  text-align: center;
+  margin: 35px 35px 13px;
+}
+
+.rateCatText {
+  font-size: 12px;
+  font-weight: bold;
+  width: 80px;
+  line-height: 15px;
+}

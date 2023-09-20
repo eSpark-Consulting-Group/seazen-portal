@@ -6,6 +6,9 @@ import { Footer } from "../../components/footer/footerContent";
 import RestaurantsOrderTypeButton from "../../components/category/button";
 import "../../components/carousel/slider//style.module.css";
 import "./style.css";
+// import OrderCard from "../../components/order-cards";
+import MyOrderScreen from "../myorder";
+import OrderNavbar from "../../components/order-navbar";
 
 const Home = () => {
   return (
@@ -14,6 +17,9 @@ const Home = () => {
       {/* <div className="card-spacing">
         <Slider />
       </div> */}
+      {/* <OrderCard /> */}
+      <MyOrderScreen />
+
       {/* <RestaurantsOrderTypeButton /> */}
       {/* <BasicCard /> */}
       {/* <DraggableSlider /> */}
