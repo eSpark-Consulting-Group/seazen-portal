@@ -51,6 +51,11 @@ body {
   display: none; 
 }
 
+.box:hover{
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
+}
+
 .box-caption {
   background: #fff ;
   border-radius: 16px;
