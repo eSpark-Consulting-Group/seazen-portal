@@ -2,6 +2,13 @@ import React from "react";
 import { useState } from "react";
 import { toppings } from "../../../utils/toppings";
 import "./style.css";
+import { styled } from "@mui/material/styles"; // Import styled from MUI
+import { lighten } from "@mui/material/styles";
+
+const StyledOuterContainer = styled("div")(({ theme }) => ({
+  backgroundColor: lighten(theme.palette.themeColor.light, 0.92), // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
 
 export const getFormattedPrice = (price) => `KWD ${price.toFixed(2)}`;
 
@@ -53,11 +60,11 @@ export default function ToppingSelection() {
 
   return (
     <div>
-      <div className="topping-selection">
+      <StyledOuterContainer className="topping-selection">
         <p className="topping-selection-title">Extra Topping</p>
         <p className="topping-small-title">(Choose up to 7)</p>
         <p className="topping-title-optional">(Optional)</p>
-      </div>
+      </StyledOuterContainer>
       <div className="toppingSelectioncheckbox-counter">
         <ul className="toppings-list">
           {toppings.map(({ name, price }, index) => {

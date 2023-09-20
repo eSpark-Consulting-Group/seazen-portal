@@ -2,6 +2,18 @@ import React from "react";
 import { useState } from "react";
 import { size } from "../../../utils/size";
 import "./style.css";
+import { styled } from "@mui/material/styles"; // Import styled from MUI
+import { lighten } from "@mui/material/styles";
+
+const StyledOuterContainer = styled("div")(({ theme }) => ({
+  backgroundColor: lighten(theme.palette.themeColor.light, 0.92), // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
+
+const StyledTextColor = styled("div")(({ theme }) => ({
+  color: theme.palette.themeColor.main,// Apply the background color
+  // Add any other styles you need for the outer container here
+}));
 
 export const getFormattedPrice = (price) => `+KWD ${price.toFixed(3)}`;
 
@@ -34,11 +46,11 @@ export default function CheckboxGroup() {
 
   return (
     <div>
-      <div className="size">
+      <StyledOuterContainer className="size">
         <p className="size-title">Choose the size</p>
         <p className="size-small-title">(Choose 1)</p>
-        <p className="size-title-required">(Required)</p>
-      </div>
+        <StyledTextColor className="size-title-required">(Required)</StyledTextColor>
+      </StyledOuterContainer>
       <div className="checkbox-size">
         <ul className="size-list">
           {size.map(({ name, price }, index) => {

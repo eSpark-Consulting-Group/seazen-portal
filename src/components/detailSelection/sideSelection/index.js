@@ -5,6 +5,13 @@ import "./style.css";
 import PricingBox from "../total/index";
 import SpecialInstructions from "../instructionsText";
 import CountContainer from "../quantityCount";
+import { styled } from "@mui/material/styles"; // Import styled from MUI
+import { lighten } from "@mui/material/styles";
+
+const StyledOuterContainer = styled("div")(({ theme }) => ({
+  backgroundColor: lighten(theme.palette.themeColor.light, 0.92), // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
 
 export const getFormattedPrice = (price) => `+KWD ${price.toFixed(3)}`;
 
@@ -25,7 +32,7 @@ export default function SideSelection() {
     const totalPrice = updatedCheckedState.reduce(
       (sum, currentState, index) => {
         if (currentState === true) {
-          return sum + side[index ].price;
+          return sum + side[index].price;
         }
         return sum;
       },
@@ -37,11 +44,11 @@ export default function SideSelection() {
 
   return (
     <div>
-      <div className="side">
+      <StyledOuterContainer className="side">
         <p className="side-title">Extra Sides</p>
         <p className="side-small-title">(Choose up to 2)</p>
         <p className="side-title-optional">(optional)</p>
-      </div>
+      </StyledOuterContainer>
       <div className="side-check">
         <ul className="side-list">
           {side.map(({ name, price }, index) => {
@@ -74,13 +81,12 @@ export default function SideSelection() {
               </li>
             );
           })}
-         
-         <SpecialInstructions/>
-         <CountContainer/>
-         <PricingBox total={total} />
+
+          <SpecialInstructions />
+          <CountContainer />
+          <PricingBox total={total} />
         </ul>
       </div>
-      
     </div>
   );
 }
