@@ -1,0 +1,43 @@
+/* styles.module.css */
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.cateringOuterContainer {
+  width: 100%;
+  padding-top: 70px;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.cateringInnerContainer {
+  width: 326px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 170px;
+}
+
+.cateringTextButtonCombinedContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.cateringTextContainer {
+  width: 100%;
+  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  color: #1f2933;
+}
+
+.cateringButtonContainer {
+  width: 326px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+}

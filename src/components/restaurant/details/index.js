@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./style.css";
+import styles from "./style.module.css";
 import { paths } from "../../../routes/paths";
 
 const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
@@ -8,13 +8,14 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
   const handleBranchHoursClick = () => {
     navigate(paths.branches);
   };
+
   return (
-    <div className="details_outer_container px-3 px-sm-4">
-      <div className="details_inner_div w-100">
-        <div className="logo_info_container">
+    <div className={styles.detailsOuterContainer}>
+      <div className={styles.detailsInnerDiv}>
+        <div className={styles.logoInfoContainer}>
           <img src="/assets/img/Trapani_logo.svg" alt="restaurant_logo" />
           <div
-            className="information_container"
+            className={styles.informationContainer}
             onClick={() => {
               handleBranchHoursClick();
             }}
@@ -29,7 +30,7 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
             </span>
           </div>
         </div>
-        <div className="tag_line">
+        <div className={styles.tagLine}>
           A modern take on the Babylonian experience
         </div>
       </div>

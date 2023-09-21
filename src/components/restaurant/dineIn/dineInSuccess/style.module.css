@@ -1,0 +1,142 @@
+.dineInSuccessOuterContainer {
+  margin-bottom: 54px;
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+  margin-bottom: 54px;
+}
+
+.dineInSuccessInnerContainer {
+  width: 326px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+}
+
+.dineInSuccessMessageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.dineInSuccessIconContainer {
+  width: 70px;
+}
+
+.dineInSuccessTextContainer {
+  font-family: Titillium Web;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 700;
+  color: #1f2933;
+  text-align: center;
+}
+
+.dineInGuestInformationCardContainer {
+  width: 100%;
+  border: 1.5px solid #bfccd7;
+  border-radius: 20px;
+  box-shadow: 0px 6px 8px rgba(134, 134, 134, 0.26);
+  display: flex;
+  justify-content: center;
+}
+
+.dineInGuestInformationCardInnerContainer {
+  padding: 24px 0px;
+  width: 292px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.dineInGuestInformationCardHeading {
+  color: #1f2933;
+  font-family: Titillium Web;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.dineInGuestInformationCardLineSaperator {
+  width: 292px;
+  height: 1px;
+  padding: 1px 0px;
+  background-color: #bfccd7;
+}
+
+.dineInGuestInformationGuestnameBranchTextContainer,
+.dine_in_guest_information_seatingarea_numberofpersons_text_container,
+.dine_in_guest_information_phone_number_text_container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.dineInGuestNameContainer,
+.dineInSeatingAreaContainer {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dineInBranchHeading,
+.dineInGuestNumberOfPersonsContainer {
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dineInPhoneNumberContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dineInGuestNameHeading,
+.dineInBranchHeading,
+.dineInSeatingAreaHeading,
+.dineInNumberOfPersonsHeading,
+.dineInPhoneNumberHeading {
+  font-family: Titillium Web;
+  font-size: 13px;
+  font-weight: 700;
+  color: #959fa8;
+}
+
+.dineInGuestName,
+.dineInBranchName,
+.dineInSeatingArea,
+.dineInNumberOfPersons,
+.dineInPhoneNumber {
+  font-family: Titillium Web;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2933;
+}
+
+.dineInContactUsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.dineInContactUsHeading {
+  color: #1f2933;
+  font-family: Titillium Web;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.dineInContactUsButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}

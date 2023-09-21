@@ -1,0 +1,78 @@
+/* Define your CSS module classes */
+.deliveryOuterContainer {
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  background-color: #e0ecea;
+}
+
+.deliveryInnerContainer {
+  height: 100%;
+  display: flex;
+  color: #323f4b;
+  font-family: Titillium Web;
+}
+
+.leftDropdownContainer {
+  width: 163px;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.leftDropdownContainerHeadingContainer,
+.rightDropdownContainerHeadingContainer {
+  font-size: 10pt;
+  font-weight: 400;
+}
+
+.rightDropdownContainer {
+  width: 163px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.dropdown {
+  width: 163px !important;
+}
+
+.dropdownToggle {
+  background-color: transparent !important;
+  color: #323f4b !important;
+  font-family: Titillium Web !important;
+  font-size: 9pt !important;
+  font-weight: bold !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.dropdownIconContainer {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+}
+
+.dropdownIconContainer img {
+  width: 12px;
+  padding: 0;
+}
+
+.dropdownMenu {
+  background-color: #f0f6f5 !important;
+  color: #323f4b !important;
+  font-family: Titillium Web !important;
+  font-size: 11pt !important;
+  font-weight: bold !important;
+  border: none !important;
+  transform: translate(0px, -22px) !important;
+}
+.dropdownToggle::after {
+  display: none !important;
+}
+
+.dropdownMenu.show {
+  transform: translate(0px, 37px) !important;
+}
