@@ -1,4 +1,4 @@
-.options_services_outer_container {
+.optionsServicesOuterContainer {
   height: auto;
   background-color: white;
   padding-top: 30px;
@@ -11,17 +11,15 @@
 }
 
 @media screen and (max-width: 500px) and (min-width: 380px) {
-  .options_services_outer_container {
+  .optionsServicesOuterContainer {
     top: 305px !important;
     max-width: 100% !important;
   }
 }
 
 @media screen and (max-width: 350px) {
-.options_services_outer_container {
-  width: 375px;
-  top: 265px;
+  .optionsServicesOuterContainer {
+    width: 375px;
+    top: 265px;
+  }
 }
-}
-
-

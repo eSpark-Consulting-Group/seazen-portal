@@ -1,5 +1,5 @@
 import React from "react";
-import "./style.css";
+import styles from "./style.module.css";
 import RestaurantDetails from "../details/index.js";
 import TabsDynamicConditionalComponent from "../../tabs/tabsConditionalRenderingComponent/index.js";
 
@@ -9,7 +9,7 @@ const RestaurantOptionsServicesContainer = ({
 }) => {
   return (
     <div>
-      <div className="options_services_outer_container"></div>
+      <div className={styles.optionsServicesOuterContainer}></div>
       <RestaurantDetails
         restaurantDetail={restaurantDetail}
         restaurantBranchHours={restaurantBranchHours}

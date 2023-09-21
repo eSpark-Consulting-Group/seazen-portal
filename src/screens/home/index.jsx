@@ -9,6 +9,8 @@ import "./style.css";
 // import OrderCard from "../../components/order-cards";
 import MyOrderScreen from "../myorder";
 import OrderNavbar from "../../components/order-navbar";
+import RestaurantOptionsServicesContainer from "../../components/restaurant/restaurant_options_services";
+import PickupDetails from "../../components/restaurant/pickup";
 
 const Home = () => {
   return (
@@ -18,12 +20,13 @@ const Home = () => {
         <Slider />
       </div> */}
       {/* <OrderCard /> */}
-      <MyOrderScreen />
-
+      {/* <MyOrderScreen /> */}
+      {/* <RestaurantOptionsServicesContainer /> */}
+      <PickupDetails />
       {/* <RestaurantsOrderTypeButton /> */}
       {/* <BasicCard /> */}
       {/* <DraggableSlider /> */}
-      <Footer showFooterSection={true} />
+      {/* <Footer showFooterSection={true} /> */}
     </div>
   );
 };
