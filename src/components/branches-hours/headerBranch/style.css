@@ -5,7 +5,6 @@
   align-items: center;
   background-color: #333;
   color: #fff;
-  padding: 10px 20px;
   height: 56px;
   background: #ffffff00 0% 0% no-repeat padding-box;
   opacity: 1;
@@ -17,22 +16,22 @@
   opacity: 1;
   position: absolute;
   top: 30px;
-  left: 32px;
+  /* left: 32px; */
   cursor: pointer;
 }
 
-.right-icons img {
+.right-icons-branch img {
   width: 24px;
   height: 20px;
   opacity: 1;
   position: absolute;
   top: 31px;
-  left: 325px;
+  /* left: 325px; */
 }
 
 .branch-logo h3 {
   top: 30px;
-  left: 101px;
+  /* left: 101px; */
   width: 174px;
   height: 22px;
   text-align: center;
@@ -41,10 +40,7 @@
   color: #1f2933;
   opacity: 1;
   position: absolute;
+  margin-left: -75px;
+
 }
 
-@media screen and (max-width: 500px) and (min-width: 380px) {
-  .branch-logo h3 {
-    left: 136px;
-  }
-}

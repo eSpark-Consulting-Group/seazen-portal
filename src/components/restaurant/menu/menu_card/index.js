@@ -67,7 +67,7 @@ const MenuCard = ({
           position: "relative",
 
           ...(menuCardDropdownOpen && {
-            borderLeft: "12px solid #026754",
+            borderLeft: (theme) => `12px solid ${theme.palette.themeColor.main}`,
           }),
         }}
         direction="row"

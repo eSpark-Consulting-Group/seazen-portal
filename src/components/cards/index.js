@@ -19,6 +19,35 @@ const bull = (
   </Box>
 );
 
+const images =[
+
+{
+  name:"first card image",
+  image: "/assets/img/15.png"
+},
+{
+  name:"second card image",
+  image: "/assets/img/21.png"
+},
+{
+  name:"third card image",
+  image: "/assets/img/17.png"
+},
+{
+  name:"fourth card image",
+  image: "/assets/img/23.png"
+},
+{
+  name:"fifth card image",
+  image: "/assets/img/19.png"
+},
+{
+  name:"sixth card image",
+  image: "/assets/img/25.png"
+},
+
+];
+
 const icons = [
   {
     id: 2,
@@ -82,11 +111,12 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const navigate = useNavigate();
   const captions = [
     icons,
-    icons.slice(0, 3),
+    [icons[0], icons[1], icons[3]],
     icons,
     icons,
-    icons.slice(0, 2),
-    icons.slice(1),
+    [icons[0], icons[1], icons[3]],
+    [icons[1], icons[3]],
+
   ];
 
   const isMediumScreen = useMediaQuery(
@@ -95,24 +125,22 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const isSmallScreen = useMediaQuery(
     "(max-width: 500px) and (min-width: 385px)"
   );
-  const isSmallerScreen = useMediaQuery(
-    "(max-width: 350px ) (min-width: 290px)"
-  );
+  const isSmallerScreen = useMediaQuery("(max-width: 350px ) (min-width: 290px)");
   const isVerySmallScreen = useMediaQuery("(max-width: 290px)");
-
+  
   // Adjust cardWidth to apply 120px width to screens less than 350px
   const cardWidth = isSmallScreen
     ? isMediumScreen
       ? 180
       : isSmallerScreen
-      ? 170
+      ? 180
       : 190
     : isSmallerScreen
     ? 170
     : isVerySmallScreen
-    ? 150
+    ? 145
     : 164;
-
+  
   const getCardClassName = () => {
     if (orderTypeFilter) {
       return orderTypeFilter === "delivery"
@@ -164,7 +192,7 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
           >
             <img
               className="restaurantCard-img"
-              src={`/assets/img/${15 + index * 2}.png`}
+              src={images[index].image}
               alt={`Card ${index + 1}`}
             />
             <div
@@ -176,13 +204,13 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
                 {captions[index].map((icon, i) => {
                   return (
                     <div key={i} className="icon-row">
-                        <img
-                          className={getClassNameAccordingToFilter(icon.id)}
-                          src={icon.image}
-                          alt={`Icon ${i + 1}`}
-                          style={{ width: iconWidth, height: iconHeight }}
-                        />
-                      </div>
+                      <img
+                        className={getClassNameAccordingToFilter(icon.id)}
+                        src={icon.image}
+                        alt={`Icon ${i + 1}`}
+                        style={{ width: iconWidth, height: iconHeight }}
+                      />
+                    </div>
                   );
                 })}
               </div>

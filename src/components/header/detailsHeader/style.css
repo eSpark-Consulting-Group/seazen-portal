@@ -15,9 +15,9 @@
 
 
 @media screen and (max-width:500px) and (min-width:400px) {
-  .detailsHeaderBackground {
+  /* .detailsHeaderBackground {
     width: 423px;
-  }
+  } */
   .detailsheadericon-style{
     left: 360px !important;
 
