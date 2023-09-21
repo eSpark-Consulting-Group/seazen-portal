@@ -1,48 +1,47 @@
-import React from 'react'
-import '../../screens/order/style.css'
+import React from "react";
+import styles from "../../screens/order/style.module.css";
 
 function formatAddress(input) {
-  
   if (!input) {
-    return ''; // Return an empty string if the input is undefined or empty
+    return ""; // Return an empty string if the input is undefined or empty
   }
 
   // Split the input string by spaces
-  const parts = input.split(' ');
+  const parts = input.split(" ");
 
   // Group the parts into lines based on certain conditions
   const lines = [];
-  let currentLine = '';
+  let currentLine = "";
 
   parts.forEach((part) => {
     // If part includes a colon or a comma, start a new line
-    if (part.includes(':') || part.includes(',')) {
-      if (currentLine !== '') {
+    if (part.includes(":") || part.includes(",")) {
+      if (currentLine !== "") {
         lines.push(currentLine.trim()); // Remove leading/trailing spaces
-        currentLine = '';
+        currentLine = "";
       }
     }
 
     // Add the part to the current line
-    currentLine += ' ' + part;
+    currentLine += " " + part;
   });
 
   // Push the last line
-  if (currentLine !== '') {
+  if (currentLine !== "") {
     lines.push(currentLine.trim()); // Remove leading/trailing spaces
   }
 
-  return lines.join('\n');
+  return lines.join("\n");
 }
 const Address = ({ address }) => {
   const formattedAddress = formatAddress(address);
 
   return (
-    <div className='orderaddress-text'>
-        <p>Office - Seazen Ardia</p>
-        <pre className="orderformatted-address">{formattedAddress}</pre>
+    <div className={styles.orderAddressText}>
+      <p>Office - Seazen Ardia</p>
+      <pre className={styles.orderFormattedAddress}>{formattedAddress}</pre>
     </div>
-  )
-}
+  );
+};
 
-export default Address
+export default Address;

@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import '../../screens/order/style.css'
-
+import React, { useState, useEffect } from "react";
+import styles from "../../screens/order/style.module.css";
 
 const UpdateSection = () => {
-  const [currentDateTime, setCurrentDateTime] = useState('');
+  const [currentDateTime, setCurrentDateTime] = useState("");
 
   useEffect(() => {
     // Function to get the current time and date in the desired format
@@ -14,16 +13,28 @@ const UpdateSection = () => {
       const year = now.getFullYear();
       const hours = now.getHours();
       const minutes = now.getMinutes();
-      const period = hours >= 12 ? 'pm' : 'am';
+      const period = hours >= 12 ? "pm" : "am";
       const shortMonths = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
       ];
 
       const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 
       // Create the formatted date and time string
-      const formattedDateTime = `${day} ${shortMonths[monthIndex]}, ${hours % 12 || 12}:${formattedMinutes} ${period}`;
+      const formattedDateTime = `${day} ${shortMonths[monthIndex]}, ${
+        hours % 12 || 12
+      }:${formattedMinutes} ${period}`;
 
       setCurrentDateTime(formattedDateTime);
     };
@@ -38,12 +49,14 @@ const UpdateSection = () => {
     return () => clearInterval(intervalId);
   }, []);
   return (
-          <div className='update-sec'>
-              <p id='text-for-arrival'>Estimated Arrival;</p>
-              <p className='ordercurrent-time'>{currentDateTime}</p>
-              {/* <CurrentTime/> */}
-          </div>
-  )
-}
+    <div className={styles.updateSec}>
+      <p id="text-for-arrival" className={styles.textForArrival}>
+        Estimated Arrival;
+      </p>
+      <p className={styles.orderCurrentTime}>{currentDateTime}</p>
+      {/* <CurrentTime/> */}
+    </div>
+  );
+};
 
-export default UpdateSection
+export default UpdateSection;

@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600;700;900&display=swap");
 
-.order-screen {
+.orderScreen {
   background-color: #ffffff;
   padding: 70px 40px;
   box-sizing: border-box;
@@ -8,13 +8,13 @@
   position: relative;
 }
 
-#close-button {
+.closeButton {
   position: absolute;
   left: 80%;
   top: 2%;
 }
 
-#close-btn-tag {
+.closeBtnTag {
   background-color: #ffffff;
   display: flex;
   justify-content: center;
@@ -24,7 +24,7 @@
   border-radius: 50%;
 }
 
-.orderheader-section {
+.orderheaderSection {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -32,13 +32,13 @@
   font-size: 16px;
 }
 
-.update-sec {
+.updateSec {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-#text-for-arrival {
+.textForArrival {
   letter-spacing: 0.5px;
   text-align: left;
   font: normal normal 600 16px/18px Titillium Web;
@@ -47,7 +47,7 @@
   opacity: 1;
 }
 
-.ordercurrent-time {
+.orderCurrentTime {
   font-size: 20px;
   font-weight: bold;
   text-align: right;
@@ -57,25 +57,25 @@
   opacity: 1;
 }
 
-.order-progress-bar {
+.orderProgressBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.orderprogress-bar {
+.orderprogressBar {
   width: 65px;
   height: 5px;
   background-color: #dcdfe3;
 }
 
-.orderaddress-section hr {
+.orderAddressSection hr {
   height: 1px;
   background-color: #dcdfe3;
   border: none;
 }
 
-#order-status-tag {
+.orderStatusTag {
   background-color: #f7b500;
   border-radius: 7px;
   letter-spacing: 0.4px;
@@ -87,41 +87,41 @@
   align-self: center;
 }
 
-.order-status {
+.orderStatus {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 15px;
 }
 
-#order-status-tag p {
+.orderStatusTag p {
   font-weight: bold;
   font-size: 16px;
   color: #ffffff;
 }
 
-#orderconfirm-text {
+.orderConfirmText {
   font-weight: bold;
   font-size: 16px;
   letter-spacing: 0.5px;
   color: #959fa8;
 }
 
-.orderconfirm-text-container {
+.orderConfirmTextContainer {
   margin-top: 15px;
 }
 
-.orderaddress-text {
+.orderAddressText {
   font-size: 14px;
   line-height: 110%;
 }
 
-.order-id-section {
+.orderIdSection {
   display: flex;
   justify-content: space-between;
 }
 
-#order-id-text {
+.orderIdText {
   font-size: 16px;
   text-align: left;
   font: normal normal 600 16px/18px Titillium Web;
@@ -130,7 +130,7 @@
   opacity: 1;
 }
 
-.orderid-with-tag {
+.orderidWithTag {
   display: flex;
   flex-direction: column;
   align-items: end;
@@ -138,7 +138,7 @@
   top: -1px;
 }
 
-.orderid-with-tag p {
+.orderidWithTag p {
   font-size: 20px;
   font-weight: bold;
   text-align: right;
@@ -148,14 +148,14 @@
   opacity: 1;
 }
 
-#order-id-tag a {
+.orderIdTag a {
   font-weight: bold;
   font-size: 12px;
   color: white;
   text-decoration: none;
 }
 
-#order-id-tag {
+.orderIdTag {
   background-color: #98694e;
   border-radius: 10px;
   width: 88px;
@@ -166,14 +166,14 @@
   margin-top: -10px;
 }
 
-.ordercontact-section {
+.orderContactSection {
   display: flex;
   justify-content: space-between;
   padding: 0 20px;
   margin: 50px 0 70px 0;
 }
 
-#call-tag {
+#callTag {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -186,13 +186,13 @@
   margin-left: -8px;
 }
 
-#call-tag a {
+.callTag a {
   text-decoration: none;
   color: #ffffff;
   font-size: 14px;
 }
 
-#whatsapp-tag {
+.whatsappTagTag {
   display: flex;
   justify-content: space-around;
   padding: 0 3px;
@@ -206,12 +206,12 @@
   font-size: 15px;
 }
 
-#whatsapp-tag a {
+.whatsappTag a {
   color: #ffffff;
   text-decoration: none;
 }
 
-#thanksnote {
+.thanksnote {
   text-align: left;
   font: normal normal 400 16px/18px Titillium Web;
   letter-spacing: 0px;
@@ -224,14 +224,14 @@
   height: 42px;
 }
 
-.orderformatted-address {
+.orderFormattedAddress {
   text-align: left;
   letter-spacing: 0px;
   color: #1f2933;
   opacity: 1;
 }
 
-.orderaddress-text p {
+.orderAddressText p {
   text-align: left;
   font: normal normal 600 14px/16px Titillium Web;
   letter-spacing: 0px;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./style.css";
+import styles from "./style.module.css";
 import ContactUs from "../../components/contactButton/contact";
 import UpdateSection from "../../components/orderPlace/timeUpdateSection";
 import AddressSection from "../../components/orderPlace/addressSection";
@@ -39,41 +39,45 @@ const OrderScreen = () => {
   };
 
   return (
-    <div className="order-screen">
-      <div id="close-button">
-        <div id="close-btn-tag">
+    <div className={styles.orderScreen}>
+      <div id="close-button" className={styles.closeButton}>
+        <div id="close-btn-tag" className={styles.closeBtnTag}>
           <p style={{ color: "#1F2933" }}>
             <strong>᙭</strong>
           </p>
         </div>
       </div>{" "}
-      <div className="orderheader-section">
+      <div className={styles.orderheaderSection}>
         <img src="/assets/img/tick.png" alt="" />
-        <p id="thanksnote">
+        <p id="thanksnote" className={styles.thanksnote}>
           Thank you for placing<br></br>your order.
         </p>
       </div>{" "}
       <UpdateSection />
-      <div className="order-progress-bar">
+      <div className={styles.orderProgressBar}>
         {progress.map((stage, index) => {
           return (
             <div
               key={index}
               style={{ backgroundColor: stage.done ? "#BEC2C7" : "#DCDFE3" }}
-              className="orderprogress-bar"
+              className={styles.orderprogressBar}
             ></div>
           );
         })}
       </div>
-      <div className="order-status">
+      <div className={styles.orderStatus}>
         <div
           id="order-status-tag"
+          className={styles.orderStatusTag}
           style={{ backgroundColor: updateStatus[count].tagColor }}
         >
           <p>{updateStatus[count].tag}</p>
         </div>
-        <div className="orderconfirm-text-container">
-          <p id="orderconfirm-text"> {updateStatus[count].text}</p>
+        <div className={styles.orderConfirmTextContainer}>
+          <p id="orderconfirm-text" className={styles.orderConfirmText}>
+            {" "}
+            {updateStatus[count].text}
+          </p>
         </div>
       </div>
       <AddressSection />
