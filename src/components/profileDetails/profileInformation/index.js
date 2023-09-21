@@ -14,7 +14,7 @@ function ProfileInformation() {
   };
 
   const handleEditClick = () => {
-    navigate(paths.update_profile)
+    navigate(paths.update_profile);
   };
 
   return (

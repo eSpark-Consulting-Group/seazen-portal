@@ -1,4 +1,6 @@
-.profile-section {
+/* ProfileStructure.module.css */
+
+.profileSection {
   top: 90px;
   left: 24px;
   width: 327px;
@@ -10,7 +12,7 @@
   position: absolute;
 }
 
-.profile-register {
+.profileRegister {
   text-align: left;
   font: normal normal 600 14px/24px Titillium Web;
   letter-spacing: 0.28px;
@@ -21,7 +23,7 @@
   left: 104px;
 }
 
-.guest-register-button {
+.guestRegisterButton {
   top: 66px;
   left: 104px;
   width: 60px;
@@ -34,7 +36,7 @@
   border: none;
 }
 
-.guest-register-text {
+.guestRegisterText {
   text-align: left;
   font: normal normal 600 10px/8px Titillium Web;
   letter-spacing: 0px;
@@ -45,14 +47,14 @@
   left: 14px;
 }
 
-.left-section {
+.leftSection {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.profile-name {
+.profileName {
   top: 18px;
   left: 105px;
   width: 79px;
@@ -65,7 +67,7 @@
   position: absolute;
 }
 
-.profile-number {
+.profileNumber {
   top: 40px;
   left: 104px;
   text-align: left;
@@ -76,7 +78,7 @@
   position: absolute;
 }
 
-.profile-email {
+.profileEmail {
   top: 59px;
   left: 105px;
   text-align: left;
@@ -87,14 +89,14 @@
   position: absolute;
 }
 
-.right-contsectionainer {
+.rightContainer {
   flex: 1;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.image-style {
+.imageStyle {
   top: 15px;
   left: 19px;
   width: 68px;
@@ -104,7 +106,7 @@
   position: absolute;
 }
 
-.profile-edit-button {
+.profileEditButton {
   background: 0% 0% no-repeat padding-box;
   border: none;
   top: 32px;
@@ -114,7 +116,7 @@
   position: absolute;
 }
 
-.inline-container {
+.inlineContainer {
   display: inline-flex;
   align-items: center;
   position: absolute;
@@ -123,7 +125,7 @@
   cursor: pointer;
 }
 
-.map-style {
+.mapStyle {
   top: 212px;
   left: 39px;
   width: 16px;
@@ -131,7 +133,7 @@
   opacity: 1;
 }
 
-.inline-container p {
+.inlineContainer p {
   text-align: left;
   font: normal normal 600 14px/10px Titillium Web;
   letter-spacing: 0px;
@@ -142,7 +144,7 @@
   top: 8px;
 }
 
-.inline-container2 {
+.inlineContainer2 {
   display: inline-flex;
   align-items: center;
   position: absolute;
@@ -151,7 +153,7 @@
   cursor: pointer;
 }
 
-.map-style {
+.mapStyle {
   top: 212px;
   left: 39px;
   width: 16px;
@@ -159,7 +161,7 @@
   opacity: 1;
 }
 
-.inline-container2 p {
+.inlineContainer2 p {
   text-align: left;
   font: normal normal 600 14px/10px Titillium Web;
   letter-spacing: 0px;
