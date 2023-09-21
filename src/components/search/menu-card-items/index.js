@@ -58,8 +58,8 @@ const MenuCardItem = ({item: {id,
             <div className={`${styles.menu_card_sub_text}`}>{foodIngredients}</div>
             <div className={`${styles.menu_card_price_add_to_cart_container}`}>
               <div className={`${styles.menu_card_price_container}`}>
-                <div className={`${styles.menu_card_currency}`}>{foodCurrency}</div>
-                <div className={`${styles.menu_card_item_price}`}>{foodPrice}</div>
+                <div className={`${styles.menu_card_currency}`} style={{color:`${color}`}}>{foodCurrency}</div>
+                <div className={`${styles.menu_card_item_price}`} style={{color:`${color}`}}>{foodPrice}</div>
               </div>
             </div>
           </div>

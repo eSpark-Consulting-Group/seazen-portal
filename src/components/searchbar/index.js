@@ -1,42 +1,73 @@
 import React from 'react'
+import { styled, alpha } from '@mui/material/styles';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
 import styles from '../../screens/searchPage/style.module.css'
 
-const SearchBar = ({isSearchOpen, searchParams, toggleSearch, handleSearchItem}) => {
+const SearchBar = ({ isSearchOpen, searchParams, toggleSearch, handleSearchItem, value }) => {
+
+  const Search = styled('div')(({ theme }) => ({
+    position: 'relative',
+    borderRadius: "15px",
+    backgroundColor: "#FAFAFA",
+    marginRight: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginLeft: 0,
+    width: '100%',
+    height: "30px",
+    [theme.breakpoints.down('sm')]: {
+      width: '90%',
+      margin: 'auto'
+    },
+    [theme.breakpoints.up('sm')]: {
+      width: '90%',
+      margin: 'auto'
+    },
+  }));
+
+  const SearchIconWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }));
+
+  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    color: 'inherit',
+    '& .MuiInputBase-input': {
+      padding: theme.spacing(1, 1, 1, 0),
+      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        width: '20ch',
+      },
+    },
+  }));
   return (
-    <div className={`${styles.menu_card_list_outer_container} px-3 px-sm-4 pt-3 pt-sm-4 pb-0`} >
-    <div className={`${styles.menu_card_list_inner_container}`} >
-      <div
-        className={`${styles.card_list_title_search_container} ${
-          isSearchOpen ? `${styles.expanded_search}` : ""
-        }`}
-        
-      >
-        <div className={`${styles.card_list_title}`}>
-          {searchParams.get("category")}
-        </div>
-        <div className={`${styles.search} ${isSearchOpen ? `${styles.expanded_search}` : ""}`}>
-          <div
-            className={`${styles.searchwrapper} ${
-              isSearchOpen ? `${styles.expanded_search}` : ""
-            }`}
-          >
-            <img
-              src="/assets/img/Icon - Search.svg"
-              alt="search_icon"
-              className={`${styles.searchicon}`}
-              onClick={toggleSearch}
-            />
-            <input
-              type="text"
-              placeholder="Search"
-              onChange={(event) => handleSearchItem(event)}
-              className={`${styles.searchbar} ${isSearchOpen ? `${styles.expanded_search}` : ""}`}                   
-            />
-          </div>
-        </div>
-      </div>
+
+
+    <div className={`${styles.mySearchBar}`} >
+      <img
+        src="/assets/img/Icon - Search.svg"
+        alt="search_icon"
+        className={`${styles.searchicon}`}
+
+      />
+      <input className={`${styles.mySearchBarInput}`} type="text" value={value} placeholder='Search...' onChange={(event) => handleSearchItem(event)} />
+      <img
+        src="/assets/img/Closebutton.svg"
+        alt="close_icon"
+        className={`${styles.searchicon}`}
+        onClick={toggleSearch}
+
+      />
     </div>
-  </div>
   )
 }
 
