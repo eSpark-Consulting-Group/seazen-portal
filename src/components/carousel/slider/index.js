@@ -22,7 +22,7 @@ const Slider = () => {
             rows: 1,
             gap: 10,
             loop: true,
-            autoplay: 1000,
+            
           },
         ]}
         cols={1}
@@ -31,7 +31,8 @@ const Slider = () => {
         showDots={true}
         hideArrow={true}
         loop={true}
-        autoplay={3000}
+        autoplay={false}
+        
       >
         {slides.map((slide, index) => (
           <Carousel.Item key={index}>

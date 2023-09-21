@@ -15,6 +15,9 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { ReactComponent as DollarIcon } from "../../assets/icons/dollar.svg";
 import { ReactComponent as KNETIcon } from "../../assets/icons/knet.svg";
 import { paths } from "../../routes/paths";
+import { useTheme } from "@mui/material";
+import { setThemeColor } from "../../store/reducers/themeSlice";
+import { useDispatch } from "react-redux";
 
 let CART_ITEMS = [
   {
@@ -248,7 +251,7 @@ function CartPage() {
                     justifyContent="center"
                     alignItems="center"
                     sx={{
-                      bgcolor: "#026754",
+                      bgcolor: (theme) => theme.palette.themeColor.main,
                       color: "common.white",
                       p: 1,
                       borderRadius: "8px",

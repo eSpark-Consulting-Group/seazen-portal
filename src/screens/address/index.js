@@ -58,8 +58,9 @@ const AddressForm = () => {
         {addressType === "appartment" && <AppartmentAdress />}
         {addressType === "office" && <OfficeAdress />}
         <div className="contact-style">
+          <div className="contact-section">
           <h3>Contact Details</h3>
-        </div>
+          </div>
         <div className="contact-field">
           <input
             className="country-code-input"
@@ -77,6 +78,7 @@ const AddressForm = () => {
             value={phoneNumber}
             onChange={handlePhoneNumberChange}
           />
+        </div>
         </div>
         <button type="submit" className="address-button" onClick={()=>{navigate(paths.addresses)}}>
           {" "}
