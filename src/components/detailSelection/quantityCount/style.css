@@ -5,7 +5,7 @@
   border-radius: 12px 12px 0px 0px;
   opacity: 1;
   margin-top: 20px;
-  margin-left: 16px;
+  margin-left: 28px;
   position: relative;
 }
 
@@ -79,7 +79,7 @@
 
 @media screen and (max-width: 500px) and (min-width: 400px) {
   .count-container {
-    margin-left: 26px;
+    margin-left: 55px;
   }
 
   .quantity-label {

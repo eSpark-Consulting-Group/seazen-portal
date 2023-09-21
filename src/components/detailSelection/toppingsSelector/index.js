@@ -1,33 +1,27 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { toppings } from "../../../utils/toppings";
 import "./style.css";
-import { styled } from "@mui/material/styles"; // Import styled from MUI
+import { styled } from "@mui/material/styles";
 import { lighten } from "@mui/material/styles";
 import { Checkbox } from "@mui/material";
-import { useTheme } from "@mui/material/styles"; // Import useTheme from MUI
-
-
+import { useTheme } from "@mui/material/styles";
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
-  backgroundColor: lighten(theme.palette.themeColor.light, 0.92), // Apply the background color
-  // Add any other styles you need for the outer container here
+  backgroundColor: lighten(theme.palette.themeColor.light, 0.92),
 }));
 
 const StyledTextColor = styled("div")(({ theme }) => ({
-  color: theme.palette.themeColor.main, // Apply the background color
-  // Add any other styles you need for the outer container here
+  color: theme.palette.themeColor.main,
 }));
 
 export const getFormattedPrice = (price) => `KWD ${price.toFixed(2)}`;
 
 export default function ToppingSelection() {
-  const theme = useTheme(); // Use the useTheme hook to access the theme
+  const theme = useTheme();
   const [checkedState, setCheckedState] = useState(
     new Array(toppings.length).fill(false)
   );
 
-  // Initialize the counterState as an object
   const [counterState, setCounterState] = useState({});
 
   const [total, setTotal] = useState(0);
@@ -73,18 +67,25 @@ export default function ToppingSelection() {
     setCheckedState(updatedCheckedState);
     updateTotal(counterState);
   };
-  const [isChecked, setIsChecked] = useState(false);
 
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
+  const [isCheckedArray, setIsCheckedArray] = useState(
+    new Array(toppings.length).fill(false)
+  );
+
+  const handleCheckboxChange = (index) => {
+    const updatedCheckedArray = [...isCheckedArray];
+    updatedCheckedArray[index] = !updatedCheckedArray[index];
+    setIsCheckedArray(updatedCheckedArray);
   };
 
-  const checkboxStyle = {
-    color: isChecked ? theme.palette.themeColor.main : '',
-  };
+  const checkboxStyle = (index) => ({
+    color: isCheckedArray[index] ? theme.palette.themeColor.main : "",
+  });
+
+
   return (
     <div>
-      <StyledOuterContainer className="topping-selection">
+      <StyledOuterContainer className="topping-selection me-2">
         <p className="topping-selection-title">Extra Topping</p>
         <p className="topping-small-title">(Choose up to 7)</p>
         <p className="topping-title-optional">(Optional)</p>
@@ -106,12 +107,11 @@ export default function ToppingSelection() {
                       id={`custom-checkbox-${adjustedIndex}`}
                       name={name}
                       value={name}
-                      checked={isChecked[adjustedIndex]}
+                      checked={isCheckedArray[index]}
                       className="large-checkbox"
                       disabled={isLastItem}
-                      onChange={handleCheckboxChange}
-                      style={checkboxStyle}
-                      
+                      onChange={() => handleCheckboxChange(index)} // Pass the index
+                      style={checkboxStyle(index)} // Pass the index
                     />
                     <span
                       className={`custom-checkbox ${
@@ -119,7 +119,7 @@ export default function ToppingSelection() {
                       }`}
                     ></span>
                     <label
-                      htmlFor={`custom-checkbox-${adjustedIndex}`} // Use the adjusted index here
+                      htmlFor={`custom-checkbox-${adjustedIndex}`}
                       className={`large-checkbox ${
                         isLastItem ? "disabled-text" : ""
                       }`}
@@ -130,7 +130,7 @@ export default function ToppingSelection() {
                   {!isLastItem && (
                     <div className="left-section-counter">
                       <button
-                        onClick={() => handleDecrement(name)} // Use the topping name here
+                        onClick={() => handleDecrement(name)}
                         className="counter-button-right"
                       >
                         <span className="counter-icon-left">-</span>
@@ -139,7 +139,7 @@ export default function ToppingSelection() {
                         {counterState[name] || 0}
                       </StyledTextColor>
                       <button
-                        onClick={() => handleIncrement(name)} // Use the topping name here
+                        onClick={() => handleIncrement(name)}
                         className="counter-button-left"
                       >
                         <span className="counter-icon-right">+</span>
@@ -147,7 +147,7 @@ export default function ToppingSelection() {
                     </div>
                   )}
                 </div>
-                <hr />
+                {index < toppings.length - 1 && <hr />} {/* Conditionally render <hr> */}
               </li>
             );
           })}

@@ -8,6 +8,11 @@
   height: 309px;
 }
 
+.container-fluid{
+  --bs-gutter-x: initial;
+
+}
+
 
 @media screen and (max-width:500px) and (min-width:400px) {
   .detailsHeaderBackground {
@@ -97,3 +102,5 @@
   opacity: 1;
   position: absolute;
 }
+
+

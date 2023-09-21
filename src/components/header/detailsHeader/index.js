@@ -14,7 +14,7 @@ export const DetailsHeader = () => {
   const navigate = useNavigate();
   return (
     <header className="detailsheaderheader">
-      <img className="detailsHeaderBackground" src="/assets/img/image.png" />
+      <img className="detailsHeaderBackground container-fluid" src="/assets/img/image.png" />
       <div
         className="detailsheaderarrowicons-style pointer"
         onClick={() => navigate(-1)}

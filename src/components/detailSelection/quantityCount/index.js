@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './style.css'
 import { styled } from "@mui/material/styles"; // Import styled from MUI
+import PricingBox from '../total';
 
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({

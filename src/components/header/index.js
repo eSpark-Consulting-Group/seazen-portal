@@ -44,7 +44,7 @@ const Navbar = (props) => {
       >
         {variant !== NavbarVariants.backWithProfile && (
           <div
-            className="icon-btn"
+            className="iconaccount-btn"
             onClick={() => {
               navigate(paths.profile);
             }}

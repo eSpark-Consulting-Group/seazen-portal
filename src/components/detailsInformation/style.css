@@ -1,7 +1,5 @@
 .content-heading {
-  top: 295px;
-  left: 24px;
-  width: 194px;
+  /* width: 194px; */
   height: 60px;
   text-align: left;
   font: normal normal 600 22px/26px Titillium Web;
@@ -9,12 +7,14 @@
   color: #1f2933;
   opacity: 1;
   position: absolute;
+  margin-top: 290px;
+  /* margin-left: 30px; */
+  padding-right: 182px;
+
 }
 
 .content-paragraph {
-  top: 350px;
-  left: 24px;
-  width: 327px;
+  /* width: 327px; */
   height: 65px;
   text-align: left;
   letter-spacing: 0.34px;
@@ -22,12 +22,13 @@
   opacity: 1;
   position: absolute;
   font-size: 12px;
+  margin-top: 350px;
+  /* margin-left: 32px; */
+  padding-right: 66px;
 }
 
 .content-small {
-  top: 300px;
-  left: 302px;
-  width: 41px;
+  /* width: 41px; */
   height: 10px;
   text-align: right;
   font: normal normal bold 10px/12px Titillium Web;
@@ -35,16 +36,22 @@
   color: #026754;
   opacity: 1;
   position: absolute;
+  margin-top: 296px;
+  margin-left: 285px;
 }
 
-.information-style{
-position: absolute;
-top: 30px;
+.information-style {
+  position: absolute;
+  top: 30px;
 }
 
-@media screen and (max-width:500px) and (min-width:400px)  {
+/* @media screen and (max-width:500px) and (min-width:400px)  {
   .information-style{
     left: 30px;
   }
-}
+} */
 
+.styled-section{
+  display: flex;
+  justify-content: space-between;
+}

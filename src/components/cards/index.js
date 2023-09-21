@@ -95,7 +95,10 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const isSmallScreen = useMediaQuery(
     "(max-width: 500px) and (min-width: 385px)"
   );
-  const isSmallerScreen = useMediaQuery("(max-width: 350px)");
+  const isSmallerScreen = useMediaQuery(
+    "(max-width: 350px ) (min-width: 290px)"
+  );
+  const isVerySmallScreen = useMediaQuery("(max-width: 290px)");
 
   // Adjust cardWidth to apply 120px width to screens less than 350px
   const cardWidth = isSmallScreen
@@ -106,7 +109,10 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
       : 190
     : isSmallerScreen
     ? 170
+    : isVerySmallScreen
+    ? 150
     : 164;
+
   const getCardClassName = () => {
     if (orderTypeFilter) {
       return orderTypeFilter === "delivery"
@@ -138,7 +144,7 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   };
 
   return (
-    <div className="restaurantCard-container">
+    <div className="restaurantCard-container container-fluid">
       {Object.keys(restaurantThemeColor).map((restaurant, index) => (
         <div
           key={index}
@@ -170,13 +176,13 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
                 {captions[index].map((icon, i) => {
                   return (
                     <div key={i} className="icon-row">
-                      <img
-                        className={getClassNameAccordingToFilter(icon.id)}
-                        src={icon.image}
-                        alt={`Icon ${i + 1}`}
-                        style={{ width: iconWidth, height: iconHeight }}
-                      />
-                    </div>
+                        <img
+                          className={getClassNameAccordingToFilter(icon.id)}
+                          src={icon.image}
+                          alt={`Icon ${i + 1}`}
+                          style={{ width: iconWidth, height: iconHeight }}
+                        />
+                      </div>
                   );
                 })}
               </div>

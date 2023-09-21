@@ -5,20 +5,17 @@ import "./style.css";
 import PricingBox from "../total/index";
 import SpecialInstructions from "../instructionsText";
 import CountContainer from "../quantityCount";
-import { styled } from "@mui/material/styles"; // Import styled from MUI
+import { styled } from "@mui/material/styles";
 import { lighten } from "@mui/material/styles";
 import { Checkbox } from "@mui/material";
-import { useTheme } from "@mui/material/styles"; // Import useTheme from MUI
+import { useTheme } from "@mui/material/styles";
 
 const StyledTextColor = styled("div")(({ theme }) => ({
-  color: theme.palette.themeColor.main, // Apply the background color
-  // Add any other styles you need for the outer container here
+  color: theme.palette.themeColor.main,
 }));
 
-
 const StyledOuterContainer = styled("div")(({ theme }) => ({
-  backgroundColor: lighten(theme.palette.themeColor.light, 0.92), // Apply the background color
-  // Add any other styles you need for the outer container here
+  backgroundColor: lighten(theme.palette.themeColor.light, 0.92),
 }));
 
 export const getFormattedPrice = (price) => `+KWD ${price.toFixed(3)}`;
@@ -51,22 +48,27 @@ export default function SideSelection() {
 
     setTotal(totalPrice);
   };
-  const [isChecked, setIsChecked] = useState(false);
 
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
+  const [isCheckedArray, setIsCheckedArray] = useState(
+    new Array(side.length).fill(false)
+  );
+
+  const handleCheckboxChange = (index) => {
+    const updatedCheckedArray = [...isCheckedArray];
+    updatedCheckedArray[index] = !updatedCheckedArray[index];
+    setIsCheckedArray(updatedCheckedArray);
   };
 
-  const checkboxStyle = {
-    color: isChecked ? theme.palette.themeColor.main : '',
-  };
+  const checkboxStyle = (index) => ({
+    color: isCheckedArray[index] ? theme.palette.themeColor.main : "",
+  });
 
   return (
     <div>
-      <StyledOuterContainer className="side">
+      <StyledOuterContainer className="side ">
         <p className="side-title">Extra Sides</p>
         <p className="side-small-title">(Choose up to 2)</p>
-        <p className="side-title-optional">(optional)</p>
+        <p className="side-title-optional">(Optional)</p>
       </StyledOuterContainer>
       <div className="side-check">
         <ul className="side-list">
@@ -81,24 +83,27 @@ export default function SideSelection() {
                     <Checkbox
                       id={`custom-checkbox-${index}`}
                       name={name}
-                      checked={isChecked[index]}
+                      checked={isCheckedArray[index]}
                       className="large-checkbox"
-                      onChange={handleCheckboxChange}
-                      style={checkboxStyle}
+                      onChange={() => handleCheckboxChange(index)} // Pass the index
+                      style={checkboxStyle(index)} // Pass the index
                     />
                     <span className="custom-checkbox"></span>
                     <label
-                      htmlFor={`custom-checkbox-${index}`} // Use the adjusted index here
+                      htmlFor={`custom-checkbox-${index}`}
                       className="large-checkbox"
                     >
                       {name}
                     </label>
                   </div>
                   <div className="side-right-section">
-                    <StyledTextColor>{getFormattedPrice(price)}</StyledTextColor>
+                    <StyledTextColor>
+                      {getFormattedPrice(price)}
+                    </StyledTextColor>
                   </div>
                 </div>
-                <hr />
+                {index !== side.length - 1 && <hr />}{" "}
+                {/* Conditionally render <hr> */}
               </li>
             );
           })}

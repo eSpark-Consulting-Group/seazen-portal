@@ -4,7 +4,7 @@
   gap: 10px;
   justify-items: center;
   padding-top: 20px;
-  margin-left: -5px;
+  margin-left: -1px;
 }
 .restaurantCard-border-delivery {
   border: 2px solid #93674e;
@@ -50,14 +50,17 @@
 }
 
 .icon-row img{
-  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 1px 12px 1px 2px;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+    display: inline-block;
 }
 
 .icon-row-selected {
   margin-bottom: -11px;
   opacity: 1;
 }
-
 .button-icons-styles-delivery {
   background-color: #93674e;
   padding: 1px 12px 1px 2px;

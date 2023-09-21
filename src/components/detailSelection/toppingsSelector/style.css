@@ -1,7 +1,7 @@
 .topping-selection {
   top: 650px;
-  left: 12px;
-  width: 351px;
+  left: 0;
+  width: 100%;
   height: 40px;
   background: #f0f6f5 0% 0% no-repeat padding-box;
   border-radius: 16px;
@@ -34,16 +34,15 @@
 }
 
 .topping-title-optional {
-  top: 6px;
-  left: 274px;
-  width: 60px;
+  /* width: 60px; */
   height: 21px;
   text-align: right;
   font: normal normal bold 14px/24px Titillium Web;
   letter-spacing: 0px;
   color: #6b7580;
   opacity: 1;
-  position: absolute;
+  margin-top: 7px;
+  margin-right: 17px;
 }
 
 .checkbox-counter {
@@ -80,11 +79,8 @@
 .toppings-list {
   list-style: none;
   padding: 15px;
-  margin-top: 340px;
-  /* margin-left: 19px; */
-  /* margin-right: -52px; */
-  position: absolute;
-  left: 19px;
+  margin-top: 12px;
+  margin-left: -9px;
 }
 
 .toppings-list-item {
@@ -102,7 +98,6 @@
   border-radius: 12px;
   opacity: 1;
 }
-
 
 .pricing-section {
   text-align: center;
@@ -141,15 +136,13 @@
   flex: 1;
   display: flex;
   align-items: center;
-  width: 38px;
+  /* width: 38px; */
   height: 24px;
   text-align: left;
   font: normal normal 600 16px/24px Titillium Web;
   letter-spacing: 0px;
   color: #323f4b;
   opacity: 1;
-  position: absolute;
-  left: 280px;
 }
 
 .counter-button-right {
@@ -162,8 +155,7 @@
   padding: 11px;
   margin-right: 4px;
   position: absolute;
-  right: 21px;
-  top: 1px;
+  right: 61px;
 }
 
 .counter-icon-right {
@@ -198,11 +190,11 @@
   padding: 11px;
   margin-right: 4px;
   position: absolute;
-  right: -23px;
+  right: 16px;
 }
 
 .counter-value {
-  right: 10px;
+  right: 50px;
   position: absolute;
 }
 
@@ -225,8 +217,7 @@
 /* Style for the Total section */
 .toppings-list-item:last-child {
   background-color: #fff;
-  padding-top: 8px;
-  margin-top: 8px;
+  margin-top: -6px;
 }
 
 /* Hover effect for list items */
@@ -235,13 +226,15 @@
   transition: background-color 0.2s ease-in-out;
 } */
 
-hr {
-  width: 325px;
+.toppings-list hr {
   height: 0px;
   transform: matrix(1, 0, 0, 1, 0, 0);
   border: 1px solid #ebeef0;
   opacity: 1;
   margin-top: 10px;
+  margin-right: 26px;
+  margin-bottom: 9px;
+
 }
 
 /* .toppingSelectioncheckbox-counter input[type="checkbox"] {
@@ -257,7 +250,7 @@ hr {
   color: #c0c4c8;
 }
 
-@media screen and (max-width: 500px) and (min-width: 400px) {
+/* @media screen and (max-width: 500px) and (min-width: 400px) {
   .topping-selection {
     left: 36px;
   }
@@ -265,4 +258,4 @@ hr {
   .toppings-list {
     margin-left: 20px;
   }
-}
+} */
