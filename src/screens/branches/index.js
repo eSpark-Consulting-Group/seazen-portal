@@ -2,7 +2,7 @@ import React from "react";
 import BranchHeader from "../../components/branches-hours/headerBranch";
 import BranchContent from "../../components/branches-hours/content";
 import RestaurantInfo from "../../components/branches-hours/branch";
-import "./style.css";
+import styles from "./style.module.css";
 import { Footer } from "../../components/footer/footerContent";
 
 export const Branches = () => {
@@ -34,11 +34,11 @@ export const Branches = () => {
     // Add more restaurant objects as needed
   ];
   return (
-    <div className="branches-screen-container">
+    <div className={styles.branchesScreenContainer}>
       <BranchHeader />
       <BranchContent />
       <RestaurantInfo restaurants={restaurantData} />;
-      <div className="branches-footer">
+      <div className={styles.branchesFooter}>
         <Footer />
       </div>
     </div>
