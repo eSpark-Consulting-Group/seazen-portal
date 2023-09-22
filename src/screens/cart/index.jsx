@@ -18,6 +18,7 @@ import { paths } from "../../routes/paths";
 import { useTheme } from "@mui/material";
 import { setThemeColor } from "../../store/reducers/themeSlice";
 import { useDispatch } from "react-redux";
+import "./style.css";
 
 let CART_ITEMS = [
   {
@@ -139,6 +140,11 @@ function CartPage() {
         >
           Your Cart
         </Typography>
+        <div className="cartHeaderoption">
+        <div className="cartHeaderoption-icon">
+          <img src="/assets/img/Group 256.svg" alt="Option Icon" />
+        </div>
+      </div>
       </Stack>
 
       {cartItems && cartItems.length > 0 ? (
@@ -327,8 +333,15 @@ function CartPage() {
           <TextField
             id="special-instructions"
             placeholder="Special Instructions (Optional)"
+            InputProps={{ disableUnderline: true,}}
             multiline
             rows={2}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                background: "#FAFAFA",
+                border: "none"
+                },
+            }}
             variant="outlined"
           />
 
@@ -338,6 +351,7 @@ function CartPage() {
             variant="outlined"
             sx={{
               "& .MuiOutlinedInput-root": {
+                background: "#FAFAFA",
                 "& input": {
                   "&::placeholder": {
                     fontWeight: 700,
@@ -474,13 +488,7 @@ function CartPage() {
                 },
                 {
                   icon: (
-                    <CreditCardOutlinedIcon
-                      fontSize="large"
-                      sx={{
-                        ml: 0.5,
-                        mb: 1,
-                      }}
-                    />
+                    <img src='/assets/img/credit card.png'></img>
                   ),
                   name: "Credit Card",
                 },
@@ -531,12 +539,12 @@ function CartPage() {
           </Button>
         </React.Fragment>
       ) : (
-        <Stack justifyContent="center" alignItems="center" sx={{ pt: 5 }}>
+        <Stack justifyContent="center" alignItems="center" sx={{ pt: 15 }}>
           <Typography variant="h5" fontWeight={500}>
             Your cart is empty
           </Typography>
 
-          <Box>
+          <Box sx={{ pt: 5 }}>
             <img src="/assets/img/cart.svg" alt="Empty Cart" />
           </Box>
 
@@ -549,12 +557,20 @@ function CartPage() {
             sx={{
               whiteSpace: "pre-line",
               mb: 2,
+              pt: 4
             }}
           >
             {`Looks like you have not added anything\n to your cart.\n Go ahead & explore something`}
           </Typography>
 
-          <Button variant="contained" size="large" onClick={() => navigate(-1)}>
+          <Button sx={{
+              width: "184px",
+              height: "56px",
+              mt: 5
+            }} 
+          variant="contained" 
+          size="large" 
+          onClick={() => navigate(-1)}>
             Back
           </Button>
         </Stack>

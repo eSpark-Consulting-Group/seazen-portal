@@ -36,6 +36,10 @@
   opacity: 1;
 }
 
+.form-style-text-area {
+ height: auto !important;
+}
+
 .style-text {
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;

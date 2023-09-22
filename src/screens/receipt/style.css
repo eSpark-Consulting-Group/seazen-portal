@@ -10,10 +10,12 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 25px;
+    margin-bottom: 1rem;
 }
 .receipt-head p{
     font-size: 22px;
     font-weight: 400;
+    margin-bottom: 0rem !important;
 }
 
 .receipt-info{

@@ -5,7 +5,7 @@ import "./style.css"
 
 export const PrivacyPolicy = () => {
   return (
-    <div>
+    <>
         <ProfileHeader showFlagOption={false} />
         <div className="privacy-policy-section">
             <h1>Privacy Policy</h1>
@@ -18,6 +18,6 @@ export const PrivacyPolicy = () => {
         <div className="privacy-policy-footer">
         <Footer showCommentOption={false} />
         </div>
-    </div>
+    </>
   )
 }

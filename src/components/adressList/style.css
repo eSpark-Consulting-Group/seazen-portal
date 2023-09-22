@@ -111,7 +111,7 @@
   opacity: 1;
   /* position: absolute; */
   padding-left: 217px;
-  margin-top: -54px;
+  margin-top: -88px;
 }
 
 .addresses-name {
@@ -121,6 +121,12 @@
   color: #40484e;
   opacity: 1;
   margin-bottom: 0px;
+}
+.additional-addresses {
+  font-size: 6px;
+  font-weight: 300;
+  color: #40484e;
+  margin-top: 5px;
 }
 
 .addresses-details {

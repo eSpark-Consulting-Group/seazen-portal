@@ -24,7 +24,7 @@
 
 /* Style for the cards without a border */
 .restaurantCard-no-border {
-  border: none;
+  border: 2px solid white;
 }
 
 .restaurantCards {

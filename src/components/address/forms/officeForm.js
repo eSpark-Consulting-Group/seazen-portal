@@ -49,10 +49,11 @@ export const OfficeAdress = () => {
         placeholder="Address Label (Optional)"
       />
       <textarea
-        className="form-style"
+        className="form-style form-style-text-area"
         name="AdditionalDirection"
         id="AdditionalDirection"
         placeholder="Additional Direction"
+        rows="4"
       ></textarea>
     </form>
   );

@@ -5,7 +5,7 @@ import "./style.css"
 
 export const Terms = () => {
   return (
-    <div>
+    <>
         <ProfileHeader showFlagOption={false} />
         <div className="terms-section">
             <h1>Terms & Conditions</h1>
@@ -18,6 +18,6 @@ export const Terms = () => {
         <div className="terms-footer">
         <Footer showCommentOption={false} />
         </div>
-    </div>
+    </>
   )
 }
