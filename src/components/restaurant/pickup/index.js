@@ -3,13 +3,22 @@ import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css"
 import { useState } from "react";
+import { styled } from "@mui/material/styles"; // Import styled from MUI
+import { lighten } from "@mui/material/styles";
+
+
+const StyledOuterContainer = styled("div")(({ theme }) => ({
+  backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
 
 const PickupDetails = () => {
 
     const[branch,setBranch]=useState("Choose a Branch ");
     const[pickupTime,setPickupTime]=useState("14 August 2023, ASAP ")
 
-    return (<div className="pickup_outer_container">
+    return (
+    <StyledOuterContainer className="pickup_outer_container">
     <div className="pickup_inner_container">
       <div className="pickup_left_dropdown_container">
         <div className="pickup_left_dropdown_container_heading_container">Pickup from</div>
@@ -106,7 +115,8 @@ const PickupDetails = () => {
         </Dropdown>
       </div>
     </div>
-  </div>
+    
+    </StyledOuterContainer>
 );
 }
  

@@ -7,8 +7,20 @@ import { styled } from "@mui/material/styles";
 import "./style.css";
 import { paths } from "../../../../routes/paths";
 
+
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
+}));
+
+const StyledItemPrice = styled("div")(({ theme }) => ({
+ color: theme.palette.themeColor.main,
+  // Add any other styles you need for the item price here
+}));
+
+
+const AddToCartButton = styled("button")(({ theme }) => ({
+  backgroundColor: theme.palette.themeColor.main,
+  // Add any other button styles you need here
 }));
 
 const MenuCard = ({
@@ -88,31 +100,33 @@ const MenuCard = ({
             <div className="menu_card_price_add_to_cart_container">
               <div className="menu_card_price_container">
                 <div className="menu_card_currency">{foodCurrency}</div>
-                <div className="menu_card_item_price">{foodPrice}</div>
+                <StyledItemPrice className="menu_card_item_price">{foodPrice}</StyledItemPrice>
               </div>
             </div>
           </div>
         </Stack>
 
         <div className="menu_card_buttons_quantity_container">
-          <div className="menu_card_qunatity_label">{`${foodItemQuantity}x`}</div>
+          <StyledItemPrice className="menu_card_qunatity_label">{`${foodItemQuantity}x`}</StyledItemPrice>
           <div className="menu_card_add_to_cart_button_container">
-            <button
-              onClick={handleClickAdd}
-              className="menu_card_add_to_cart_button"
-            >
-              <img src={plusIcon} alt="button_icon" />
-            </button>
+  <AddToCartButton
+    onClick={handleClickAdd}
+    className="menu_card_add_to_cart_button"
+  >
+    <img src={plusIcon} alt="button_icon" />
+  </AddToCartButton>
 
-            {foodItemQuantity > 0 && (
-              <button
-                onClick={handleClickSubtract}
-                className="menu_card_add_to_cart_button"
-              >
-                <img src={conditionalIcon} alt="button_icon" />
-              </button>
-            )}
-          </div>
+  {foodItemQuantity > 0 && (
+    <AddToCartButton
+      onClick={handleClickSubtract}
+      className="menu_card_add_to_cart_button"
+    >
+      <img src={conditionalIcon} alt="button_icon" />
+    </AddToCartButton>
+  )}
+</div>
+
+          
         </div>
       </Stack>
       {menuCardDropdownOpen && (

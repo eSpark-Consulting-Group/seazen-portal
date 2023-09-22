@@ -1,6 +1,6 @@
 .branch-img {
-  position: absolute; 
-  top: 90px; 
+  position: absolute;
+  top: 90px;
   left: 126px;
   width: 123px;
   height: 27px;
@@ -18,4 +18,13 @@
   color: #40484e;
   opacity: 1;
   position: absolute;
+}
+
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .branch-img {
+    left: 165px;
+  }
+  .branch-content p {
+    left: 75px;
+  }
 }

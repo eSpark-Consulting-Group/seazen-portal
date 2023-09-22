@@ -40,7 +40,7 @@
   padding-top: 20px;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 600px) {
   .content-section {
     display: none;
   }
@@ -55,7 +55,7 @@ h6 {
   all: unset;
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 600px) {
   .design-section {
     min-width: 375px;
     max-width: 375px;

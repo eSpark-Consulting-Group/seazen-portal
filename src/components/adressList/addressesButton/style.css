@@ -1,6 +1,5 @@
 .addresses-add-button {
   top: 635px;
-  left: 26px;
   width: 326px;
   height: 56px;
   background: #98694e 0% 0% no-repeat padding-box;
@@ -8,7 +7,6 @@
   position: absolute;
   border-radius: 16px;
   border: none;
-  
 }
 
 .addresses-add-button-text {
@@ -19,3 +17,16 @@
   opacity: 1;
   cursor: pointer;
 }
+
+.addressButton {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+/* 
+@media screen and (max-width:500px) and (min-width:380px) {
+  .addresses-add-button{
+    left:55px;
+  }
+   */
