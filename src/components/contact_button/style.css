@@ -3,11 +3,14 @@
 .contact_button{
     display: flex;
     flex-direction: row;
-    gap: 32px;
+    justify-content: space-between;
+    align-items: center;
+    /* gap: 32px; */
     padding: 10px 16px;
     border: none;
     color: white;
-    width: 226px;
+    width: 203.5px;
+    height: 37.71px;
     font-family: 'Montserrat', sans-serif;
     font-size: 18px;
     font-weight: 700;
@@ -16,4 +19,9 @@
 
 .contact_button_span img{
     padding-top: 3px;
+    margin-top: 4px;
+}
+.contact_button_text{
+    margin-top: 4px;
+    width: 100%;
 }

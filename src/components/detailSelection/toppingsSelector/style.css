@@ -266,3 +266,8 @@ hr {
     margin-left: 20px;
   }
 }
+
+.extra-topping-instruction{
+  font-size: 10px;
+  font-weight: 400;
+}

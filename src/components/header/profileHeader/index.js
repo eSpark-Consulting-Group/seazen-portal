@@ -55,7 +55,9 @@ const ProfileHeader = (props) => {
           )}
           {isPopupOpen && (
             <div className="profileHeaderpopup">
-              <h2>Select which country to order from</h2>
+             <div>
+             <h2>Select which country to order from</h2>
+             </div>
               <div className="profileHeadercountry-list">
                 {countries.map((country, index) => (
                   <div
