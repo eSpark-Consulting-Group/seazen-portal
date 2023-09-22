@@ -22,7 +22,7 @@
 
 .caption {
   position: absolute;
-  bottom: 6px;
+  bottom: 7px;
   right: 0px;
   color: white;
   font-weight: bold;
@@ -40,4 +40,14 @@
   color: #ffffff;
   opacity: 1;
   padding-left: 27px;
+}
+
+.bEjuCR {
+  grid-template-columns: repeat(4, 100%);
+}
+
+@media screen and (max-width: 767px) {
+  .gZzsDe {
+    display: flex;
+  }
 }

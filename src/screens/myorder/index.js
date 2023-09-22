@@ -6,7 +6,6 @@ import RateCard from "../../components/rate-card";
 import OrderNavbar from "../../components/order-navbar";
 import { paths } from "../../routes/paths";
 import { useNavigate } from "react-router";
-// import "../order/style.css";
 import styles from "./style.module.css";
 
 const MyOrderScreen = () => {

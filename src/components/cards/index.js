@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import styles from "./style.module.css";
@@ -42,6 +42,42 @@ const icons = [
   },
 ];
 
+export const restaurantThemeColor = {
+  "Restaurant 1": {
+    main: "#003964",
+    light: "#095371",
+  },
+  "Restaurant 2": {
+    main: "#424E1F",
+    light: "#596732",
+  },
+  "Restaurant 3": {
+    main: "#026754",
+    light: "#308979",
+    contrastText: "#fff",
+  },
+  "Restaurant 4": {
+    main: "#172931",
+    light: "#2E4A57",
+  },
+  "Restaurant 5": {
+    main: "#2A3549",
+    light: "#435067",
+  },
+  "Restaurant 6": {
+    main: "#0E1220",
+    light: "#293046",
+  },
+  // "Restaurant 7": {
+  //   main: "#101F4A",
+  //   light: "#101F4A",
+  // },
+  // "Restaurant 8": {
+  //   main: "#9C0B2A",
+  //   light: "#B51739",
+  // },
+};
+
 const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const navigate = useNavigate();
   const captions = [
@@ -53,20 +89,24 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
     icons.slice(1),
   ];
 
+  const isMediumScreen = useMediaQuery(
+    "(max-width: 400px) and (min-width: 385px)"
+  );
   const isSmallScreen = useMediaQuery(
-    "(max-width: 500px) and (min-width: 380px)"
+    "(max-width: 500px) and (min-width: 385px)"
   );
   const isSmallerScreen = useMediaQuery("(max-width: 350px)");
 
   // Adjust cardWidth to apply 120px width to screens less than 350px
   const cardWidth = isSmallScreen
-    ? isSmallerScreen
-      ? 145
+    ? isMediumScreen
+      ? 180
+      : isSmallerScreen
+      ? 170
       : 190
     : isSmallerScreen
-    ? 145
+    ? 170
     : 164;
-
   const getCardClassName = () => {
     if (orderTypeFilter) {
       return orderTypeFilter === "delivery"
@@ -93,9 +133,13 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const iconWidth = "7px";
   const iconHeight = "9px";
 
+  const goToRestaurantMenuPage = (restaurant) => {
+    navigate(paths.menu + `/${restaurant}`);
+  };
+
   return (
     <div className={styles.restaurantCardContainer}>
-      {[0, 1, 2, 3, 4, 5].map((index) => (
+      {Object.keys(restaurantThemeColor).map((restaurant, index) => (
         <div
           key={index}
           className={`${styles.restaurantCards} ${styles.restaurantCards}${
@@ -108,7 +152,9 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
               borderRadius: 1,
             }}
             className={styles.restaurantCards}
-            onClick={() => navigate(paths.menu)}
+            onClick={() => {
+              goToRestaurantMenuPage(restaurant);
+            }}
           >
             <img
               className={styles.restaurantCardImg}

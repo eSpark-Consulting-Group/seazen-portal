@@ -41,3 +41,12 @@
   opacity: 1;
   position: absolute;
 }
+
+@media screen and (max-width: 500px) and (min-width: 380px){
+  .addressHeaderlogo h3 {
+    left: 132px;
+  }
+  .addressHeaderright-icons img {
+    left: 375px;
+  }
+}

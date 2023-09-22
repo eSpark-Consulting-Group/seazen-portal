@@ -2,30 +2,41 @@ import React, { useState } from "react";
 import styles from "./style.module.css"; // Import your CSS module
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { styled } from "@mui/material/styles"; // Import styled from MUI
+import { lighten } from "@mui/material/styles";
+
+const StyledOuterContainer = styled("div")(({ theme }) => ({
+  backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
+
+const StyledOuterContainerIcon = styled("div")(({ theme }) => ({
+  backgroundColor: theme.palette.themeColor.main, // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
 
 const DeliveryDetails = () => {
   const [location, setLocation] = useState("Ardiya, Al Qasim St ");
 
   return (
-    <div className={styles.deliveryOuterContainer}>
+    <StyledOuterContainer className={styles.deliveryOuterContainer}>
       <div className={styles.deliveryInnerContainer}>
         <div className={styles.leftDropdownContainer}>
           <div className={styles.leftDropdownContainerHeadingContainer}>
             Deliver to
           </div>
-          <Dropdown className={styles.dropdown} style={{ width: "163px" }}>
+          <Dropdown style={{ width: "163px" }}>
             <Dropdown.Toggle
               variant="success"
               id="dropdown-basic"
               className={styles.dropdownToggle}
             >
               {location}
-              <span className={styles.dropdownIconContainer}>
-                <img
-                  src="/assets/img/Add To Cart.svg"
-                  alt="chevron_down_icon"
-                />
-              </span>
+              <StyledOuterContainerIcon
+                className={styles.dropdownIconContainer}
+              >
+                <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
+              </StyledOuterContainerIcon>
             </Dropdown.Toggle>
 
             <Dropdown.Menu className={styles.dropdownMenu}>
@@ -64,12 +75,11 @@ const DeliveryDetails = () => {
               className={styles.dropdownToggle}
             >
               {"ASAP "}
-              <span className={styles.dropdownIconContainer}>
-                <img
-                  src="/assets/img/Add To Cart.svg"
-                  alt="chevron_down_icon"
-                />
-              </span>
+              <StyledOuterContainerIcon
+                className={styles.dropdownIconContainer}
+              >
+                <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
+              </StyledOuterContainerIcon>
             </Dropdown.Toggle>
 
             <Dropdown.Menu className={styles.dropdownMenu}>
@@ -80,7 +90,7 @@ const DeliveryDetails = () => {
           </Dropdown>
         </div>
       </div>
-    </div>
+    </StyledOuterContainer>
   );
 };
 

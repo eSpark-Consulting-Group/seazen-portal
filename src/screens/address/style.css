@@ -161,6 +161,10 @@
   margin-top: 1px;
 }
 
+.contact-section {
+  padding-bottom: 20px;
+}
+
 .country-code-input {
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
@@ -206,3 +210,14 @@
   color: #959fa8;
   opacity: 1;
 }
+
+@media screen and (max-width: 500px) and (min-width: 380px){
+  .edit-container{
+    margin-left: 30px;
+  }
+  .address-button{
+    margin-left: 30px;
+  }
+}
+
+

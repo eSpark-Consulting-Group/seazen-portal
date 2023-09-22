@@ -2,10 +2,25 @@ import React from "react";
 import { useState } from "react";
 import { size } from "../../../utils/size";
 import styles from "./style.module.css";
+import { styled } from "@mui/material/styles"; // Import styled from MUI
+import { lighten } from "@mui/material/styles";
+import { Checkbox } from "@mui/material";
+import { useTheme } from "@mui/material/styles"; // Import useTheme from MUI
+
+const StyledOuterContainer = styled("div")(({ theme }) => ({
+  backgroundColor: lighten(theme.palette.themeColor.light, 0.92), // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
+
+const StyledTextColor = styled("div")(({ theme }) => ({
+  color: theme.palette.themeColor.main, // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
 
 export const getFormattedPrice = (price) => `+KWD ${price.toFixed(3)}`;
 
 export default function CheckboxGroup() {
+  const theme = useTheme();
   const [checkedState, setCheckedState] = useState(
     new Array(size.length).fill(false)
   );
@@ -31,14 +46,25 @@ export default function CheckboxGroup() {
 
     setTotal(totalPrice);
   };
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  const checkboxStyle = {
+    color: isChecked ? theme.palette.themeColor.main : "",
+  };
 
   return (
     <div>
-      <div className={styles.size}>
+      <StyledOuterContainer className={styles.size}>
         <p className={styles.sizeTitle}>Choose the size</p>
         <p className={styles.sizeSmallTitle}>(Choose 1)</p>
-        <p className={styles.sizeTitleRequired}>(Required)</p>
-      </div>
+        <StyledTextColor className={styles.sizeTitleRequired}>
+          (Required)
+        </StyledTextColor>
+      </StyledOuterContainer>
       <div className={styles.checkboxSize}>
         <ul className={styles.sizeList}>
           {size.map(({ name, price }, index) => {
@@ -47,16 +73,18 @@ export default function CheckboxGroup() {
 
             return (
               <li key={adjustedIndex}>
-                <div className={styles.sizeListItem}>
+                <div
+                  className={styles.sizeListItem}
+                  onChange={() => handleOnChange(adjustedIndex)}
+                >
                   <div className={styles.sizeLeftSection}>
-                    <input
-                      type="checkbox"
-                      id={`custom-checkbox-${adjustedIndex}`} // Use the adjusted index here
+                    <Checkbox
+                      id={`custom-checkbox-${adjustedIndex}`}
                       name={name}
-                      value={name}
-                      checked={checkedState[adjustedIndex]}
-                      onChange={() => handleOnChange(adjustedIndex)} // Use the adjusted index here
+                      checked={isChecked[adjustedIndex]}
                       className={styles.largeCheckbox}
+                      onChange={handleCheckboxChange}
+                      style={checkboxStyle}
                     />
                     <span className={styles.customCheckbox}></span>
                     <label
@@ -68,7 +96,9 @@ export default function CheckboxGroup() {
                   </div>
                   {index > 0 && (
                     <div className={styles.sizeRightSection}>
-                      {getFormattedPrice(price)}
+                      <StyledTextColor>
+                        {getFormattedPrice(price)}
+                      </StyledTextColor>
                     </div>
                   )}
                 </div>

@@ -46,7 +46,9 @@ const ProfileStructure = ({
         <p>My Orders</p>
       </div>
       <DetailsButton />
-      <Footer showCommentOption={false} />
+      <div className={styles.profileFooter}>
+        <Footer showCommentOption={false} />
+      </div>
     </div>
   );
 };

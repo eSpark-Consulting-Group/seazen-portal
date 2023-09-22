@@ -8,7 +8,6 @@
   padding-top: 10px;
   padding-left: 10px;
 }
-
 .termsStyle {
   text-align: left;
   font: normal normal 600 10px/20px Titillium Web;
@@ -18,34 +17,31 @@
   padding-left: 10px;
   cursor: pointer;
 }
-
 .textBox {
-  position: absolute;
-  left: 310px;
-  top: 126%;
+  display: flex;
+  float: right;
+  margin-top: -60px;
 }
-
 .footerContainer {
   margin-bottom: -32px;
 }
 
-@media screen and (max-width: 500px) and (min-width: 400px) {
+/* @media screen and (max-width: 500px) and (min-width: 400px) {
   .text-box {
     position: absolute;
-    top: 116%;
+    top: 109%;
     left: 355px;
   }
 }
-
 @media screen and (max-width: 380px) and (min-width: 350px) {
   .text-box {
-    top: 110%;
+    top: 103%;
   }
 }
-
 @media screen and (max-width: 350px) {
   .text-box {
-    left: 262px;
+    left: 315px;
     top: 104%;
   }
 }
+} */

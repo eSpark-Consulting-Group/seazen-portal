@@ -3,13 +3,23 @@ import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./style.module.css";
 import { useState } from "react";
+import { styled } from "@mui/material/styles";
+import { lighten } from "@mui/material/styles";
+
+const StyledOuterContainer = styled("div")(({ theme }) => ({
+  backgroundColor: lighten(theme.palette.themeColor.light, 0.9),
+}));
 
 const PickupDetails = () => {
   const [branch, setBranch] = useState("Choose a Branch ");
   const [pickupTime, setPickupTime] = useState("14 August 2023, ASAP ");
 
+  const handleBranchSelect = (selectedBranch) => {
+    setBranch(selectedBranch);
+  };
+
   return (
-    <div className={styles.pickupOuterContainer}>
+    <StyledOuterContainer className={styles.pickupOuterContainer}>
       <div className={styles.pickupInnerContainer}>
         <div className={styles.pickupLeftDropdownContainer}>
           <div className={styles.pickupLeftDropdownContainerHeadingContainer}>
@@ -37,7 +47,6 @@ const PickupDetails = () => {
                 />
               </span>
             </Dropdown.Toggle>
-
             <Dropdown.Menu
               className={styles.dropdownMenu}
               style={{
@@ -160,7 +169,7 @@ const PickupDetails = () => {
           </Dropdown>
         </div>
       </div>
-    </div>
+    </StyledOuterContainer>
   );
 };
 

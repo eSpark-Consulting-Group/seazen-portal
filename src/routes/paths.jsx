@@ -45,7 +45,7 @@ export const paths = {
 export const routes = {
   home: "/",
   error: "*",
-  menu: "/menu/:option?",
+  menu: "/menu/:restaurant/:option?",
   details: "/details",
   address: "/address",
   cart: "/cart",

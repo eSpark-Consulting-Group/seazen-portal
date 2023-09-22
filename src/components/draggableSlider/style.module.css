@@ -49,8 +49,13 @@ body {
   display: none;
 }
 
+.box:hover{
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
+}
+
 .boxCaption {
-  background: #fff;
+  background: #fff ;
   border-radius: 16px;
   opacity: 1;
   width: 120px;

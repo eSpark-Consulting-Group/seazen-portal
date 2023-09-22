@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Card from '../../components/adressList';
 import MyAddresses from '../../components/header/myAdresses';
+import { AddressesButton } from '../../components/adressList/addressesButton';
 
  const App = () => {
   const cardData = [
@@ -38,7 +39,7 @@ import MyAddresses from '../../components/header/myAdresses';
   ];
 
   return (
-    <div className="app">
+    <div className="app ">
       <MyAddresses/>
       {cardData.map((data) => (
         <Card
@@ -53,6 +54,7 @@ import MyAddresses from '../../components/header/myAdresses';
           imageUrl={data.imageUrl}
         />
       ))}
+      <AddressesButton/>
     </div>
   );
 };

@@ -10,6 +10,7 @@
   height: 56px;
   background: #ffffff00 0% 0% no-repeat padding-box;
   opacity: 1;
+  margin-bottom: 45px;
 }
 
 .leftIcons img {
@@ -31,7 +32,7 @@
 }
 
 .logo h3 {
-  top: 11px;
+  top: 30px;
   left: 101px;
   width: 174px;
   height: 22px;
@@ -41,4 +42,13 @@
   color: #1f2933;
   opacity: 1;
   position: absolute;
+}
+
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .logo h3 {
+    left: 135px;
+  }
+  .rightIcons img {
+    left: 380px;
+  }
 }

@@ -5,14 +5,14 @@ import { useNavigate } from "react-router";
 const MyAddresses = () => {
   const navigate = useNavigate();
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} container-fluid`}>
       <div
         className={styles.leftIcons}
         onClick={() => {
           navigate(-1);
         }}
       >
-        <img src="/assets/img/Icon - Arrow.svg" alt="Arrow Icon" />
+        <img src="/assets/img/Icon - Arrow.svg"></img>
       </div>
       <div className={styles.logo}>
         {" "}

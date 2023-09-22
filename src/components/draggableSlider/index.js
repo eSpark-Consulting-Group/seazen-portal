@@ -44,7 +44,7 @@ export default function App() {
   });
 
   return (
-    <div className={styles.App}>
+    <div className={styles.app}>
       <div className={styles.sliderTile}>
         <h3>Popular Dishes</h3>
       </div>
@@ -53,7 +53,7 @@ export default function App() {
           return (
             <Box
               key={index}
-              index={index} // Pass the index prop here
+              index={index}
               imageUrl={info.imageUrl}
               caption={info.caption}
               captionImage={info.captionImage}

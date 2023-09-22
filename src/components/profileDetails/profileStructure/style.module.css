@@ -171,3 +171,31 @@
   left: 10px;
   top: 8px;
 }
+
+.profileFooter {
+  margin-top: 70px;
+}
+
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .profileSection {
+    width: 380px;
+  }
+  .profileEditButton {
+    left: 325px;
+  }
+  .profileFooter {
+    margin-top: 220px;
+  }
+}
+
+@media screen and (max-width: 379px) and (min-width: 350px) {
+  .profileFooter {
+    margin-top: 220px;
+  }
+}
+
+@media screen and (max-width: 340px) {
+  .profileFooter {
+    margin-top: 265px;
+  }
+}

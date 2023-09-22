@@ -65,3 +65,9 @@
 .containerStyle {
   margin-top: 10px;
 }
+
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .containerStyle {
+    margin-left: 30px;
+  }
+}
