@@ -40,7 +40,7 @@ import { AddressesButton } from '../../components/adressList/addressesButton';
 
   return (
     <div className="app ">
-      <MyAddresses/>
+      <MyAddresses title="Your Addresses" />
       {cardData.map((data) => (
         <Card
           key={data.id}

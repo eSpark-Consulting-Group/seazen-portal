@@ -15,7 +15,7 @@
   width: 19px;
   height: 17px;
   opacity: 1;
-  margin-left: 5px;
+  margin-left: 14px;
   margin-top: 13px;
 }
 
@@ -26,7 +26,7 @@
   color: #40484e;
   opacity: 1;
   margin-top: -35px;
-  margin-left: 30px;
+  margin-left: 34px;
 }
 
 .addresses-home-title2 {
@@ -35,8 +35,8 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  margin-top: -27px;
-  margin-left: 30px;
+  margin-top: -30px;
+  margin-left: 34px;
 }
 
 .addresses-delete-button {
@@ -67,7 +67,8 @@
   height: 0px;
   border: 1px dashed #b1b1b1;
   opacity: 1;
-  margin-left: -68px;
+  margin-left: -57px;
+  margin-top: 10px;
 }
 
 .addresses-delete-text {
@@ -97,7 +98,7 @@
 }
 
 .addresses-button-container {
-  margin-left: 88px;
+  margin-left: 100px;
   margin-top: 5px;
 }
 
@@ -110,7 +111,7 @@
   border-radius: 12px;
   opacity: 1;
   /* position: absolute; */
-  padding-left: 217px;
+  padding-left: 215px;
   margin-top: -54px;
 }
 
