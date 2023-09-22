@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
+import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import styles from './style.module.css'
+import { paths } from "../../../routes/paths";
 
 
 const PaperCard = styled(Paper)(({ theme }) => ({
@@ -18,6 +20,8 @@ const MenuCardItem = ({item: {id,
   foodImage,
   category: { color } }}) => {
 
+  const navigate = useNavigate();
+
   const handleClick = ()=>{
     alert("Forward") ;
   }
@@ -27,10 +31,12 @@ const MenuCardItem = ({item: {id,
     <Stack
       spacing={0}
       alignItems="center"
+      onClick={() => {navigate(paths.details)}}
       sx={{
         width: "100%",
         padding:"2% 5%"
       }}
+      
     >
       <Stack
         sx={{

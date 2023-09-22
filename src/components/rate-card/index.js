@@ -1,6 +1,7 @@
 import React from 'react'
 import { Modal, Slide, Rating } from '@mui/material';
 import { useState } from 'react';
+import styles from '../../screens/myorder/style.module.css'
 
 const RateCard = ({ isVisible, handleClose }) => {
 
@@ -19,10 +20,10 @@ const RateCard = ({ isVisible, handleClose }) => {
 
             >
                 <Slide direction="up" in={isVisible}>
-                    <div style={{ backgroundColor: "white" , position:"absolute", bottom:"0"}} className='rate-screen'>
-                        <div id='rate-head'>How satisfied are you with your order?</div>
-                        <div className='rate-cat'>
-                            <div id='rate-cat-text'>Overall Experience</div>
+                    <div style={{ backgroundColor: "white" , position:"absolute", bottom:"0"}} className={`${styles.rate_screen}`}>
+                        <div id={`${styles.rate_head}`}>How satisfied are you with your order?</div>
+                        <div className={`${styles.rate_cat}`}>
+                            <div id={`${styles.rate_cat_text}`}>Overall Experience</div>
                             <Rating
                                 name="simple-controlled"
                                 value={experience}
@@ -36,8 +37,8 @@ const RateCard = ({ isVisible, handleClose }) => {
                                 }}
                             />
                         </div>
-                        <div className='rate-cat'>
-                            <div id='rate-cat-text'>Food & Drinks<br />Quality</div>
+                        <div className={`${styles.rate_cat}`}>
+                            <div id={`${styles.rate_cat_text}`}>Food & Drinks<br />Quality</div>
                             <Rating
                                 name="simple-controlled"
                                 value={quality}
@@ -51,8 +52,8 @@ const RateCard = ({ isVisible, handleClose }) => {
                                 }}
                             />
                         </div>
-                        <div className='rate-cat'>
-                            <div id='rate-cat-text'>Presentation</div>
+                        <div className={`${styles.rate_cat}`}>
+                            <div id={`${styles.rate_cat_text}`}>Presentation</div>
                             <Rating
                                 name="simple-controlled"
                                 value={presentation}
@@ -66,8 +67,8 @@ const RateCard = ({ isVisible, handleClose }) => {
                                 }}
                             />
                         </div>
-                        <div className='rate-cat'>
-                            <div id='rate-cat-text'>Service &<br />Speed</div>
+                        <div className={`${styles.rate_cat}`}>
+                            <div id={`${styles.rate_cat_text}`}>Service &<br />Speed</div>
                             <Rating
                                 name="simple-controlled"
                                 value={service}

@@ -95,7 +95,8 @@ const Navbar = (props) => {
           </div>
 
           <div className="icon-btn">
-            <img src="/assets/img/Icon - Search.svg" alt="search icon" />
+            <img src="/assets/img/Icon - Search.svg" alt="search icon"
+              onClick={() => {navigate(paths.search)}} />
           </div>
         </div>
       )}
