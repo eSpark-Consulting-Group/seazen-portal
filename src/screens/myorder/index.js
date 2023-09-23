@@ -6,10 +6,8 @@ import RateCard from "../../components/rate-card";
 import OrderNavbar from "../../components/order-navbar";
 import { paths } from "../../routes/paths";
 import { useNavigate } from "react-router";
-import styles from './style.module.css'
-
-
-
+import styles from "./style.module.css";
+import FooterSection from "../../components/footer/footerTextBox/footerSection";
 
 const MyOrderScreen = () => {
   const navigate = useNavigate();
@@ -90,7 +88,6 @@ const MyOrderScreen = () => {
   //// cart empty
   //const itemsList = null;
 
-
   function formatDateToCustomFormat(date) {
     const options = {
       year: "numeric",
@@ -103,8 +100,7 @@ const MyOrderScreen = () => {
     return formattedDate;
   }
 
-
-  const emptyCartText = "You don't have any orders yet."
+  const emptyCartText = "You don't have any orders yet.";
 
   const handleItems = (item, index) => {
     setState(item.type);
@@ -146,50 +142,53 @@ const MyOrderScreen = () => {
         })}
       </div>
       <div className={`${styles.my_order_cards}`}>
-       {(itemsList === "" || itemsList === null)
-       ?  <div className={`${styles.empty_orders}`}>
+        {itemsList === "" || itemsList === null ? (
+          <div className={`${styles.empty_orders}`}>
             <img src="/assets/img/cart_image.svg" alt="" />
             <div className={`${styles.empty_orders_desc}`}>{emptyCartText}</div>
-            <Button 
+            <Button
               sx={{
-                width:"326px",
-                height:"56px",
-                fontSize:"22px",
-                fontWeight:"500",
-                backgroundColor:"#98694E",
-                color:"#fff"
+                width: "326px",
+                height: "56px",
+                fontSize: "22px",
+                fontWeight: "500",
+                backgroundColor: "#98694E",
+                color: "#fff",
               }}
-              onClick={() => {navigate(paths.home)}}>
+              onClick={() => {
+                navigate(paths.home);
+              }}
+            >
               Start Ordering
-              </Button>
+            </Button>
           </div>
-       :  <div>
+        ) : (
+          <div>
             {itemsList.map((item, index) =>
-            item.type === state ? (
-            <OrderCard
-              item={item}
-              key={index}
-              handleReceipt={handleReceipt}
-              handleReorder={handleReorder}
-              handleRate={handleRate}
-            />
-          ) : state === "All" ? (
-            <OrderCard
-              item={item}
-              key={index}
-              handleReceipt={handleReceipt}
-              handleReorder={handleReorder}
-              handleRate={handleRate}
-            />
-          ) : null
-          
-               )}
-              <div className={`${styles.comment_section}`}>
-                 <img src="/assets/img/Comment_Icon.png" alt="" />
-              </div>
+              item.type === state ? (
+                <OrderCard
+                  item={item}
+                  key={index}
+                  handleReceipt={handleReceipt}
+                  handleReorder={handleReorder}
+                  handleRate={handleRate}
+                />
+              ) : state === "All" ? (
+                <OrderCard
+                  item={item}
+                  key={index}
+                  handleReceipt={handleReceipt}
+                  handleReorder={handleReorder}
+                  handleRate={handleRate}
+                />
+              ) : null
+            )}
+            <div className={`${styles.comment_section}`}>
+            <FooterSection />
+            </div>
+            
           </div>
-       }
-
+        )}
       </div>
 
       <RateCard />

@@ -16,7 +16,7 @@ const SearchBar = ({ isSearchOpen, searchParams, toggleSearch, handleSearchItem,
       />
       <input className={`${styles.mySearchBarInput}`} type="text" value={value} placeholder='Search...' onChange={(event) => handleSearchItem(event)} />
       <img
-        src="/assets/img/Closebutton.svg"
+        src="/assets/img/closebutton.svg"
         alt="close_icon"
         className={`${styles.searchicon}`}
         onClick={() => {navigate(paths.home)}}

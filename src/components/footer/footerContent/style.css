@@ -1,29 +1,33 @@
 .footer-style {
   text-align: left;
-  font:  14px Titillium Web !important;
+  font: normal normal 600 16px Titillium Web !important;
   letter-spacing: 0px;
-  color: #1F2933;
+  color: #1f2933;
   opacity: 1;
   font-size: 18px;
   padding-top: 10px;
   padding-left: 10px;
 }
+
 .terms-style {
   text-align: left;
   font: normal normal 600 10px/20px Titillium Web;
   letter-spacing: 0px;
-  color: #959FA8;
+  color: #959fa8;
   opacity: 1;
   padding-left: 10px;
   cursor: pointer;
 }
+
 .text-box {
   display: flex;
-    float: right;
-    margin-top: -60px;
+  float: right;
+  margin-top: -60px;
 }
+
 .footer-container {
   margin-bottom: -32px;
+  
 }
 
 /* @media screen and (max-width: 500px) and (min-width: 400px) {
@@ -33,15 +37,16 @@
     left: 355px;
   }
 }
+
 @media screen and (max-width: 380px) and (min-width: 350px) {
   .text-box {
     top: 103%;
   }
 }
+
 @media screen and (max-width: 350px) {
   .text-box {
     left: 315px;
     top: 104%;
   }
-}
 } */

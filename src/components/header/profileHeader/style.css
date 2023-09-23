@@ -32,6 +32,7 @@
   opacity: 1;
   position: absolute;
   border: 1px solid #c0cdd7;
+  cursor: pointer;
 }
 
 .profileHeaderaccount-icon {

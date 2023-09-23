@@ -1,5 +1,11 @@
-/* .footer-section {
-    position: absolute;
-    left: 82%;
-    top: 97%;
-  } */
+.footer-section {
+  position: fixed;
+  bottom: 12px;
+  left: 315px;
+  z-index: 1000;
+}
+
+.footer-section img {
+  width: 40px;
+  height: 40px;
+}
