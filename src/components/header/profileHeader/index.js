@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./style.css";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { paths } from "../../../routes/paths";
 
 const ProfileHeader = (props) => {
@@ -33,10 +33,10 @@ const ProfileHeader = (props) => {
     <nav className="profile-header">
       <div
         className="profileHeaderaccount"
-        onClick={() => navigate(paths.home)}
+        onClick={()=>navigate(paths.home)}
       >
-        <div className="profileHeaderaccount-icon">
-          <img src="/assets/img/Group 330.svg" alt="Account Icon" />
+        <div className="profileHeaderaccount-icon" >
+          <img src="/assets/img/Group 330.svg" alt="Account Icon"/>
         </div>
       </div>
       <div className="profileHeaderlogo">

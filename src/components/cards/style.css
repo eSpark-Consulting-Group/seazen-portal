@@ -90,6 +90,12 @@
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
 }
+.button-icons-styles-none {
+  padding: 1px 12px 1px 2px;
+  margin-left: -2px;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
 
 .inner-svg-container {
   position: absolute;

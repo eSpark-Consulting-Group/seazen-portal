@@ -19,33 +19,37 @@ const bull = (
   </Box>
 );
 
-const images =[
-
-{
-  name:"first card image",
-  image: "/assets/img/15.png"
-},
-{
-  name:"second card image",
-  image: "/assets/img/21.png"
-},
-{
-  name:"third card image",
-  image: "/assets/img/17.png"
-},
-{
-  name:"fourth card image",
-  image: "/assets/img/23.png"
-},
-{
-  name:"fifth card image",
-  image: "/assets/img/19.png"
-},
-{
-  name:"sixth card image",
-  image: "/assets/img/25.png"
-},
-
+const images = [
+  {
+    name: "first card image",
+    image: "/assets/img/15.png",
+    service: { doesDelivery: false, isNear: true },
+  },
+  {
+    name: "second card image",
+    image: "/assets/img/21.png",
+    service: { doesDelivery: true, isNear: true },
+  },
+  {
+    name: "third card image",
+    image: "/assets/img/17.png",
+    service: { doesDelivery: true, isNear: false },
+  },
+  {
+    name: "fourth card image",
+    image: "/assets/img/23.png",
+    service: { doesDelivery: true, isNear: true },
+  },
+  {
+    name: "fifth card image",
+    image: "/assets/img/19.png",
+    service: { doesDelivery: false, isNear: true },
+  },
+  {
+    name: "sixth card image",
+    image: "/assets/img/25.png",
+    service: { doesDelivery: false, isNear: false },
+  },
 ];
 
 const icons = [
@@ -116,7 +120,6 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
     icons,
     [icons[0], icons[1], icons[3]],
     [icons[1], icons[3]],
-
   ];
 
   const isMediumScreen = useMediaQuery(
@@ -125,9 +128,11 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const isSmallScreen = useMediaQuery(
     "(max-width: 500px) and (min-width: 385px)"
   );
-  const isSmallerScreen = useMediaQuery("(max-width: 350px ) (min-width: 290px)");
+  const isSmallerScreen = useMediaQuery(
+    "(max-width: 350px ) (min-width: 290px)"
+  );
   const isVerySmallScreen = useMediaQuery("(max-width: 290px)");
-  
+
   // Adjust cardWidth to apply 120px width to screens less than 350px
   const cardWidth = isSmallScreen
     ? isMediumScreen
@@ -140,26 +145,72 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
     : isVerySmallScreen
     ? 145
     : 161;
-  
-  const getCardClassName = () => {
+
+  const getCardClassName = (service) => {
     if (orderTypeFilter) {
-      return orderTypeFilter === "delivery"
-        ? "restaurantCard-border-delivery"
-        : "restaurantCard-border-near";
-    } else {
-      return "restaurantCard-no-border";
+      const { delivery, near, selectedNow } = orderTypeFilter;
+      const { doesDelivery, isNear } = service;
+      if (delivery && !near) {
+        return doesDelivery && "restaurantCard-border-delivery";
+      }
+
+      if (!delivery && near) {
+        return isNear && "restaurantCard-border-near";
+      }
+
+      if (delivery && near) {
+        if (doesDelivery && isNear) {
+          return selectedNow === "delivery"
+            ? "restaurantCard-border-delivery"
+            : "restaurantCard-border-near";
+        }
+        if (!doesDelivery && isNear) {
+          return "restaurantCard-border-near";
+        }
+        if (!isNear && doesDelivery) {
+          return "restaurantCard-border-delivery";
+        }
+      }
+
+      if (!doesDelivery && !isNear) {
+        return "restaurantCard-no-border";
+      }
     }
   };
 
-  const getClassNameAccordingToFilter = (orderTypeId) => {
+  const getClassNameAccordingToFilter = (orderTypeId, service) => {
     if (
       orderTypeId === clickedButtonIndex &&
       orderTypeFilter &&
       orderTypeId !== 1
     ) {
-      return orderTypeFilter === "delivery"
-        ? "button-icons-styles-delivery"
-        : "button-icons-styles-near";
+      const { delivery, near, selectedNow } = orderTypeFilter;
+      const { doesDelivery, isNear } = service;
+      if (delivery && !near) {
+        return doesDelivery && "button-icons-styles-delivery";
+      }
+
+      if (!delivery && near) {
+        return isNear && "button-icons-styles-near";
+      }
+
+      if (delivery && near) {
+        if (doesDelivery && isNear) {
+          return selectedNow === "delivery"
+            ? "button-icons-styles-delivery"
+            : "button-icons-styles-near";
+        }
+        if (!doesDelivery && isNear) {
+          return "button-icons-styles-near";
+        }
+        if (!isNear && doesDelivery) {
+          return "button-icons-styles-delivery";
+        }
+      }
+
+      if (!doesDelivery && !isNear) {
+        return "button-icons-styles-none";
+      }
     }
   };
 
@@ -178,7 +229,7 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
           key={index}
           className={`restaurantCards restaurantCard-${
             isSmallScreen ? "small" : "large"
-          } ${getCardClassName()}`}
+          } ${getCardClassName(images[index].service)}`}
         >
           <Card
             sx={{
@@ -205,7 +256,10 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
                   return (
                     <div key={i} className="icon-row">
                       <img
-                        className={getClassNameAccordingToFilter(icon.id)}
+                        className={getClassNameAccordingToFilter(
+                          icon.id,
+                          images[index].service
+                        )}
                         src={icon.image}
                         alt={`Icon ${i + 1}`}
                         style={{ width: iconWidth, height: iconHeight }}

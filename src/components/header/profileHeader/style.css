@@ -33,6 +33,7 @@
   position: absolute;
   border: 1px solid #c0cdd7;
   cursor: pointer;
+  z-index: 1000;
 }
 
 .profileHeaderaccount-icon {

@@ -12,65 +12,89 @@ const OrderTypeButtonExpandable = ({
   isButtonExpanded,
   clicked,
   id,
-  handleOrderTypeFilter
+  handleOrderTypeFilter,
 }) => {
   const [expanded, setToggleExpanded] = useState(false);
   const [filterClassDelivery, setToggleFilterClassDelivery] = useState(false);
   const [filterClassNear, setToggleFilterClassNear] = useState(false);
-  const [filterBoth, setFilterBoth] = useState(false);
+  const [filterSelectedNow, setFilterSelectedNow] = useState();
+
+  useEffect(()=>{
+    if(expanded === false){
+      handleOrderTypeFilter(false, false,filterSelectedNow);
+      setToggleFilterClassDelivery(false);
+      setToggleFilterClassNear(false);
+
+    }
+  },[expanded])
+  
+    useEffect(() => {
+      handleOrderTypeFilter(filterClassDelivery, filterClassNear,filterSelectedNow);
+    }, [filterClassDelivery, filterClassNear]);
+  
+    const handleFilterClick = (orderType) => {
+      if(!filterClassDelivery){
+        orderType === "delivery" && setFilterSelectedNow(orderType);
+      }
+      if(!filterClassNear){
+        orderType === "near" && setFilterSelectedNow(orderType);
+      }
+      if (orderType === "delivery") {
+        setToggleFilterClassDelivery(!filterClassDelivery);
+      } else {
+        setToggleFilterClassNear(!filterClassNear);
+      }
+    };
   
 
   const handleClick = () => {
     if (id !== 1) {
       setToggleExpanded(!expanded);
-      setIsButtonExpanded({ expanded: !expanded, id: id })
+      setIsButtonExpanded({ expanded: !expanded, id: id });
     } else {
-      setIsButtonExpanded({ expanded: false })
+      setIsButtonExpanded({ expanded: false });
     }
     handleButtonClickIndex(id);
-  }
-  useEffect(() => {
-    if (filterBoth) {
-      handleOrderTypeFilter("both");
-    } else if (filterClassNear) {
-      handleOrderTypeFilter("near");
-    } else if (filterClassDelivery) {
-      handleOrderTypeFilter("delivery");
-    } else {
-      handleOrderTypeFilter(null);
-    }
-  }, [filterClassNear, filterClassDelivery, filterBoth]);
+  };
 
-  const handleFilterClick = (orderType) => {
-    if (orderType === "delivery") {
-      setToggleFilterClassDelivery(!filterClassDelivery);
-      if (filterBoth) {
-        setFilterBoth(false);
-      }
-    } else if (orderType === "near") {
-      setToggleFilterClassNear(!filterClassNear);
-      if (filterBoth) {
-        setFilterBoth(false);
-      }
-    } else if (orderType === "both") {
-      setToggleFilterClassDelivery(false);
-      setToggleFilterClassNear(false);
-      setFilterBoth(!filterBoth);
-    }
-  }
 
   return (
     <div
-      className={`custom-button ${isButtonExpanded.expanded && isButtonExpanded.id === id ? "expanded" : ""} ${clicked ? "clicked" : ""
-        }`}
+      className={`custom-button ${
+        isButtonExpanded.expanded && isButtonExpanded.id === id
+          ? "expanded"
+          : ""
+      } ${clicked ? "clicked" : ""}`}
     >
-      <img src={iconSrc} alt="Icon" className="orderTypebutton-icon" onClick={handleClick} />
-      {((isButtonExpanded.expanded && isButtonExpanded.id === id) || !isButtonExpanded.expanded) && <span className={`orderTypebutton-text`}>{text}</span>}
+      <img
+        src={iconSrc}
+        alt="Icon"
+        className="orderTypebutton-icon"
+        onClick={handleClick}
+      />
+      {((isButtonExpanded.expanded && isButtonExpanded.id === id) ||
+        !isButtonExpanded.expanded) && (
+        <span className={`orderTypebutton-text`}>{text}</span>
+      )}
       <span className="orderTypebutton-content">
-        {(isButtonExpanded.expanded && isButtonExpanded.id === id) && (
+        {isButtonExpanded.expanded && isButtonExpanded.id === id && (
           <div className="options">
-            <button className={`orderTypebutton-style-one ${filterClassDelivery && 'orderTypebutton-style-one-active'}`} onClick={() => handleFilterClick("delivery")}>{buttonOneText}</button>
-            <button className={`orderTypebutton-style-two ${filterClassNear && 'orderTypebutton-style-two-active'}`} onClick={() => handleFilterClick("near")}>{buttonTwoText}</button>
+            <button
+              className={`orderTypebutton-style-one ${
+                filterClassDelivery && "orderTypebutton-style-one-active"
+              }`}
+              onClick={() => handleFilterClick("delivery")}
+            >
+              {buttonOneText}
+            </button>
+            <button
+              className={`orderTypebutton-style-two ${
+                filterClassNear && "orderTypebutton-style-two-active"
+              }`}
+              onClick={() => handleFilterClick("near")}
+            >
+              {buttonTwoText}
+            </button>
           </div>
         )}
       </span>
@@ -78,10 +102,12 @@ const OrderTypeButtonExpandable = ({
   );
 };
 
-
 const RestaurantsOrderTypeButton = () => {
   const [clickedButtonIndex, setClickedButtonIndex] = useState(null);
-  const [isButtonExpanded, setIsButtonExpanded] = useState({ expanded: false, id: null });
+  const [isButtonExpanded, setIsButtonExpanded] = useState({
+    expanded: false,
+    id: null,
+  });
   const [orderTypeFilter, setOrderTypeFilter] = useState();
 
   const handleButtonClickIndex = (index) => {
@@ -94,9 +120,13 @@ const RestaurantsOrderTypeButton = () => {
     }
   };
 
-  const handleOrderTypeFilter = (orderType) => {
-    setOrderTypeFilter(orderType);
-  }
+  const handleOrderTypeFilter = (deliveryFilter, nearFilter, filterSelectedNow) => {
+    setOrderTypeFilter({
+      delivery: deliveryFilter,
+      near: nearFilter,
+      selectedNow: filterSelectedNow
+    });
+  };
 
   const data = [
     {
@@ -115,7 +145,7 @@ const RestaurantsOrderTypeButton = () => {
       iconSrc: "/assets/img/Delivery.svg",
       OrderType: "Delivery",
       locations: "Available for Delivery",
-      where: "Delivers to Me"
+      where: "Delivers to Me",
     },
     {
       iconSrc: "/assets/img/Pickup.svg",
@@ -130,28 +160,29 @@ const RestaurantsOrderTypeButton = () => {
         <h4>Restaurants</h4>
       </div>
       <div className="orderType-button-container">
-        {
-          data.map((item, index) => {
-            return (
-              <OrderTypeButtonExpandable
-                iconSrc={item.iconSrc}
-                text={item.OrderType}
-                key={index}
-                id={index}
-                handleButtonClickIndex={handleButtonClickIndex}
-                buttonOneText={item.locations}
-                buttonTwoText={item.where}
-                setIsButtonExpanded={setIsButtonExpanded}
-                isButtonExpanded={isButtonExpanded}
-                clicked={index === 1 ? clickedButtonIndex === 1 : false}
-                handleOrderTypeFilter={handleOrderTypeFilter}
-              />
-            );
-          })
-        }
+        {data.map((item, index) => {
+          return (
+            <OrderTypeButtonExpandable
+              iconSrc={item.iconSrc}
+              text={item.OrderType}
+              key={index}
+              id={index}
+              handleButtonClickIndex={handleButtonClickIndex}
+              buttonOneText={item.locations}
+              buttonTwoText={item.where}
+              setIsButtonExpanded={setIsButtonExpanded}
+              isButtonExpanded={isButtonExpanded}
+              clicked={index === 1 ? clickedButtonIndex === 1 : false}
+              handleOrderTypeFilter={handleOrderTypeFilter}
+            />
+          );
+        })}
       </div>
       {/* Pass the clickedButtonIndex to BasicCard */}
-      <BasicCard clickedButtonIndex={clickedButtonIndex} orderTypeFilter={orderTypeFilter} />
+      <BasicCard
+        clickedButtonIndex={clickedButtonIndex}
+        orderTypeFilter={orderTypeFilter}
+      />
     </>
   );
 };
