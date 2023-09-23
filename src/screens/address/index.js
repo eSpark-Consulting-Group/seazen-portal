@@ -46,7 +46,7 @@ const AddressForm = () => {
         handleAddressTypeChange={handleAddressTypeChange}
       />
 
-      <div className="edit-container">
+      <div className="edit-container px-3">
         <p className="address-name">Salmiya</p>
         <button className="edit-button" onClick={() => navigate(paths.location)}>
           <span className="edit-text">Edit Location</span>

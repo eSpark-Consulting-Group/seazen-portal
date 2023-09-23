@@ -3,7 +3,7 @@ import "./style.css";
 
 export const AppartmentAdress = () => {
   return (
-    <form className="container-style">
+    <form className="container-style px-3">
       <input
         className="form-style"
         type="text"

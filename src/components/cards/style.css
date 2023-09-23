@@ -70,6 +70,12 @@
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
 }
+
+.button-icons-styles-both{
+  background-color: #5f934e !important;
+
+
+}
 .button-icons-styles-near {
   background-color: #4f948a !important;
   padding: 1px 12px 1px 2px;
