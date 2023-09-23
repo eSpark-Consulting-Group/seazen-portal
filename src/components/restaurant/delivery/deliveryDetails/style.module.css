@@ -47,12 +47,17 @@
   font-weight: bold !important;
   border: none !important;
   padding: 0 !important;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 4px auto;
+  gap: 5px;
 }
 
 .dropdownIconContainer {
   display: inline-block;
   width: 12px;
-  height: 12px;
+  height: 14px;
 }
 
 .dropdownIconContainer img {
@@ -73,6 +78,6 @@
   display: none !important;
 }
 
-.dropdownMenu.show {
+.dropdownMenu {
   transform: translate(0px, 37px) !important;
 }

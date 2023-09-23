@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
-.menu_card_outer_container {
+.menuCardOuterContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,7 +12,7 @@
   width: 100%;
 }
 
-.menu_card_active_indicator {
+.menuCardActiveIndicator {
   width: 6px;
   height: 100%;
   background-color: #026754;
@@ -24,26 +24,26 @@
   cursor: pointer;
 }
 
-.menu_card_inner_container {
+.menuCardInnerContainer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
 }
 
-.menu_card_image_container {
+.menuCardImageContainer {
   width: 100px;
   height: 100px;
 }
 
-.menu_card_price_text_container {
+.menuCardPriceTextContainer {
   padding: 4px 0px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.menu_card_heading_text {
+.menuCardHeadingText {
   font-family: Titillium Web;
   font-weight: 700;
   font-size: 13px;
@@ -51,7 +51,7 @@
   color: #40484e;
 }
 
-.menu_card_sub_text {
+.menuCardSubText {
   font-family: Titillium Web;
   font-weight: 300;
   font-size: 11px;
@@ -59,7 +59,7 @@
   color: #40484e;
 }
 
-.menu_card_price_add_to_cart_container {
+.menuCardPriceAddToCartContainer {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -67,7 +67,7 @@
   font-family: Titillium Web;
 }
 
-.menu_card_price_container {
+.menuCardPriceContainer {
   width: 85px;
   display: flex;
   flex-direction: row;
@@ -75,19 +75,19 @@
   align-items: center;
 }
 
-.menu_card_currency {
+.menuCardCurrency {
   font-size: 10pt;
   color: #777777;
   font-weight: 600;
 }
 
-.menu_card_item_price {
+.menuCardItemPrice {
   font-size: 16pt;
   font-weight: 700;
   color: #026754;
 }
 
-.menu_card_buttons_quantity_container {
+.menuCardButtonsQuantityContainer {
   width: 38px;
   display: flex;
   flex-direction: column;
@@ -95,7 +95,7 @@
   justify-content: space-between;
 }
 
-.menu_card_buttons_quantity_container_active {
+.menuCardButtonsQuantityContainerActive {
   width: 38px;
   display: flex;
   flex-direction: column;
@@ -103,7 +103,7 @@
   justify-content: space-between;
 }
 
-.menu_card_qunatity_label {
+.menuCardQunatityLabel {
   width: 100%;
   display: flex;
   align-items: center;
@@ -114,7 +114,7 @@
   font-weight: 800;
 }
 
-.menu_card_add_to_cart_button_container {
+.menuCardAddToCartButtonContainer {
   width: 32px;
   display: flex;
   flex-direction: column;
@@ -122,7 +122,7 @@
   gap: 4px;
 }
 
-.menu_card_add_to_cart_button {
+.menuCardAddToCartButton {
   width: 30px;
   height: 29px;
   border: none;
@@ -130,12 +130,12 @@
   border-radius: 12px;
 }
 
-.menu_card_add_to_cart_button img {
+.menuCardAddToCartButton img {
   width: 14px;
 }
 
 
-.menu_card_dropdown_container{
+.menuCardDropdownContainer{
   width: 290px;
   background-color: white;
   display: flex;
@@ -144,7 +144,7 @@
   border-bottom-right-radius: 12px;
 }
 
-.menu_card_dropdown_inner_container{
+.menuCardDropdownInnerContainer{
   width: 270px;
   margin-bottom: 10px;
   margin-top: 8px;
@@ -153,7 +153,7 @@
   gap: 6px;
 }
 
-.menu_card_position_relative_container{
+.menuCardPositionRelativeContainer{
   display: flex;
   flex-direction: column;
   align-items: center;

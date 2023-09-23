@@ -1,5 +1,5 @@
 import React from "react";
-import "./style.css";
+import styles from "./style.module.css";
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useSearchParams } from "react-router-dom";
@@ -29,12 +29,13 @@ const MenuItems = () => {
   };
 
   return (
-    <div className="menu_item_outer_container px-3 px-sm-4">
-      <div className="menu_item_inner_container">
-        <div className="menu_dropdown_container">
+    <div className={`${styles.menuItemOuterContainer} px-3 px-sm-4`}>
+      <div className={styles.menuItemInnerContainer}>
+        <div className={styles.menuDropdownContainer}>
           <Dropdown>
-            <Dropdown.Toggle
+            <Dropdown.Toggle 
               variant="success"
+              className={styles.dropdownToggle}
               id="dropdown-basic"
               style={{
                 backgroundColor: "transparent",
@@ -46,7 +47,7 @@ const MenuItems = () => {
                 padding: "0",
               }}
             >
-              <span className="dropdown_icon_container_menu">
+              <span className={styles.dropdownIconContainerMenu}>
                 <img src="/assets/img/menu_Icon.svg" alt="chevron_down_icon" />
               </span>
             </Dropdown.Toggle>
@@ -74,7 +75,7 @@ const MenuItems = () => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <div className="menu_itmes_text_container">
+        <div className={styles.menuItmesTextContainer}>
           {menu_categories.map((category, index) => (
             <button
               key={`menu_category_${index}`}

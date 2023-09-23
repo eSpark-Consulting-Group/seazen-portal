@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import MenuCard from "../menu_card/index.js";
-import "./style.css";
+import styles from "./style.module.css";
 import { paths } from "../../../../routes/paths.jsx";
 
 const MenuCardListContainer = () => {
@@ -24,32 +24,32 @@ const MenuCardListContainer = () => {
 
   return (
     <div>
-    <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-5">
-      <div className="menu_card_list_inner_container">
+    <div className={`${styles.menuCardListOuterContainer} px-3 px-sm-4 pt-3 pt-sm-4 pb-5`}>
+      <div className={styles.menuCardListInnerContainer}>
         <div
-          className={`card_list_title_search_container ${
-            isSearchOpen ? "expanded_search" : ""
+          className={`${styles.cardListTitleSearchContainer} ${
+            isSearchOpen ? styles.expanded_search : ""
           }`}
         >
-          <div className="card_list_title">
+          <div className={styles.cardListTitle}>
             {searchParams.get("category") || "Burrito in a Bowl"}
           </div>
-          <div className={`search ${isSearchOpen ? "expanded_search" : ""}`}>
+          <div className={`${styles.search} ${isSearchOpen ? styles.expanded_search : ""}`}>
             <div
-              className={`searchwrapper ${
-                isSearchOpen ? "expanded_search" : ""
+              className={`${styles.searchwrapper} ${
+                isSearchOpen ? styles.expanded_search : ""
               }`}
             >
               <img
                 src="/assets/img/Icon - Search.svg"
                 alt="search_icon"
-                className="searchicon"
+                className={styles.searchIcon}
                 onClick={toggleSearch}
               />
               <input
                 type="text"
                 placeholder="Search"
-                className={`searchbar ${isSearchOpen ? "expanded_search" : ""}`}
+                className={`${styles.searchbar} ${isSearchOpen ? styles.expanded_search : ""}`}
               />
             </div>
           </div>
@@ -81,7 +81,7 @@ const MenuCardListContainer = () => {
 
         
 
-        {/* <div className="comment_button_container">
+        {/* <div className={styles.commentButtonContainer}>
           <button>
             <img src="/assets/img/comment_icon.svg" alt="comment_icon" />
           </button>

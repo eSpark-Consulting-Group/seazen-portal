@@ -4,19 +4,17 @@ import ExtraItems from "../extraItems";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
-import "./style.css";
+import styles from "./style.module.css";
 import { paths } from "../../../../routes/paths";
-
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
 }));
 
 const StyledItemPrice = styled("div")(({ theme }) => ({
- color: theme.palette.themeColor.main,
+  color: theme.palette.themeColor.main,
   // Add any other styles you need for the item price here
 }));
-
 
 const AddToCartButton = styled("button")(({ theme }) => ({
   backgroundColor: theme.palette.themeColor.main,
@@ -82,7 +80,7 @@ const MenuCard = ({
           }}
         >
           <div
-            className="menu_card_image_container pointer"
+            className={`${styles.menuCardImageContainer} pointer`}
             onClick={() => {
               setMenuCardDropdownOpen(!menuCardDropdownOpen);
             }}
@@ -90,43 +88,45 @@ const MenuCard = ({
             <img src={foodImage} alt="menu_card_image" />
           </div>
           <div
-            className="menu_card_price_text_container pointer"
+            className={`${styles.menuCardPriceTextContainer} pointer`}
             onClick={() => {
               navigate(paths.details);
             }}
           >
-            <div className="menu_card_heading_text">{foodItem}</div>
-            <div className="menu_card_sub_text">{foodIngredients}</div>
-            <div className="menu_card_price_add_to_cart_container">
-              <div className="menu_card_price_container">
-                <div className="menu_card_currency">{foodCurrency}</div>
-                <StyledItemPrice className="menu_card_item_price">{foodPrice}</StyledItemPrice>
+            <div className={styles.menuCardHeadingText}>{foodItem}</div>
+            <div className={styles.menuCardSubText}>{foodIngredients}</div>
+            <div className={styles.menuCardPriceAddToCartContainer}>
+              <div className={styles.menuCardPriceContainer}>
+                <div className={styles.menuCardCurrency}>{foodCurrency}</div>
+                <StyledItemPrice className={styles.menuCardItemPrice}>
+                  {foodPrice}
+                </StyledItemPrice>
               </div>
             </div>
           </div>
         </Stack>
 
-        <div className="menu_card_buttons_quantity_container">
-          <StyledItemPrice className="menu_card_qunatity_label">{`${foodItemQuantity}x`}</StyledItemPrice>
-          <div className="menu_card_add_to_cart_button_container">
-  <AddToCartButton
-    onClick={handleClickAdd}
-    className="menu_card_add_to_cart_button"
-  >
-    <img src={plusIcon} alt="button_icon" />
-  </AddToCartButton>
+        <div className={styles.menuCardButtonsQuantityContainer}>
+          <StyledItemPrice
+            className={styles.menuCardQunatityLabel}
+          >{`${foodItemQuantity}x`}</StyledItemPrice>
+          <div className={styles.menuCardAddToCartButtonContainer}>
+            <AddToCartButton
+              onClick={handleClickAdd}
+              className={styles.menuCardAddToCartButton}
+            >
+              <img src={plusIcon} alt="button_icon" />
+            </AddToCartButton>
 
-  {foodItemQuantity > 0 && (
-    <AddToCartButton
-      onClick={handleClickSubtract}
-      className="menu_card_add_to_cart_button"
-    >
-      <img src={conditionalIcon} alt="button_icon" />
-    </AddToCartButton>
-  )}
-</div>
-
-          
+            {foodItemQuantity > 0 && (
+              <AddToCartButton
+                onClick={handleClickSubtract}
+                className={styles.menuCardAddToCartButton}
+              >
+                <img src={conditionalIcon} alt="button_icon" />
+              </AddToCartButton>
+            )}
+          </div>
         </div>
       </Stack>
       {menuCardDropdownOpen && (

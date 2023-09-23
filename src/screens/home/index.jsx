@@ -15,6 +15,13 @@ import BasicCard from "../../components/cards";
 import RestaurantDetails from "../../components/restaurant/details";
 import App from "../../components/draggableSlider";
 import { AddressesButton } from "../../components/adressList/addressesButton";
+import ExtraItems from "../../components/restaurant/menu/extraItems";
+import MenuCard from "../../components/restaurant/menu/menu_card";
+import MenuCardListContainer from "../../components/restaurant/menu/menu_card_list_container";
+import MenuItems from "../../components/restaurant/menu/menu_items";
+import { Menu } from "@mui/material";
+import { Details } from "@mui/icons-material";
+import TabsDynamicConditionalComponent from "../../components/tabs/tabsConditionalRenderingComponent";
 
 const Home = () => {
   return (
@@ -28,11 +35,18 @@ const Home = () => {
       {/* <RestaurantOptionsServicesContainer /> */}
       {/* <PickupDetails /> */}
       {/* <RestaurantsOrderTypeButton /> */}
-      {/* <BasicCard /> */}
-      {/* <PickupDetails /> */}
-      {/* <RestaurantDetails /> */}
-      {/* <App /> */}
-      <AddressesButton />
+      {/* <BasicCard />
+      <PickupDetails />
+      <RestaurantDetails />
+      <App />
+      <AddressesButton /> */}
+      
+      <TabsDynamicConditionalComponent />
+      {/* <ExtraItems /> */}
+      {/* <MenuCard /> */}
+      {/* <MenuCardListContainer /> */}
+      {/* <MenuItems /> */}
+
       {/* <DraggableSlider /> */}
       {/* <Footer showFooterSection={true} /> */}
     </div>

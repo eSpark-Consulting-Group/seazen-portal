@@ -1,5 +1,5 @@
 import React from "react";
-import "./style.css"
+import styles from "./style.module.css"
 
 const ExtraItems = ({ extraItemName, extraItemCount, setExtraItemCount }) => {
 
@@ -13,11 +13,11 @@ const ExtraItems = ({ extraItemName, extraItemCount, setExtraItemCount }) => {
         }
     }
   return (
-    <div className="extra_item_outer_container">
-      <div className="extra_item_text_container">{extraItemName}</div>
-      <div className="extra_item_input_stepper my-1">
+    <div className={styles.extraItemOuterContainer}>
+      <div className={styles.extraItemTextContainer}>{extraItemName}</div>
+      <div className={`${styles.extraItemInputStepper} my-1`}>
         <button onClick={handleClickSubtractCount}>-</button>
-        <div className="extra_item_input_stepper_count mx-1">{extraItemCount}</div>
+        <div className={`${styles.extraItemInputStepperCount} mx-1`}>{extraItemCount}</div>
         <button onClick={handleClickAddCount}>+</button>
       </div>
     </div>

@@ -28,6 +28,7 @@ const PickupDetails = () => {
           <Dropdown style={{ width: "163px" }}>
             <Dropdown.Toggle
               variant="success"
+              className={styles.dropdownToggle}
               id="dropdown-basic"
               style={{
                 backgroundColor: "transparent",
@@ -90,6 +91,7 @@ const PickupDetails = () => {
           <Dropdown style={{ width: "163px" }}>
             <Dropdown.Toggle
               variant="success"
+              className={styles.dropdownToggle}
               id="dropdown-basic"
               style={{
                 backgroundColor: "transparent",
