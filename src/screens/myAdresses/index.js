@@ -15,6 +15,7 @@ import { AddressesButton } from '../../components/adressList/addressesButton';
       block: 'Block 11, Oman Street,',
       home: 'Home No: 33, ',
       floor: 'Floor: 2 Flat: 4',
+      AdditionalDirections: 'Across BE School',
     },
     {
       id: 2,
@@ -25,6 +26,7 @@ import { AddressesButton } from '../../components/adressList/addressesButton';
       block: 'Block 11, Oman Street,',
       home: 'Building No: 33, Sahar Building',
       floor: 'Floor: 10 Flat: 20',
+      AdditionalDirections: 'Across BE School',
     },
     {
       id: 3,
@@ -35,6 +37,7 @@ import { AddressesButton } from '../../components/adressList/addressesButton';
       block: 'Block 11, Oman Street,',
       home: 'Building No: 33, Sahar Building',
       floor: 'loor: 10, Seazen Office',
+      AdditionalDirections: 'Across BE School',
     },
   ];
 
@@ -52,6 +55,7 @@ import { AddressesButton } from '../../components/adressList/addressesButton';
           home={data.home}
           floor={data.floor}
           imageUrl={data.imageUrl}
+          AdditionalDirections={data.AdditionalDirections}
         />
       ))}
       <AddressesButton/>

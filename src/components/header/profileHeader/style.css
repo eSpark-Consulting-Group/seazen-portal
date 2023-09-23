@@ -23,8 +23,8 @@
 .profileHeaderaccount {
   top: 22px;
   left: 27px;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   background: #ffffff 0% 0% no-repeat padding-box;
   border-radius: 50%;
   box-shadow: 0px 24px 48px #314f7c1f;
@@ -87,6 +87,7 @@
 
 .profileHeaderflag-profile {
   position: relative;
+  height: 100%;
 }
 
 .profileHeadercircle-container {
@@ -109,16 +110,20 @@
 }
 
 .profileHeaderpopup {
-  position: inherit;
-  top: 80px;
-  transform: translateY(110%);
+  position: absolute;
+  /* top: 80px; */
+  /* transform: translateY(110%); */
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   padding: 20px;
   border-radius: 17px;
   z-index: 2; /* Place above the overlay */
+  bottom: -15px;
 }
-
+.profileHeaderpopupWrapper {
+  position: relative;
+  height: 100%;
+}
 .profileHeaderpopup-overlay {
   position: fixed;
   top: 0;
@@ -129,13 +134,18 @@
   z-index: 1; /* Ensure it's above other content */
 }
 
-.profileHeaderpopup h2 {
+.profileHeaderpopup-heading h2 {
   text-align: center;
   font: normal normal bold 16px/28px Titillium Web;
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  padding-bottom: 22px;
+}
+
+.profileHeaderpopup-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .profileHeadercountry-list {
@@ -339,20 +349,21 @@
 .profile-header * {
   box-sizing: content-box;
 }
+.profile-header {
+  height: 100%;
+}
 
 @media screen and (max-width: 500px) and (min-width: 360px) {
   .profileHeaderpopup {
     position: fixed;
-    top: 235px;
+    /* top: 235px; */
   }
-  
 }
-
 
 @media screen and (max-width: 360px) and (min-width: 330px) {
   .profileHeaderpopup {
     position: fixed;
-    top: 149px;
+    /* top: 149px; */
     /* margin-bottom: 40px; */
     height: 294px;
   }
@@ -364,13 +375,12 @@
 @media screen and (max-width: 330px) {
   .profileHeaderpopup {
     position: fixed;
-    top: 390px;
+    /* top: 390px; */
   }
   .profileHeaderpopup2 {
-    left: 183px;
+    left: 188px;
   }
 }
-
 
 @media screen and (max-width: 500px) and (min-width: 380px) {
   .profileHeaderlogo {
@@ -381,5 +391,8 @@
   }
   .profileHeaderoption {
     left: 370px;
+  }
+  .profileHeaderpopup2 {
+    left: 215px;
   }
 }

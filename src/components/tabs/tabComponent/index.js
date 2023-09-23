@@ -83,7 +83,7 @@ export default function IconPositionTabs({
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
             <DineInIcon />
-            <span style={{ marginLeft: "8px" }}>Dine In</span>
+            <span style={{ marginLeft: "8px", fontWeight: 600 }}>Dine In</span>
           </div>
         }
         sx={{
@@ -104,7 +104,7 @@ export default function IconPositionTabs({
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
             <CateringIcon />
-            <span style={{ marginLeft: "8px" }}>Catering</span>
+            <span style={{ marginLeft: "8px", fontWeight: 600 }}>Catering</span>
           </div>
         }
         sx={{
@@ -125,7 +125,7 @@ export default function IconPositionTabs({
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
             <DeliveryIcon />
-            <span style={{ marginLeft: "8px" }}>Delivery</span>
+            <span style={{ marginLeft: "8px" , fontWeight: 600}}>Delivery</span>
           </div>
         }
         sx={{
@@ -146,7 +146,7 @@ export default function IconPositionTabs({
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
             <PickupIcon />
-            <span style={{ marginLeft: "8px" }}>Pickup</span>
+            <span style={{ marginLeft: "8px", fontWeight: 600 }}>Pickup</span>
           </div>
         }
         sx={{

@@ -39,7 +39,7 @@ export const Branches = () => {
       <BranchContent />
       <RestaurantInfo restaurants={restaurantData} />;
       <div className="branches-footer">
-        <Footer />
+        <Footer showFooterSection />
       </div>
     </div>
   );

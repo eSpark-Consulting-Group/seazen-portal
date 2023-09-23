@@ -250,7 +250,7 @@
   color: #c0c4c8;
 }
 
-/* @media screen and (max-width: 500px) and (min-width: 400px) {
+/* /* @media screen and (max-width: 500px) and (min-width: 400px) {
   .topping-selection {
     left: 36px;
   }
@@ -259,3 +259,8 @@
     margin-left: 20px;
   }
 } */
+
+.extra-topping-instruction{
+  font-size: 10px;
+  font-weight: 400;
+}

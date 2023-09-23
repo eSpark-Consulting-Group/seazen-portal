@@ -1,9 +1,18 @@
 .branches-footer {
   position: absolute;
-  top: 643px;
+  /* top: 643px; */
   left: 12px;
+  bottom: 30px;
+  width: 340px;
+}
+
+@media screen and (max-width: 600px) {
+  .branches-footer {
+    width: 92%;
+  }
 }
 
 .branches-screen-container{
   margin-top: 50px;
+  /* position: relative; */
 }

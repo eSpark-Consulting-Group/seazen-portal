@@ -4,8 +4,15 @@
   gap: 10px;
   justify-items: center;
   padding-top: 20px;
-  margin-left: -1px;
 }
+
+.footer-text p{
+  color: #959FA8;
+  font-size: 10px;
+  margin-bottom: 0px !important;
+  padding-left: 10px;
+} 
+
 .restaurantCard-border-delivery {
   border: 2px solid #93674e;
   border-radius: 12px; /* You can adjust the border color and width */
@@ -17,7 +24,7 @@
 
 /* Style for the cards without a border */
 .restaurantCard-no-border {
-  border: none;
+  border: 2px solid white;
 }
 
 .restaurantCards {
@@ -27,7 +34,7 @@
 
 .restaurantCard-img {
   width: 101%;
-  height: 100%;
+  height: 80px;
   object-fit: cover;
   margin-bottom: -8px;
 }

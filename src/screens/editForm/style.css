@@ -5,7 +5,7 @@
   color: #1f2933;
   opacity: 1;
   position: absolute;
-  top: 100px;
+  top: 120px;
   left: 109px;
 }
 
@@ -119,7 +119,8 @@
 }
 
 .editProfile-button {
-  top: 624px;
+  /* top: 624px; */
+  bottom: 24px;
   left: 19px;
   width: 326px;
   height: 56px;

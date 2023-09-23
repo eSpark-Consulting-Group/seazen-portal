@@ -5,6 +5,8 @@ import UpdateSection from "../../components/orderPlace/timeUpdateSection";
 import AddressSection from "../../components/orderPlace/addressSection";
 import OrderIdSection from "../../components/orderPlace/orderIdSection";
 import FooterSection from "../../components/footer/footerTextBox/footerSection";
+import { useNavigate } from "react-router-dom";
+import { paths } from "../../routes/paths";
 
 const OrderScreen = () => {
   const [progress, setProgress] = useState([
@@ -22,6 +24,7 @@ const OrderScreen = () => {
   ]);
 
   const [count, setCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (count < 4) StartProgress();
@@ -42,7 +45,7 @@ const OrderScreen = () => {
     <div className="order-screen">
       <div id="close-button">
         <div id="close-btn-tag">
-          <p style={{ color: "#1F2933" }}>
+          <p  onClick={() => navigate(paths.home)} style={{ color: "#1F2933", cursor: "pointer" }}>
             <strong>᙭</strong>
           </p>
         </div>
@@ -79,7 +82,9 @@ const OrderScreen = () => {
       <AddressSection />
       <OrderIdSection />
       <ContactUs />
+     <div className="orderconfirm-footer">
       <FooterSection />
+     </div>
     </div>
   );
 };

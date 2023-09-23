@@ -55,7 +55,11 @@ const ProfileHeader = (props) => {
           )}
           {isPopupOpen && (
             <div className="profileHeaderpopup">
-              <h2>Select which country to order from</h2>
+              <div>
+                <div className="profileHeaderpopup-heading" >
+                  <h2>Select which country to order from</h2>
+                </div>
+              </div>
               <div className="profileHeadercountry-list">
                 {countries.map((country, index) => (
                   <div
@@ -109,7 +113,7 @@ const ProfileHeader = (props) => {
                   className="profileHeaderbutton-cancel"
                   onClick={() => setIsCountryPopupOpen(false)}
                 >
-                  <span className="profileHeadercancel-text">Cancel</span>
+                  <span className="profileHeadercancel-text">Back</span>
                 </button>
                 <button
                   className="profileHeaderbutton-confirm"

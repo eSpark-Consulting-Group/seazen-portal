@@ -124,7 +124,7 @@ export default function ToppingSelection() {
                         isLastItem ? "disabled-text" : ""
                       }`}
                     >
-                      {name}
+                      {name} <span className="extra-topping-instruction">(Each +KWD 0.500)</span>
                     </label>
                   </div>
                   {!isLastItem && (
