@@ -34,7 +34,7 @@ export default function CheckboxGroup() {
     const totalPrice = updatedCheckedState.reduce(
       (sum, currentState, index) => {
         if (currentState === true) {
-          return sum + (index === 0 ? 0 : size[index].price);
+          return sum + (index === 0 ? 0 : size[index - 1].price); 
         }
         return sum;
       },
@@ -57,7 +57,6 @@ export default function CheckboxGroup() {
   const checkboxStyle = (index) => ({
     color: isCheckedArray[index] ? theme.palette.themeColor.main : "",
   });
-
 
   return (
     <div>
@@ -85,8 +84,8 @@ export default function CheckboxGroup() {
                       name={name}
                       checked={isCheckedArray[index]}
                       className="large-checkbox"
-                      onChange={() => handleCheckboxChange(index)} // Pass the index
-                      style={checkboxStyle(index)} // Pass the index
+                      onChange={() => handleCheckboxChange(index)}
+                      style={checkboxStyle(index)}
                     />
                     <span className="custom-checkbox"></span>
                     <label
@@ -96,7 +95,7 @@ export default function CheckboxGroup() {
                       {name}
                     </label>
                   </div>
-                  {index < size.length - 1 && (
+                  {index !== 0 && ( // Only display price if it's not the first item
                     <div className="size-right-section">
                       <StyledTextColor>
                         {getFormattedPrice(price)}
@@ -104,7 +103,7 @@ export default function CheckboxGroup() {
                     </div>
                   )}
                 </div>
-                {index < size.length - 1 && <hr />} {/* Conditionally render <hr> */}
+                {index < size.length - 1 && <hr />}
               </li>
             );
           })}

@@ -115,6 +115,11 @@
   margin-top: -88px;
 }
 
+.addresses-map-section img {
+  width: 83px;
+  height: 83px;
+}
+
 .addresses-name {
   text-align: left;
   font: normal normal normal 12px/14px Titillium Web;

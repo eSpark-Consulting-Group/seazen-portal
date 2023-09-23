@@ -103,6 +103,10 @@
   background: #93694f 0% 0% no-repeat padding-box;
 }
 
+.custom-button.clicked .orderTypebutton-text {
+ color:#ffffff;
+}
+
 .orderTypebutton-text.clicked {
   color: white;
 }

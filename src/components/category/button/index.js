@@ -17,6 +17,8 @@ const OrderTypeButtonExpandable = ({
   const [expanded, setToggleExpanded] = useState(false);
   const [filterClassDelivery, setToggleFilterClassDelivery] = useState(false);
   const [filterClassNear, setToggleFilterClassNear] = useState(false);
+  const [filterBoth, setFilterBoth] = useState(false);
+  
 
   const handleClick = () => {
     if (id !== 1) {
@@ -27,22 +29,33 @@ const OrderTypeButtonExpandable = ({
     }
     handleButtonClickIndex(id);
   }
-
   useEffect(() => {
-    if (filterClassNear) {
+    if (filterBoth) {
+      handleOrderTypeFilter("both");
+    } else if (filterClassNear) {
       handleOrderTypeFilter("near");
     } else if (filterClassDelivery) {
       handleOrderTypeFilter("delivery");
     } else {
       handleOrderTypeFilter(null);
     }
-  }, [filterClassDelivery, filterClassNear])
+  }, [filterClassNear, filterClassDelivery, filterBoth]);
 
   const handleFilterClick = (orderType) => {
     if (orderType === "delivery") {
       setToggleFilterClassDelivery(!filterClassDelivery);
-    } else {
+      if (filterBoth) {
+        setFilterBoth(false);
+      }
+    } else if (orderType === "near") {
       setToggleFilterClassNear(!filterClassNear);
+      if (filterBoth) {
+        setFilterBoth(false);
+      }
+    } else if (orderType === "both") {
+      setToggleFilterClassDelivery(false);
+      setToggleFilterClassNear(false);
+      setFilterBoth(!filterBoth);
     }
   }
 

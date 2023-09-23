@@ -139,7 +139,7 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
     ? 170
     : isVerySmallScreen
     ? 145
-    : 164;
+    : 161;
   
   const getCardClassName = () => {
     if (orderTypeFilter) {

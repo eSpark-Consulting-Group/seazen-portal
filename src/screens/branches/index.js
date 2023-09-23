@@ -15,13 +15,13 @@ export const Branches = () => {
     },
     {
       id: 2,
-      name: "Argan Al-Bida",
+      name: "Argan Al-Bidaa",
       weekdayHours: "9:00 AM - 7:00 PM",
       weekendHours: "10:00 AM - 8:00 PM",
     },
     {
       id: 3,
-      name: "AlKout Mall",
+      name: "Al-Kout Mall",
       weekdayHours: "9:00 AM - 22:00 PM",
       weekendHours: "10:00 AM - 8:00 PM",
     },

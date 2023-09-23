@@ -126,7 +126,7 @@ const MyOrderScreen = () => {
               onClick={() => handleItems(item, index)}
               key={index}
               className="cat-item"
-              sx={{ p: 1, border: " 1px solid #C0CDD7", color: "#40484E" }}
+              sx={{ p: 1, border: " 1px solid #C0CDD7", color: "#40484E", fontSize: "normal normal bold 12px/28px Titillium Web" }}
             >
               {item.type}
             </Button>

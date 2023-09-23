@@ -163,3 +163,10 @@
     left: 56px;
   }
 }
+
+@media screen and (max-width: 350px) {
+  .editProfile-button {
+    bottom: -165px;
+    left: 22px;
+  }
+}
