@@ -18,6 +18,7 @@ import { Branches } from "../screens/branches";
 import Addresses from "../screens/myAdresses";
 import MyOrderScreen from "../screens/myorder";
 import Receipt from "../screens/receipt";
+import SearchScreen from "../screens/searchPage";
 
 export const paths = {
   home: "/",
@@ -40,6 +41,7 @@ export const paths = {
   details: "/details",
   branches: "/branches",
   addresses: "/my-addresses",
+  search: "search"
 };
 
 export const routes = {
@@ -63,6 +65,7 @@ export const routes = {
   terms: "/terms",
   branches: "/branches",
   addresses: "/my-addresses",
+  search: "/search"
 };
 
 export const publicRoutes = {
@@ -160,6 +163,11 @@ export const publicRoutes = {
     name: "Receipt",
     path: routes.receipt,
     component: <Receipt />,
+  },
+  [paths.search]: {
+    name: "Search",
+    path: routes.search,
+    component: <SearchScreen />,
   },
 };
 

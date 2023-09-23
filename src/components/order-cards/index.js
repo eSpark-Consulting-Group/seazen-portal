@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Card, Rating } from '@mui/material';
-import '../../screens/myorder/style.css'
+import styles from '../../screens/myorder/style.module.css'
 import RateCard from '../rate-card';
 
 
@@ -22,36 +22,36 @@ const OrderCard = ({ item, handleReorder, handleReceipt }) => {
 
     return (
         <Card style={{ border: "1px solid #C0CDD7", marginTop: "10px" }} >
-            <div className='card-nav'>
+            <div className={`${styles.card_nav}`}>
                 <img src="/assets/img/Group 15.svg" alt="" />
-                <div className='card-nav-tags'>
-                    <div className='status-tag' style={{ backgroundColor: `${item.status.color}` }}>{item.status.text}</div>
-                    <Button sx={{ p: 1, border: ' 1px solid #C0CDD7', color: '#40484E' }} variant='outlined' className='receipt-tag' onClick={handleReceipt}>Receipt</Button>
+                <div className={`${styles.card_nav_tags}`}>
+                    <div className={`${styles.status_tag}`} style={{ backgroundColor: `${item.status.color}` }}>{item.status.text}</div>
+                    <Button sx={{ p: 1, border: ' 1px solid #C0CDD7', color: '#40484E' }} variant='outlined' className={`${styles.receipt_tag}`} onClick={handleReceipt}>Receipt</Button>
                 </div>
             </div>
-            <hr className='break-line' />
-            <div className='card-content'>
-                <div className='card-content-left'>
-                    <div className='card-content-left-lt'>
+            <hr className={`${styles.break_line}`} />
+            <div className={`${styles.card_content}`}>
+                <div className={`${styles.card_content_left}`}>
+                    <div className={`${styles.card_content_left_lt}`}>
                         <img src={iconPath} alt="" />
                         <div>
-                            <div className='card-content-left-text'>{item.type} order</div>
-                            <div className='card-content-left-text'>Order Id : {item.orderId}</div>
+                            <div className={`${styles.card_content_left_text}`}>{item.type} order</div>
+                            <div className={`${styles.card_content_left_text}`}>Order Id : {item.orderId}</div>
                         </div>
                     </div>
-                    <div className='card-content-left-text-regular'>Placed at {item.placeAt}</div>
+                    <div className={`${styles.card_content_left_text_regular}`}>Placed at {item.placeAt}</div>
                 </div>
-                <div className='card-content-right'>
-                    <div id='card-content-right-price'>{item.priceTag}</div>
-                    <div id='card-content-right-unit'>{item.currency}</div>
+                <div className={`${styles.card_content_right}`}>
+                    <div id={`${styles.card_content_right_price}`}>{item.priceTag}</div>
+                    <div id={`${styles.card_content_right_unit}`}>{item.currency}</div>
                 </div>
             </div>
-            <div className={item.rateTag.isActive && item.reOrderTag.isActive ? 'card-footer' : "card-single-footer"}>
+            <div className={item.rateTag.isActive && item.reOrderTag.isActive ? `${styles.card_footer}` : `${styles.card_single_footer}`}>
                 {average!==0 
                 ? <Rating name="read-only" value={average}/> 
-                : item.rateTag.isActive && <Button sx={{ p: 1, border: ' 1px solid #C0CDD7', color: '#40484E' }} variant='outlined' className='card-footer-rate' onClick={() => handleRate(true)}>Rate</Button>}
+                : item.rateTag.isActive && <Button sx={{ p: 1, border: ' 1px solid #C0CDD7', color: '#40484E' }} variant='outlined' className={`${styles.card_footer_rate}`} onClick={() => handleRate(true)}>Rate</Button>}
                                
-                {item.reOrderTag.isActive && <Button sx={{ p: 1, border: ' 1px solid #C0CDD7', color: '#40484E' }} variant='outlined' className='card-footer-reorder' href='' onClick={handleReorder}>Reorder</Button>}
+                {item.reOrderTag.isActive && <Button sx={{ p: 1, border: ' 1px solid #C0CDD7', color: '#40484E' }} variant='outlined' className={`${styles.card_footer_reorder}`} href='' onClick={handleReorder}>Reorder</Button>}
             </div>
             <RateCard isVisible={openRate} handleClose={(val)=>handleClose(val)} />
         </Card>
