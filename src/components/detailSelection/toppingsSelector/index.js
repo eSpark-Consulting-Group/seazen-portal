@@ -7,6 +7,8 @@ import { lighten } from "@mui/material/styles";
 import { Checkbox } from "@mui/material";
 import { useTheme } from "@mui/material/styles"; // Import useTheme from MUI
 
+
+
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.92), // Apply the background color
   // Add any other styles you need for the outer container here
@@ -78,7 +80,7 @@ export default function ToppingSelection() {
   };
 
   const checkboxStyle = {
-    color: isChecked ? theme.palette.themeColor.main : "",
+    color: isChecked ? theme.palette.themeColor.main : '',
   };
   return (
     <div>
@@ -87,8 +89,8 @@ export default function ToppingSelection() {
         <p className={styles.toppingSmallTitle}>(Choose up to 7)</p>
         <p className={styles.toppingTitleOptional}>(Optional)</p>
       </StyledOuterContainer>
-      <div className={styles.toppingSelectionCheckboxCounter}>
-        <ul className={styles.toppingList}>
+      <div className={styles.toppingSelectioncheckboxCounter}>
+        <ul className={styles.toppingsList}>
           {toppings.map(({ name, price }, index) => {
             const adjustedIndex = index + 2000;
             const isLastItem = index === toppings.length - 1;
@@ -109,10 +111,11 @@ export default function ToppingSelection() {
                       disabled={isLastItem}
                       onChange={handleCheckboxChange}
                       style={checkboxStyle}
+                      
                     />
                     <span
-                      className={`custom-checkbox ${
-                        isLastItem ? "disabled" : ""
+                      className={`${styles.customCheckbox} ${
+                        isLastItem ? styles.disabled : ""
                       }`}
                     ></span>
                     <label
@@ -121,14 +124,14 @@ export default function ToppingSelection() {
                         isLastItem ? styles.disabledText : ""
                       }`}
                     >
-                      {name}
+                      {name} <span className={styles.extraToppingInstruction}>(Each +KWD 0.500)</span>
                     </label>
                   </div>
                   {!isLastItem && (
                     <div className={styles.leftSectionCounter}>
                       <button
                         onClick={() => handleDecrement(name)} // Use the topping name here
-                        className={styles.counterButtonRight}
+                       className={styles.counterButtonRight}
                       >
                         <span className={styles.counterIconLeft}>-</span>
                       </button>
@@ -144,7 +147,7 @@ export default function ToppingSelection() {
                     </div>
                   )}
                 </div>
-                <hr className={styles.hr} />
+                <hr />
               </li>
             );
           })}

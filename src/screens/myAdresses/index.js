@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import Card from '../../components/adressList';
 import MyAddresses from '../../components/header/myAdresses';
 import { AddressesButton } from '../../components/adressList/addressesButton';
+import styles from "./style.module.css"
 
- const App = () => {
+const App = () => {
   const cardData = [
     {
       id: 1,
@@ -39,7 +40,7 @@ import { AddressesButton } from '../../components/adressList/addressesButton';
   ];
 
   return (
-    <div className="app ">
+    <div className={styles.app}>
       <MyAddresses/>
       {cardData.map((data) => (
         <Card

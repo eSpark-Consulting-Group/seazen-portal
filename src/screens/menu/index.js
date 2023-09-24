@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import getRestaurantDetails, {
   GET_RESTAURANT_DETAILS_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantDetails";
-import "./style.css";
 import { useLocation, useParams } from "react-router";
 import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,

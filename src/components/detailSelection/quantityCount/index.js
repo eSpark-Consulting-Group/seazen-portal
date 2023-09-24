@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./style.css";
+import styles from "./style.module.css";
 import { styled } from "@mui/material/styles"; // Import styled from MUI
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
@@ -25,15 +25,21 @@ function CountContainer() {
   };
 
   return (
-    <StyledOuterContainer className="count-container">
-      <span className="quantity-label">Quantity</span>
-      <div className="count">
-        <StyledOuterButton className="minus-button" onClick={decrementCount}>
-          <span className="minus-style">-</span>
+    <StyledOuterContainer className={styles.countContainer}>
+      <span className={styles.quantityLabel}>Quantity</span>
+      <div className={styles.count}>
+        <StyledOuterButton
+          className={styles.minusButton}
+          onClick={decrementCount}
+        >
+          <span className={styles.minusStyle}>-</span>
         </StyledOuterButton>
-        <span className="quantitycount-style">{count}</span>
-        <StyledOuterButton className="pluss-button" onClick={incrementCount}>
-          <span className="pluss-style">+</span>
+        <span className={styles.quantitycountStyle}>{count}</span>
+        <StyledOuterButton
+          className={styles.plussButton}
+          onClick={incrementCount}
+        >
+          <span className={styles.plussStyle}>+</span>
         </StyledOuterButton>
       </div>
     </StyledOuterContainer>

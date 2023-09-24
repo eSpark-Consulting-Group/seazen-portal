@@ -1,6 +1,6 @@
 import React from "react";
-import "./style.css";
 import Select from "react-select";
+import styles from "./style.module.css";
 
 const DineInForm = ({
   firstName,
@@ -22,7 +22,7 @@ const DineInForm = ({
   handleSpecialRequirementsChange,
   handleSubmit,
 }) => {
-  const styles = {
+  const customStyles = {
     control: (baseStyles, state) => ({
       ...baseStyles,
       borderColor: state.isFocused ? "#C0CDD7" : "#C0CDD7",
@@ -63,23 +63,23 @@ const DineInForm = ({
   };
 
   return (
-    <div className="dine_in_form_outer_container">
-      <div className="dine_in_form_inner_container">
-        <div className="dine_in_form_heading_text">
-          Fill your details below and we will contact you at the earliest.
+    <div className={styles.dineInFormOuterContainer}>
+      <div className={styles.dineInFormInnerContainer}>
+        <div className={styles.dineInFormHeadingText}>
+          Fill your details below, and we will contact you at the earliest.
         </div>
-        <div className="dine_in_form_divider_line"></div>
-        <div className="dine_in_form_contact_details">
-          <div className="dine_in_form_contact_details_heading">
+        <div className={styles.dineInFormDividerLine}></div>
+        <div className={styles.dineInFormContactDetails}>
+          <div className={styles.dineInFormContactDetailsHeading}>
             Contact Details
           </div>
           <form
             action=""
-            className="dine_in_form_contact_details_form_container"
+            className={styles.dineInFormContactDetailsFormContainer}
           >
-            <div className="dine_in_form_contact_details_name_container">
+            <div className={styles.dineInFormContactDetailsNameContainer}>
               <input
-                className="first_name_input"
+                className={styles.firstNameInput}
                 type="text"
                 name="firstName"
                 placeholder="First Name"
@@ -88,7 +88,7 @@ const DineInForm = ({
                 required
               />
               <input
-                className="first_name_input"
+                className={styles.lastNameInput}
                 type="text"
                 name="lastName"
                 placeholder="Last Name"
@@ -97,9 +97,9 @@ const DineInForm = ({
                 required
               />
             </div>
-            <div className="dine_in_form_contact_details_phonenumber_container">
+            <div className={styles.dineInFormContactDetailsPhonenumberContainer}>
               <input
-                className="first_name_input"
+                className={styles.countryCodeInput}
                 type="text"
                 name="CountryCode"
                 placeholder="+965"
@@ -108,7 +108,7 @@ const DineInForm = ({
                 required
               />
               <input
-                className="first_name_input"
+                className={styles.phoneNumberInput}
                 type="text"
                 name="PhoneNumber"
                 placeholder="Mobile Number"
@@ -119,18 +119,18 @@ const DineInForm = ({
             </div>
           </form>
         </div>
-        <div className="dine_in_form_queue_information">
-          <div className="dine_in_form_queue_information_heading">
-            Queue information details
+        <div className={styles.dineInFormQueueInformation}>
+          <div className={styles.dineInFormQueueInformationHeading}>
+            Queue Information Details
           </div>
-          <form className="dine_in_form_queue_information_form_container">
-            <div className="select_container">
+          <form className={styles.dineInFormQueueInformationFormContainer}>
+            <div className={styles.selectContainer}>
               <Select
-                placeholder="Select branch"
+                placeholder="Select Branch"
                 value={selectBranch}
                 options={dummy_options}
                 onChange={handleChangeSelectBranch}
-                styles={styles}
+                styles={customStyles}
                 getOptionLabel={(e) => (
                   <div
                     style={{
@@ -148,13 +148,13 @@ const DineInForm = ({
                 )}
               />
             </div>
-            <div className="select_container">
+            <div className={styles.selectContainer}>
               <Select
-                placeholder="Seating area"
+                placeholder="Seating Area"
                 value={seatingArea}
                 options={dummy_options}
                 onChange={handleChangeSeatingArea}
-                styles={styles}
+                styles={customStyles}
                 getOptionLabel={(e) => (
                   <div
                     style={{
@@ -172,13 +172,13 @@ const DineInForm = ({
                 )}
               />
             </div>
-            <div className="select_container">
+            <div className={styles.selectContainer}>
               <Select
                 placeholder="Number of Persons"
                 value={numberOfPersons}
                 options={dummy_options}
                 onChange={handleChangeNumberOfPersons}
-                styles={styles}
+                styles={customStyles}
                 getOptionLabel={(e) => (
                   <div
                     style={{
@@ -197,10 +197,10 @@ const DineInForm = ({
               />
             </div>
             <textarea
-              className="special_requirement_text_area"
+              className={styles.specialRequirementTextArea}
               name="SpecialRequirement"
               id="SpecialRequirement"
-              placeholder="Special requirement"
+              placeholder="Special Requirement"
               value={specialRequirements}
               onChange={handleSpecialRequirementsChange}
             ></textarea>
@@ -208,7 +208,7 @@ const DineInForm = ({
         </div>
         <button
           type="submit"
-          className="dine_in_form_submit_button"
+          className={styles.dineInFormSubmitButton}
           onClick={handleSubmit}
         >
           Submit

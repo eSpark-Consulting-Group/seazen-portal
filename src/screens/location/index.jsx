@@ -26,6 +26,7 @@ import "@reach/combobox/styles.css";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { paths } from "../../routes/paths";
 
+
 const containerStyle = {
   width: "100%",
   height: "90vh",

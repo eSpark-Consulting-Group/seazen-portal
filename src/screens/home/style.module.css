@@ -1,4 +1,4 @@
-.home-styling {
+.homeStyling {
   padding: 20px !important;
 }
 
@@ -7,6 +7,6 @@ svg {
   vertical-align: inherit !important;
 }
 
-.home-styling * {
+.homeStyling * {
   box-sizing: content-box;
 }

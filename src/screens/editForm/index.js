@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Stack from "@mui/material/Stack";
-import "./style.css";
+import styles from "./style.module.css";
 import Navbar, { NavbarVariants } from "../../components/header";
 
 export const EditForm = () => {
@@ -30,9 +30,9 @@ export const EditForm = () => {
       }}
     >
       <Navbar variant={NavbarVariants.backWithProfile} />
-      <div className="editProfile-style">
+      <div className={styles.editProfileStyle}>
         <h2>Edit Your Profile</h2>
-        <form className="editProfileform-style" onSubmit={handleSubmit}>
+        <form className={styles.editProfileformStyle} onSubmit={handleSubmit}>
           <div>
             <input
               type="text"
@@ -41,7 +41,7 @@ export const EditForm = () => {
               onChange={(e) => setFirstName(e.target.value)}
               required
               placeholder="First Name"
-              className="editProfileleft-name"
+              className={styles.editProfileleftName}
             />
           </div>
           <div>
@@ -52,7 +52,7 @@ export const EditForm = () => {
               onChange={(e) => setLastName(e.target.value)}
               required
               placeholder="Last Name"
-              className="editProfileright-name"
+              className={styles.editProfilerightName}
             />
           </div>
           <div>
@@ -63,7 +63,7 @@ export const EditForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="test@gmail.com"
-              className="editProfileemail-style"
+              className={styles.editProfileemailStyle}
             />
           </div>
           <div>
@@ -75,7 +75,7 @@ export const EditForm = () => {
               onChange={(e) => setPhone(e.target.value)}
               required
               placeholder="11223344"
-              className="editProfileright-number"
+              className={styles.editProfilerightNumber}
             />
           </div>
           <div>
@@ -84,12 +84,12 @@ export const EditForm = () => {
               id="countryCode"
               value={countryCode}
               placeholder="965"
-              className="editProfileleft-code"
+              className={styles.editProfileleftCode}
               onChange={(e) => setCountryCode(e.target.value)}
             />
           </div>
-          <button className="editProfile-button" type="submit">
-            <span className="editProfile-text">Save Changes</span>
+          <button className={styles.editProfileButton} type="submit">
+            <span className={styles.editProfileText}>Save Changes</span>
           </button>
         </form>
       </div>

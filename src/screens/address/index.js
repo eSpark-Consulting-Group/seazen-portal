@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { HomeAdress } from "../../components/address/forms/homeForm";
-import "./style.css";
+import styles from "./style.module.css";
 import AddressHeader from "../../components/address/adressHeader";
 import AddressTypeSelector from "../../components/address/addressButton";
 import { AppartmentAdress } from "../../components/address/forms/appartmentForm";
@@ -38,17 +38,17 @@ const AddressForm = () => {
   };
 
   return (
-    <div className="button-style">
+    <div className={styles.buttonStyle}>
       <AddressHeader />
       <AddressTypeSelector
         addressType={addressType}
         handleAddressTypeChange={handleAddressTypeChange}
       />
 
-      <div className="edit-container">
-        <p className="address-name">Salmiya</p>
-        <button className="edit-button" onClick={() => navigate(paths.location)}>
-          <span className="edit-text">Edit Location</span>
+      <div className={styles.editContainer}>
+        <p className={styles.addressName}>Salmiya</p>
+        <button className={styles.editButton} onClick={() => navigate(paths.location)}>
+          <span className={styles.editText}>Edit Location</span>
         </button>
       </div>
       <form onSubmit={handleSubmit}>
@@ -57,13 +57,13 @@ const AddressForm = () => {
         {addressType === "house" && <HomeAdress />}
         {addressType === "appartment" && <AppartmentAdress />}
         {addressType === "office" && <OfficeAdress />}
-        <div className="contact-style">
-          <div className="contact-section">
+        <div className={styles.contactStyle}>
+          <div className={styles.contactSection}>
           <h3>Contact Details</h3>
           </div>
-        <div className="contact-field">
+        <div className={styles.contactField}>
           <input
-            className="country-code-input"
+            className={styles.countryCodeInput}
             type="text"
             name="CountryCode"
             placeholder="+956"
@@ -71,7 +71,7 @@ const AddressForm = () => {
             onChange={handleCountryCodeChange}
           />
           <input
-            className="phone-number-input"
+            className={styles.phoneNumberInput}
             type="text"
             name="PhoneNumber"
             placeholder="Alternative Phone Number"
@@ -80,10 +80,10 @@ const AddressForm = () => {
           />
         </div>
         </div>
-        <button type="submit" className="address-button" onClick={()=>{navigate(paths.addresses)}}>
+        <button type="submit" className={styles.addressButton} onClick={()=>{navigate(paths.addresses)}}>
           {" "}
           {/* Use type='submit' to make it a submit button */}
-          <a href="#" className="address-text">
+          <a href="#" className={styles.addressText}>
             Save
           </a>
         </button>

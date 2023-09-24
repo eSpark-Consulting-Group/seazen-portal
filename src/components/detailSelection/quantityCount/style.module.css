@@ -1,4 +1,4 @@
-.count-container {
+.countContainer {
   width: 280px;
   height: 44px;
   background: #026754 0% 0% no-repeat padding-box;
@@ -16,7 +16,7 @@
   left: -10px;
 }
 
-.quantity-label {
+.quantityLabel {
   text-align: left;
   font: normal normal normal 16px/22px Titillium Web;
   letter-spacing: 0px;
@@ -27,13 +27,13 @@
   left: 18px;
 }
 
-.quantitycount-style {
+.quantitycountStyle {
   position: absolute;
   top: 1px;
   left: 30px;
 }
 
-.minus-button {
+.minusButton {
   background: #308979 0% 0% no-repeat padding-box;
   border-radius: 12px;
   opacity: 1;
@@ -43,10 +43,9 @@
   margin-left: -3px;
   margin-right: 10px;
   cursor: pointer;
-
 }
 
-.pluss-button {
+.plussButton {
   background: #308979 0% 0% no-repeat padding-box;
   box-shadow: 0px 4px 16px #74869429;
   border-radius: 12px;
@@ -59,7 +58,7 @@
   cursor: pointer;
 }
 
-.minus-style {
+.minusStyle {
   text-align: center;
   font: normal normal normal 24px/24px Titillium Web;
   letter-spacing: 0px;
@@ -68,7 +67,7 @@
   margin-left: 9px;
 }
 
-.pluss-style {
+.plussStyle {
   text-align: center;
   font: normal normal normal 24px/24px Titillium Web;
   letter-spacing: 0px;
@@ -78,11 +77,11 @@
 }
 
 @media screen and (max-width: 500px) and (min-width: 400px) {
-  .count-container {
+  .countContainer {
     margin-left: 26px;
   }
 
-  .quantity-label {
+  .quantityLabel {
     left: 20px;
   }
 

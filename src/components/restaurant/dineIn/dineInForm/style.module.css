@@ -1,4 +1,4 @@
-.dine_in_form_outer_container {
+.dineInFormOuterContainer {
   width: 100%;
   padding-top: 30px;
   margin-bottom: 54px;
@@ -7,18 +7,18 @@
   position: relative;
 }
 
-.dine_in_form_inner_container {
+.dineInFormInnerContainer {
   width: 326px;
 }
 
-.dine_in_form_heading_text {
+.dineInFormHeadingText {
   font-family: Titillium Web;
   font-size: 18px;
   font-weight: 700;
   color: #1f2933;
 }
 
-.dine_in_form_divider_line {
+.dineInFormDividerLine {
   height: 1.5px;
   width: 100%;
   background-color: #707070;
@@ -28,7 +28,7 @@
   z-index: 100;
 }
 
-.dine_in_form_contact_details {
+.dineInFormContactDetails {
   width: 326px;
   display: flex;
   flex-direction: column;
@@ -37,7 +37,7 @@
   padding-bottom: 30px;
 }
 
-.dine_in_form_contact_details_form_container {
+.dineInFormContactDetailsFormContainer {
   width: 326px;
   display: flex;
   flex-direction: column;
@@ -45,21 +45,21 @@
   align-items: center;
 }
 
-.dine_in_form_contact_details_name_container {
+.dineInFormContactDetailsNameContainer {
   width: 326px;
   display: flex;
   justify-content: space-between;
 }
 
-.dine_in_form_contact_details_heading,
-.dine_in_form_queue_information_heading {
+.dineInFormContactDetailsHeading,
+.dineInFormQueueInformationHeading {
   font-family: Titillium Web;
   font-size: 18px;
   font-weight: 700;
   color: #1f2933;
 }
 
-.first_name_input {
+.firstNameInput {
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
   border-radius: 12px;
@@ -69,12 +69,12 @@
   width: 160px;
 }
 
-.first_name_input:focus {
+.firstNameInput:focus {
   outline: none;
   color: #959fa8;
 }
 
-.first_name_input::placeholder {
+.firstNameInput::placeholder {
   text-align: left;
   font: normal normal bold 14px/28px Montserrat;
   letter-spacing: 0px;
@@ -82,12 +82,12 @@
   opacity: 1;
 }
 
-.first_name_input:focus {
+.firstNameInput:focus {
   outline: none;
   color: #959fa8;
 }
 
-.first_name_input::placeholder {
+.firstNameInput::placeholder {
   text-align: left;
   font: normal normal bold 14px/28px Montserrat;
   letter-spacing: 0px;
@@ -95,8 +95,8 @@
   opacity: 1;
 }
 
-.last_name_input {
-  width: 146px;
+.lastNameInput {
+  width: 160px;
   height: 52px;
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
@@ -104,12 +104,12 @@
   opacity: 1;
 }
 
-.last_name_input:focus {
+.lastNameInput:focus {
   outline: none;
   color: #959fa8;
 }
 
-.last_name_input::placeholder {
+.lastNameInput::placeholder {
   text-align: left;
   font: normal normal bold 14px/28px Montserrat;
   letter-spacing: 0px;
@@ -118,13 +118,13 @@
   padding-left: 15px;
 }
 
-.dine_in_form_contact_details_phonenumber_container {
+.dineInFormContactDetailsPhonenumberContainer {
   width: 326px;
   display: flex;
   justify-content: space-between;
 }
 
-.special_requirement_text_area {
+.specialRequirementTextArea {
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
   border-radius: 12px;
@@ -135,22 +135,8 @@
   color: #959fa8;
   resize: none;
 }
-
-.country_code_input:focus {
-  outline: none;
-  color: #959fa8;
-}
-
-.country_code_input::placeholder {
-  text-align: center;
-  font: normal normal bold 14px/28px Montserrat;
-  letter-spacing: 0px;
-  color: #959fa8;
-  opacity: 1;
-}
-
-.phone_number_input {
-  width: 236px;
+.countryCodeInput {
+  width: 160px;
   height: 52px;
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
@@ -158,12 +144,12 @@
   opacity: 1;
 }
 
-.phone_number_input:focus {
+.countryCodeInput:focus {
   outline: none;
   color: #959fa8;
 }
 
-.phone_number_input::placeholder {
+.countryCodeInput::placeholder {
   text-align: left;
   font: normal normal bold 14px/28px Montserrat;
   letter-spacing: 0px;
@@ -172,7 +158,30 @@
   padding-left: 15px;
 }
 
-.special_requirement_text_area {
+.phoneNumberInput {
+  width: 160px;
+  height: 52px;
+  background: #fafafa 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  opacity: 1;
+}
+
+.phoneNumberInput:focus {
+  outline: none;
+  color: #959fa8;
+}
+
+.phoneNumberInput::placeholder {
+  text-align: left;
+  font: normal normal bold 14px/28px Montserrat;
+  letter-spacing: 0px;
+  color: #959fa8;
+  opacity: 1;
+  padding-left: 15px;
+}
+
+.specialRequirementTextArea {
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
   border-radius: 12px;
@@ -184,12 +193,12 @@
   resize: none;
 }
 
-.special_requirement_text_area:focus {
+.specialRequirementTextArea:focus {
   outline: none;
   color: #959fa8;
 }
 
-.special_requirement_text_area::placeholder {
+.specialRequirementTextArea::placeholder {
   text-align: left;
   font: normal normal bold 16px/28px Titillium Web;
   letter-spacing: 0px;
@@ -197,7 +206,7 @@
   opacity: 1;
 }
 
-.queue_information_form_select {
+.queueInformationFormSelect {
   width: 326px;
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
@@ -211,7 +220,7 @@
   color: #959fa8;
 }
 
-.queue_information_form_select option {
+.queueInformationFormSelect option {
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
   border-radius: 12px;
@@ -224,7 +233,7 @@
   border: none;
 }
 
-.queue_information_form_select:focus {
+.queueInformationFormSelect:focus {
   outline: none;
   color: #959fa8;
 }
@@ -242,7 +251,7 @@
   color: #e02020;
 }
 
-.dine_in_form_submit_button {
+.dineInFormSubmitButton {
   width: 318px;
   height: 56px;
   border: none;
@@ -254,12 +263,12 @@
   font-weight: 700;
 }
 
-.select_container {
+.selectContainer {
   width: 326px;
   /* height: 52px; */
 }
 
-.dine_in_form_queue_information_form_container {
+.dineInFormQueueInformationFormContainer {
   width: 326px;
   display: flex;
   flex-direction: column;
@@ -268,7 +277,7 @@
   padding: 30px 0px;
 }
 
-.dine_in_form_outer_container::-webkit-scrollbar {
+.dineInFormOuterContainer::-webkit-scrollbar {
   display: none;
 }
 

@@ -1,10 +1,12 @@
 import React from "react";
 import styles from "./style.module.css";
+
 const AddressTypeButton = ({ type, addressType, onClick }) => (
   <button
     onClick={() => onClick(type)}
-    className={addressType === type ? "active" : type}
+    className={addressType === type ? styles.active : styles[type]}
   >
+    {/* {console.log(type , "type")} */}
     <img
       src={`/assets/img/${type} - ${
         addressType === type ? "white" : "black"
@@ -14,7 +16,7 @@ const AddressTypeButton = ({ type, addressType, onClick }) => (
     <br />
     <span
       className={
-        addressType === type ? "button-text-active" : "button-text-inactive"
+        addressType === type ? styles.buttonTextActive : styles.buttonTextInactive
       }
     >
       {type.charAt(0).toUpperCase() + type.slice(1)}

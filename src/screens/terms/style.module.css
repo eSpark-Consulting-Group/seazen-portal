@@ -1,4 +1,4 @@
-.terms-section h1 {
+.termsSection h1 {
     top: 95px;
     left: 105px;
     text-align: center;
@@ -9,7 +9,7 @@
     position: absolute;
   }
   
-  .terms-paragraph-title {
+  .termsParagraphTitle {
     top: 150px;
     left: 25px;
     text-align: left;
@@ -20,7 +20,7 @@
     font: normal normal bold 12px/14px Titillium Web;
   }
   
-  .terms-paragraphOne {
+  .termsParagraphOne {
     width: 321px;
     height: 19px;
     text-align: left;
@@ -32,7 +32,7 @@
     left: 25px;
   }
   
-  .terms-paragraphTwo {
+  .termsParagraphTwo {
     width: 321px;
     height: 19px;
     text-align: left;
@@ -44,7 +44,7 @@
     left: 25px;
   }
   
-  .terms-paragraph-title-two {
+  .termsParagraphTitleTwo {
     top: 415px;
     left: 25px;
     text-align: left;
@@ -55,7 +55,7 @@
     font: normal normal bold 12px/14px Titillium Web;
   }
   
-  .terms-paragraphThree {
+  .termsParagraphThree {
     width: 321px;
     height: 19px;
     text-align: left;
@@ -67,7 +67,7 @@
     left: 25px;
   }
   
-  .terms-footer {
+  .termsFooter {
     position: absolute;
     top: 645px;
     left: 15px;

@@ -46,7 +46,7 @@
   position: absolute;
 }
 
-.checkbox-counter {
+.checkboxCounter {
   top: 370px;
   left: 13px;
   width: 351px;
@@ -94,7 +94,7 @@
   margin-bottom: 8px;
 }
 
-/* .pricing-box {
+.pricingBox {
   width: 327px;
   height: 56px;
   background: #308979 0% 0% no-repeat padding-box;
@@ -104,7 +104,7 @@
 }
 
 
-.pricing-section {
+.pricingSection {
   text-align: center;
   font: normal normal 600 18px/24px Titillium Web;
   letter-spacing: 0px;
@@ -115,7 +115,7 @@
   position: absolute;
 }
 
-.pricing-icon {
+.pricingIcon {
   top: 307px;
   left: 20px;
   width: 24px;
@@ -124,7 +124,7 @@
   position: absolute;
 }
 
-.calculation-section {
+.calculationSection {
   top: 309px;
   left: 211px;
   width: 95px;
@@ -135,7 +135,7 @@
   color: #ffffff;
   opacity: 1;
   position: absolute;
-} */
+}
 
 .leftSectionCounter {
   flex: 1;
@@ -235,7 +235,7 @@
   transition: background-color 0.2s ease-in-out;
 } */
 
-.hr {
+hr {
   width: 325px;
   height: 0px;
   transform: matrix(1, 0, 0, 1, 0, 0);
@@ -244,7 +244,7 @@
   margin-top: 10px;
 }
 
-/* .toppingSelectioncheckbox-counter input[type="checkbox"] {
+/* .toppingSelectioncheckboxCounter input[type="checkbox"] {
   width: 20px;
   height: 20px;
 
@@ -265,4 +265,9 @@
   .toppingsList {
     margin-left: 20px;
   }
+}
+
+.extraToppingInstruction{
+  font-size: 10px;
+  font-weight: 400;
 }

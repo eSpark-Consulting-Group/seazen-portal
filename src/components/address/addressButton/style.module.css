@@ -3,3 +3,73 @@
   justify-content: space-around;
   margin-top: 20px;
 }
+.house {
+  top: 90px;
+  left: 37px;
+  width: 88px;
+  height: 88px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 7px 50px #74869426;
+  border: 1px solid #ebeff3;
+  border-radius: 12px;
+  opacity: 1;
+}
+
+.active {
+  top: 90px;
+  left: 144px;
+  width: 88px;
+  height: 88px;
+  background: #98694e 0% 0% no-repeat padding-box;
+  box-shadow: 0px 7px 50px #74869426;
+  border: 1px solid #ebeff3;
+  border-radius: 12px;
+  opacity: 1;
+}
+
+.buttonTextActive {
+  top: 146px;
+  left: 62px;
+  width: 38px;
+  height: 21px;
+  text-align: center;
+  font: normal normal 600 14px/21px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+.buttonTextInactive {
+  left: 156px;
+  width: 64px;
+  height: 21px;
+  text-align: center;
+  font: normal normal 600 14px/21px Titillium Web;
+  letter-spacing: 0px;
+  color: #40484e;
+  opacity: 1;
+}
+
+.office {
+  top: 90px;
+  left: 37px;
+  width: 88px;
+  height: 88px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 7px 50px #74869426;
+  border: 1px solid #ebeff3;
+  border-radius: 12px;
+  opacity: 1;
+}
+
+.appartment {
+  top: 90px;
+  left: 37px;
+  width: 88px;
+  height: 88px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 7px 50px #74869426;
+  border: 1px solid #ebeff3;
+  border-radius: 12px;
+  opacity: 1;
+}

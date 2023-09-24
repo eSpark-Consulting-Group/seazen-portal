@@ -1,81 +1,10 @@
-.house {
-  top: 90px;
-  left: 37px;
-  width: 88px;
-  height: 88px;
-  background: #ffffff 0% 0% no-repeat padding-box;
-  box-shadow: 0px 7px 50px #74869426;
-  border: 1px solid #ebeff3;
-  border-radius: 12px;
-  opacity: 1;
-}
-
-.active {
-  top: 90px;
-  left: 144px;
-  width: 88px;
-  height: 88px;
-  background: #98694e 0% 0% no-repeat padding-box;
-  box-shadow: 0px 7px 50px #74869426;
-  border: 1px solid #ebeff3;
-  border-radius: 12px;
-  opacity: 1;
-}
-
-.button-text-active {
-  top: 146px;
-  left: 62px;
-  width: 38px;
-  height: 21px;
-  text-align: center;
-  font: normal normal 600 14px/21px Titillium Web;
-  letter-spacing: 0px;
-  color: #ffffff;
-  opacity: 1;
-}
-
-.button-text-inactive {
-  left: 156px;
-  width: 64px;
-  height: 21px;
-  text-align: center;
-  font: normal normal 600 14px/21px Titillium Web;
-  letter-spacing: 0px;
-  color: #40484e;
-  opacity: 1;
-}
-
-.office {
-  top: 90px;
-  left: 37px;
-  width: 88px;
-  height: 88px;
-  background: #ffffff 0% 0% no-repeat padding-box;
-  box-shadow: 0px 7px 50px #74869426;
-  border: 1px solid #ebeff3;
-  border-radius: 12px;
-  opacity: 1;
-}
-
-.appartment {
-  top: 90px;
-  left: 37px;
-  width: 88px;
-  height: 88px;
-  background: #ffffff 0% 0% no-repeat padding-box;
-  box-shadow: 0px 7px 50px #74869426;
-  border: 1px solid #ebeff3;
-  border-radius: 12px;
-  opacity: 1;
-}
-
-.button-style {
+.buttonStyle {
   margin-left: 20px;
   margin-right: 20px;
   margin-bottom: 20px;
 }
 
-.address-button {
+.addressButton {
   width: 320px;
   height: 56px;
   background: #98694e 0% 0% no-repeat padding-box;
@@ -85,12 +14,12 @@
   border: none;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-.address-button:hover {
+.addressButton:hover {
   background-color:#bd8d72;
   color: #ecf0f1;
 }
 
-.address-text {
+.addressText {
   width: 44px;
   height: 34px;
   text-align: center;
@@ -101,11 +30,11 @@
   text-decoration: none;
 }
 
-.address-button:focus {
+.addressButton:focus {
   outline: none;
 }
 
-.edit-container {
+.editContainer {
   display: flex;
   justify-content: space-between;
   width: 327px;
@@ -117,7 +46,7 @@
   margin-top: 20px;
 }
 
-.edit-button {
+.editButton {
   /* margin-left: 195px; */
   margin-top: 16px;
   margin-right: 10px;
@@ -131,7 +60,7 @@
   position: relative; */
 }
 
-.edit-text {
+.editText {
   text-align: right;
   font: normal normal 600 16px/24px Titillium Web;
   letter-spacing: 0px;
@@ -139,7 +68,7 @@
   opacity: 1;
 }
 
-.address-name {
+.addressName {
   width: 60px;
   height: 16px;
   text-align: left;
@@ -150,7 +79,7 @@
   margin-left: 20px;
   margin-top: 25px;
 }
-.contact-style {
+.contactStyle {
   text-align: center;
   padding-bottom: 15px;
   width: 100%;
@@ -161,11 +90,11 @@
   margin-top: 1px;
 }
 
-.contact-section {
+.contactSection {
   padding-bottom: 20px;
 }
 
-.country-code-input {
+.countryCodeInput {
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
   border-radius: 12px;
@@ -175,7 +104,7 @@
   margin-right: 10px;
 }
 
-.phone-number-input {
+.phoneNumberInput {
   width: 230px;
   height: 64px;
   background: #fafafa 0% 0% no-repeat padding-box;
@@ -184,17 +113,17 @@
   opacity: 1;
 }
 
-.country-code-input:focus {
+.countryCodeInput:focus {
   outline: none;
   color: #959fa8;
 }
 
-.phone-number-input:focus {
+.phoneNumberInput:focus {
   outline: none;
   color: #959fa8;
 }
 
-.phone-number-input::placeholder {
+.phoneNumberInput::placeholder {
   text-align: left;
   font: normal normal bold 14px/28px Montserrat;
   letter-spacing: 0px;
@@ -203,7 +132,7 @@
   padding-left: 15px;
 }
 
-.country-code-input::placeholder {
+.countryCodeInput::placeholder {
   text-align: center;
   font: normal normal bold 14px/28px Montserrat;
   letter-spacing: 0px;
@@ -212,10 +141,10 @@
 }
 
 @media screen and (max-width: 500px) and (min-width: 380px){
-  .edit-container{
+  .editContainer{
     margin-left: 30px;
   }
-  .address-button{
+  .addressButton{
     margin-left: 30px;
   }
 }

@@ -1,4 +1,4 @@
-.privacy-policy-section h1 {
+.privacyPolicySection h1 {
   top: 95px;
   left: 127px;
   text-align: center;
@@ -9,7 +9,7 @@
   position: absolute;
 }
 
-.privacy-paragraph-title {
+.privacyParagraphTitle {
   top: 150px;
   left: 25px;
   text-align: left;
@@ -20,7 +20,7 @@
   font: normal normal bold 12px/14px Titillium Web;
 }
 
-.privacy-paragraphOne {
+.privacyParagraphOne {
   width: 321px;
   height: 19px;
   text-align: left;
@@ -32,7 +32,7 @@
   left: 25px;
 }
 
-.privacy-paragraphTwo {
+.privacyParagraphTwo {
   width: 321px;
   height: 19px;
   text-align: left;
@@ -44,7 +44,7 @@
   left: 25px;
 }
 
-.privacy-paragraph-title-two {
+.privacyParagraphTitleTwo {
   top: 415px;
   left: 25px;
   text-align: left;
@@ -55,7 +55,7 @@
   font: normal normal bold 12px/14px Titillium Web;
 }
 
-.privacy-paragraphThree {
+.privacyParagraphThree {
   width: 321px;
   height: 19px;
   text-align: left;
@@ -67,7 +67,7 @@
   left: 25px;
 }
 
-.privacy-policy-footer {
+.privacyPolicyFooter {
   position: absolute;
   top: 645px;
   left: 15px;
