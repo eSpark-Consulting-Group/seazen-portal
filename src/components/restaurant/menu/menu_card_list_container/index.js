@@ -46,11 +46,11 @@ const MenuCardListContainer = () => {
                 className="searchicon"
                 onClick={toggleSearch}
               />
-              <input
+              {isSearchOpen && <input
                 type="text"
                 placeholder="Search"
                 className={`searchbar ${isSearchOpen ? "expanded_search" : ""}`}
-              />
+              />}
             </div>
           </div>
         </div>
