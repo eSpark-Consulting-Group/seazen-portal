@@ -19,33 +19,35 @@ const OrderTypeButtonExpandable = ({
   const [filterClassNear, setToggleFilterClassNear] = useState(false);
   const [filterSelectedNow, setFilterSelectedNow] = useState();
 
-  useEffect(()=>{
-    if(expanded === false){
-      handleOrderTypeFilter(false, false,filterSelectedNow);
+  useEffect(() => {
+    if (expanded === false) {
+      handleOrderTypeFilter(false, false, filterSelectedNow);
       setToggleFilterClassDelivery(false);
       setToggleFilterClassNear(false);
-
     }
-  },[expanded])
-  
-    useEffect(() => {
-      handleOrderTypeFilter(filterClassDelivery, filterClassNear,filterSelectedNow);
-    }, [filterClassDelivery, filterClassNear]);
-  
-    const handleFilterClick = (orderType) => {
-      if(!filterClassDelivery){
-        orderType === "delivery" && setFilterSelectedNow(orderType);
-      }
-      if(!filterClassNear){
-        orderType === "near" && setFilterSelectedNow(orderType);
-      }
-      if (orderType === "delivery") {
-        setToggleFilterClassDelivery(!filterClassDelivery);
-      } else {
-        setToggleFilterClassNear(!filterClassNear);
-      }
-    };
-  
+  }, [expanded]);
+
+  useEffect(() => {
+    handleOrderTypeFilter(
+      filterClassDelivery,
+      filterClassNear,
+      filterSelectedNow
+    );
+  }, [filterClassDelivery, filterClassNear]);
+
+  const handleFilterClick = (orderType) => {
+    if (!filterClassDelivery) {
+      orderType === "delivery" && setFilterSelectedNow(orderType);
+    }
+    if (!filterClassNear) {
+      orderType === "near" && setFilterSelectedNow(orderType);
+    }
+    if (orderType === "delivery") {
+      setToggleFilterClassDelivery(!filterClassDelivery);
+    } else {
+      setToggleFilterClassNear(!filterClassNear);
+    }
+  };
 
   const handleClick = () => {
     if (id !== 1) {
@@ -57,7 +59,6 @@ const OrderTypeButtonExpandable = ({
     handleButtonClickIndex(id);
   };
 
-
   return (
     <div
       className={`custom-button ${
@@ -65,6 +66,7 @@ const OrderTypeButtonExpandable = ({
           ? "expanded"
           : ""
       } ${clicked ? "clicked" : ""}`}
+      // style={{ marginRight: id !== 0 ? "5px" : "" }}
     >
       <img
         src={iconSrc}
@@ -120,11 +122,15 @@ const RestaurantsOrderTypeButton = () => {
     }
   };
 
-  const handleOrderTypeFilter = (deliveryFilter, nearFilter, filterSelectedNow) => {
+  const handleOrderTypeFilter = (
+    deliveryFilter,
+    nearFilter,
+    filterSelectedNow
+  ) => {
     setOrderTypeFilter({
       delivery: deliveryFilter,
       near: nearFilter,
-      selectedNow: filterSelectedNow
+      selectedNow: filterSelectedNow,
     });
   };
 

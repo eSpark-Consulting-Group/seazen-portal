@@ -8,13 +8,17 @@
 
 .orderType-button-container {
   display: flex;
-  justify-content: space-between;
+  /* width: 328px; */
+  justify-content: space-between; 
   margin-top: 10px;
+  /* width: 100%; */
 }
 
 .custom-button {
   display: flex;
   align-items: center;
+  width: 78px;
+  height: 27px;
   /* margin-right: 10px ; */
   color: white;
   cursor: pointer;
@@ -24,7 +28,7 @@
   border: 1px solid #ebeef0;
   border-radius: 16px;
   opacity: 1;
-  justify-content: center;
+  /* justify-content: center; */
   cursor: pointer;
   transform: scale(0.98);
   transition: all 0.3s;
@@ -48,7 +52,7 @@
 .orderTypebutton-icon {
   width: 24px;
   height: 24px;
-  padding: 1px;
+  padding: 2px;
 }
 
 .custom-button.expanded {

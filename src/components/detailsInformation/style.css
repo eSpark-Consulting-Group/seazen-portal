@@ -1,50 +1,47 @@
 .content-heading {
   /* width: 194px; */
-  height: 60px;
+  /* height: 60px; */
   text-align: left;
   font: normal normal 600 22px/26px Titillium Web;
   letter-spacing: 0px;
   color: #1f2933;
   opacity: 1;
-  position: absolute;
-  margin-top: 290px;
+  /* position: absolute; */
+  /* margin-top: 290px; */
   /* margin-left: 30px; */
   padding-right: 182px;
-
+  z-index: 1000;
 }
 
 .content-paragraph {
   /* width: 327px; */
-  height: 65px;
+  /* height: 65px; */
   text-align: left;
   letter-spacing: 0.34px;
   color: #6b7580;
   opacity: 1;
-  position: absolute;
+  position: relative;
   font-size: 12px;
-  margin-top: 350px;
+  /* margin-top: 350px; */
   /* margin-left: 32px; */
   padding-right: 66px;
 }
 
 .content-small {
   /* width: 41px; */
-  height: 10px;
+  /* height: 10px; */
   text-align: right;
   font: normal normal bold 10px/12px Titillium Web;
   letter-spacing: 0px;
   color: #026754;
   opacity: 1;
   position: absolute;
-  margin-top: 296px;
-  margin-left: 285px;
+  padding-top: 10px;
+  left: 285px;
 }
-
-.information-style {
-  position: absolute;
-  top: 30px;
+.information-style{
+  margin-bottom: 30px;
 }
-
 /* @media screen and (max-width:500px) and (min-width:400px)  {
   .information-style{
     left: 30px;

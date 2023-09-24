@@ -34,7 +34,7 @@
 }
 
 .restaurantCard-img {
-  width: 101%;
+  width: 100%;
   height: 80px;
   object-fit: cover;
   margin-bottom: -8px;
