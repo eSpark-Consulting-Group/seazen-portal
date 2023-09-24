@@ -113,7 +113,7 @@ const MenuCard = ({
     onClick={handleClickAdd}
     className="menu_card_add_to_cart_button"
   >
-    <img src={plusIcon} alt="button_icon" />
+    <img src={plusIcon} alt="button_icon" style={{width:16, height:16}} />
   </AddToCartButton>
 
   {foodItemQuantity > 0 && (
