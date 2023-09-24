@@ -77,7 +77,8 @@ const MenuItems = () => {
         <div className="menu_itmes_text_container">
           {menu_categories.map((category, index) => (
             <button
-              key={`menu_category_${index}`}
+              style={{color:"black"}}
+              key={index}
               onClick={() => {
                 handleMenuItemClick(category);
               }}

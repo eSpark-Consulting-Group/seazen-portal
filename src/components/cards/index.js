@@ -150,6 +150,7 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
     if (orderTypeFilter) {
       const { delivery, near, selectedNow } = orderTypeFilter;
       const { doesDelivery, isNear } = service;
+
       if (delivery && !near) {
         return doesDelivery && "restaurantCard-border-delivery";
       }
@@ -176,16 +177,19 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
         return "restaurantCard-no-border";
       }
     }
+    if (clickedButtonIndex === 1) {
+      return "restaurantCard-border-delivery";
+    }
   };
 
   const getClassNameAccordingToFilter = (orderTypeId, service) => {
-    if (
-      orderTypeId === clickedButtonIndex &&
-      orderTypeFilter &&
-      orderTypeId !== 1
-    ) {
+    if (orderTypeId === clickedButtonIndex && orderTypeFilter) {
       const { delivery, near, selectedNow } = orderTypeFilter;
       const { doesDelivery, isNear } = service;
+      if (orderTypeId === 1) {
+        return "button-icons-styles-delivery";
+      }
+
       if (delivery && !near) {
         return doesDelivery && "button-icons-styles-delivery";
       }

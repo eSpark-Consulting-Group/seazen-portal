@@ -16,10 +16,6 @@
   border-radius: 20px;
 }
 
-.hover-slider:hover {
-  transform: scale(1.05);
-}
-
 .caption {
   position: absolute;
   bottom: 7px;

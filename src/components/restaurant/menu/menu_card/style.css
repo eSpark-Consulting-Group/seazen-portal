@@ -124,11 +124,11 @@
 }
 
 .menu_card_add_to_cart_button {
-  width: 30px;
-  height: 29px;
-  border: none;
+  width: 30px !important;
+  height: 29px !important;
+  border: none !important;
   background-color: #026754;
-  border-radius: 12px;
+  border-radius: 12px !important;
 }
 
 .menu_card_add_to_cart_button img {
