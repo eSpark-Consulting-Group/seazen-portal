@@ -18,7 +18,7 @@ const StyledItemPrice = styled("div")(({ theme }) => ({
 }));
 
 
-const AddToCartButton = styled("button")(({ theme }) => ({
+const AddToCartButton = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.themeColor.main,
   // Add any other button styles you need here
 }));
