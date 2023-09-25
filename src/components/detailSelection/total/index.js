@@ -1,6 +1,7 @@
 import React from "react";
 import { getFormattedPrice } from "../sideSelection/index";
 import { styled } from "@mui/material/styles"; // Import styled from MUI
+import "./style.css"
 
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({

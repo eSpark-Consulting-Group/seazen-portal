@@ -60,7 +60,7 @@ export default function CheckboxGroup() {
 
   return (
     <div style={{position:"relative"}}>
-      <StyledOuterContainer >
+      <StyledOuterContainer className="size"  >
         <p className="size-title">Choose the size</p>
         <p className="size-small-title">(Choose 1)</p>
         <StyledTextColor className="size-title-required">

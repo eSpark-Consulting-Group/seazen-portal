@@ -9,8 +9,7 @@
   /* position: absolute; */
   /* margin-top: 290px; */
   /* margin-left: 30px; */
-  padding-right: 182px;
-  z-index: 1000;
+  padding-right: 145px;
 }
 
 .content-paragraph {
@@ -22,9 +21,9 @@
   opacity: 1;
   position: relative;
   font-size: 12px;
-  /* margin-top: 350px; */
+  margin-top: 10px;
   /* margin-left: 32px; */
-  padding-right: 66px;
+  padding-right: 36px;
 }
 
 .content-small {
@@ -37,7 +36,7 @@
   opacity: 1;
   position: absolute;
   padding-top: 10px;
-  left: 285px;
+  right: 30px;
 }
 .information-style{
   margin-bottom: 30px;

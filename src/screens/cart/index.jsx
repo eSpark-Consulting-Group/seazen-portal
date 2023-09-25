@@ -351,6 +351,7 @@ function CartPage() {
           <Dialog
             open={openSchedulePopup}
             onClose={() => setOpenSchedulePopup(false)}
+            
             sx={{
               margin: "0",
               textAlign: "center",
@@ -367,6 +368,9 @@ function CartPage() {
                 borderBottomLeftRadius: "0px",
                 borderBottomRightRadius: "0px",
                 paddingTop: "20px",
+                '@media (max-width: 600px)': {
+                  width: '100%', 
+                },
               },
             }}
           >

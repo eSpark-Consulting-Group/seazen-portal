@@ -15,19 +15,30 @@
   display: none;
 }
 
-.section{
-  margin: 20px;
+.section {
+  z-index: 1;
+  margin-top: -140px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  position: relative;
+  padding-top: 51px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  width: 375px;
+  padding-left: 20px;
+  padding-right: 20px;
+
 }
 
-
-/* @media screen and (max-width:500px) {
-    .detail{
-        padding-bottom: 445px;
+@media screen and (max-width:600px) {
+    .section{
+        width: 100%;
     }
 }
 
-@media screen and (max-width:500px) and (min-width:400px)  {
+/* @media screen and (max-width:500px) and (min-width:400px)  {
     .detail{
         width: 426px;
     }
 } */
+
+

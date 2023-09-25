@@ -13,7 +13,7 @@ const StyledOuterContainer = styled("div")(({ theme }) => ({
 export const DetailsHeader = () => {
   const navigate = useNavigate();
   return (
-    <header>
+    <header className="container-fluid">
       <img className="detailsHeaderBackground container-fluid" src="/assets/img/image.png" />
       <div
         className="detailsheaderarrowicons-style pointer"

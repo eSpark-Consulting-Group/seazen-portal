@@ -122,52 +122,34 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
     [icons[1], icons[3]],
   ];
 
-  // const isMediumScreen = useMediaQuery(
-  //   "(max-width: 400px) and (min-width: 385px)"
-  // );
-  // const isSmallScreen = useMediaQuery(
-  //   "(max-width: 500px) and (min-width: 385px)"
-  // );
-  // const isSmallerScreen = useMediaQuery(
-  //   "(max-width: 350px ) (min-width: 290px)"
-  // );
-  // const isVerySmallScreen = useMediaQuery("(max-width: 290px)");
+  const isMediumScreen = useMediaQuery(
+    "(max-width: 400px) and (min-width: 385px)"
+  );
+  const isSmallScreen = useMediaQuery(
+    "(max-width: 500px) and (min-width: 385px)"
+  );
+  const isSmallerScreen = useMediaQuery(
+    "(max-width: 350px ) (min-width: 290px)"
+  );
+  const isVerySmallScreen = useMediaQuery("(max-width: 290px)");
 
-  // // Adjust cardWidth to apply 120px width to screens less than 350px
-  // const cardWidth = isSmallScreen
-  //   ? isMediumScreen
-  //     ? 170
-  //     : isSmallerScreen
-  //     ? 180
-  //     : 190
-  //   : isSmallerScreen
-  //   ? 170
-  //   : isVerySmallScreen
-  //   ? 145
-  //   : 155;
-
-  const isMediumScreen = useMediaQuery("(max-width: 500px) and (min-width: 385px)");
-const isSmallScreen = useMediaQuery("(max-width: 400px) and (min-width: 385px)");
-const isSmallerScreen = useMediaQuery("(max-width: 360px ) and (min-width: 290px)");
-const isVerySmallScreen = useMediaQuery("(max-width: 290px)");
-
-// Define the cardWidth values for different screen resolutions
-const cardWidth = isVerySmallScreen
-  ? 143
-  : isSmallerScreen
-  ? 155
-  : isSmallScreen
-  ? 170
-  : isMediumScreen
-  ? 180
-  : 161;
-
+  // Adjust cardWidth to apply 120px width to screens less than 350px
+  const cardWidth = isSmallScreen
+    ? isMediumScreen
+      ? 180
+      : isSmallerScreen
+      ? 180
+      : 190
+    : isSmallerScreen
+    ? 170
+    : isVerySmallScreen
+    ? 145
+    : 161;
 
   const getCardClassName = (service) => {
     if (orderTypeFilter) {
       const { delivery, near, selectedNow } = orderTypeFilter;
       const { doesDelivery, isNear } = service;
-
       if (delivery && !near) {
         return doesDelivery && "restaurantCard-border-delivery";
       }
@@ -194,19 +176,16 @@ const cardWidth = isVerySmallScreen
         return "restaurantCard-no-border";
       }
     }
-    if (clickedButtonIndex === 1) {
-      return "restaurantCard-border-delivery";
-    }
   };
 
   const getClassNameAccordingToFilter = (orderTypeId, service) => {
-    if (orderTypeId === clickedButtonIndex && orderTypeFilter) {
+    if (
+      orderTypeId === clickedButtonIndex &&
+      orderTypeFilter &&
+      orderTypeId !== 1
+    ) {
       const { delivery, near, selectedNow } = orderTypeFilter;
       const { doesDelivery, isNear } = service;
-      if (orderTypeId === 1) {
-        return "button-icons-styles-delivery";
-      }
-
       if (delivery && !near) {
         return doesDelivery && "button-icons-styles-delivery";
       }

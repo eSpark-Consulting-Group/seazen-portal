@@ -22,14 +22,14 @@
   opacity: 1;
   position: absolute;
 }
-
+/* 
 @media screen and (max-width: 600px) {
-  .css-9am2qe-MuiPaper-root-MuiDialog-paper {
+  .PaperProps{
     width: 100% !important;
     position: fixed !important;
     padding: 0 !important;
     
   }
-}
+} */
 
 

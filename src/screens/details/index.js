@@ -11,12 +11,12 @@ export const Details = () => {
   return (
       <div>
         <DetailsHeader />
-      <div className="detail"></div>
+      {/* <div className="detail"></div> */}
         <div className="container-fluid section">
         <Content />
-        {/* <CheckboxGroup /> */}
-        {/* <ToppingSelection /> */}
-        {/* <SideSelection /> */}
+        <CheckboxGroup />
+        <ToppingSelection />
+        <SideSelection />
       </div>
       </div>
 
