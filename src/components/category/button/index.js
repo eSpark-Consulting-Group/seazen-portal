@@ -12,7 +12,8 @@ const OrderTypeButtonExpandable = ({
   isButtonExpanded,
   clicked,
   id,
-  handleOrderTypeFilter
+  handleOrderTypeFilter,
+  customButtonExpandedClass // New prop to pass the custom class
 }) => {
   const [expanded, setToggleExpanded] = useState(false);
   const [filterClassDelivery, setToggleFilterClassDelivery] = useState(false);
@@ -21,12 +22,12 @@ const OrderTypeButtonExpandable = ({
   const handleClick = () => {
     if (id !== 1) {
       setToggleExpanded(!expanded);
-      setIsButtonExpanded({ expanded: !expanded, id: id })
+      setIsButtonExpanded({ expanded: !expanded, id: id });
     } else {
-      setIsButtonExpanded({ expanded: false })
+      setIsButtonExpanded({ expanded: false });
     }
     handleButtonClickIndex(id);
-  }
+  };
 
   useEffect(() => {
     if (filterClassNear) {
@@ -36,7 +37,7 @@ const OrderTypeButtonExpandable = ({
     } else {
       handleOrderTypeFilter(null);
     }
-  }, [filterClassDelivery, filterClassNear])
+  }, [filterClassDelivery, filterClassNear]);
 
   const handleFilterClick = (orderType) => {
     if (orderType === "delivery") {
@@ -44,27 +45,39 @@ const OrderTypeButtonExpandable = ({
     } else {
       setToggleFilterClassNear(!filterClassNear);
     }
-  }
+  };
 
   return (
     <div
-      className={`custom-button ${isButtonExpanded.expanded && isButtonExpanded.id === id ? "expanded" : ""} ${clicked ? "clicked" : ""
-        }`}
+      className={`custom-button ${isButtonExpanded.expanded && isButtonExpanded.id === id ? "expanded" : ""} ${
+        clicked ? "clicked" : ""
+      } ${customButtonExpandedClass}`}
     >
       <img src={iconSrc} alt="Icon" className="orderTypebutton-icon" onClick={handleClick} />
-      {((isButtonExpanded.expanded && isButtonExpanded.id === id) || !isButtonExpanded.expanded) && <span className={`orderTypebutton-text`}>{text}</span>}
+      {((isButtonExpanded.expanded && isButtonExpanded.id === id) || !isButtonExpanded.expanded) && (
+        <span className={`orderTypebutton-text`}>{text}</span>
+      )}
       <span className="orderTypebutton-content">
         {(isButtonExpanded.expanded && isButtonExpanded.id === id) && (
           <div className="options">
-            <button className={`orderTypebutton-style-one ${filterClassDelivery && 'orderTypebutton-style-one-active'}`} onClick={() => handleFilterClick("delivery")}>{buttonOneText}</button>
-            <button className={`orderTypebutton-style-two ${filterClassNear && 'orderTypebutton-style-two-active'}`} onClick={() => handleFilterClick("near")}>{buttonTwoText}</button>
+            <button
+              className={`orderTypebutton-style-one ${filterClassDelivery && "orderTypebutton-style-one-active"}`}
+              onClick={() => handleFilterClick("delivery")}
+            >
+              {buttonOneText}
+            </button>
+            <button
+              className={`orderTypebutton-style-two ${filterClassNear && "orderTypebutton-style-two-active"}`}
+              onClick={() => handleFilterClick("near")}
+            >
+              {buttonTwoText}
+            </button>
           </div>
         )}
       </span>
     </div>
   );
 };
-
 
 const RestaurantsOrderTypeButton = () => {
   const [clickedButtonIndex, setClickedButtonIndex] = useState(null);
@@ -83,7 +96,7 @@ const RestaurantsOrderTypeButton = () => {
 
   const handleOrderTypeFilter = (orderType) => {
     setOrderTypeFilter(orderType);
-  }
+  };
 
   const data = [
     {
@@ -102,7 +115,7 @@ const RestaurantsOrderTypeButton = () => {
       iconSrc: "/assets/img/Delivery.svg",
       OrderType: "Delivery",
       locations: "Available for Delivery",
-      where: "Delivers to Me"
+      where: "Delivers to Me",
     },
     {
       iconSrc: "/assets/img/Pickup.svg",
@@ -111,31 +124,31 @@ const RestaurantsOrderTypeButton = () => {
       where: "Near Me",
     },
   ];
+
   return (
     <>
       <div className="restaurant-title">
         <h4>Restaurants</h4>
       </div>
       <div className="orderType-button-container">
-        {
-          data.map((item, index) => {
-            return (
-              <OrderTypeButtonExpandable
-                iconSrc={item.iconSrc}
-                text={item.OrderType}
-                key={index}
-                id={index}
-                handleButtonClickIndex={handleButtonClickIndex}
-                buttonOneText={item.locations}
-                buttonTwoText={item.where}
-                setIsButtonExpanded={setIsButtonExpanded}
-                isButtonExpanded={isButtonExpanded}
-                clicked={index === 1 ? clickedButtonIndex === 1 : false}
-                handleOrderTypeFilter={handleOrderTypeFilter}
-              />
-            );
-          })
-        }
+        {data.map((item, index) => {
+          return (
+            <OrderTypeButtonExpandable
+              iconSrc={item.iconSrc}
+              text={item.OrderType}
+              key={index}
+              id={index}
+              handleButtonClickIndex={handleButtonClickIndex}
+              buttonOneText={item.locations}
+              buttonTwoText={item.where}
+              setIsButtonExpanded={setIsButtonExpanded}
+              isButtonExpanded={isButtonExpanded}
+              clicked={index === 1 ? clickedButtonIndex === 1 : false}
+              handleOrderTypeFilter={handleOrderTypeFilter}
+              customButtonExpandedClass={isButtonExpanded.expanded ? "custom-button-expanded" : ""}
+            />
+          );
+        })}
       </div>
       {/* Pass the clickedButtonIndex to BasicCard */}
       <BasicCard clickedButtonIndex={clickedButtonIndex} orderTypeFilter={orderTypeFilter} />

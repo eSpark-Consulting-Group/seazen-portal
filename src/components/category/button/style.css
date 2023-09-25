@@ -12,6 +12,10 @@
   margin-top: 10px;
 }
 
+.custom-button-expanded{
+  padding: 0 !important;
+}
+
 .custom-button {
   display: flex;
   align-items: center;
@@ -28,6 +32,7 @@
   cursor: pointer;
   transform: scale(0.98);
   transition: all 0.3s;
+  padding-right: 11px;
 }
 
 .orderTypebutton-text {
