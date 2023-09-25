@@ -122,3 +122,9 @@
   padding: 5px;
   background-color: #f0f0f0;
 }
+
+@media screen and (max-width:500px) and (min-width:400px){
+  .custom-button{
+    padding-right: 25px ;
+  }
+}
