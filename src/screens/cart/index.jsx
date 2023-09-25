@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -15,6 +15,10 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { ReactComponent as DollarIcon } from "../../assets/icons/dollar.svg";
 import { ReactComponent as KNETIcon } from "../../assets/icons/knet.svg";
 import { paths } from "../../routes/paths";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import { DialogActions } from "@mui/material";
 
 let CART_ITEMS = [
   {
@@ -57,6 +61,17 @@ function CartPage() {
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
   const DISCOUNT_AMOUNT = Number(1).toFixed(3);
   const DELIVERY_CHARGE = Number(1).toFixed(3);
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  // Function to handle opening the dialog
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+
+  // Function to handle closing the dialog
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
 
   useEffect(() => {
     let isCartEmpty = searchParams.get("empty");
@@ -354,12 +369,72 @@ function CartPage() {
                   }}
                   disableElevation
                   disableRipple
+                  onClick={handleDialogOpen} // Open the dialog on button click
                 >
                   Apply
                 </Button>
               ),
             }}
           />
+
+          {/* Dialog */}
+          <Dialog
+            open={isDialogOpen}
+            onClose={handleDialogClose}
+            sx={{
+              "& .MuiDialog-paper": {
+                height: "178px",
+                width: "327px",
+                textAlign: "center",
+                overflowY:"hidden",
+                
+                "@media (min-width: 600px)": {
+                  left: "0",
+                  position: "fixed",
+                  margin: "20px",
+                },
+              },
+            }}
+          >
+            <DialogTitle>
+              <img src="/assets/img/exclaim.svg"></img>
+            </DialogTitle>
+            <DialogContent sx={{padding:"0",}}>
+              <div
+                style={{
+                  font: "normal normal bold 16px/18px Titillium Web",
+                  color: "#959FA8",
+                }}
+              >
+                You&apos;ve entered an invalid <br /> Promo Code!
+              </div>
+              <Button
+                onClick={handleDialogClose}
+                sx={{
+                  background: "#98694E 0% 0% no-repeat padding-box",
+                  border: "1px solid #707070",
+                  borderRadius: "12px",
+                  opacity: "1",
+                  width: "116px",
+                  height: "29px",
+                  marginTop:"20px",
+                  "&:hover": {
+                    background: "#98694E 0% 0% no-repeat padding-box",
+                  },
+                  
+                }}
+              >
+                <span
+              style={{
+                font: "normal normal 600 16px/24px Titillium Web",
+                color: "#ffffff",
+              }}
+            >
+              Go Back
+            </span>
+              </Button>
+            </DialogContent>
+          </Dialog>
 
           <Stack spacing={2}>
             <Typography variant="h5" fontWeight={500}>
