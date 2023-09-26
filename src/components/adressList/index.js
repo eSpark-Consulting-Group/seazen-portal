@@ -10,7 +10,16 @@ import {
 import "./style.css";
 import { AddressesButton } from "./addressesButton";
 
-const Card = ({ title, title2, iconUrl, name, block, home, floor, AdditionalDirections }) => {
+const Card = ({
+  title,
+  title2,
+  iconUrl,
+  name,
+  block,
+  home,
+  floor,
+  AdditionalDirections,
+}) => {
   const [open, setOpen] = useState(false); // State to control the dialog visibility
 
   const handleClickOpen = () => {
@@ -22,8 +31,7 @@ const Card = ({ title, title2, iconUrl, name, block, home, floor, AdditionalDire
   };
 
   return (
-    <div className=" container-fluid">
-      <div className="addresses-container  container-fluid">
+    <div className="addresses-container  container-fluid">
       <div className="addresses-header">
         <img className="addresses-card-icon" src={iconUrl} alt="Icon" />
         <p className="addresses-home-title">{title}</p>
@@ -41,22 +49,21 @@ const Card = ({ title, title2, iconUrl, name, block, home, floor, AdditionalDire
         <hr />
       </div>
       <div className="addresses-content">
-      <div className="addresses-details-and-map">
-      <div className="addresses-details">
-          <p className="addresses-name">{name}</p>
-          <p className="addresses-name">{block}</p>
-          <p className="addresses-name">{home}</p>
-          <p className="addresses-name">{floor}</p>
-          <p className="additional-addresses">Additional Directions; <br/> {AdditionalDirections}</p>
+        <div className="addresses-details-and-map">
+          <div className="addresses-details">
+            <p className="addresses-name">{name}</p>
+            <p className="addresses-name">{block}</p>
+            <p className="addresses-name">{home}</p>
+            <p className="addresses-name">{floor}</p>
+            <p className="additional-addresses">
+              Additional Directions; <br /> {AdditionalDirections}
+            </p>
+          </div>
         </div>
-        
-        
-      </div>
-      <div className="addresses-map-section">
+        <div className="addresses-map-section">
           <img src="/assets/img/map-image.svg" alt="Small Image" />
         </div>
       </div>
-      <AddressesButton />
 
       {/* Delete Confirmation Dialog */}
       <Dialog
@@ -65,11 +72,13 @@ const Card = ({ title, title2, iconUrl, name, block, home, floor, AdditionalDire
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         sx={{
+          overflow: "hidden",
           "& .MuiDialog-paper": {
             height: "204px",
             width: "327px",
             textAlign: "center",
-            overflowY:"hidden",
+            overflow: "hidden",
+            overflowY: "hidden",
             "@media (min-width: 600px)": {
               left: "0",
               position: "fixed",
@@ -83,8 +92,15 @@ const Card = ({ title, title2, iconUrl, name, block, home, floor, AdditionalDire
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to
-            <br /> delete {title}?
+            <div
+              style={{
+                font: "normal normal bold 16px/18px Titillium Web",
+                color: "#959FA8",
+              }}
+            >
+              Are you sure you want to
+              <br /> delete {title}?{" "}
+            </div>
           </DialogContentText>
         </DialogContent>
         <DialogActions
@@ -137,7 +153,6 @@ const Card = ({ title, title2, iconUrl, name, block, home, floor, AdditionalDire
         </DialogActions>
       </Dialog>
     </div>
-</div>
   );
 };
 

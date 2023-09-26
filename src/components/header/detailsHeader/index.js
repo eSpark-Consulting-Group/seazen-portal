@@ -13,7 +13,7 @@ const StyledOuterContainer = styled("div")(({ theme }) => ({
 export const DetailsHeader = () => {
   const navigate = useNavigate();
   return (
-    <header className="container-fluid">
+    <div className="container-fluid detailsHeader">
       <img className="detailsHeaderBackground container-fluid" src="/assets/img/image.png" />
       <div
         className="detailsheaderarrowicons-style pointer"
@@ -37,6 +37,6 @@ export const DetailsHeader = () => {
           src="/assets/img/Icon - Bag.svg"
         ></img>
       </div>
-    </header>
+    </div>
   );
 };

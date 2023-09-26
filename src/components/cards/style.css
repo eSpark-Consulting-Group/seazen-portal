@@ -18,9 +18,18 @@
   border: 2px solid #93674e;
   border-radius: 12px; /* You can adjust the border color and width */
 }
+.restaurantCard-border-delivery:hover {
+  border: 2px solid #93674e;
+  border-radius: 12px; /* You can adjust the border color and width */
+  transform: scale(1.08) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
 .restaurantCard-border-near {
   border: 2px solid #4f948a;
   border-radius: 12px; /* You can adjust the border color and width */
+  transform: scale(1.08) !important;
+  transition: all 0.2s ease-in-out !important;
 }
 
 /* Style for the cards without a border */
@@ -103,14 +112,14 @@
 .inner-svg-container {
   position: absolute;
   top: -75px;
-  left: 154px;
+  right: -6px;
 }
 
 .collapsed {
   display: none;
 }
 
-@media screen and (max-width: 500px) and (min-width: 400px) {
+/* @media screen and (max-width: 500px) and (min-width: 400px) {
   .inner-svg-container {
     left: 178px;
   }
@@ -122,8 +131,8 @@
   }
 }
 
-@media screen and (max-width: 350px) {
+@media screen and (max-width: 300px) {
   .inner-svg-container {
-    left: 159px;
+    left: 133px;
   }
-}
+} */
