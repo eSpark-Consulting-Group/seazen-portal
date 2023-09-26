@@ -12,7 +12,7 @@
   margin-top: 10px;
 }
 
-.custom-button-expanded{
+.custom-button-expanded {
   padding: 0 !important;
 }
 
@@ -32,7 +32,7 @@
   cursor: pointer;
   transform: scale(0.98);
   transition: all 0.3s;
-  padding-right: 11px;
+  padding-right: 6px;
 }
 
 .orderTypebutton-text {
@@ -40,9 +40,9 @@
   letter-spacing: 0.18px;
   color: #323f4b;
   opacity: 1;
-  font-size: 8px;
-  padding-left: 8px;
-  padding-right: 8px;
+  font-size: 9px;
+  padding-left: 3px;
+  padding-right: 10px;
 }
 
 .basic-card.expanded {
@@ -51,8 +51,8 @@
 }
 
 .orderTypebutton-icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   padding: 1px;
 }
 
@@ -76,7 +76,7 @@
   letter-spacing: 0.14px;
   color: #93694f;
   opacity: 1;
-  width: 83px;
+  width: 82px;
   height: 16px;
 }
 
@@ -87,16 +87,18 @@
 
 .orderTypebutton-style-two {
   box-shadow: 0px 24px 48px #314f7c14;
-  border: 1px solid #4f948a;
-  border-radius: 16px;
-  opacity: 1;
-  width: 62px;
-  height: 16px;
-  text-align: center;
-  font: normal normal 600 7px/6px Titillium Web;
-  letter-spacing: 0.14px;
-  color: #4f948a;
-  opacity: 1;
+    border: 1px solid #4f948a;
+    border-radius: 16px;
+    opacity: 1;
+    width: 61px;
+    height: 16px;
+    text-align: center;
+    font: normal normal 600 7px/6px Titillium Web;
+    letter-spacing: 0.14px;
+    color: #4f948a;
+    opacity: 1;
+    margin-left: 3px;
+    margin-right: 2px;
 }
 
 .orderTypebutton-style-two-active {
@@ -114,7 +116,7 @@
 
 .options {
   display: flex;
-  margin-left: 10px;
+  margin-left: -5px;
 }
 
 .options span {
@@ -123,8 +125,30 @@
   background-color: #f0f0f0;
 }
 
-@media screen and (max-width:500px) and (min-width:400px){
-  .custom-button{
-    padding-right: 25px ;
+@media screen and (max-width: 500px) and (min-width: 400px) {
+  .custom-button {
+    padding-right: 18px;
+  }
+  .custom-button.expanded {
+    padding-right: 8px !important;
+  }
+  .orderTypebutton-style-one {
+    margin-left: 8px;
+  }
+  .orderTypebutton-style-two {
+    margin-left: 6px;
+  }
+  .orderTypebutton-text{
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 315px) {
+  .orderTypebutton-style-one {
+    width: 65px;
+  }
+  .orderTypebutton-style-two {
+    width: 50px;
   }
 }
