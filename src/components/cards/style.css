@@ -28,6 +28,11 @@
 .restaurantCard-border-near {
   border: 2px solid #4f948a;
   border-radius: 12px; /* You can adjust the border color and width */
+}
+
+.restaurantCard-border-near:hover {
+  border: 2px solid #4f948a;
+  border-radius: 12px; /* You can adjust the border color and width */
   transform: scale(1.08) !important;
   transition: all 0.2s ease-in-out !important;
 }

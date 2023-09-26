@@ -1,12 +1,12 @@
 .addresses-add-button {
-  bottom: 15px;
   width: 326px;
   height: 56px;
   background: #98694e 0% 0% no-repeat padding-box;
   opacity: 1;
-  position: absolute;
   border-radius: 16px;
   border: none;
+  margin-top: 70px;
+
 }
 
 .addresses-add-button-text {
@@ -24,10 +24,15 @@
   align-items: center;
 }
 
+@media screen and (max-width:500px) and (min-width:355px) {
+  .addresses-add-button{
+    margin-top: 50px;
+  }
+}
 
 @media screen and (max-width:350px) {
   .addresses-add-button{
-    bottom:-95px;
+    margin-top: 165px;
   }
 }
   
