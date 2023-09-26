@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Card from '../../components/adressList';
 import MyAddresses from '../../components/header/myAdresses';
+import { AddressesButton } from '../../components/adressList/addressesButton';
 
  const App = () => {
   const cardData = [
@@ -14,6 +15,7 @@ import MyAddresses from '../../components/header/myAdresses';
       block: 'Block 11, Oman Street,',
       home: 'Home No: 33, ',
       floor: 'Floor: 2 Flat: 4',
+      AdditionalDirections: 'Across BE School',
     },
     {
       id: 2,
@@ -24,6 +26,7 @@ import MyAddresses from '../../components/header/myAdresses';
       block: 'Block 11, Oman Street,',
       home: 'Building No: 33, Sahar Building',
       floor: 'Floor: 10 Flat: 20',
+      AdditionalDirections: 'Across BE School',
     },
     {
       id: 3,
@@ -34,12 +37,13 @@ import MyAddresses from '../../components/header/myAdresses';
       block: 'Block 11, Oman Street,',
       home: 'Building No: 33, Sahar Building',
       floor: 'loor: 10, Seazen Office',
+      AdditionalDirections: 'Across BE School',
     },
   ];
 
   return (
-    <div className="app">
-      <MyAddresses/>
+    <div className="app ">
+      <MyAddresses title="Your Addresses" />
       {cardData.map((data) => (
         <Card
           key={data.id}
@@ -51,8 +55,10 @@ import MyAddresses from '../../components/header/myAdresses';
           home={data.home}
           floor={data.floor}
           imageUrl={data.imageUrl}
+          AdditionalDirections={data.AdditionalDirections}
         />
       ))}
+      <AddressesButton/>
     </div>
   );
 };

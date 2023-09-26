@@ -61,3 +61,6 @@ h6 {
     max-width: 375px;
   }
 }
+
+iframe#webpack-dev-server-client-overlay{display:none!important}
+

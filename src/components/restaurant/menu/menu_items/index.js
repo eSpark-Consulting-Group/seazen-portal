@@ -46,9 +46,9 @@ const MenuItems = () => {
                 padding: "0",
               }}
             >
-              <span className="dropdown_icon_container_menu">
+              <div className="dropdown_icon_container_menu">
                 <img src="/assets/img/menu_Icon.svg" alt="chevron_down_icon" />
-              </span>
+              </div>
             </Dropdown.Toggle>
 
             <Dropdown.Menu
@@ -77,7 +77,8 @@ const MenuItems = () => {
         <div className="menu_itmes_text_container">
           {menu_categories.map((category, index) => (
             <button
-              key={`menu_category_${index}`}
+              style={{color:"black"}}
+              key={index}
               onClick={() => {
                 handleMenuItemClick(category);
               }}

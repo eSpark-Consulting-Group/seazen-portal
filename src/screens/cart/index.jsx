@@ -16,9 +16,14 @@ import { ReactComponent as DollarIcon } from "../../assets/icons/dollar.svg";
 import { ReactComponent as KNETIcon } from "../../assets/icons/knet.svg";
 import { paths } from "../../routes/paths";
 import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { DialogActions } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { useTheme } from "@mui/material";
+import { setThemeColor } from "../../store/reducers/themeSlice";
+import { useDispatch } from "react-redux";
+import "./style.css";
 
 let CART_ITEMS = [
   {
@@ -110,6 +115,25 @@ function CartPage() {
       Number(getDeliveryCharge())
     ).toFixed(3);
   };
+  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
+  const [selectedSchedule, setSelectedSchedule] = useState(
+    "14 August 2023, ASAP"
+  );
+
+  const scheduleOptions = [
+    "14 August 2023, ASAP",
+    "12 August 2023, 11:00 pm - 11:30 pm",
+    "12 August 2023, 11:30 pm - 12:00 am",
+    "12 August 2023, 12:00 am - 12:30 am",
+    "12 August 2023, 12:30 am - 01:00 am",
+    "12 August 2023, 01:00 am - 01:30 am",
+    "12 August 2023, 01:30 am - 02:00 am",
+  ];
+
+  const handleScheduleOptionClick = (option) => {
+    setSelectedSchedule(option);
+    setOpenSchedulePopup(false); // Close the dialog after selecting an option
+  };
 
   return (
     <Stack
@@ -151,6 +175,11 @@ function CartPage() {
         >
           Your Cart
         </Typography>
+        <div className="cartHeaderoption">
+          <div className="cartHeaderoption-icon">
+            <img src="/assets/img/Group 256.svg" alt="Option Icon" />
+          </div>
+        </div>
       </Stack>
 
       {cartItems && cartItems.length > 0 ? (
@@ -263,7 +292,7 @@ function CartPage() {
                     justifyContent="center"
                     alignItems="center"
                     sx={{
-                      bgcolor: "#026754",
+                      bgcolor: (theme) => theme.palette.themeColor.main,
                       color: "common.white",
                       p: 1,
                       borderRadius: "8px",
@@ -290,8 +319,17 @@ function CartPage() {
                     </Typography>
                   </Stack>
                 </Typography>
-                <Typography variant="h5" sx={{ color: "#026754" }}>
-                  14 August, ASAP
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: "#026754",
+                    fontFamily: "Titillium Web, sans-serif", // Set the font family
+                    fontWeight: 600, // Set the font weight
+                    fontSize: "14px", // Set the font size
+                    lineHeight: "24px", // Set the line height
+                  }}
+                >
+                  {selectedSchedule}
                 </Typography>
               </Stack>
             </Stack>
@@ -316,11 +354,71 @@ function CartPage() {
                   fontSize: "16px",
                 },
               }}
+              onClick={() => setOpenSchedulePopup(true)}
             >
               Schedule
             </Button>
           </Stack>
+          <Dialog
+            open={openSchedulePopup}
+            onClose={() => setOpenSchedulePopup(false)}
+            
+            sx={{
+              margin: "0",
+              textAlign: "center",
+            }}
+            PaperProps={{
+              sx: {
+                overflow: "visible",
+                margin: "0",
+                height: "275px",
+                bottom: "0",
+                position: "fixed",
+                width: "375px",
+                left: "0",
+                borderBottomLeftRadius: "0px",
+                borderBottomRightRadius: "0px",
+                paddingTop: "20px",
+                '@media (max-width: 600px)': {
+                  width: '100%', 
+                },
+              },
+            }}
+          >
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={() => setOpenSchedulePopup(false)}
+              sx={{
+                position: "absolute",
+                top: "-16px",
+                right: "18px",
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <DialogTitle>Select time</DialogTitle>
+            <DialogContent
+              sx={{
+                fontFamily: "Titillium Web, sans-serif", // Set the font family
+                fontWeight: 600, // Set the font weight
+              }}
+            >
+              {scheduleOptions.map((option, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleScheduleOptionClick(option)}
+                  style={{
+                    cursor: "pointer",
 
+                    color: selectedSchedule === option ? "#026754" : "inherit",
+                  }}
+                >
+                  {option}
+                </div>
+              ))}
+            </DialogContent>
+          </Dialog>
           <Stack spacing={2}>
             <Typography variant="h5">
               Your Items
@@ -339,8 +437,15 @@ function CartPage() {
           <TextField
             id="special-instructions"
             placeholder="Special Instructions (Optional)"
+            InputProps={{ disableUnderline: true }}
             multiline
             rows={2}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                background: "#FAFAFA",
+                border: "none",
+              },
+            }}
             variant="outlined"
           />
 
@@ -350,6 +455,7 @@ function CartPage() {
             variant="outlined"
             sx={{
               "& .MuiOutlinedInput-root": {
+                background: "#FAFAFA",
                 "& input": {
                   "&::placeholder": {
                     fontWeight: 700,
@@ -545,15 +651,7 @@ function CartPage() {
                   name: "KNET",
                 },
                 {
-                  icon: (
-                    <CreditCardOutlinedIcon
-                      fontSize="large"
-                      sx={{
-                        ml: 0.5,
-                        mb: 1,
-                      }}
-                    />
-                  ),
+                  icon: <img src="/assets/img/credit card.png"></img>,
                   name: "Credit Card",
                 },
               ].map((method) => (
@@ -603,12 +701,12 @@ function CartPage() {
           </Button>
         </React.Fragment>
       ) : (
-        <Stack justifyContent="center" alignItems="center" sx={{ pt: 5 }}>
+        <Stack justifyContent="center" alignItems="center" sx={{ pt: 15 }}>
           <Typography variant="h5" fontWeight={500}>
             Your cart is empty
           </Typography>
 
-          <Box>
+          <Box sx={{ pt: 5 }}>
             <img src="/assets/img/cart.svg" alt="Empty Cart" />
           </Box>
 
@@ -621,12 +719,22 @@ function CartPage() {
             sx={{
               whiteSpace: "pre-line",
               mb: 2,
+              pt: 4,
             }}
           >
             {`Looks like you have not added anything\n to your cart.\n Go ahead & explore something`}
           </Typography>
 
-          <Button variant="contained" size="large" onClick={() => navigate(-1)}>
+          <Button
+            sx={{
+              width: "184px",
+              height: "56px",
+              mt: 5,
+            }}
+            variant="contained"
+            size="large"
+            onClick={() => navigate(-1)}
+          >
             Back
           </Button>
         </Stack>

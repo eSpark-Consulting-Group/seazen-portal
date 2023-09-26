@@ -18,6 +18,37 @@ const OrderTypeButtonExpandable = ({
   const [expanded, setToggleExpanded] = useState(false);
   const [filterClassDelivery, setToggleFilterClassDelivery] = useState(false);
   const [filterClassNear, setToggleFilterClassNear] = useState(false);
+  const [filterSelectedNow, setFilterSelectedNow] = useState();
+
+  useEffect(() => {
+    if (expanded === false) {
+      handleOrderTypeFilter(false, false, filterSelectedNow);
+      setToggleFilterClassDelivery(false);
+      setToggleFilterClassNear(false);
+    }
+  }, [expanded]);
+
+  useEffect(() => {
+    handleOrderTypeFilter(
+      filterClassDelivery,
+      filterClassNear,
+      filterSelectedNow
+    );
+  }, [filterClassDelivery, filterClassNear]);
+
+  const handleFilterClick = (orderType) => {
+    if (!filterClassDelivery) {
+      orderType === "delivery" && setFilterSelectedNow(orderType);
+    }
+    if (!filterClassNear) {
+      orderType === "near" && setFilterSelectedNow(orderType);
+    }
+    if (orderType === "delivery") {
+      setToggleFilterClassDelivery(!filterClassDelivery);
+    } else {
+      setToggleFilterClassNear(!filterClassNear);
+    }
+  };
 
   const handleClick = () => {
     if (id !== 1) {
@@ -29,45 +60,37 @@ const OrderTypeButtonExpandable = ({
     handleButtonClickIndex(id);
   };
 
-  useEffect(() => {
-    if (filterClassNear) {
-      handleOrderTypeFilter("near");
-    } else if (filterClassDelivery) {
-      handleOrderTypeFilter("delivery");
-    } else {
-      handleOrderTypeFilter(null);
-    }
-  }, [filterClassDelivery, filterClassNear]);
-
-  const handleFilterClick = (orderType) => {
-    if (orderType === "delivery") {
-      setToggleFilterClassDelivery(!filterClassDelivery);
-    } else {
-      setToggleFilterClassNear(!filterClassNear);
-    }
-  };
-
   return (
     <div
       className={`custom-button ${isButtonExpanded.expanded && isButtonExpanded.id === id ? "expanded" : ""} ${
         clicked ? "clicked" : ""
       } ${customButtonExpandedClass}`}
     >
-      <img src={iconSrc} alt="Icon" className="orderTypebutton-icon" onClick={handleClick} />
-      {((isButtonExpanded.expanded && isButtonExpanded.id === id) || !isButtonExpanded.expanded) && (
+      <img
+        src={iconSrc}
+        alt="Icon"
+        className="orderTypebutton-icon"
+        onClick={handleClick}
+      />
+      {((isButtonExpanded.expanded && isButtonExpanded.id === id) ||
+        !isButtonExpanded.expanded) && (
         <span className={`orderTypebutton-text`}>{text}</span>
       )}
       <span className="orderTypebutton-content">
-        {(isButtonExpanded.expanded && isButtonExpanded.id === id) && (
+        {isButtonExpanded.expanded && isButtonExpanded.id === id && (
           <div className="options">
             <button
-              className={`orderTypebutton-style-one ${filterClassDelivery && "orderTypebutton-style-one-active"}`}
+              className={`orderTypebutton-style-one ${
+                filterClassDelivery && "orderTypebutton-style-one-active"
+              }`}
               onClick={() => handleFilterClick("delivery")}
             >
               {buttonOneText}
             </button>
             <button
-              className={`orderTypebutton-style-two ${filterClassNear && "orderTypebutton-style-two-active"}`}
+              className={`orderTypebutton-style-two ${
+                filterClassNear && "orderTypebutton-style-two-active"
+              }`}
               onClick={() => handleFilterClick("near")}
             >
               {buttonTwoText}
@@ -81,7 +104,10 @@ const OrderTypeButtonExpandable = ({
 
 const RestaurantsOrderTypeButton = () => {
   const [clickedButtonIndex, setClickedButtonIndex] = useState(null);
-  const [isButtonExpanded, setIsButtonExpanded] = useState({ expanded: false, id: null });
+  const [isButtonExpanded, setIsButtonExpanded] = useState({
+    expanded: false,
+    id: null,
+  });
   const [orderTypeFilter, setOrderTypeFilter] = useState();
 
   const handleButtonClickIndex = (index) => {
@@ -94,8 +120,16 @@ const RestaurantsOrderTypeButton = () => {
     }
   };
 
-  const handleOrderTypeFilter = (orderType) => {
-    setOrderTypeFilter(orderType);
+  const handleOrderTypeFilter = (
+    deliveryFilter,
+    nearFilter,
+    filterSelectedNow
+  ) => {
+    setOrderTypeFilter({
+      delivery: deliveryFilter,
+      near: nearFilter,
+      selectedNow: filterSelectedNow,
+    });
   };
 
   const data = [
@@ -151,7 +185,10 @@ const RestaurantsOrderTypeButton = () => {
         })}
       </div>
       {/* Pass the clickedButtonIndex to BasicCard */}
-      <BasicCard clickedButtonIndex={clickedButtonIndex} orderTypeFilter={orderTypeFilter} />
+      <BasicCard
+        clickedButtonIndex={clickedButtonIndex}
+        orderTypeFilter={orderTypeFilter}
+      />
     </>
   );
 };

@@ -24,7 +24,7 @@ export default function App() {
     {
       imageUrl: "/assets/img/13.png",
       captionImage: "/assets/img/Group 327.svg",
-      caption: "Masgouf Fish",
+      caption: "Masgouf \nFish",
       additionalText: "KWD",
       inlineText: "6.450",
     },
@@ -48,7 +48,7 @@ export default function App() {
           return (
             <Box
               key={index}
-              index={index} // Pass the index prop here
+              index={index} 
               imageUrl={info.imageUrl}
               caption={info.caption}
               captionImage={info.captionImage}
@@ -157,10 +157,12 @@ function Box({
             </React.Fragment>
           ))}
         </div>
-        <div className="text-style">
+            <div className="price-wrapper">
+            <div className="text-style">
           <p className={additionalTextClass}>{additionalText}</p>
         </div>
         <div className="inline-text">{inlineText}</div>
+            </div>
       </div>
     </div>
   );

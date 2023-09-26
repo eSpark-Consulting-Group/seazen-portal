@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
 import './style.css'
+import { styled } from "@mui/material/styles"; // Import styled from MUI
+import PricingBox from '../total';
 
+
+const StyledOuterContainer = styled("div")(({ theme }) => ({
+  backgroundColor: theme.palette.themeColor.main, // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
+
+const StyledOuterButton = styled("div")(({ theme }) => ({
+  backgroundColor: theme.palette.themeColor.light, // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
 function CountContainer() {
   const [count, setCount] = useState(0);
 
@@ -15,14 +27,14 @@ function CountContainer() {
   };
 
   return (
-    <div className="count-container">
+    <StyledOuterContainer className="count-container">
       <span className="quantity-label">Quantity</span>
       <div className="count">
-        <button className="minus-button" onClick={decrementCount}><span className="minus-style">-</span></button>
+        <StyledOuterButton className="minus-button" onClick={decrementCount}><span className="minus-style">-</span></StyledOuterButton>
         <span className="quantitycount-style">{count}</span>
-        <button className="pluss-button" onClick={incrementCount}><span className="pluss-style">+</span></button>
+        <StyledOuterButton className="pluss-button" onClick={incrementCount}><span className="pluss-style">+</span></StyledOuterButton>
       </div>
-    </div>
+    </StyledOuterContainer>
   );
 }
 

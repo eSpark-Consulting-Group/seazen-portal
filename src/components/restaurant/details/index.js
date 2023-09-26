@@ -2,6 +2,13 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./style.css";
 import { paths } from "../../../routes/paths";
+import { styled } from "@mui/material/styles";
+
+
+const StyledItemPrice = styled("div")(({ theme }) => ({
+  color: theme.palette.themeColor.main,
+   // Add any other styles you need for the item price here
+ }));
 
 const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
   const navigate = useNavigate();
@@ -13,7 +20,7 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
       <div className="details_inner_div w-100">
         <div className="logo_info_container">
           <img src="/assets/img/Trapani_logo.svg" alt="restaurant_logo" />
-          <div
+          <StyledItemPrice
             className="information_container"
             onClick={() => {
               handleBranchHoursClick();
@@ -27,11 +34,11 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
                 alt="information_icon"
               />
             </span>
-          </div>
+          </StyledItemPrice>
         </div>
-        <div className="tag_line">
+        <StyledItemPrice className="tag_line">
           A modern take on the Babylonian experience
-        </div>
+        </StyledItemPrice>
       </div>
     </div>
   );

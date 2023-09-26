@@ -4,7 +4,7 @@
   border-radius: 12px;
   opacity: 1;
   padding: 10px;
-  width: 329px;
+  width: 100%;
   margin-bottom: 10px;
   height: 44px;
   color: #959fa8;
@@ -34,6 +34,10 @@
   letter-spacing: 0px;
   color: #959fa8;
   opacity: 1;
+}
+
+.form-style-text-area {
+ height: auto !important;
 }
 
 .style-text {
@@ -66,8 +70,8 @@
   margin-top: 10px;
 }
 
-@media screen and (max-width: 500px) and (min-width: 380px) {
+/* @media screen and (max-width: 500px) and (min-width: 380px) {
   .container-style {
     margin-left: 30px;
   }
-}
+} */

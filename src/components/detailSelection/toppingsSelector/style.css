@@ -1,12 +1,14 @@
 .topping-selection {
   top: 650px;
-  left: 12px;
-  width: 351px;
+  left: 0;
+  width: 100%;
   height: 40px;
   background: #f0f6f5 0% 0% no-repeat padding-box;
   border-radius: 16px;
   opacity: 1;
-  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  margin-top: -15px;
 }
 
 .topping-selection-title {
@@ -18,7 +20,8 @@
   font: normal normal 600 16px/24px Titillium Web;
   letter-spacing: 0px;
   color: #1f2933;
-  position: absolute;
+  margin-top: 7px;
+  margin-left: 13px;
 }
 
 .topping-small-title {
@@ -30,20 +33,20 @@
   font: normal normal 600 10px/24px Titillium Web;
   letter-spacing: 0px;
   color: #6b7580;
-  position: absolute;
+  margin-top: 9px;
+  margin-left: -84px;
 }
 
 .topping-title-optional {
-  top: 6px;
-  left: 274px;
-  width: 60px;
+  /* width: 60px; */
   height: 21px;
   text-align: right;
   font: normal normal bold 14px/24px Titillium Web;
   letter-spacing: 0px;
   color: #6b7580;
   opacity: 1;
-  position: absolute;
+  margin-top: 7px;
+  margin-right: 17px;
 }
 
 .checkbox-counter {
@@ -55,36 +58,14 @@
   position: absolute;
 }
 
-input[type="checkbox"] {
-  accent-color: #2e9c6e;
-}
 
-.checkbox label:before {
-  border-radius: 3px;
-}
 
-input[type="checkbox"]:checked {
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-  font-size: 12px;
-  color: #fff;
-  text-align: center;
-  line-height: 12px;
-}
 
-.checkbox {
-  border-radius: 4px;
-  width: 300px;
-  font-family: Arial, sans-serif;
-}
 
 .toppings-list {
   list-style: none;
   padding: 15px;
-  margin-top: 340px;
-  /* margin-left: 19px; */
-  /* margin-right: -52px; */
-  position: absolute;
-  left: 19px;
+  margin-left: -9px;
 }
 
 .toppings-list-item {
@@ -94,120 +75,58 @@ input[type="checkbox"]:checked {
   margin-bottom: 8px;
 }
 
-.pricing-box {
-  width: 327px;
-  height: 56px;
-  background: #308979 0% 0% no-repeat padding-box;
-  box-shadow: 0px 4px 16px #30897929;
-  border-radius: 12px;
-  opacity: 1;
-}
-
-.pricing-section {
-  text-align: center;
-  font: normal normal 600 18px/24px Titillium Web;
-  letter-spacing: 0px;
-  color: #ffffff;
-  opacity: 1;
-  top: 308px;
-  left: 56px;
-  position: absolute;
-}
-
-.pricing-icon {
-  top: 307px;
-  left: 20px;
-  width: 24px;
-  height: 24px;
-  opacity: 1;
-  position: absolute;
-}
-
-.calculation-section {
-  top: 309px;
-  left: 211px;
-  width: 95px;
-  height: 24px;
-  text-align: right;
-  font: normal normal 600 16px/24px Titillium Web;
-  letter-spacing: 0px;
-  color: #ffffff;
-  opacity: 1;
-  position: absolute;
-}
-
 .left-section-counter {
-  flex: 1;
   display: flex;
   align-items: center;
-  width: 38px;
+  /* width: 38px; */
   height: 24px;
   text-align: left;
   font: normal normal 600 16px/24px Titillium Web;
   letter-spacing: 0px;
   color: #323f4b;
   opacity: 1;
-  position: absolute;
-  left: 280px;
+  margin-top: 2px;
 }
 
 .counter-button-right {
-  /* width: 42px; */
-  /* height: 20px; */
+  width: 24px;
+  height: 24px;
   background: #ffffff 0% 0% no-repeat padding-box;
   border: 1px solid #dcdfe3;
   border-radius: 100px;
   opacity: 1;
-  padding: 11px;
-  margin-right: 4px;
-  position: absolute;
-  right: 21px;
-  top: 1px;
-
+  position: relative;
+  left: 9px;
 }
 
 .counter-icon-right {
-  top: -2px;
-  left: 5px;
-  width: 12px;
-  height: 12px;
-  opacity: 1;
-  color: #1c304f "";
+  top: -3px;
+  left: 1px;
   color: #1c304f;
-  position: absolute;
+  position: relative;
 }
 
 .counter-icon-left {
-  top: -2px;
-  left: 5px;
-  width: 12px;
-  height: 12px;
-  opacity: 1;
-  color: #1c304f "";
+  top: -3px;
+  left: 1px;
   color: #1c304f;
-  position: absolute;
+  position: relative;
 }
 
 .counter-button-left {
-  /* width: 42px; */
-    /* height: 20px; */
-    background: #ffffff 0% 0% no-repeat padding-box;
-    border: 1px solid #dcdfe3;
-    border-radius: 100px;
-    opacity: 1;
-    padding: 11px;
-    margin-right: 4px;
-    position: absolute;
-    right: -23px;
+  width: 24px;
+  height: 24px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #dcdfe3;
+  border-radius: 100px;
+  opacity: 1;
+  position: relative;
+  left: 15px;
 }
 
-.counter-value{
-  right: 10px;
-  position: absolute;
-}
-
-input[type="checkbox"] {
-  margin-right: 8px;
+.counter-value {
+  right: -13px;
+  position: relative;
 }
 
 .right-section-counter {
@@ -218,53 +137,40 @@ input[type="checkbox"] {
   letter-spacing: 0px;
   color: #323f4b;
   opacity: 1;
-  margin-left: -10px;
+  margin-left: -16px;
+  margin-bottom: -12px;
 }
 
-/* Style for the Total section */
 .toppings-list-item:last-child {
   background-color: #fff;
-  padding-top: 8px;
-  margin-top: 8px;
+  margin-top: -6px;
 }
 
-/* Hover effect for list items */
-.toppings-list-item:hover {
-  background-color: #e6e6e6;
-  transition: background-color 0.2s ease-in-out;
-}
-
-hr {
-  width: 325px;
+.toppings-list hr {
   height: 0px;
   transform: matrix(1, 0, 0, 1, 0, 0);
   border: 1px solid #ebeef0;
   opacity: 1;
   margin-top: 10px;
-
-}
-
-.toppingSelectioncheckbox-counter input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-
-  background-color: #fff;
-  border: 2px solid #333;
-  border-radius: 4px;
+  margin-bottom: 9px;
+  width: 104%;
 }
 
 .disabled-text {
   color: #c0c4c8;
 }
 
-@media screen and (max-width:500px) and (min-width:400px) {
-  .topping-selection{
+/* /* @media screen and (max-width: 500px) and (min-width: 400px) {
+  .topping-selection {
     left: 36px;
   }
 
-  .toppings-list{
+  .toppings-list {
     margin-left: 20px;
   }
+} */
 
-  
+.extra-topping-instruction {
+  font-size: 10px;
+  font-weight: 400;
 }

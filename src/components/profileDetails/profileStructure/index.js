@@ -9,7 +9,7 @@ const ProfileStructure = ({ name, phoneNumber, email, imageUrl, onEditClick }) =
   const navigate = useNavigate();
 
   return (
-    <div className="profile-section">
+    <div className="profile-section container-fluid">
       <div className="left-section">
         <img src={imageUrl} alt="Profile" className="image-style" />
         <div className="profile-name">{name}</div>

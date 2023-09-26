@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./style.css";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { paths } from "../../../routes/paths";
 
 const ProfileHeader = (props) => {
@@ -39,10 +39,10 @@ const ProfileHeader = (props) => {
     <nav className="profile-header">
       <div
         className="profileHeaderaccount"
-        onClick={() => navigate(paths.home)}
+        onClick={()=>navigate(paths.home)}
       >
-        <div className="profileHeaderaccount-icon">
-          <img src="/assets/img/Group 330.svg" alt="Account Icon" />
+        <div className="profileHeaderaccount-icon" >
+          <img src="/assets/img/Group 330.svg" alt="Account Icon"/>
         </div>
       </div>
       <div className="profileHeaderlogo">
@@ -61,7 +61,11 @@ const ProfileHeader = (props) => {
           )}
           {isPopupOpen && (
             <div className="profileHeaderpopup">
-              <h2>Select which country to order from</h2>
+              <div>
+                <div className="profileHeaderpopup-heading" >
+                  <h2>Select which country to order from</h2>
+                </div>
+              </div>
               <div className="profileHeadercountry-list">
                 {countries.map((country, index) => (
                   <div
@@ -115,7 +119,7 @@ const ProfileHeader = (props) => {
                   className="profileHeaderbutton-cancel"
                   onClick={() => setIsCountryPopupOpen(false)}
                 >
-                  <span className="profileHeadercancel-text">Cancel</span>
+                  <span className="profileHeadercancel-text">Back</span>
                 </button>
                 <button
                   className="profileHeaderbutton-confirm"

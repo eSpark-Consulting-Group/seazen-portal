@@ -9,7 +9,7 @@ import "./style.css";
 
 const Home = () => {
   return (
-    <div className="home-styling">
+    <div className="home-styling container-fluid">
       <Navbar />
       <div className="card-spacing">
         <Slider />

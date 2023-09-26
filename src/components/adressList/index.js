@@ -10,7 +10,7 @@ import {
 import "./style.css";
 import { AddressesButton } from "./addressesButton";
 
-const Card = ({ title, title2, iconUrl, name, block, home, floor }) => {
+const Card = ({ title, title2, iconUrl, name, block, home, floor, AdditionalDirections }) => {
   const [open, setOpen] = useState(false); // State to control the dialog visibility
 
   const handleClickOpen = () => {
@@ -22,7 +22,8 @@ const Card = ({ title, title2, iconUrl, name, block, home, floor }) => {
   };
 
   return (
-    <div className="addresses-container">
+    <div className=" container-fluid">
+      <div className="addresses-container  container-fluid">
       <div className="addresses-header">
         <img className="addresses-card-icon" src={iconUrl} alt="Icon" />
         <p className="addresses-home-title">{title}</p>
@@ -40,15 +41,18 @@ const Card = ({ title, title2, iconUrl, name, block, home, floor }) => {
         <hr />
       </div>
       <div className="addresses-content">
-        <div className="addresses-details-and-map">
-          <div className="addresses-details">
-            <p className="addresses-name">{name}</p>
-            <p className="addresses-name">{block}</p>
-            <p className="addresses-name">{home}</p>
-            <p className="addresses-name">{floor}</p>
-          </div>
+      <div className="addresses-details-and-map">
+      <div className="addresses-details">
+          <p className="addresses-name">{name}</p>
+          <p className="addresses-name">{block}</p>
+          <p className="addresses-name">{home}</p>
+          <p className="addresses-name">{floor}</p>
+          <p className="additional-addresses">Additional Directions; <br/> {AdditionalDirections}</p>
         </div>
-        <div className="addresses-map-section">
+        
+        
+      </div>
+      <div className="addresses-map-section">
           <img src="/assets/img/map-image.svg" alt="Small Image" />
         </div>
       </div>
@@ -133,6 +137,7 @@ const Card = ({ title, title2, iconUrl, name, block, home, floor }) => {
         </DialogActions>
       </Dialog>
     </div>
+</div>
   );
 };
 
