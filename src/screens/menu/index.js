@@ -25,7 +25,7 @@ const Menu = () => {
     isError,
   } = useQuery({
     queryKey: [GET_RESTAURANT_DETAILS_QUERY_KEY],
-    queryFn: () => getRestaurantDetails(location.state.restaurantId),
+    queryFn: () => getRestaurantDetails(location.state?.restaurantId),
     onSuccess: (data) => {
       console.log("data", data);
     },
@@ -38,7 +38,7 @@ const Menu = () => {
     isError: restaurantBranchHoursIsError,
   } = useQuery({
     queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY],
-    queryFn: () => getRestaurantBranchHours(location.state.restaurantId),
+    queryFn: () => getRestaurantBranchHours(location.state?.restaurantId),
     onSuccess: (data) => {
       console.log("data", data);
     },

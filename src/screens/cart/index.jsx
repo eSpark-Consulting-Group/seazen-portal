@@ -22,8 +22,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material";
 import { setThemeColor } from "../../store/reducers/themeSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
+import { useQuery } from "@tanstack/react-query";
+import cartList from "../../api/cart/cartList";
+import CircularProgress from '@mui/material/CircularProgress';
 
 let CART_ITEMS = [
   {
@@ -62,10 +65,51 @@ function CartPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [tipValue, setTipValue] = React.useState(0.25);
-  const [cartItems, setCartItems] = React.useState(CART_ITEMS);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [cartItems, setCartItems] = React.useState();
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
   const DISCOUNT_AMOUNT = Number(1).toFixed(3);
   const DELIVERY_CHARGE = Number(1).toFixed(3);
+
+  const token = useSelector((state) => state.auth.token);
+
+  const checkoutHandler = () => {
+
+    fetch("http://34.133.246.217/api/v1/checkout/process", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      method: "POST",
+      body: JSON.stringify({
+        payment_method_id: "1",
+        order_total_price: "2.10",
+        currency_id: "3",
+        country_id: "3",
+        restaurant_id: "2",
+        branch_id: "1",
+        driver_id: "1",
+        address_id: "1",
+        service_type: "pickup",
+        tip_id: "1",
+        pick_from_store: "",
+        pickup_from_car: "",
+        delivery_charges: "0",
+        promo_code: "Test1",
+        comments: "Optional Comments"
+      })
+    })
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((res) => {
+        window.location.href = res.data.checkout_url
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   useEffect(() => {
     let isCartEmpty = searchParams.get("empty");
@@ -78,9 +122,27 @@ function CartPage() {
     }
   }, []);
 
+  useEffect(() => {
+      cartRefetch()
+  }, []);
+
+  const cartRefetch = () => {
+    setTimeout(() => {
+    cartList(token).then((res) => {
+      setCartItems(res.data)
+      setIsLoading(false)
+    }).catch((err) => {
+      console.log(err)
+      setCartItems([])
+      setIsLoading(false)
+    })
+    }, 500);
+  }
+
   const getItemTotal = () => {
-    return CART_ITEMS.reduce((acc, cartItem) => {
-      return acc + cartItem.item.price * cartItem.quantity;
+    return cartItems.reduce((acc, cartItem) => {
+      return acc + cartItem.unit_price * cartItem.option_group_quantity;
+      // return acc + 100 * cartItem.quantity;
     }, 0).toFixed(3);
   };
 
@@ -411,12 +473,12 @@ function CartPage() {
           <Stack spacing={2}>
             <Typography variant="h5">
               Your Items
-              {CART_ITEMS.length > 0 ? ` (s)` : ""}
+              {cartItems.length > 0 ? ` (s)` : ""}
             </Typography>
 
-            {CART_ITEMS.length > 0 ? (
-              CART_ITEMS.map((cartItem) => {
-                return <CartItem key={cartItem.id} {...cartItem} />;
+            {cartItems.length > 0 ? (
+              cartItems.map((cartItem) => {
+                return <CartItem key={cartItem.id} {...cartItem} cartRefetch={cartRefetch} />;
               })
             ) : (
               <Typography variant="body1">No items in your cart</Typography>
@@ -526,7 +588,7 @@ function CartPage() {
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="body1">
                 Item
-                {CART_ITEMS.length > 1 ? `(s)` : ""} Total
+                {cartItems.length > 1 ? `(s)` : ""} Total
               </Typography>
               <Typography variant="body1">{`KWD ${getItemTotal()}`}</Typography>
             </Stack>
@@ -625,12 +687,12 @@ function CartPage() {
             </Stack>
           </Stack>
 
-          <Button variant="contained" size="large">
+          <Button onClick={() => checkoutHandler()} variant="contained" size="large">
             Pay Now
           </Button>
         </React.Fragment>
       ) : (
-        <Stack justifyContent="center" alignItems="center" sx={{ pt: 15 }}>
+       <> {!isLoading ? <Stack justifyContent="center" alignItems="center" sx={{ pt: 15 }}>
           <Typography variant="h5" fontWeight={500}>
             Your cart is empty
           </Typography>
@@ -666,7 +728,12 @@ function CartPage() {
           >
             Back
           </Button>
-        </Stack>
+        </Stack> : 
+        <Box sx={{ display: 'flex', justifyContent: "center", marginTop: "100px !important" }}>
+          <CircularProgress />
+        </Box>
+        }
+        </>
       )}
     </Stack>
   );
