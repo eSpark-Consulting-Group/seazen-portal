@@ -25,6 +25,12 @@ export const Details = () => {
 
   const cart = useSelector((state) => state.cart.cart);
 
+  const [cartItem, setCartItem] = React.useState();
+  const [quantity, setQuantity] = React.useState(0);
+  const [sizeVariant, setSizeVariant] = React.useState();
+  const [toppingVariant, setToppingVariant] = React.useState([]);
+  const [sideVariant, setSideVariant] = React.useState([]);
+
   const {
     data: menuItemDetails,
     isLoading,
@@ -38,6 +44,18 @@ export const Details = () => {
     },
   });
 
+  const checkIfItemIsInCart = () => {
+    return cart.find((item) => item.id === id);
+  };
+
+  const getCartItemQuantity = () => {
+    return cartItem?.quantity;
+  };
+
+  const getCartItemPrice = () => {
+    return `+KWD ${Number(cartItem?.price).toFixed(3)}`;
+  };
+
   // i-e KWD 1.750 => 1.750 as a number
   const menuItemPriceWithoutCurrency = () => {
     return Number(menuItemDetails?.data?.price?.split(" ")[1]).toFixed(3);
@@ -45,6 +63,98 @@ export const Details = () => {
 
   const getFormattedPrice = (price) => {
     return `+KWD ${Number(price).toFixed(3)}`;
+  };
+
+  React.useEffect(() => {
+    setCartItem(cart.find((item) => item.id === id));
+  }, [cart]);
+
+  const checkIfToppingIsAdded = (name_en) => {
+    return toppingVariant.find((item) => item.name_en === name_en);
+  };
+
+  const checkIfSideIsAdded = (name_en) => {
+    return sideVariant.find((item) => item.name_en === name_en);
+  };
+
+  const checkIfSizeIsAdded = (name_en) => {
+    return sizeVariant?.name_en === name_en;
+  };
+
+  const handleToppingVariant = (option) => {
+    if (checkIfToppingIsAdded(option?.name_en)) {
+      setToppingVariant(
+        toppingVariant.filter((item) => item.name_en !== option?.name_en)
+      );
+    } else {
+      let extraTopping = {
+        ...option,
+        quantity: 1,
+      };
+      setToppingVariant([...toppingVariant, option]);
+    }
+  };
+
+  const handleSideVariant = (option) => {
+    if (checkIfSideIsAdded(option?.name_en)) {
+      setSideVariant(
+        sideVariant.filter((item) => item.name_en !== option?.name_en)
+      );
+    } else {
+      setSideVariant([...sideVariant, option]);
+    }
+  };
+
+  const handleSizeVariant = (option) => {
+    if (checkIfSizeIsAdded(option?.name_en)) {
+      setSizeVariant(null);
+    } else {
+      setSizeVariant(option);
+    }
+  };
+
+  const getExtraToppingQuantity = (option) => {
+    console.log(
+      "option",
+      toppingVariant.find((item) => item.name_en === option?.name_en)
+        ?.quantity || 0
+    );
+    return (
+      toppingVariant.find((item) => item.name_en === option?.name_en)
+        ?.quantity || 0
+    );
+  };
+
+  const handleAddToppingQuantity = (option) => {
+    var extraTopping = {
+      ...option,
+      quantity: option?.quantity + 1,
+    };
+
+    setToppingVariant((toppingVariant) =>
+      toppingVariant.map((item) => {
+        if (item.name_en === option?.name_en) {
+          return extraTopping;
+        }
+        return item;
+      })
+    );
+  };
+
+  const handleRemoveToppingQuantity = (option) => {
+    var extraTopping = {
+      ...option,
+      quantity: option?.quantity - 1,
+    };
+
+    setToppingVariant((toppingVariant) =>
+      toppingVariant.map((item) => {
+        if (item.name_en === option?.name_en) {
+          return extraTopping;
+        }
+        return item;
+      })
+    );
   };
 
   return (
@@ -179,11 +289,48 @@ export const Details = () => {
                             alignItems="center"
                           >
                             <FormControlLabel
+                              checked={
+                                variant.name_en === "Choose the Size"
+                                  ? checkIfSizeIsAdded(option?.name_en)
+                                  : variant.name_en === "Extra Topping"
+                                  ? checkIfToppingIsAdded(option?.name_en)
+                                  : variant.name_en === "Extra Sides"
+                                  ? checkIfSideIsAdded(option?.name_en)
+                                  : false
+                              }
+                              onChange={() => {
+                                variant.name_en === "Choose the Size"
+                                  ? handleSizeVariant(option)
+                                  : variant.name_en === "Extra Topping"
+                                  ? handleToppingVariant(option)
+                                  : variant.name_en === "Extra Sides"
+                                  ? handleSideVariant(option)
+                                  : () => {};
+                              }}
                               control={<Checkbox color="themeColor" />}
                               label={option?.name_en}
                             />
                             {variant.name_en === "Extra Topping" ? (
-                              <IncDec quantity={0} />
+                              <IncDec
+                                IncButtonProps={{
+                                  disabled:
+                                    getExtraToppingQuantity(option) === 7 ||
+                                    !checkIfToppingIsAdded(option?.name_en),
+                                }}
+                                DecButtonProps={{
+                                  disabled: !checkIfToppingIsAdded(
+                                    option?.name_en ||
+                                      getExtraToppingQuantity(option) === 0
+                                  ),
+                                }}
+                                quantity={getExtraToppingQuantity(option)}
+                                onIncrease={() => {
+                                  handleAddToppingQuantity(option);
+                                }}
+                                onDecrease={() => {
+                                  handleRemoveToppingQuantity(option);
+                                }}
+                              />
                             ) : (
                               <Typography
                                 variant="body1"
@@ -244,8 +391,17 @@ export const Details = () => {
               </Typography>
 
               <IncDec
-                quantity={0}
+                quantity={quantity}
+                onIncrease={() => {
+                  setQuantity(quantity + 1);
+                }}
+                onDecrease={() => {
+                  if (quantity > 0) {
+                    setQuantity(quantity - 1);
+                  }
+                }}
                 IncButtonProps={{
+                  disabled: quantity === 10,
                   sx: {
                     color: "common.white",
                     backgroundColor: (theme) => theme.palette.themeColor.light,
@@ -256,6 +412,7 @@ export const Details = () => {
                   },
                 }}
                 DecButtonProps={{
+                  disabled: quantity === 0,
                   sx: {
                     color: "common.white",
                     backgroundColor: (theme) => theme.palette.themeColor.light,
@@ -271,6 +428,7 @@ export const Details = () => {
               size="large"
               variant="contained"
               fullWidth
+              disabled={!sizeVariant}
               sx={{
                 py: 2,
                 display: "flex",

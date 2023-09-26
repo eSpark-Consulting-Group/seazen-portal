@@ -44,6 +44,33 @@ const cartSlice = createSlice({
       );
     },
 
+    addSizeVariant: (state, action) => {
+      const { id, size } = action.payload;
+      const itemIndex = state.cart.findIndex((cartItem) => cartItem.id === id);
+
+      if (itemIndex !== -1) {
+        state.cart[itemIndex].size = size;
+      }
+    },
+
+    addExtraToppings: (state, action) => {
+      const { id, extraToppings } = action.payload;
+      const itemIndex = state.cart.findIndex((cartItem) => cartItem.id === id);
+
+      if (itemIndex !== -1) {
+        state.cart[itemIndex].extraToppings = extraToppings;
+      }
+    },
+
+    addExtraSides: (state, action) => {
+      const { id, extraSides } = action.payload;
+      const itemIndex = state.cart.findIndex((cartItem) => cartItem.id === id);
+
+      if (itemIndex !== -1) {
+        state.cart[itemIndex].extraSides = extraSides;
+      }
+    },
+
     removeFromCart: (state, action) => {
       const id = action.payload;
       const itemIndex = state.cart.findIndex((cartItem) => cartItem.id === id);
@@ -60,7 +87,14 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addToCart, updateCart, removeFromCart } = cartSlice.actions;
+export const {
+  addToCart,
+  updateCart,
+  removeFromCart,
+  addSizeVariant,
+  addExtraToppings,
+  addExtraSides,
+} = cartSlice.actions;
 
 export const selectCart = (state) => state.cart;
 
