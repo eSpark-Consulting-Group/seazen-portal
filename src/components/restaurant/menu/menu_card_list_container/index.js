@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 
 const MenuCardListContainer = () => {
   const navigate = useNavigate();
+  const cartTotal = useSelector((state) => state.cart.total);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryList = useSelector(
@@ -118,7 +119,7 @@ const MenuCardListContainer = () => {
             backgroundColor: (theme) => theme.palette.themeColor.light,
           }}
         >
-          KWD 0.00
+          KWD {cartTotal.toFixed(2) || Number(0).toFixed(2)}
         </Box>
       </Box>
     </div>

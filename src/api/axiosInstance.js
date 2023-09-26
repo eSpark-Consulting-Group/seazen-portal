@@ -4,6 +4,10 @@ import axios from "axios";
 const axiosInstance = axios.create({
   baseURL: "http://34.133.246.217/api/v1/",
   timeout: 1000,
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  },
 });
 
 // Add a request interceptor

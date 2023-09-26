@@ -70,6 +70,7 @@ export default function CheckboxGroup() {
           })
           .flat()
   );
+
   useEffect(() => {
     dispatch(setVariantSize({ isCheckedArray, id }));
   }, []);

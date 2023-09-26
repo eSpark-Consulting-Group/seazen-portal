@@ -3,10 +3,17 @@ import { useNavigate } from "react-router";
 import ExtraItems from "../extraItems";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import "./style.css";
 import { paths } from "../../../../routes/paths";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  removeFromCart,
+  selectCart,
+  updateCart,
+} from "../../../../store/reducers/cartSlice";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
@@ -23,14 +30,6 @@ const AddToCartButton = styled("div")(({ theme }) => ({
 }));
 
 const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
-  function handleClickAdd() {
-    setFoodItemQuantity(foodItemQuantity + 1);
-  }
-
-  function handleClickSubtract() {
-    setFoodItemQuantity(foodItemQuantity - 1);
-  }
-
   const plusIcon = "/assets/img/Icon - Plus.svg";
   const minusIcon = "/assets/img/Icon-Minus.svg";
   const trashIcon = "/assets/img/Icon-Trash.svg";
@@ -40,15 +39,76 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
   const [menuCardDropdownOpen, setMenuCardDropdownOpen] = useState(false);
   const [extraItemCount_1, setExtraItemCount_1] = useState(0);
   const [extraItemCount_2, setExtraItemCount_2] = useState(0);
+  const cart = useSelector((state) => state.cart.cart);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
-  const itemQuantity = useSelector(
-    (state) => state.resturants.details.itemQuantity
-  );
   let conditionalIcon = foodItemQuantity < 2 ? trashIcon : minusIcon;
-  const item = useSelector(
-    (state) => state?.resturants?.listItemByCategory
-  ).find((item) => item.id === id);
+
+  function handleClickAdd() {
+    setFoodItemQuantity(foodItemQuantity + 1);
+
+    if (foodItemQuantity === 0) {
+      dispatch(
+        addToCart({
+          id: id,
+          name: foodItem,
+          price: foodPriceWithoutCurrency(),
+          quantity: foodItemQuantity,
+          itemIngredients: foodIngredients,
+        })
+      );
+    }
+
+    if (foodItemQuantity > 0) {
+      dispatch(
+        updateCart({
+          id: id,
+          quantity: foodItemQuantity + 1,
+        })
+      );
+    }
+  }
+
+  function handleClickSubtract() {
+    setFoodItemQuantity(foodItemQuantity - 1);
+
+    if (foodItemQuantity === 1) {
+      dispatch(removeFromCart(id));
+    }
+
+    if (foodItemQuantity > 1) {
+      dispatch(
+        updateCart({
+          id: id,
+          quantity: foodItemQuantity - 1,
+        })
+      );
+    }
+  }
+
+  // i-e KWD 1.750 => 1.750 as a number
+  const foodPriceWithoutCurrency = () => {
+    return Number(foodPrice.split(" ")[1]);
+  };
+
+  const checkIfItemIsInCart = () => {
+    const itemIndex = cart.findIndex((cartItem) => cartItem.id === id);
+
+    if (itemIndex === -1) {
+      return false;
+    }
+    return true;
+  };
+
+  const getItemQuantity = () => {
+    const itemIndex = cart.findIndex((cartItem) => cartItem.id === id);
+
+    if (itemIndex === -1) {
+      return 0;
+    }
+    return cart[itemIndex].quantity;
+  };
 
   return (
     <Stack
@@ -63,10 +123,10 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
           p: 1.5,
           width: "100%",
           position: "relative",
+          borderRadius: "8px",
 
-          ...(menuCardDropdownOpen && {
-            borderLeft: (theme) =>
-              `12px solid ${theme.palette.themeColor.main}`,
+          ...(checkIfItemIsInCart() && {
+            borderLeft: (theme) => `8px solid ${theme.palette.themeColor.main}`,
           }),
         }}
         direction="row"
@@ -91,28 +151,48 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
           <div
             className="menu_card_price_text_container pointer"
             onClick={() => {
-              navigate(paths.details, {
+              navigate(paths.details + "/" + id, {
                 state: {
                   id: id,
                 },
               });
             }}
           >
-            <div className="menu_card_heading_text">{foodItem}</div>
-            <div className="menu_card_sub_text">{foodIngredients}</div>
+            <div>
+              <div className="menu_card_heading_text">{foodItem}</div>
+              <div className="menu_card_sub_text">{foodIngredients}</div>
+            </div>
             <div className="menu_card_price_add_to_cart_container">
               <div className="menu_card_price_container">
                 {/* <div className="menu_card_currency">{foodCurrency}</div> */}
                 <StyledItemPrice className="menu_card_item_price">
-                  {foodPrice}
+                  <Typography
+                    variant="subtitle2"
+                    color="GrayText"
+                    component="sup"
+                    sx={{
+                      mr: 0.5,
+                    }}
+                  >
+                    KWD
+                  </Typography>
+                  {foodPriceWithoutCurrency()}
                 </StyledItemPrice>
               </div>
             </div>
           </div>
         </Stack>
 
-        <div className="menu_card_buttons_quantity_container">
-          <StyledItemPrice className="menu_card_qunatity_label">{`${itemQuantity}x`}</StyledItemPrice>
+        <div
+          className={`menu_card_buttons_quantity_container ${
+            getItemQuantity() > 0
+              ? "justify-content-between"
+              : "justify-content-end"
+          }`}
+        >
+          {getItemQuantity() > 0 && (
+            <StyledItemPrice className="menu_card_qunatity_label">{`${getItemQuantity()}x`}</StyledItemPrice>
+          )}
           <div className="menu_card_add_to_cart_button_container">
             <AddToCartButton
               onClick={handleClickAdd}

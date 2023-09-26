@@ -1,21 +1,309 @@
-import React from "react";
-import SideSelection from "../../components/detailSelection/sideSelection";
-import CheckboxGroup from "../../components/detailSelection/sizeSelection";
-import ToppingSelection from "../../components/detailSelection/toppingsSelector";
-import { Content } from "../../components/detailsInformation";
+import React, { Fragment } from "react";
+import { useParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useSelector, useDispatch } from "react-redux";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Skeleton from "@mui/material/Skeleton";
+import Typography from "@mui/material/Typography";
 import { DetailsHeader } from "../../components/header/detailsHeader";
 import "./style.css";
+import getMenuItemDetails, {
+  GET_MENU_ITEM_DETAILS_QUERY_KEY,
+} from "../../api/menu/getMenuItemDetails";
+import { Divider, alpha } from "@mui/material";
+import IncDec from "../../components/Input/InputWithIncDec";
+import { AddShoppingCartRounded } from "@mui/icons-material";
 
 export const Details = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  const cart = useSelector((state) => state.cart.cart);
+
+  const {
+    data: menuItemDetails,
+    isLoading,
+    error,
+    isError,
+  } = useQuery({
+    queryKey: [GET_MENU_ITEM_DETAILS_QUERY_KEY],
+    queryFn: () => getMenuItemDetails(id, 1, 1),
+    onSuccess: (data) => {
+      console.log("data", data);
+    },
+  });
+
+  // i-e KWD 1.750 => 1.750 as a number
+  const menuItemPriceWithoutCurrency = () => {
+    return Number(menuItemDetails?.data?.price?.split(" ")[1]).toFixed(3);
+  };
+
+  const getFormattedPrice = (price) => {
+    return `+KWD ${Number(price).toFixed(3)}`;
+  };
+
   return (
     <div>
-      <DetailsHeader />
-      {/* <div className="detail"></div> */}
+      <DetailsHeader image={menuItemDetails?.data?.image} />
       <div className="container-fluid section">
-        <Content />
-        <CheckboxGroup />
-        <ToppingSelection />
-        <SideSelection />
+        <Stack
+          spacing={2}
+          sx={{
+            color: "common.black",
+          }}
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: -2.5 * 8,
+              right: 3 * 8,
+              backgroundColor: (theme) => theme.palette.themeColor.main,
+              color: "white",
+              px: 2,
+              py: 1,
+              borderRadius: "12px",
+              zIndex: 1,
+            }}
+          >
+            <Typography variant="body1" component="div">
+              <Typography
+                variant="subtitle2"
+                component="sup"
+                sx={{
+                  mr: 0.5,
+                }}
+              >
+                KWD
+              </Typography>
+              {menuItemPriceWithoutCurrency()}
+            </Typography>
+          </Box>
+          <Stack spacing={1}>
+            {isLoading ? (
+              <Skeleton variant="rectangular" width={210} height={118} />
+            ) : (
+              <>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Typography variant="h5" component="div">
+                    {menuItemDetails?.data?.name_en}
+                  </Typography>
+
+                  <Typography
+                    variant="caption"
+                    component="div"
+                    sx={{
+                      color: (theme) => theme.palette.themeColor.main,
+                    }}
+                  >
+                    483 Kcal
+                  </Typography>
+                </Stack>
+                <Typography variant="body2" component="div">
+                  {menuItemDetails?.data?.description_en}
+                </Typography>
+              </>
+            )}
+
+            {menuItemDetails &&
+              menuItemDetails?.data?.variants?.map((variant) => {
+                return (
+                  <Stack key={variant?.id} spacing={0.5}>
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      spacing={1}
+                      sx={{
+                        py: 0.5,
+                        px: 1.5,
+                        borderRadius: 999,
+                        backgroundColor: (theme) =>
+                          alpha(theme.palette.themeColor.main, 0.12),
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        component="div"
+                        fontWeight="normal"
+                      >
+                        {variant?.name_en}
+
+                        <Typography
+                          variant="subtitle2"
+                          component="sub"
+                          color="GrayText"
+                          fontWeight="light"
+                          sx={{
+                            ml: 0.5,
+                          }}
+                        >
+                          {variant.name_en === "Choose the Size"
+                            ? "(Choose 1)"
+                            : variant.name_en === "Extra Topping"
+                            ? "(Choose up to 7)"
+                            : variant.name_en === "Extra Sides"
+                            ? "(Choose up to 2)"
+                            : ""}
+                        </Typography>
+                      </Typography>
+
+                      <Typography
+                        variant="body1"
+                        component="div"
+                        fontWeight={600}
+                        sx={{
+                          color: (theme) => theme.palette.themeColor.main,
+                        }}
+                      >
+                        (Required)
+                      </Typography>
+                    </Stack>
+
+                    {variant?.options?.map((option, index) => {
+                      return (
+                        <Fragment key={option?.id}>
+                          <Stack
+                            direction="row"
+                            spacing={0.5}
+                            justifyContent="space-between"
+                            alignItems="center"
+                          >
+                            <FormControlLabel
+                              control={<Checkbox color="themeColor" />}
+                              label={option?.name_en}
+                            />
+                            {variant.name_en === "Extra Topping" ? (
+                              <IncDec quantity={0} />
+                            ) : (
+                              <Typography
+                                variant="body1"
+                                component="div"
+                                sx={{
+                                  color: "common.black",
+                                }}
+                              >
+                                {getFormattedPrice(option?.unit_price)}
+                              </Typography>
+                            )}
+                          </Stack>
+
+                          {variant?.options?.length - 1 !== index && (
+                            <Divider />
+                          )}
+                        </Fragment>
+                      );
+                    })}
+                  </Stack>
+                );
+              })}
+          </Stack>
+
+          <TextField
+            multiline
+            rows={4}
+            placeholder="Special instructions (Optional)"
+            sx={{
+              mt: 2,
+            }}
+            fullWidth
+          />
+
+          <Stack
+            spacing={0}
+            alignItems="center"
+            sx={{
+              pb: 2,
+            }}
+          >
+            <Box
+              sx={{
+                width: "85%",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                py: 1,
+                px: 2,
+                borderTopLeftRadius: "12px",
+                borderTopRightRadius: "12px",
+                color: "common.white",
+                backgroundColor: (theme) => theme.palette.themeColor.main,
+              }}
+            >
+              <Typography variant="h6" component="div">
+                Quantity
+              </Typography>
+
+              <IncDec
+                quantity={0}
+                IncButtonProps={{
+                  sx: {
+                    color: "common.white",
+                    backgroundColor: (theme) => theme.palette.themeColor.light,
+                    "&:hover": {
+                      backgroundColor: (theme) =>
+                        theme.palette.themeColor.light,
+                    },
+                  },
+                }}
+                DecButtonProps={{
+                  sx: {
+                    color: "common.white",
+                    backgroundColor: (theme) => theme.palette.themeColor.light,
+                    "&:hover": {
+                      backgroundColor: (theme) =>
+                        theme.palette.themeColor.light,
+                    },
+                  },
+                }}
+              />
+            </Box>
+            <Button
+              size="large"
+              variant="contained"
+              fullWidth
+              sx={{
+                py: 2,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: (theme) => theme.palette.themeColor.light,
+                "&:hover": {
+                  backgroundColor: (theme) => theme.palette.themeColor.light,
+                },
+              }}
+            >
+              <Typography
+                variant="h6"
+                component="span"
+                fontWeight={600}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <AddShoppingCartRounded
+                  sx={{
+                    mr: 1,
+                  }}
+                />
+                Add to Cart
+              </Typography>
+              <Typography variant="body1" component="span">
+                +KWD 15.88
+              </Typography>
+            </Button>
+          </Stack>
+        </Stack>
       </div>
     </div>
   );

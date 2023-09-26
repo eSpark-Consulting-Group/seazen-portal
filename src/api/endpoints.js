@@ -6,6 +6,9 @@ const API_ENDPOINTS = {
   RESTAURANT: {
     GET_RESTAURANT_DETAIL: "/restaurant/",
   },
+  MENU: {
+    GET_MENU_ITEM_DETAILS: "/restaurant/",
+  },
 };
 
 export default API_ENDPOINTS;
