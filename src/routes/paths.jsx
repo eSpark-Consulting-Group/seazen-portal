@@ -41,13 +41,13 @@ export const paths = {
   details: "/details",
   branches: "/branches",
   addresses: "/my-addresses",
-  search: "search"
+  search: "search",
 };
 
 export const routes = {
   home: "/",
   error: "*",
-  menu: "/menu/:restaurant/:option?",
+  menu: "/menu/:restaurant/:id/:option?",
   details: "/details",
   address: "/address",
   cart: "/cart",
@@ -65,7 +65,7 @@ export const routes = {
   terms: "/terms",
   branches: "/branches",
   addresses: "/my-addresses",
-  search: "/search"
+  search: "/search",
 };
 
 export const publicRoutes = {

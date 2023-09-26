@@ -6,30 +6,23 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import "./style.css";
 import { paths } from "../../../../routes/paths";
-
+import { useSelector } from "react-redux";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
 }));
 
 const StyledItemPrice = styled("div")(({ theme }) => ({
- color: theme.palette.themeColor.main,
+  color: theme.palette.themeColor.main,
   // Add any other styles you need for the item price here
 }));
-
 
 const AddToCartButton = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.themeColor.main,
   // Add any other button styles you need here
 }));
 
-const MenuCard = ({
-  foodItem,
-  foodIngredients,
-  foodCurrency,
-  foodPrice,
-  foodImage,
-}) => {
+const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
   function handleClickAdd() {
     setFoodItemQuantity(foodItemQuantity + 1);
   }
@@ -49,8 +42,13 @@ const MenuCard = ({
   const [extraItemCount_2, setExtraItemCount_2] = useState(0);
 
   const navigate = useNavigate();
-
+  const itemQuantity = useSelector(
+    (state) => state.resturants.details.itemQuantity
+  );
   let conditionalIcon = foodItemQuantity < 2 ? trashIcon : minusIcon;
+  const item = useSelector(
+    (state) => state?.resturants?.listItemByCategory
+  ).find((item) => item.id === id);
 
   return (
     <Stack
@@ -67,7 +65,8 @@ const MenuCard = ({
           position: "relative",
 
           ...(menuCardDropdownOpen && {
-            borderLeft: (theme) => `12px solid ${theme.palette.themeColor.main}`,
+            borderLeft: (theme) =>
+              `12px solid ${theme.palette.themeColor.main}`,
           }),
         }}
         direction="row"
@@ -83,50 +82,58 @@ const MenuCard = ({
         >
           <div
             className="menu_card_image_container pointer"
-            onClick={() => {
-              setMenuCardDropdownOpen(!menuCardDropdownOpen);
-            }}
+            // onClick={() => {
+            //   setMenuCardDropdownOpen(!menuCardDropdownOpen);
+            // }}
           >
-            <img src={foodImage} alt="menu_card_image" />
+            <img className="food-image" src={foodImage} alt="menu_card_image" />
           </div>
           <div
             className="menu_card_price_text_container pointer"
             onClick={() => {
-              navigate(paths.details);
+              navigate(paths.details, {
+                state: {
+                  id: id,
+                },
+              });
             }}
           >
             <div className="menu_card_heading_text">{foodItem}</div>
             <div className="menu_card_sub_text">{foodIngredients}</div>
             <div className="menu_card_price_add_to_cart_container">
               <div className="menu_card_price_container">
-                <div className="menu_card_currency">{foodCurrency}</div>
-                <StyledItemPrice className="menu_card_item_price">{foodPrice}</StyledItemPrice>
+                {/* <div className="menu_card_currency">{foodCurrency}</div> */}
+                <StyledItemPrice className="menu_card_item_price">
+                  {foodPrice}
+                </StyledItemPrice>
               </div>
             </div>
           </div>
         </Stack>
 
         <div className="menu_card_buttons_quantity_container">
-          <StyledItemPrice className="menu_card_qunatity_label">{`${foodItemQuantity}x`}</StyledItemPrice>
+          <StyledItemPrice className="menu_card_qunatity_label">{`${itemQuantity}x`}</StyledItemPrice>
           <div className="menu_card_add_to_cart_button_container">
-  <AddToCartButton
-    onClick={handleClickAdd}
-    className="menu_card_add_to_cart_button"
-  >
-    <img src={plusIcon} alt="button_icon" style={{width:16, height:16}} />
-  </AddToCartButton>
+            <AddToCartButton
+              onClick={handleClickAdd}
+              className="menu_card_add_to_cart_button"
+            >
+              <img
+                src={plusIcon}
+                alt="button_icon"
+                style={{ width: 16, height: 16 }}
+              />
+            </AddToCartButton>
 
-  {foodItemQuantity > 0 && (
-    <AddToCartButton
-      onClick={handleClickSubtract}
-      className="menu_card_add_to_cart_button"
-    >
-      <img src={conditionalIcon} alt="button_icon" />
-    </AddToCartButton>
-  )}
-</div>
-
-          
+            {foodItemQuantity > 0 && (
+              <AddToCartButton
+                onClick={handleClickSubtract}
+                className="menu_card_add_to_cart_button"
+              >
+                <img src={conditionalIcon} alt="button_icon" />
+              </AddToCartButton>
+            )}
+          </div>
         </div>
       </Stack>
       {menuCardDropdownOpen && (

@@ -10,12 +10,11 @@ import { useParams } from "react-router-dom/dist";
 import { lighten } from "@mui/material/styles";
 import { styled } from "@mui/material/styles"; // Import styled from MUI
 
-
-
 export default function IconPositionTabs({
   setTabPosition,
   locationDeliver,
   deliveryAvailable,
+  resturantId,
 }) {
   const [value, setValue] = React.useState(0);
   const navigate = useNavigate();
@@ -28,7 +27,7 @@ export default function IconPositionTabs({
   const setTabPositionAndNavigate = (tabPosition) => {
     setTabPosition(tabPosition);
     navigate(
-      `/menu/${restaurant}/${tabPosition}`,
+      `/menu/${restaurant}/${resturantId}/${tabPosition}`,
       createSearchParams({
         locationDeliver: locationDeliver,
         deliveryAvailable: deliveryAvailable,
@@ -60,7 +59,8 @@ export default function IconPositionTabs({
       aria-label="options tabs"
       TabIndicatorProps={{ sx: { backgroundColor: "#323F4B" } }}
       sx={{
-        backgroundColor: (theme) => lighten(theme.palette.themeColor.light, 0.95),
+        backgroundColor: (theme) =>
+          lighten(theme.palette.themeColor.light, 0.95),
         width: "100%",
         padding: "0 20px",
         color: "#323F4B",
@@ -125,7 +125,7 @@ export default function IconPositionTabs({
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
             <DeliveryIcon />
-            <span style={{ marginLeft: "8px" , fontWeight: 600}}>Delivery</span>
+            <span style={{ marginLeft: "8px", fontWeight: 600 }}>Delivery</span>
           </div>
         }
         sx={{

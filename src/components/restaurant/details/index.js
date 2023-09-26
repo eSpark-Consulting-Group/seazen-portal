@@ -4,11 +4,10 @@ import "./style.css";
 import { paths } from "../../../routes/paths";
 import { styled } from "@mui/material/styles";
 
-
 const StyledItemPrice = styled("div")(({ theme }) => ({
   color: theme.palette.themeColor.main,
-   // Add any other styles you need for the item price here
- }));
+  // Add any other styles you need for the item price here
+}));
 
 const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
   const navigate = useNavigate();

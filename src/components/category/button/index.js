@@ -1,6 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./style.css";
 import BasicCard from "../../cards/index";
+import { useQuery } from "@tanstack/react-query";
+
+import getAllRestaurants, {
+  GET_ALL_RESTAURANTS_QUERY_KEY,
+} from "../../../api/home/getAllRestaurants";
+import { useDispatch } from "react-redux";
+import { getResturants } from "../../../store/reducers/resturantsSlice";
+import { useEffect } from "react";
 
 const OrderTypeButtonExpandable = ({
   iconSrc,
@@ -111,6 +119,7 @@ const RestaurantsOrderTypeButton = () => {
     id: null,
   });
   const [orderTypeFilter, setOrderTypeFilter] = useState();
+  const dispatch = useDispatch();
 
   const handleButtonClickIndex = (index) => {
     if (index === clickedButtonIndex) {
@@ -121,6 +130,22 @@ const RestaurantsOrderTypeButton = () => {
       setClickedButtonIndex(index);
     }
   };
+  const {
+    data: getAllResturantsResponse,
+    isLoading: resturantsDataLoading,
+    error: resturantsDataError,
+    isError: resturantsDataIsError,
+  } = useQuery({
+    queryKey: [GET_ALL_RESTAURANTS_QUERY_KEY],
+    queryFn: getAllRestaurants,
+
+    onSuccess: (data) => {},
+  });
+  const { data: restaurantsData } = getAllResturantsResponse || {};
+
+  useEffect(() => {
+    dispatch(getResturants(restaurantsData));
+  }, [restaurantsData]);
 
   const handleOrderTypeFilter = (
     deliveryFilter,

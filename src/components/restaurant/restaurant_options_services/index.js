@@ -1,14 +1,24 @@
 import React from "react";
 import "./style.css";
-import RestaurantDetails from "../details/index.js"
+import RestaurantDetails from "../details/index.js";
 import TabsDynamicConditionalComponent from "../../tabs/tabsConditionalRenderingComponent/index.js";
 
-const RestaurantOptionsServicesContainer = ({restaurantDetail, restaurantBranchHours}) => {
+const RestaurantOptionsServicesContainer = ({
+  restaurantDetail,
+  restaurantBranchHours,
+  resturantId,
+}) => {
   return (
     <div>
-    <div className="options_services_outer_container"></div>
-      <RestaurantDetails restaurantDetail={restaurantDetail} restaurantBranchHours={restaurantBranchHours}/>
-      <TabsDynamicConditionalComponent restaurantDetail={restaurantDetail}/>
+      <div className="options_services_outer_container"></div>
+      <RestaurantDetails
+        restaurantDetail={restaurantDetail}
+        restaurantBranchHours={restaurantBranchHours}
+      />
+      <TabsDynamicConditionalComponent
+        restaurantDetail={restaurantDetail}
+        resturantId={resturantId}
+      />
     </div>
   );
 };
