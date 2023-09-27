@@ -23,7 +23,7 @@ const bull = (
 const images = [
   {
     name: "first card image",
-    image: "/assets/img/15.png",
+    image: "/assets/img/restaurants-1-6.svg",
     service: { doesDelivery: false, isNear: true },
   },
   {
@@ -33,12 +33,12 @@ const images = [
   },
   {
     name: "third card image",
-    image: "/assets/img/17.png",
+    image: "/assets/img/restaurants-3-6.svg",
     service: { doesDelivery: true, isNear: false },
   },
   {
     name: "fourth card image",
-    image: "/assets/img/23.png",
+    image: "/assets/img/restaurants-4-6.svg",
     service: { doesDelivery: true, isNear: true },
   },
   {
@@ -48,7 +48,7 @@ const images = [
   },
   {
     name: "sixth card image",
-    image: "/assets/img/25.png",
+    image: "/assets/img/restaurants-6-6.svg",
     service: { doesDelivery: false, isNear: false },
   },
 ];
