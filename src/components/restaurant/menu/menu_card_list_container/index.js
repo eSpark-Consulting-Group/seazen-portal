@@ -119,7 +119,7 @@ const MenuCardListContainer = () => {
             backgroundColor: (theme) => theme.palette.themeColor.light,
           }}
         >
-          KWD {cartTotal.toFixed(2) || Number(0).toFixed(2)}
+          KWD {Number(cartTotal).toFixed(3) || Number(0).toFixed(3)}
         </Box>
       </Box>
     </div>

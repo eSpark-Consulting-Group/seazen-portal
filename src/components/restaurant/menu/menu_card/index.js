@@ -11,8 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addToCart,
   removeFromCart,
-  selectCart,
-  updateCart,
+  updateCartItemQuantity,
 } from "../../../../store/reducers/cartSlice";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
@@ -59,24 +58,20 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
 
   function handleClickAdd() {
     setFoodItemQuantity(foodItemQuantity + 1);
-
-    if (foodItemQuantity === 0) {
+    if (checkIfItemIsInCart()) {
+      dispatch(
+        updateCartItemQuantity({
+          id: id,
+          quantity: foodItemQuantity + 1,
+        })
+      );
+    } else {
       dispatch(
         addToCart({
           id: id,
-          name: foodItem,
-          price: foodPriceWithoutCurrency(),
+          itemName: foodItem,
+          totalPrice: foodPriceWithoutCurrency(),
           quantity: foodItemQuantity,
-          itemIngredients: foodIngredients,
-        })
-      );
-    }
-
-    if (foodItemQuantity > 0) {
-      dispatch(
-        updateCart({
-          id: id,
-          quantity: foodItemQuantity + 1,
         })
       );
     }
@@ -91,17 +86,13 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
 
     if (foodItemQuantity > 1) {
       dispatch(
-        updateCart({
+        updateCartItemQuantity({
           id: id,
           quantity: foodItemQuantity - 1,
         })
       );
     }
   }
-
-  // const handleDropDownClick = () =>{
-
-  // }
 
   // i-e KWD 1.750 => 1.750 as a number
   const foodPriceWithoutCurrency = () => {
@@ -165,9 +156,7 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
             minWidth: "75%",
           }}
         >
-          <div
-            className="menu_card_image_container pointer"
-          >
+          <div className="menu_card_image_container pointer">
             <img className="food-image" src={foodImage} alt="menu_card_image" />
           </div>
           <div

@@ -18,15 +18,11 @@ import getMenuItemDetails, {
 } from "../../api/menu/getMenuItemDetails";
 import { Divider, alpha } from "@mui/material";
 import IncDec from "../../components/Input/InputWithIncDec";
-import { AddShoppingCartRounded, Label } from "@mui/icons-material";
+import { AddShoppingCartRounded } from "@mui/icons-material";
 import {
-  addExtraSides,
-  addExtraToppings,
-  addSizeVariant,
-  addToCart,
-  addToCartNew,
   removeFromCart,
-  updateCart,
+  updateCartItem,
+  addToCart,
 } from "../../store/reducers/cartSlice";
 
 export const Details = () => {
@@ -35,6 +31,7 @@ export const Details = () => {
   const navigate = useNavigate();
 
   const cart = useSelector((state) => state.cart.cart);
+  const cartInfo = useSelector((state) => state.cart);
 
   const [cartItem, setCartItem] = React.useState();
   const [quantity, setQuantity] = React.useState(1);
@@ -80,9 +77,7 @@ export const Details = () => {
     return totalUnitPrice;
   };
 
-  console.log(menuItemDetails, "shahmenuItemDetails");
   useEffect(() => {
-    console.log(sizeVariant, "shahtoppingVariant");
     const calculateTotal = () => {
       let itemTotal =
         calculateToppingVariantTotal(toppingVariant) +
@@ -155,20 +150,6 @@ export const Details = () => {
     return sizeVariant?.name_en === name_en;
   };
 
-  // const handleToppingVariant = (option, variantId) => {
-  //   if (checkIfToppingIsAdded(option?.name_en)) {
-  //     setToppingVariant(
-  //       toppingVariant.filter((item) => item.name_en !== option?.name_en)
-  //     );
-  //   } else {
-  //     let extraTopping = {
-  //       ...option,
-  //       quantity: 1,
-  //     };
-  //     setToppingVariant([...toppingVariant, option]);
-  //   }
-  // };
-
   const handleToppingVariant = (option, variantId) => {
     const isToppingAdded = checkIfToppingIsAdded(option?.name_en);
 
@@ -206,14 +187,6 @@ export const Details = () => {
       ]);
     }
   };
-
-  // const handleSizeVariant = (option, variantId) => {
-  //   if (checkIfSizeIsAdded(option?.name_en)) {
-  //     setSizeVariant(null);
-  //   } else {
-  //     setSizeVariant(option);
-  //   }
-  // };
 
   const handleSizeVariant = (option, variantId) => {
     const isSizeAdded = checkIfSizeIsAdded(option?.name_en);
@@ -309,8 +282,12 @@ export const Details = () => {
       specialInstructions: specialInstructions,
     };
     // console.log(ItemDataObject, "shahItemDataObject");
-    dispatch(addToCartNew(ItemDataObject));
-    navigate(-1);
+
+    if (checkIfItemIsInCart()) {
+      dispatch(updateCartItem(ItemDataObject));
+    } else {
+      dispatch(addToCart(ItemDataObject));
+    }
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
     // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));
     // dispatch(addExtraSides({ id: id, extraSides: sideVariant }));
