@@ -28,7 +28,7 @@ const images = [
   },
   {
     name: "second card image",
-    image: "/assets/img/19.png",
+    image: "/assets/img/restaurants-1-6.svg",
     service: { doesDelivery: true, isNear: true },
   },
   {
@@ -43,7 +43,7 @@ const images = [
   },
   {
     name: "fifth card image",
-    image: "/assets/img/15.png",
+    image: "/assets/img/restaurants-5-6.svg",
     service: { doesDelivery: false, isNear: true },
   },
   {
