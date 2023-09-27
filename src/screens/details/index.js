@@ -1,7 +1,8 @@
 import React, { Fragment, useEffect } from "react";
 import { useParams } from "react-router";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -27,6 +28,7 @@ import {
 
 export const Details = () => {
   const { id } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -114,7 +116,9 @@ export const Details = () => {
   }, [quantity]);
 
   const checkIfItemIsInCart = () => {
-    return cart.find((item) => item.id === id);
+    return cart.find(
+      (item) => item.item_code === searchParams.get("item_code")
+    );
   };
 
   const getCartItemQuantity = () => {
@@ -135,8 +139,17 @@ export const Details = () => {
   };
 
   React.useEffect(() => {
-    setCartItem(cart.find((item) => item.id === id));
-  }, [cart]);
+    const cartItem = cart.find(
+      (item) => item.item_code === searchParams.get("item_code")
+    );
+
+    setCartItem(cartItem);
+    setQuantity(cartItem?.quantity || 1);
+    setSizeVariant(cartItem?.variants?.sizeVariant || null);
+    setToppingVariant(cartItem?.variants?.toppingVariant || []);
+    setSideVariant(cartItem?.variants?.sideVariant || []);
+    setTotalPrice(cartItem?.totalPrice || 0);
+  }, [searchParams, cart]);
 
   const checkIfToppingIsAdded = (name_en) => {
     return toppingVariant.find((item) => item.name_en === name_en);
@@ -267,7 +280,7 @@ export const Details = () => {
 
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
-    const ItemDataObject = {
+    var ItemDataObject = {
       id: data?.id,
       itemName: data?.description_en,
       discountedPrice: data?.discounted_price,
@@ -278,14 +291,28 @@ export const Details = () => {
         toppingVariant: toppingVariant,
         sideVariant: sideVariant,
       },
-      totalPrice: totalPrice,
+      totalPrice: Number(totalPrice).toFixed(3),
       specialInstructions: specialInstructions,
     };
     // console.log(ItemDataObject, "shahItemDataObject");
 
     if (checkIfItemIsInCart()) {
+      const item_code = cartItem?.item_code;
+
+      ItemDataObject = {
+        ...ItemDataObject,
+        item_code,
+      };
+
       dispatch(updateCartItem(ItemDataObject));
     } else {
+      const item_code = uuidv4();
+
+      ItemDataObject = {
+        ...ItemDataObject,
+        item_code,
+      };
+
       dispatch(addToCart(ItemDataObject));
     }
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
@@ -605,10 +632,10 @@ export const Details = () => {
                     mr: 1,
                   }}
                 />
-                Add to Cart
+                {checkIfItemIsInCart() ? "Update Cart" : "Add to Cart"}
               </Typography>
               <Typography variant="body1" component="span">
-                +KWD {totalPrice}
+                +KWD {Number(totalPrice).toFixed(3)}
               </Typography>
             </Button>
           </Stack>

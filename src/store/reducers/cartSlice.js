@@ -19,10 +19,17 @@ const cartSlice = createSlice({
         (total, item) => total + item.quantity,
         0
       );
-      state.total = state.cart.reduce(
-        (total, item) => total + item.totalPrice,
-        0
+
+      console.log(
+        "type test",
+        state.total,
+        item.totalPrice,
+        state.total + Number(item.totalPrice)
       );
+
+      var total = state.total + Number(item.totalPrice);
+
+      state.total = total;
     },
 
     updateCartItemQuantity: (state, action) => {
@@ -38,7 +45,7 @@ const cartSlice = createSlice({
         0
       );
       state.total = state.cart.reduce(
-        (total, item) => total + item.totalPrice,
+        (total, item) => total + Number(item.totalPrice),
         0
       );
     },
@@ -54,11 +61,12 @@ const cartSlice = createSlice({
       }
 
       state.totalQuantity = state.cart.reduce(
-        (total, item) => total + item.totalPrice,
+        (total, item) => Number(total) + Number(item.totalPrice),
         0
       );
       state.total = state.cart.reduce(
-        (total, item) => total + item.totalPrice,
+        (total, item) =>
+          Number(total).toFixed(3) + Number(item.totalPrice).toFixed(3),
         0
       );
     },
