@@ -14,7 +14,7 @@ import updateCart from "../../../api/cart/updateCart";
 
 function CartItem(props) {
   const { 
-    option_group_quantity, 
+    quantity, 
     id, 
     menu_item_name_en, 
     unit_price, 
@@ -26,7 +26,7 @@ function CartItem(props) {
   const imgSrc = "https://seazen-portal-gdsictor1-espark-web-application-developme.vercel.app/assets/img/menu_card_image.png"
   const variant = "450g"
   
-  const [updatedQuantity, setUpdatedQuantity] = React.useState(option_group_quantity);
+  const [updatedQuantity, setUpdatedQuantity] = React.useState(quantity);
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
 

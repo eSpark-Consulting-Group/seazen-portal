@@ -23,11 +23,12 @@ import {
   addExtraSides,
   addExtraToppings,
   addSizeVariant,
-  addToCart,
+  // addToCart,
   addToCartNew,
   removeFromCart,
   updateCart,
 } from "../../store/reducers/cartSlice";
+import addToCart from "../../api/cart/addToCart";
 
 export const Details = () => {
   const { id } = useParams();
@@ -35,6 +36,7 @@ export const Details = () => {
   const navigate = useNavigate();
 
   const cart = useSelector((state) => state.cart.cart);
+  const token = useSelector((state) => state.auth.token);
 
   const [cartItem, setCartItem] = React.useState();
   const [quantity, setQuantity] = React.useState(1);
@@ -292,6 +294,22 @@ export const Details = () => {
     });
   };
 
+  const addToCartHandler = (itemData) => {
+    const itemCartObj = {
+      ...itemData,
+      item_id: itemData.id,
+      variant_quantity: 1
+    };
+
+    addToCart(itemCartObj, token)
+      .then((resp) => {
+        console.log(resp);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
     const ItemDataObject = {
@@ -310,6 +328,7 @@ export const Details = () => {
     };
     // console.log(ItemDataObject, "shahItemDataObject");
     dispatch(addToCartNew(ItemDataObject));
+    addToCartHandler(ItemDataObject)
     navigate(-1)
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
     // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));

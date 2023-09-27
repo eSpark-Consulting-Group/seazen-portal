@@ -27,39 +27,7 @@ import "./style.css";
 import { useQuery } from "@tanstack/react-query";
 import cartList from "../../api/cart/cartList";
 import CircularProgress from '@mui/material/CircularProgress';
-
-let CART_ITEMS = [
-  {
-    id: 1,
-    item: {
-      name: "Burrito Vegetarian in a Bowl",
-      price: 15.58,
-      image: "/assets/img/7.png",
-      variant: "450g",
-    },
-    quantity: 1,
-  },
-  {
-    id: 2,
-    item: {
-      name: "Burrito Vegetarian in a Bowl",
-      price: 15.58,
-      image: "/assets/img/7.png",
-      variant: "450g",
-    },
-    quantity: 1,
-  },
-  {
-    id: 3,
-    item: {
-      name: "Burrito Vegetarian in a Bowl",
-      price: 15.58,
-      image: "/assets/img/7.png",
-      variant: "450g",
-    },
-    quantity: 1,
-  },
-];
+import checkout from "../../api/cart/checkout";
 
 function CartPage() {
   const navigate = useNavigate();
@@ -67,42 +35,33 @@ function CartPage() {
   const [tipValue, setTipValue] = React.useState(0.25);
   const [isLoading, setIsLoading] = React.useState(true);
   const [cartItems, setCartItems] = React.useState();
+  const [specialIns, setSpecialIns] = React.useState("");
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
   const DISCOUNT_AMOUNT = Number(1).toFixed(3);
   const DELIVERY_CHARGE = Number(1).toFixed(3);
 
   const token = useSelector((state) => state.auth.token);
 
-  const checkoutHandler = () => {
+  const checkoutData = {
+    payment_method_id: "1",
+    order_total_price: "2.10",
+    currency_id: "3",
+    country_id: "3",
+    restaurant_id: "2",
+    branch_id: "1",
+    driver_id: "1",
+    address_id: "1",
+    service_type: "pickup",
+    tip_id: "1",
+    pick_from_store: "",
+    pickup_from_car: "",
+    delivery_charges: "0",
+    promo_code: "Test1",
+    comments: specialIns
+  }
 
-    fetch("http://34.133.246.217/api/v1/checkout/process", {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token
-      },
-      method: "POST",
-      body: JSON.stringify({
-        payment_method_id: "1",
-        order_total_price: "2.10",
-        currency_id: "3",
-        country_id: "3",
-        restaurant_id: "2",
-        branch_id: "1",
-        driver_id: "1",
-        address_id: "1",
-        service_type: "pickup",
-        tip_id: "1",
-        pick_from_store: "",
-        pickup_from_car: "",
-        delivery_charges: "0",
-        promo_code: "Test1",
-        comments: "Optional Comments"
-      })
-    })
-      .then((resp) => {
-        return resp.json();
-      })
+  const checkoutHandler = () => {
+     checkout(checkoutData, token)
       .then((res) => {
         window.location.href = res.data.checkout_url
       })
@@ -141,7 +100,7 @@ function CartPage() {
 
   const getItemTotal = () => {
     return cartItems.reduce((acc, cartItem) => {
-      return acc + cartItem.unit_price * cartItem.option_group_quantity;
+      return acc + cartItem.unit_price * cartItem.quantity;
       // return acc + 100 * cartItem.quantity;
     }, 0).toFixed(3);
   };
@@ -490,6 +449,8 @@ function CartPage() {
             placeholder="Special Instructions (Optional)"
             InputProps={{ disableUnderline: true }}
             multiline
+            onChange={(text) => setSpecialIns(text.target.value)}
+            value={specialIns}
             rows={2}
             sx={{
               "& .MuiOutlinedInput-root": {
