@@ -22,6 +22,7 @@ import IncDec from "../../components/Input/InputWithIncDec";
 import { AddShoppingCartRounded } from "@mui/icons-material";
 import { updateCartItem, addToCart } from "../../store/reducers/cartSlice";
 import addToCartApiCall from "../../api/cart/addToCart";
+import { paths } from "../../routes/paths";
 
 export const Details = () => {
   const { id } = useParams();
@@ -297,6 +298,7 @@ export const Details = () => {
       };
 
       dispatch(updateCartItem(ItemDataObject));
+      navigate(paths.cart);
     } else {
       const item_code = uuidv4();
 
