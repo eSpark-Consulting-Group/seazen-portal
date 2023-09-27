@@ -38,17 +38,17 @@ export const paths = {
   privacy_policy: "privacy-policy",
   terms: "/terms",
   address: "/address",
-  details: "/details",
+  details: "/menu-item-details",
   branches: "/branches",
   addresses: "/my-addresses",
-  search: "search"
+  search: "search",
 };
 
 export const routes = {
   home: "/",
   error: "*",
-  menu: "/menu/:restaurant/:option?",
-  details: "/details",
+  menu: "/menu/:restaurant/:id/:option?",
+  details: "/menu-item-details/:id",
   address: "/address",
   cart: "/cart",
   myorder: "profile/order",
@@ -65,7 +65,7 @@ export const routes = {
   terms: "/terms",
   branches: "/branches",
   addresses: "/my-addresses",
-  search: "/search"
+  search: "/search",
 };
 
 export const publicRoutes = {

@@ -42,6 +42,7 @@ function IncDec(props) {
             color: "black",
             p: 0.5,
           }}
+          
         >
           <RemoveRoundedIcon fontSize="small" />
         </IconButton>
@@ -59,7 +60,7 @@ function IncDec(props) {
           border: "1px solid #DCDFE3",
           color: "black",
           p: 0.5,
-          ...IncButtonProps.sx,
+          ...IncButtonProps?.sx,
         }}
         {...IncButtonProps}
       >

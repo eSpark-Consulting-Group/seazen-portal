@@ -6,7 +6,6 @@
   position: absolute;
   border-radius: 20px;
   overflow-x: hidden;
-  overflow-y: hidden;
   padding-bottom: 50px;
   width: 100%;
 }
@@ -20,25 +19,16 @@
   margin-top: -140px;
   background: #ffffff 0% 0% no-repeat padding-box;
   position: relative;
-  padding-top: 51px;
+  padding-top: 10px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   width: 375px;
   padding-left: 20px;
   padding-right: 20px;
-
 }
 
-@media screen and (max-width:600px) {
-    .section{
-        width: 100%;
-    }
+@media screen and (max-width: 600px) {
+  .section {
+    width: 100%;
+  }
 }
-
-/* @media screen and (max-width:500px) and (min-width:400px)  {
-    .detail{
-        width: 426px;
-    }
-} */
-
-

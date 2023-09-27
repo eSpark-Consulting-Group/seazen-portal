@@ -19,8 +19,10 @@ const API_ENDPOINTS = {
   PAYMENT_METHOD: {
     PAYMENT: "/payment-method",
     
-  }
- 
+  },
+  MENU: {
+    GET_MENU_ITEM_DETAILS: "/restaurant/",
+  },
 };
 
 export default API_ENDPOINTS;

@@ -6,7 +6,7 @@ import DineInCoditionalComponent from "../../restaurant/dineIn/dineInConditional
 import PickupConditionalComponent from "../../restaurant/pickup/pickupConditionalComponent/index.js";
 import DeliveryConditionalComponent from "../../restaurant/delivery/deliveryDetails/deliveryConditionalComponent/index.js";
 
-const TabsDynamicConditionalComponent = () => {
+const TabsDynamicConditionalComponent = ({ resturantId }) => {
   const [tabPosition, setTabPosition] = useState("dinein");
   const [locationDeliver, setLocationDeliver] = useState(false);
   const [deliveryAvailable, setDeliveryAvailable] = useState(false);
@@ -22,6 +22,7 @@ const TabsDynamicConditionalComponent = () => {
             setLocationDeliver={setLocationDeliver}
             deliveryAvailable={deliveryAvailable}
             setDeliveryAvailable={setDeliveryAvailable}
+            resturantId={resturantId}
           />
           <DineInCoditionalComponent />
         </div>
@@ -36,6 +37,7 @@ const TabsDynamicConditionalComponent = () => {
             setLocationDeliver={setLocationDeliver}
             deliveryAvailable={deliveryAvailable}
             setDeliveryAvailable={setDeliveryAvailable}
+            resturantId={resturantId}
           />
           <CateringDetails />
         </div>
@@ -50,6 +52,7 @@ const TabsDynamicConditionalComponent = () => {
             setLocationDeliver={setLocationDeliver}
             deliveryAvailable={deliveryAvailable}
             setDeliveryAvailable={setDeliveryAvailable}
+            resturantId={resturantId}
           />
           <DeliveryConditionalComponent
             locationDeliver={locationDeliver}
@@ -57,6 +60,7 @@ const TabsDynamicConditionalComponent = () => {
             deliveryAvailable={deliveryAvailable}
             setDeliveryAvailable={setDeliveryAvailable}
             errorMessage={"We don’t deliver to your location!"}
+            resturantId={resturantId}
           />
         </div>
       );
@@ -70,6 +74,7 @@ const TabsDynamicConditionalComponent = () => {
             setLocationDeliver={setLocationDeliver}
             deliveryAvailable={deliveryAvailable}
             setDeliveryAvailable={setDeliveryAvailable}
+            resturantId={resturantId}
           />
           <PickupConditionalComponent
             locationDeliver={locationDeliver}
@@ -90,6 +95,7 @@ const TabsDynamicConditionalComponent = () => {
             setLocationDeliver={setLocationDeliver}
             deliveryAvailable={deliveryAvailable}
             setDeliveryAvailable={setDeliveryAvailable}
+            resturantId={resturantId}
           />
           <DineInCoditionalComponent />
         </div>

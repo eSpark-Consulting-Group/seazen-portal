@@ -43,16 +43,16 @@
 .menu_card_heading_text {
   font-family: Titillium Web;
   font-weight: 700;
-  font-size: 13px;
-  line-height: 120%;
+  font-size: 16px;
+  line-height: 18px;
   color: #40484e;
 }
 
 .menu_card_sub_text {
   font-family: Titillium Web;
   font-weight: 300;
-  font-size: 8px;
-  line-height: 125%;
+  font-size: 12px;
+  line-height: 18px;
   color: #40484e;
 }
 

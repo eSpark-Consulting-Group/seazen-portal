@@ -9,6 +9,7 @@ import dineInIcon from "./dinein-icon.svg";
 import { useNavigate } from "react-router";
 import { paths } from "../../routes/paths";
 import { useMediaQuery } from "@mui/material";
+import { useSelector } from "react-redux";
 
 const bull = (
   <Box
@@ -27,7 +28,7 @@ const images = [
   },
   {
     name: "second card image",
-    image: "/assets/img/21.png",
+    image: "/assets/img/19.png",
     service: { doesDelivery: true, isNear: true },
   },
   {
@@ -42,7 +43,7 @@ const images = [
   },
   {
     name: "fifth card image",
-    image: "/assets/img/19.png",
+    image: "/assets/img/15.png",
     service: { doesDelivery: false, isNear: true },
   },
   {
@@ -111,7 +112,7 @@ export const restaurantThemeColor = {
   // },
 };
 
-const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
+const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
   const navigate = useNavigate();
   const captions = [
     icons,
@@ -219,59 +220,88 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const iconHeight = "9px";
 
   const goToRestaurantMenuPage = (restaurant) => {
-    navigate(paths.menu + `/${restaurant}`);
+    navigate(paths.menu + `/restaurant/${restaurant}`);
   };
-
   return (
     <div className="restaurantCard-container container-fluid">
-      {Object.keys(restaurantThemeColor).map((restaurant, index) => (
-        <div
-          key={index}
-          className={`restaurantCards restaurantCard-${
-            isSmallScreen ? "small" : "large"
-          } ${getCardClassName(images[index].service)}`}
-        >
-          <Card
-            sx={{
-              width: cardWidth,
-              borderRadius: 1,
-            }}
-            className="restaurantCards"
-            onClick={() => {
-              goToRestaurantMenuPage(restaurant);
-            }}
-          >
-            <img
-              className="restaurantCard-img"
-              src={images[index].image}
-              alt={`Card ${index + 1}`}
-            />
+      {Object.keys(restaurantThemeColor).map((restaurant, index) => {
+        if (restaurantsData && (index === 0)) {
+          return (
             <div
-              className={`svg-container ${
-                clickedButtonIndex !== null ? "expanded" : "collapsed"
-              }`}
+              key={index}
+              className={`restaurantCards restaurantCard-${
+                isSmallScreen ? "small" : "large"
+              } ${getCardClassName(images[index].service)}`}
             >
-              <div className="inner-svg-container">
-                {captions[index].map((icon, i) => {
-                  return (
-                    <div key={i} className="icon-row">
-                      <img
-                        className={getClassNameAccordingToFilter(
-                          icon.id,
-                          images[index].service
-                        )}
-                        src={icon.image}
-                        alt={`Icon ${i + 1}`}
-                        style={{ width: iconWidth, height: iconHeight }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
+              <Card
+                sx={{
+                  width: cardWidth,
+                  borderRadius: 1,
+                }}
+                className="restaurantCards"
+                onClick={() => {
+                  goToRestaurantMenuPage(restaurantsData[index]?.id);
+                }}
+              >
+                <img
+                  className="restaurantCard-img"
+                  src={restaurantsData[index]?.image}
+                  alt={`Card ${index + 1}`}
+                />
+              </Card>
             </div>
-          </Card>
-        </div>
-      ))}
+          );
+        } else {
+          return (
+            <div
+              key={index}
+              className={`restaurantCards restaurantCard-${
+                isSmallScreen ? "small" : "large"
+              } ${getCardClassName(images[index].service)}`}
+            >
+              <Card
+                sx={{
+                  width: cardWidth,
+                  borderRadius: 1,
+                }}
+                className="restaurantCards"
+                // onClick={() => {
+                //   goToRestaurantMenuPage(restaurant.split(" ")[1]);
+                // }}
+              >
+                <img
+                  className="restaurantCard-img"
+                  src={images[index].image}
+                  alt={`Card ${index + 1}`}
+                />
+                <div
+                  className={`svg-container ${
+                    clickedButtonIndex !== null ? "expanded" : "collapsed"
+                  }`}
+                >
+                  <div className="inner-svg-container">
+                    {captions[index].map((icon, i) => {
+                      return (
+                        <div key={i} className="icon-row">
+                          <img
+                            className={getClassNameAccordingToFilter(
+                              icon.id,
+                              images[index].service
+                            )}
+                            src={icon.image}
+                            alt={`Icon ${i + 1}`}
+                            style={{ width: iconWidth, height: iconHeight }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </Card>
+            </div>
+          );
+        }
+      })}
     </div>
   );
 };
