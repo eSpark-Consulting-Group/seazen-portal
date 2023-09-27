@@ -77,6 +77,8 @@
   letter-spacing: 0px;
   color: #e02020;
   opacity: 1;
+  position: relative;
+  top: -2px;
 }
 
 .addresses-edit-text {
@@ -85,6 +87,8 @@
   letter-spacing: 0px;
   color: #ffffff;
   opacity: 1;
+  position: relative;
+  top: -2px;
 }
 
 .addresses-details-and-map {

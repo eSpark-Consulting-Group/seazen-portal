@@ -8,6 +8,7 @@ const ProfileHeader = (props) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isCountryPopupOpen, setIsCountryPopupOpen] = useState(false);
+  const [currentFlag, setCurrentFlag] = useState("/assets/img/flag1.svg"); // Default flag
   const navigate = useNavigate();
 
   const togglePopup = () => {
@@ -18,6 +19,11 @@ const ProfileHeader = (props) => {
     setSelectedCountry(country);
     setIsPopupOpen(false); // Close the first popup
     setIsCountryPopupOpen(!isCountryPopupOpen);
+  };
+
+  const handleConfirmCountryChange = () => {
+    setCurrentFlag(selectedCountry.flag);
+    setIsCountryPopupOpen(false);
   };
 
   const countries = [
@@ -45,7 +51,7 @@ const ProfileHeader = (props) => {
       {showFlagOption && (
         <div className="profileHeaderflag-profile">
           <div className="profileHeadercircle-container" onClick={togglePopup}>
-            <img src="/assets/img/flag1.svg" alt="Default Flag" />
+            <img src={currentFlag} alt="Flag" />
           </div>
           {isPopupOpen && (
             <div
@@ -92,7 +98,7 @@ const ProfileHeader = (props) => {
               </p>
               <div className="profileHeaderselected-country">
                 <div className="profileHeadercountry-info">
-                  <img src="/assets/img/flag1.svg" alt="Default Flag" />
+                  <img src={currentFlag} alt="Current Flag" />
                   <h2>Kuwait</h2>
                 </div>
                 <img
@@ -117,14 +123,14 @@ const ProfileHeader = (props) => {
                 </button>
                 <button
                   className="profileHeaderbutton-confirm"
-                  onClick={() => setIsCountryPopupOpen(false)}
+                  onClick={handleConfirmCountryChange}
                 >
                   <span className="profileHeaderconfirm-text">Confirm</span>
                 </button>
               </div>
             </div>
           )}
-        </div>  
+        </div>
       )}
       <div className="profileHeaderoption">
         <div className="profileHeaderoption-icon">

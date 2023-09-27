@@ -21,6 +21,7 @@ const OrderTypeButtonExpandable = ({
   clicked,
   id,
   handleOrderTypeFilter,
+  customButtonExpandedClass // New prop to pass the custom class
 }) => {
   const [expanded, setToggleExpanded] = useState(false);
   const [filterClassDelivery, setToggleFilterClassDelivery] = useState(false);
@@ -69,12 +70,9 @@ const OrderTypeButtonExpandable = ({
 
   return (
     <div
-      className={`custom-button ${
-        isButtonExpanded.expanded && isButtonExpanded.id === id
-          ? "expanded"
-          : ""
-      } ${clicked ? "clicked" : ""}`}
-      // style={{ marginRight: id !== 0 ? "5px" : "" }}
+      className={`custom-button ${isButtonExpanded.expanded && isButtonExpanded.id === id ? "expanded" : ""} ${
+        clicked ? "clicked" : ""
+      } ${customButtonExpandedClass}`}
     >
       <img
         src={iconSrc}
@@ -185,6 +183,7 @@ const RestaurantsOrderTypeButton = () => {
       where: "Near Me",
     },
   ];
+
   return (
     <>
       <div className="restaurant-title">
@@ -205,6 +204,7 @@ const RestaurantsOrderTypeButton = () => {
               isButtonExpanded={isButtonExpanded}
               clicked={index === 1 ? clickedButtonIndex === 1 : false}
               handleOrderTypeFilter={handleOrderTypeFilter}
+              customButtonExpandedClass={isButtonExpanded.expanded ? "custom-button-expanded" : ""}
             />
           );
         })}

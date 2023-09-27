@@ -1,7 +1,7 @@
 .footer-section {
   position: fixed;
   bottom: 12px;
-  left: 320px;
+  margin-left: -35px;
   z-index: 1000;
 }
 

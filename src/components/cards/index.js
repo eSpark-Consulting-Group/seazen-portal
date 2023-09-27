@@ -23,32 +23,32 @@ const bull = (
 const images = [
   {
     name: "first card image",
-    image: "/assets/img/15.png",
+    image: "/assets/img/restaurants-1-6.svg",
     service: { doesDelivery: false, isNear: true },
   },
   {
     name: "second card image",
-    image: "/assets/img/19.png",
+    image: "/assets/img/restaurants-1-6.svg",
     service: { doesDelivery: true, isNear: true },
   },
   {
     name: "third card image",
-    image: "/assets/img/17.png",
+    image: "/assets/img/restaurants-3-6.svg",
     service: { doesDelivery: true, isNear: false },
   },
   {
     name: "fourth card image",
-    image: "/assets/img/23.png",
+    image: "/assets/img/restaurants-4-6.svg",
     service: { doesDelivery: true, isNear: true },
   },
   {
     name: "fifth card image",
-    image: "/assets/img/15.png",
+    image: "/assets/img/restaurants-5-6.svg",
     service: { doesDelivery: false, isNear: true },
   },
   {
     name: "sixth card image",
-    image: "/assets/img/25.png",
+    image: "/assets/img/restaurants-6-6.svg",
     service: { doesDelivery: false, isNear: false },
   },
 ];
@@ -235,8 +235,8 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
             >
               <Card
                 sx={{
-                  width: cardWidth,
-                  borderRadius: 1,
+                  width: "100%",
+                  borderRadius: "10px",
                 }}
                 className="restaurantCards"
                 onClick={() => {
@@ -248,6 +248,29 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
                   src={restaurantsData[index]?.image}
                   alt={`Card ${index + 1}`}
                 />
+                <div
+                  className={`svg-container ${
+                    clickedButtonIndex !== null ? "expanded" : "collapsed"
+                  }`}
+                >
+                  <div className="inner-svg-container">
+                    {captions[index].map((icon, i) => {
+                      return (
+                        <div key={i} className="icon-row">
+                          <img
+                            className={getClassNameAccordingToFilter(
+                              icon.id,
+                              images[index].service
+                            )}
+                            src={icon.image}
+                            alt={`Icon ${i + 1}`}
+                            style={{ width: iconWidth, height: iconHeight }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </Card>
             </div>
           );
@@ -261,8 +284,8 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
             >
               <Card
                 sx={{
-                  width: cardWidth,
-                  borderRadius: 1,
+                  width: "100%",
+                  borderRadius: "10px",
                 }}
                 className="restaurantCards"
                 // onClick={() => {
