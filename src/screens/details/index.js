@@ -310,7 +310,7 @@ export const Details = () => {
     };
     // console.log(ItemDataObject, "shahItemDataObject");
     dispatch(addToCartNew(ItemDataObject));
-    navigate(-1)
+    navigate(-1);
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
     // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));
     // dispatch(addExtraSides({ id: id, extraSides: sideVariant }));
