@@ -1,16 +1,17 @@
 .options_services_outer_container {
   height: auto;
-  background-color: white;
+  background-color: white !important;
   padding-top: 30px;
   border-top-right-radius: 18px;
   border-top-left-radius: 18px;
-  position: absolute;
-  top: 235px;
+  top: 155px;
   width: 100%;
-  max-width: 375px;
+  z-index: 2;
+  position: relative;
+  top: -15px;
 }
 
-@media screen and (max-width: 500px) and (min-width: 380px) {
+/* @media screen and (max-width: 500px) and (min-width: 380px) {
   .options_services_outer_container {
     top: 305px !important;
     max-width: 100% !important;
@@ -22,6 +23,4 @@
   width: 375px;
   top: 265px;
 }
-}
-
-
+} */

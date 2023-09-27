@@ -235,8 +235,8 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
             >
               <Card
                 sx={{
-                  width: cardWidth,
-                  borderRadius: 1,
+                  width: "100%",
+                  borderRadius: "10px",
                 }}
                 className="restaurantCards"
                 onClick={() => {
@@ -248,6 +248,29 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
                   src={restaurantsData[index]?.image}
                   alt={`Card ${index + 1}`}
                 />
+                <div
+                  className={`svg-container ${
+                    clickedButtonIndex !== null ? "expanded" : "collapsed"
+                  }`}
+                >
+                  <div className="inner-svg-container">
+                    {captions[index].map((icon, i) => {
+                      return (
+                        <div key={i} className="icon-row">
+                          <img
+                            className={getClassNameAccordingToFilter(
+                              icon.id,
+                              images[index].service
+                            )}
+                            src={icon.image}
+                            alt={`Icon ${i + 1}`}
+                            style={{ width: iconWidth, height: iconHeight }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </Card>
             </div>
           );
@@ -261,8 +284,8 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
             >
               <Card
                 sx={{
-                  width: cardWidth,
-                  borderRadius: 1,
+                  width: "100%",
+                  borderRadius: "10px",
                 }}
                 className="restaurantCards"
                 // onClick={() => {
