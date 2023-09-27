@@ -2,7 +2,7 @@ import axiosInstance from "../axiosInstance";
 import API_ENDPOINTS from "../endpoints";
 
 // we will use this function with react-query
-const updateCart = async (cartItem, token) => {
+const updateCartApiCall = async (cartItem, token) => {
     const { data } = await axiosInstance.post(
       API_ENDPOINTS.CART.UPDATE_CART,
       cartItem,
@@ -15,6 +15,6 @@ const updateCart = async (cartItem, token) => {
     return data;
   };
   
-export default updateCart;
+export default updateCartApiCall;
   
 

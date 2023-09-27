@@ -1,7 +1,8 @@
 import React, { Fragment, useEffect } from "react";
 import { useLocation, useParams } from "react-router";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -18,20 +19,16 @@ import getMenuItemDetails, {
 } from "../../api/menu/getMenuItemDetails";
 import { Divider, alpha } from "@mui/material";
 import IncDec from "../../components/Input/InputWithIncDec";
-import { AddShoppingCartRounded, Label } from "@mui/icons-material";
+import { AddShoppingCartRounded } from "@mui/icons-material";
 import {
-  addExtraSides,
-  addExtraToppings,
-  addSizeVariant,
-  // addToCart,
-  addToCartNew,
-  removeFromCart,
-  updateCart,
+  updateCartItem,
+  addToCart,
 } from "../../store/reducers/cartSlice";
-import addToCart from "../../api/cart/addToCart";
+import addToCartApiCall from "../../api/cart/addToCart";
 
 export const Details = () => {
   const { id } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -82,9 +79,7 @@ export const Details = () => {
     return totalUnitPrice;
   };
 
-  console.log(menuItemDetails, "shahmenuItemDetails");
   useEffect(() => {
-    console.log(sizeVariant, "shahtoppingVariant");
     const calculateTotal = () => {
       let itemTotal =
         calculateToppingVariantTotal(toppingVariant) +
@@ -114,14 +109,10 @@ export const Details = () => {
     setTotalPrice(total);
   }, [toppingVariant, sizeVariant, quantity, sideVariant]);
 
-  useEffect(() => {
-    if (quantity === 0) {
-      dispatch(removeFromCart(id));
-    }
-  }, [quantity]);
-
   const checkIfItemIsInCart = () => {
-    return cart.find((item) => item.id === id);
+    return cart.find(
+      (item) => item.item_code === searchParams.get("item_code")
+    );
   };
 
   const getCartItemQuantity = () => {
@@ -142,8 +133,17 @@ export const Details = () => {
   };
 
   React.useEffect(() => {
-    setCartItem(cart.find((item) => item.id === id));
-  }, [cart]);
+    const cartItem = cart.find(
+      (item) => item.item_code === searchParams.get("item_code")
+    );
+
+    setCartItem(cartItem);
+    setQuantity(cartItem?.quantity || 1);
+    setSizeVariant(cartItem?.variants?.sizeVariant || null);
+    setToppingVariant(cartItem?.variants?.toppingVariant || []);
+    setSideVariant(cartItem?.variants?.sideVariant || []);
+    setTotalPrice(cartItem?.totalPrice || 0);
+  }, [searchParams, cart]);
 
   const checkIfToppingIsAdded = (name_en) => {
     return toppingVariant.find((item) => item.name_en === name_en);
@@ -156,20 +156,6 @@ export const Details = () => {
   const checkIfSizeIsAdded = (name_en) => {
     return sizeVariant?.name_en === name_en;
   };
-
-  // const handleToppingVariant = (option, variantId) => {
-  //   if (checkIfToppingIsAdded(option?.name_en)) {
-  //     setToppingVariant(
-  //       toppingVariant.filter((item) => item.name_en !== option?.name_en)
-  //     );
-  //   } else {
-  //     let extraTopping = {
-  //       ...option,
-  //       quantity: 1,
-  //     };
-  //     setToppingVariant([...toppingVariant, option]);
-  //   }
-  // };
 
   const handleToppingVariant = (option, variantId) => {
     const isToppingAdded = checkIfToppingIsAdded(option?.name_en);
@@ -208,14 +194,6 @@ export const Details = () => {
       ]);
     }
   };
-
-  // const handleSizeVariant = (option, variantId) => {
-  //   if (checkIfSizeIsAdded(option?.name_en)) {
-  //     setSizeVariant(null);
-  //   } else {
-  //     setSizeVariant(option);
-  //   }
-  // };
 
   const handleSizeVariant = (option, variantId) => {
     const isSizeAdded = checkIfSizeIsAdded(option?.name_en);
@@ -294,25 +272,25 @@ export const Details = () => {
     });
   };
 
-  const addToCartHandler = (itemData) => {
-    const itemCartObj = {
-      ...itemData,
-      item_id: itemData.id,
-      variant_quantity: 1
-    };
+  // const addToCartHandler = (itemData) => {
+  //   const itemCartObj = {
+  //     ...itemData,
+  //     item_id: itemData.id,
+  //     variant_quantity: 1
+  //   };
 
-    addToCart(itemCartObj, token)
-      .then((resp) => {
-        console.log(resp);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  //   addToCart(itemCartObj, token)
+  //     .then((resp) => {
+  //       console.log(resp);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
-    const ItemDataObject = {
+    var ItemDataObject = {
       id: data?.id,
       itemName: data?.description_en,
       discountedPrice: data?.discounted_price,
@@ -323,14 +301,33 @@ export const Details = () => {
         toppingVariant: toppingVariant,
         sideVariant: sideVariant,
       },
-      totalPrice: totalPrice,
+      totalPrice: Number(totalPrice).toFixed(3),
       specialInstructions: specialInstructions,
       itemImage: data?.image
     };
     // console.log(ItemDataObject, "shahItemDataObject");
-    dispatch(addToCartNew(ItemDataObject));
-    addToCartHandler(ItemDataObject)
-    navigate(-1)
+
+    if (checkIfItemIsInCart()) {
+      const item_code = cartItem?.item_code;
+
+      ItemDataObject = {
+        ...ItemDataObject,
+        item_code,
+      };
+
+      dispatch(updateCartItem(ItemDataObject));
+    } else {
+      const item_code = uuidv4();
+
+      ItemDataObject = {
+        ...ItemDataObject,
+        item_code,
+      };
+
+      dispatch(addToCart(ItemDataObject));
+      // addToCartHandler(ItemDataObject)
+      navigate(-1)
+    }
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
     // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));
     // dispatch(addExtraSides({ id: id, extraSides: sideVariant }));
@@ -648,10 +645,10 @@ export const Details = () => {
                     mr: 1,
                   }}
                 />
-               {search ? "Update Cart" : "Add to cart"}
+                {checkIfItemIsInCart() && search ? "Update Cart" : "Add to Cart"}
               </Typography>
               <Typography variant="body1" component="span">
-                +KWD {totalPrice}
+                +KWD {Number(totalPrice).toFixed(3)}
               </Typography>
             </Button>
           </Stack>

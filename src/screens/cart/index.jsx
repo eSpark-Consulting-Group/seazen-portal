@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
 import { useQuery } from "@tanstack/react-query";
 import cartList from "../../api/cart/cartList";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import checkout from "../../api/cart/checkout";
 
 function CartPage() {
@@ -37,8 +37,8 @@ function CartPage() {
   const [cartItems, setCartItems] = React.useState();
   const [specialIns, setSpecialIns] = React.useState("");
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
-  const DISCOUNT_AMOUNT = Number(1).toFixed(3);
-  const DELIVERY_CHARGE = Number(1).toFixed(3);
+  const DISCOUNT_AMOUNT = Number(1).toFixed(2);
+  const DELIVERY_CHARGE = Number(1).toFixed(2);
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   // Function to handle opening the dialog
@@ -69,29 +69,30 @@ function CartPage() {
     pickup_from_car: "",
     delivery_charges: "0",
     promo_code: "Test1",
-    comments: specialIns
-  }
+    comments: specialIns,
+  };
 
   useEffect(() => {
-    setCartItems(cart)
-    setIsLoading(false)
-  }, [cart])
+    setCartItems(cart);
+    setIsLoading(false);
+  }, [cart]);
 
   const checkoutHandler = () => {
-     checkout(checkoutData, token)
+    checkout(checkoutData, token)
       .then((res) => {
-        window.location.href = res.data.checkout_url
+        const checkoutUrl = res.data.checkout_url;
+        window.open(checkoutUrl, "_blank"); // '_blank' opens the URL in a new tab
       })
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
   useEffect(() => {
     let isCartEmpty = searchParams.get("empty");
 
-    if(cart.length > 0){
-      setCartItems(cart)
+    if (cart.length > 0) {
+      setCartItems(cart);
     }
 
     if (isCartEmpty === "true") {
@@ -103,32 +104,38 @@ function CartPage() {
   }, []);
 
   useEffect(() => {
-      cartRefetch()
+    cartRefetch();
   }, []);
 
   const cartRefetch = () => {
-    if(cart.length == 0) {
-    setTimeout(() => {
-      cartList(token).then((res) => {
-        setCartItems(res.data)
-        setIsLoading(false)
-      }).catch((err) => {
-          setCartItems([])
-        setIsLoading(false)
-      })
+    if (cart.length == 0) {
+      setTimeout(() => {
+        cartList(token)
+          .then((res) => {
+            setCartItems(res.data);
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            setCartItems([]);
+            setIsLoading(false);
+          });
       }, 500);
     }
-  }
+  };
 
   const getItemTotal = () => {
-    return cartItems.reduce((acc, cartItem) => {
-      return acc + (cartItem.unit_price || cartItem.totalPrice) * cartItem.quantity;
-      // return acc + 100 * cartItem.quantity;
-    }, 0).toFixed(3);
+    return cartItems
+      .reduce((acc, cartItem) => {
+        return (
+          acc + (cartItem.unit_price || cartItem.totalPrice) * cartItem.quantity
+        );
+        // return acc + 100 * cartItem.quantity;
+      }, 0)
+      .toFixed(2);
   };
 
   const getTipAmount = () => {
-    return tipValue.toFixed(3);
+    return tipValue.toFixed(2);
   };
 
   const getDiscountAmount = () => {
@@ -145,7 +152,7 @@ function CartPage() {
       Number(getTipAmount()) -
       Number(getDiscountAmount()) +
       Number(getDeliveryCharge())
-    ).toFixed(3);
+    ).toFixed(2 );
   };
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(
@@ -193,7 +200,7 @@ function CartPage() {
             boxShadow: (theme) => theme.shadows[16],
           }}
           edge="start"
-          onClick={() => navigate(paths.home)}
+          onClick={() => navigate(-1)}
         >
           <ArrowBackRoundedIcon fontSize="medium" />
         </IconButton>
@@ -394,7 +401,6 @@ function CartPage() {
           <Dialog
             open={openSchedulePopup}
             onClose={() => setOpenSchedulePopup(false)}
-            
             sx={{
               margin: "0",
               textAlign: "center",
@@ -411,8 +417,8 @@ function CartPage() {
                 borderBottomLeftRadius: "0px",
                 borderBottomRightRadius: "0px",
                 paddingTop: "20px",
-                '@media (max-width: 600px)': {
-                  width: '100%', 
+                "@media (max-width: 600px)": {
+                  width: "100%",
                 },
               },
             }}
@@ -459,7 +465,13 @@ function CartPage() {
 
             {cartItems.length > 0 ? (
               cartItems.map((cartItem) => {
-                return <CartItem key={cartItem.id} {...cartItem} cartRefetch={cartRefetch} />;
+                return (
+                  <CartItem
+                    key={cartItem.id}
+                    {...cartItem}
+                    cartRefetch={cartRefetch}
+                  />
+                );
               })
             ) : (
               <Typography variant="body1">No items in your cart</Typography>
@@ -526,8 +538,8 @@ function CartPage() {
                 height: "178px",
                 width: "327px",
                 textAlign: "center",
-                overflowY:"hidden",
-                
+                overflowY: "hidden",
+
                 "@media (min-width: 600px)": {
                   left: "0",
                   position: "fixed",
@@ -539,7 +551,7 @@ function CartPage() {
             <DialogTitle>
               <img src="/assets/img/exclaim.svg"></img>
             </DialogTitle>
-            <DialogContent sx={{padding:"0",}}>
+            <DialogContent sx={{ padding: "0" }}>
               <div
                 style={{
                   font: "normal normal bold 16px/18px Titillium Web",
@@ -557,21 +569,20 @@ function CartPage() {
                   opacity: "1",
                   width: "116px",
                   height: "29px",
-                  marginTop:"20px",
+                  marginTop: "20px",
                   "&:hover": {
                     background: "#98694E 0% 0% no-repeat padding-box",
                   },
-                  
                 }}
               >
                 <span
-              style={{
-                font: "normal normal 600 16px/24px Titillium Web",
-                color: "#ffffff",
-              }}
-            >
-              Go Back
-            </span>
+                  style={{
+                    font: "normal normal 600 16px/24px Titillium Web",
+                    color: "#ffffff",
+                  }}
+                >
+                  Go Back
+                </span>
               </Button>
             </DialogContent>
           </Dialog>
@@ -617,7 +628,7 @@ function CartPage() {
                   />
 
                   <Typography variant="body1" fontWeight={600}>
-                    {`KWD ${Number(tip).toFixed(3)}`}
+                    {`KWD ${Number(tip).toFixed(2)}`}
                   </Typography>
                 </Box>
               ))}
@@ -730,52 +741,66 @@ function CartPage() {
             </Stack>
           </Stack>
 
-          <Button onClick={() => checkoutHandler()} variant="contained" size="large">
+          <Button
+            onClick={() => checkoutHandler()}
+            variant="contained"
+            size="large"
+          >
             Pay Now
           </Button>
         </React.Fragment>
       ) : (
-       <> {!isLoading ? <Stack justifyContent="center" alignItems="center" sx={{ pt: 15 }}>
-          <Typography variant="h5" fontWeight={500}>
-            Your cart is empty
-          </Typography>
+        <>
+          {" "}
+          {!isLoading ? (
+            <Stack justifyContent="center" alignItems="center" sx={{ pt: 15 }}>
+              <Typography variant="h5" fontWeight={500}>
+                Your cart is empty
+              </Typography>
 
-          <Box sx={{ pt: 5 }}>
-            <img src="/assets/img/cart.svg" alt="Empty Cart" />
-          </Box>
+              <Box sx={{ pt: 5 }}>
+                <img src="/assets/img/cart.svg" alt="Empty Cart" />
+              </Box>
 
-          <Typography
-            variant="body1"
-            align="center"
-            fontWeight={400}
-            gutterBottom
-            gap={1}
-            sx={{
-              whiteSpace: "pre-line",
-              mb: 2,
-              pt: 4,
-            }}
-          >
-            {`Looks like you have not added anything\n to your cart.\n Go ahead & explore something`}
-          </Typography>
+              <Typography
+                variant="body1"
+                align="center"
+                fontWeight={400}
+                gutterBottom
+                gap={1}
+                sx={{
+                  whiteSpace: "pre-line",
+                  mb: 2,
+                  pt: 4,
+                }}
+              >
+                {`Looks like you have not added anything\n to your cart.\n Go ahead & explore something`}
+              </Typography>
 
-          <Button
-            sx={{
-              width: "184px",
-              height: "56px",
-              mt: 5,
-            }}
-            variant="contained"
-            size="large"
-            onClick={() => navigate(-1)}
-          >
-            Back
-          </Button>
-        </Stack> : 
-        <Box sx={{ display: 'flex', justifyContent: "center", marginTop: "100px !important" }}>
-          <CircularProgress />
-        </Box>
-        }
+              <Button
+                sx={{
+                  width: "184px",
+                  height: "56px",
+                  mt: 5,
+                }}
+                variant="contained"
+                size="large"
+                onClick={() => navigate(-1)}
+              >
+                Back
+              </Button>
+            </Stack>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "100px !important",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
         </>
       )}
     </Stack>

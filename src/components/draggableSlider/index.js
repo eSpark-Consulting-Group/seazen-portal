@@ -30,12 +30,17 @@ export default function App() {
     },
   ];
 
-  const { data: poularDishes, isLoading, error, isError } = useQuery({
+  const {
+    data: poularDishes,
+    isLoading,
+    error,
+    isError,
+  } = useQuery({
     queryKey: [GET_ALL_POPULAR_ITEMS_QUERY_KEY],
     queryFn: () => getAllPopularItems(),
     onSuccess: (data) => {
       console.log("data", data);
-    }
+    },
   });
 
   return (
@@ -48,7 +53,7 @@ export default function App() {
           return (
             <Box
               key={index}
-              index={index} 
+              index={index}
               imageUrl={info.imageUrl}
               caption={info.caption}
               captionImage={info.captionImage}
@@ -142,7 +147,7 @@ function Box({
 
   return (
     <div className="box">
-      <img className="box-image" src={imageUrl} alt="Image"  />
+      <img className="box-image" src={imageUrl} alt="Image" />
       <div className="box-caption">
         <img
           src={captionImage}
@@ -157,12 +162,12 @@ function Box({
             </React.Fragment>
           ))}
         </div>
-            <div className="price-wrapper">
-            <div className="text-style">
-          <p className={additionalTextClass}>{additionalText}</p>
+        <div className="price-wrapper">
+          <div className="text-style">
+            <p className={additionalTextClass}>{additionalText}</p>
+          </div>
+          <div className="inline-text">{inlineText}</div>
         </div>
-        <div className="inline-text">{inlineText}</div>
-            </div>
       </div>
     </div>
   );

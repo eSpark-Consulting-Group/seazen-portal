@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../../routes/paths";
-import updateCart from "../../../api/cart/updateCart";
+import updateCartApiCall from "../../../api/cart/updateCart";
 import * as reduxCart from "../../../store/reducers/cartSlice";
 
 function CartItem(props) {
@@ -24,7 +24,8 @@ function CartItem(props) {
     totalPrice,
     itemImage, 
     // variant, 
-    cartRefetch 
+    cartRefetch,
+    item_code 
   } = props;
 
   const variant = "450g"
@@ -35,7 +36,7 @@ function CartItem(props) {
   const dispatch = useDispatch();
 
   const updateCartHandler = useQuery({
-    queryFn: () => updateCart({
+    queryFn: () => updateCartApiCall({
       "cart_id" : cart_id,
       "quantity" : updatedQuantity,
     }, token),
@@ -47,9 +48,10 @@ function CartItem(props) {
 
   function onIncrease() {
     dispatch(
-      reduxCart.updateCart({
+      reduxCart.updateCartItemQuantity({
         id: id,
-        quantity: updatedQuantity + 1
+        itemCode:item_code,
+        quantity: updatedQuantity + 1,
       })
     );
     setUpdatedQuantity((prev) => prev + 1);
@@ -83,8 +85,9 @@ function CartItem(props) {
 
   function onDecrease() {
     dispatch(
-      reduxCart.updateCart({
+      reduxCart.updateCartItemQuantity({
         id: id,
+        itemCode:item_code,
         quantity: updatedQuantity - 1
       })
     );
@@ -141,7 +144,7 @@ function CartItem(props) {
             disableRipple
             disableElevation
             endIcon={<EditTwoToneIcon />}
-            onClick={()=>{navigate(`${paths.details}/${id}?isUpdate`)}}
+            onClick={()=>{navigate(`${paths.details}/${id}?item_code=${item_code}`)}}
             sx={{
               p: 0,
               minHeight: "auto",
