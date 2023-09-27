@@ -213,6 +213,7 @@ const RestaurantsOrderTypeButton = () => {
       <BasicCard
         clickedButtonIndex={clickedButtonIndex}
         orderTypeFilter={orderTypeFilter}
+        restaurantsData={restaurantsData}
       />
     </>
   );

@@ -1,5 +1,6 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
@@ -17,19 +18,31 @@ import getMenuItemDetails, {
 } from "../../api/menu/getMenuItemDetails";
 import { Divider, alpha } from "@mui/material";
 import IncDec from "../../components/Input/InputWithIncDec";
-import { AddShoppingCartRounded } from "@mui/icons-material";
+import { AddShoppingCartRounded, Label } from "@mui/icons-material";
+import {
+  addExtraSides,
+  addExtraToppings,
+  addSizeVariant,
+  addToCart,
+  addToCartNew,
+  removeFromCart,
+  updateCart,
+} from "../../store/reducers/cartSlice";
 
 export const Details = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const cart = useSelector((state) => state.cart.cart);
 
   const [cartItem, setCartItem] = React.useState();
-  const [quantity, setQuantity] = React.useState(0);
+  const [quantity, setQuantity] = React.useState(1);
   const [sizeVariant, setSizeVariant] = React.useState();
   const [toppingVariant, setToppingVariant] = React.useState([]);
   const [sideVariant, setSideVariant] = React.useState([]);
+  const [totalPrice, setTotalPrice] = React.useState();
+  const [specialInstructions, setSpecialInstructions] = React.useState("");
 
   const {
     data: menuItemDetails,
@@ -43,6 +56,67 @@ export const Details = () => {
       console.log("data", data);
     },
   });
+
+  const calculateToppingVariantTotal = (toppingVariantData) => {
+    const eachToppingTotal = toppingVariantData
+      .map((topping, index) => {
+        return topping.quantity && topping.unit_price * topping.quantity;
+      })
+      .filter((item) => !!item);
+    const sum = eachToppingTotal.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+
+    return sum;
+  };
+
+  const calculateSidesVariantTotal = (sidesVariantData) => {
+    const totalUnitPrice = sidesVariantData.reduce(
+      (total, item) => total + parseFloat(item.unit_price),
+      0
+    );
+
+    return totalUnitPrice;
+  };
+
+  console.log(menuItemDetails, "shahmenuItemDetails");
+  useEffect(() => {
+    console.log(sizeVariant, "shahtoppingVariant");
+    const calculateTotal = () => {
+      let itemTotal =
+        calculateToppingVariantTotal(toppingVariant) +
+        calculateSidesVariantTotal(sideVariant) +
+        +sizeVariant?.unit_price +
+        Number(menuItemPriceWithoutCurrency());
+
+      // Check if itemTotal is NaN and set it to 0.00 if NaN
+      if (isNaN(itemTotal)) {
+        itemTotal = 0.0;
+      }
+
+      if (quantity > 1) {
+        itemTotal *= quantity; // Multiply by quantity if greater than 1
+      }
+
+      // Format itemTotal with exactly two decimal places
+      itemTotal = itemTotal.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+
+      return itemTotal;
+    };
+
+    const total = calculateTotal();
+    setTotalPrice(total);
+  }, [toppingVariant, sizeVariant, quantity, sideVariant]);
+
+  useEffect(() => {
+    if (quantity === 0) {
+      dispatch(removeFromCart(id));
+    }
+  }, [quantity]);
 
   const checkIfItemIsInCart = () => {
     return cart.find((item) => item.id === id);
@@ -81,35 +155,76 @@ export const Details = () => {
     return sizeVariant?.name_en === name_en;
   };
 
-  const handleToppingVariant = (option) => {
-    if (checkIfToppingIsAdded(option?.name_en)) {
-      setToppingVariant(
-        toppingVariant.filter((item) => item.name_en !== option?.name_en)
+  // const handleToppingVariant = (option, variantId) => {
+  //   if (checkIfToppingIsAdded(option?.name_en)) {
+  //     setToppingVariant(
+  //       toppingVariant.filter((item) => item.name_en !== option?.name_en)
+  //     );
+  //   } else {
+  //     let extraTopping = {
+  //       ...option,
+  //       quantity: 1,
+  //     };
+  //     setToppingVariant([...toppingVariant, option]);
+  //   }
+  // };
+
+  const handleToppingVariant = (option, variantId) => {
+    const isToppingAdded = checkIfToppingIsAdded(option?.name_en);
+
+    if (isToppingAdded) {
+      // Remove the option if it's already added
+      setToppingVariant((prevToppingVariant) =>
+        prevToppingVariant.filter((item) => item.name_en !== option?.name_en)
       );
     } else {
-      let extraTopping = {
-        ...option,
-        quantity: 1,
-      };
-      setToppingVariant([...toppingVariant, option]);
+      // Add the option with the variantId and quantity
+      setToppingVariant((prevToppingVariant) => [
+        ...prevToppingVariant,
+        { ...option, variantId, quantity: 1 },
+      ]);
     }
   };
 
-  const handleSideVariant = (option) => {
-    if (checkIfSideIsAdded(option?.name_en)) {
-      setSideVariant(
-        sideVariant.filter((item) => item.name_en !== option?.name_en)
+  const handleSpecialInstructionsChange = (event) => {
+    setSpecialInstructions(event.target.value);
+  };
+
+  const handleSideVariant = (option, variantId) => {
+    const isSideAdded = checkIfSideIsAdded(option?.name_en);
+
+    if (isSideAdded) {
+      // Remove the option if it's already added
+      setSideVariant((prevSideVariant) =>
+        prevSideVariant.filter((item) => item.name_en !== option?.name_en)
       );
     } else {
-      setSideVariant([...sideVariant, option]);
+      // Add the option with the variantId
+      setSideVariant((prevSideVariant) => [
+        ...prevSideVariant,
+        { ...option, variantId },
+      ]);
     }
   };
 
-  const handleSizeVariant = (option) => {
-    if (checkIfSizeIsAdded(option?.name_en)) {
+  // const handleSizeVariant = (option, variantId) => {
+  //   if (checkIfSizeIsAdded(option?.name_en)) {
+  //     setSizeVariant(null);
+  //   } else {
+  //     setSizeVariant(option);
+  //   }
+  // };
+
+  const handleSizeVariant = (option, variantId) => {
+    const isSizeAdded = checkIfSizeIsAdded(option?.name_en);
+
+    if (isSizeAdded) {
+      // If the size is already added, set it to null to remove it
       setSizeVariant(null);
     } else {
-      setSizeVariant(option);
+      // Add the variantId to the selected size option
+      const sizeWithVariantId = { ...option, variantId };
+      setSizeVariant(sizeWithVariantId);
     }
   };
 
@@ -126,35 +241,79 @@ export const Details = () => {
   };
 
   const handleAddToppingQuantity = (option) => {
-    var extraTopping = {
-      ...option,
-      quantity: option?.quantity + 1,
-    };
+    setToppingVariant((prevToppingVariant) => {
+      // Find the index of the topping with the same name_en
+      const index = prevToppingVariant.findIndex(
+        (item) => item.name_en === option.name_en
+      );
 
-    setToppingVariant((toppingVariant) =>
-      toppingVariant.map((item) => {
-        if (item.name_en === option?.name_en) {
-          return extraTopping;
-        }
-        return item;
-      })
-    );
+      // If the topping with the same name_en exists, update its quantity
+      if (index !== -1) {
+        const updatedToppingVariant = [...prevToppingVariant];
+        updatedToppingVariant[index] = {
+          ...updatedToppingVariant[index],
+          quantity: (updatedToppingVariant[index].quantity || 0) + 1,
+        };
+        return updatedToppingVariant;
+      } else {
+        // If the topping doesn't exist, add it with quantity 1
+        return [...prevToppingVariant, { ...option, quantity: 1 }];
+      }
+    });
   };
 
   const handleRemoveToppingQuantity = (option) => {
-    var extraTopping = {
-      ...option,
-      quantity: option?.quantity - 1,
-    };
+    setToppingVariant((prevToppingVariant) => {
+      // Find the index of the topping with the same name_en
+      const index = prevToppingVariant.findIndex(
+        (item) => item.name_en === option.name_en
+      );
 
-    setToppingVariant((toppingVariant) =>
-      toppingVariant.map((item) => {
-        if (item.name_en === option?.name_en) {
-          return extraTopping;
+      if (index !== -1) {
+        const updatedToppingVariant = [...prevToppingVariant];
+        const updatedQuantity =
+          (updatedToppingVariant[index].quantity || 0) - 1;
+
+        if (updatedQuantity > 0) {
+          // If the updated quantity is greater than 0, update it
+          updatedToppingVariant[index] = {
+            ...updatedToppingVariant[index],
+            quantity: updatedQuantity,
+          };
+        } else {
+          // If the updated quantity is 0 or less, remove the topping
+          updatedToppingVariant.splice(index, 1);
         }
-        return item;
-      })
-    );
+
+        return updatedToppingVariant;
+      }
+
+      return prevToppingVariant; // No change if topping doesn't exist
+    });
+  };
+
+  const handleAddToCart = () => {
+    const { data } = menuItemDetails;
+    const ItemDataObject = {
+      id: data?.id,
+      itemName: data?.description_en,
+      discountedPrice: data?.discounted_price,
+      price: data?.price,
+      quantity: quantity,
+      variants: {
+        sizeVariant: sizeVariant,
+        toppingVariant: toppingVariant,
+        sideVariant: sideVariant,
+      },
+      totalPrice: totalPrice,
+      specialInstructions: specialInstructions,
+    };
+    // console.log(ItemDataObject, "shahItemDataObject");
+    dispatch(addToCartNew(ItemDataObject));
+    navigate(-1)
+    // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
+    // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));
+    // dispatch(addExtraSides({ id: id, extraSides: sideVariant }));
   };
 
   return (
@@ -275,7 +434,13 @@ export const Details = () => {
                           color: (theme) => theme.palette.themeColor.main,
                         }}
                       >
-                        (Required)
+                        {variant.name_en === "Choose the Size"
+                          ? "(Required)"
+                          : variant.name_en === "Extra Topping"
+                          ? "(Optional)"
+                          : variant.name_en === "Extra Sides"
+                          ? "(Optional)"
+                          : ""}
                       </Typography>
                     </Stack>
 
@@ -300,16 +465,23 @@ export const Details = () => {
                               }
                               onChange={() => {
                                 variant.name_en === "Choose the Size"
-                                  ? handleSizeVariant(option)
+                                  ? handleSizeVariant(option, variant.id)
                                   : variant.name_en === "Extra Topping"
-                                  ? handleToppingVariant(option)
+                                  ? handleToppingVariant(option, variant.id)
                                   : variant.name_en === "Extra Sides"
-                                  ? handleSideVariant(option)
+                                  ? handleSideVariant(option, variant.id)
                                   : () => {};
                               }}
                               control={<Checkbox color="themeColor" />}
                               label={option?.name_en}
                             />
+                            <p
+                              style={{
+                                fontSize: "10px",
+                                paddingTop: "5px",
+                                marginRight: "10px",
+                              }}
+                            >{`(Each +KWD ${option?.unit_price})`}</p>
                             {variant.name_en === "Extra Topping" ? (
                               <IncDec
                                 IncButtonProps={{
@@ -362,6 +534,7 @@ export const Details = () => {
             sx={{
               mt: 2,
             }}
+            onChange={handleSpecialInstructionsChange}
             fullWidth
           />
 
@@ -439,6 +612,7 @@ export const Details = () => {
                   backgroundColor: (theme) => theme.palette.themeColor.light,
                 },
               }}
+              onClick={handleAddToCart}
             >
               <Typography
                 variant="h6"
@@ -457,7 +631,7 @@ export const Details = () => {
                 Add to Cart
               </Typography>
               <Typography variant="body1" component="span">
-                +KWD 15.88
+                +KWD {totalPrice}
               </Typography>
             </Button>
           </Stack>

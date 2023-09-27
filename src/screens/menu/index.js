@@ -15,7 +15,7 @@ const Menu = () => {
   const location = useLocation();
   const { id } = useParams();
   const {
-    data: restaurantDetail,
+    data: restaurantDetailResponse,
     isLoading,
     error,
     isError,
@@ -24,6 +24,9 @@ const Menu = () => {
     queryFn: () => getRestaurantDetails(id),
     onSuccess: (data) => {},
   });
+  const { data: restaurantDetail } = restaurantDetailResponse || {};
+
+  console.log(restaurantDetail,"shahrestaurantDetail");
 
   const {
     data: restaurantBranchHours,

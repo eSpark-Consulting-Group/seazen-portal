@@ -28,7 +28,7 @@ const images = [
   },
   {
     name: "second card image",
-    image: "/assets/img/21.png",
+    image: "/assets/img/19.png",
     service: { doesDelivery: true, isNear: true },
   },
   {
@@ -43,7 +43,7 @@ const images = [
   },
   {
     name: "fifth card image",
-    image: "/assets/img/19.png",
+    image: "/assets/img/15.png",
     service: { doesDelivery: false, isNear: true },
   },
   {
@@ -112,8 +112,7 @@ export const restaurantThemeColor = {
   // },
 };
 
-const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
-  const resturants = useSelector((state) => state?.restaurants?.restaurantData);
+const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
   const navigate = useNavigate();
   const captions = [
     icons,
@@ -226,7 +225,7 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   return (
     <div className="restaurantCard-container container-fluid">
       {Object.keys(restaurantThemeColor).map((restaurant, index) => {
-        if (resturants && (index === 0 || index === 1)) {
+        if (restaurantsData && (index === 0)) {
           return (
             <div
               key={index}
@@ -241,12 +240,12 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
                 }}
                 className="restaurantCards"
                 onClick={() => {
-                  goToRestaurantMenuPage(resturants[index]?.id);
+                  goToRestaurantMenuPage(restaurantsData[index]?.id);
                 }}
               >
                 <img
                   className="restaurantCard-img"
-                  src={resturants[index]?.image}
+                  src={restaurantsData[index]?.image}
                   alt={`Card ${index + 1}`}
                 />
               </Card>
@@ -266,9 +265,9 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
                   borderRadius: 1,
                 }}
                 className="restaurantCards"
-                onClick={() => {
-                  goToRestaurantMenuPage(restaurant.split(" ")[1]);
-                }}
+                // onClick={() => {
+                //   goToRestaurantMenuPage(restaurant.split(" ")[1]);
+                // }}
               >
                 <img
                   className="restaurantCard-img"

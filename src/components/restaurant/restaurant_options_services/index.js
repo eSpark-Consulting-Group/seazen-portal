@@ -16,7 +16,6 @@ const RestaurantOptionsServicesContainer = ({
         restaurantBranchHours={restaurantBranchHours}
       />
       <TabsDynamicConditionalComponent
-        restaurantDetail={restaurantDetail}
         resturantId={resturantId}
       />
     </div>

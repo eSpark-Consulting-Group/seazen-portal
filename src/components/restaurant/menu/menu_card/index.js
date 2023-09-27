@@ -45,6 +45,18 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
   const navigate = useNavigate();
   let conditionalIcon = foodItemQuantity < 2 ? trashIcon : minusIcon;
 
+  const handlersAndStates = [
+    {
+      handler: (count) => setExtraItemCount_1(count),
+      state: extraItemCount_1,
+    },
+    {
+      handler: (count) => setExtraItemCount_2(count),
+      state: extraItemCount_2,
+    },
+    // Add more handlers and state variables as needed
+  ];
+
   function handleClickAdd() {
     setFoodItemQuantity(foodItemQuantity + 1);
 
@@ -87,6 +99,10 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
     }
   }
 
+  // const handleDropDownClick = () =>{
+
+  // }
+
   // i-e KWD 1.750 => 1.750 as a number
   const foodPriceWithoutCurrency = () => {
     return Number(foodPrice.split(" ")[1]);
@@ -108,6 +124,15 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
       return 0;
     }
     return cart[itemIndex].quantity;
+  };
+
+  const getExtraItemName = () => {
+    const itemIndex = cart.findIndex((cartItem) => cartItem.id === id);
+
+    if (itemIndex === -1) {
+      return 0;
+    }
+    return cart[itemIndex].sideVariant;
   };
 
   return (
@@ -142,9 +167,6 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
         >
           <div
             className="menu_card_image_container pointer"
-            // onClick={() => {
-            //   setMenuCardDropdownOpen(!menuCardDropdownOpen);
-            // }}
           >
             <img className="food-image" src={foodImage} alt="menu_card_image" />
           </div>
@@ -228,16 +250,17 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
           }}
         >
           <Stack>
-            <ExtraItems
-              extraItemName={extraItemName}
-              extraItemCount={extraItemCount_1}
-              setExtraItemCount={setExtraItemCount_1}
-            />
-            <ExtraItems
-              extraItemName={extraItemName}
-              extraItemCount={extraItemCount_2}
-              setExtraItemCount={setExtraItemCount_2}
-            />
+            {getExtraItemName().map((item, index) => {
+              const { handler, state } = handlersAndStates[index];
+              return (
+                <ExtraItems
+                  key={index}
+                  extraItemName={item?.name_en}
+                  extraItemCount={state}
+                  setExtraItemCount={handler}
+                />
+              );
+            })}
           </Stack>
         </Stack>
       )}
