@@ -41,6 +41,7 @@ function CartPage() {
   const DELIVERY_CHARGE = Number(1).toFixed(3);
 
   const token = useSelector((state) => state.auth.token);
+  const cart = useSelector((state) => state.cart.cart);
 
   const checkoutData = {
     payment_method_id: "1",
@@ -60,6 +61,11 @@ function CartPage() {
     comments: specialIns
   }
 
+  useEffect(() => {
+    setCartItems(cart)
+    setIsLoading(false)
+  }, [cart])
+
   const checkoutHandler = () => {
      checkout(checkoutData, token)
       .then((res) => {
@@ -72,6 +78,10 @@ function CartPage() {
 
   useEffect(() => {
     let isCartEmpty = searchParams.get("empty");
+
+    if(cart.length > 0){
+      setCartItems(cart)
+    }
 
     if (isCartEmpty === "true") {
       setCartItems((prevState) => {
@@ -86,21 +96,22 @@ function CartPage() {
   }, []);
 
   const cartRefetch = () => {
+    if(cart.length == 0) {
     setTimeout(() => {
-    cartList(token).then((res) => {
-      setCartItems(res.data)
-      setIsLoading(false)
-    }).catch((err) => {
-      console.log(err)
-      setCartItems([])
-      setIsLoading(false)
-    })
-    }, 500);
+      cartList(token).then((res) => {
+        setCartItems(res.data)
+        setIsLoading(false)
+      }).catch((err) => {
+          setCartItems([])
+        setIsLoading(false)
+      })
+      }, 500);
+    }
   }
 
   const getItemTotal = () => {
     return cartItems.reduce((acc, cartItem) => {
-      return acc + cartItem.unit_price * cartItem.quantity;
+      return acc + (cartItem.unit_price || cartItem.totalPrice) * cartItem.quantity;
       // return acc + 100 * cartItem.quantity;
     }, 0).toFixed(3);
   };

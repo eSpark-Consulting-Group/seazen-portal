@@ -7,32 +7,36 @@ import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import IncDec from "../../Input/InputWithIncDec";
 import deleteCart from "../../../api/cart/deleteCartItem";
 import { useQuery } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../../routes/paths";
 import updateCart from "../../../api/cart/updateCart";
+import * as reduxCart from "../../../store/reducers/cartSlice";
 
 function CartItem(props) {
   const { 
     quantity, 
     id, 
+    cart_id,
     menu_item_name_en, 
     unit_price, 
-    // image, 
+    itemName,
+    totalPrice,
+    itemImage, 
     // variant, 
     cartRefetch 
   } = props;
 
-  const imgSrc = "https://seazen-portal-gdsictor1-espark-web-application-developme.vercel.app/assets/img/menu_card_image.png"
   const variant = "450g"
   
   const [updatedQuantity, setUpdatedQuantity] = React.useState(quantity);
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
 
   const updateCartHandler = useQuery({
     queryFn: () => updateCart({
-      "cart_id" : id,
+      "cart_id" : cart_id,
       "quantity" : updatedQuantity,
     }, token),
     onSuccess: (data) => {
@@ -42,6 +46,12 @@ function CartItem(props) {
   });
 
   function onIncrease() {
+    dispatch(
+      reduxCart.updateCart({
+        id: id,
+        quantity: updatedQuantity + 1
+      })
+    );
     setUpdatedQuantity((prev) => prev + 1);
     setTimeout(() => {
       updateCartHandler.refetch()
@@ -51,7 +61,12 @@ function CartItem(props) {
 
 
   const { data, refetch } = useQuery({
-    queryFn: () => deleteCart({cart_id: id}, token),
+    queryFn: () => deleteCart(
+      {
+        cart_id: cart_id,
+        item_id: "", 
+        item_code: ""
+      }, token),
     onSuccess: (data) => {
       console.log(data, "data")
     },
@@ -59,6 +74,7 @@ function CartItem(props) {
   });
 
   const onDelete = () => {
+    dispatch(reduxCart.removeFromCart(id));
     refetch()
     setTimeout(() => {
       cartRefetch()
@@ -66,6 +82,12 @@ function CartItem(props) {
   }
 
   function onDecrease() {
+    dispatch(
+      reduxCart.updateCart({
+        id: id,
+        quantity: updatedQuantity - 1
+      })
+    );
     setUpdatedQuantity((prev) => prev - 1);
     setTimeout(() => {
       updateCartHandler.refetch()
@@ -75,7 +97,7 @@ function CartItem(props) {
   }
 
   function getItemName() {
-    return `${menu_item_name_en} (${variant})`;
+    return `${menu_item_name_en || itemName} (${variant})`;
   }
 
   return (
@@ -100,7 +122,7 @@ function CartItem(props) {
             },
           }}
         >
-          <img src={imgSrc} alt={menu_item_name_en} />
+          <img src={itemImage} alt={menu_item_name_en || itemName} />
         </Box>
 
         <Stack
@@ -119,7 +141,7 @@ function CartItem(props) {
             disableRipple
             disableElevation
             endIcon={<EditTwoToneIcon />}
-            onClick={()=>{navigate(`${paths.details}?isUpdate`)}}
+            onClick={()=>{navigate(`${paths.details}/${id}?isUpdate`)}}
             sx={{
               p: 0,
               minHeight: "auto",
@@ -150,7 +172,7 @@ function CartItem(props) {
         <Typography
           align="center"
           fontWeight={600}
-        >{`KWD ${unit_price * updatedQuantity}`}</Typography>
+        >{`KWD ${((unit_price || totalPrice) * updatedQuantity).toFixed(2)}`}</Typography>
         <IncDec
           quantity={updatedQuantity}
           onIncrease={onIncrease}

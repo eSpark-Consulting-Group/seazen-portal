@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from "react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector, useDispatch } from "react-redux";
@@ -45,7 +45,7 @@ export const Details = () => {
   const [sideVariant, setSideVariant] = React.useState([]);
   const [totalPrice, setTotalPrice] = React.useState();
   const [specialInstructions, setSpecialInstructions] = React.useState("");
-
+  const { search } = useLocation()
   const {
     data: menuItemDetails,
     isLoading,
@@ -325,6 +325,7 @@ export const Details = () => {
       },
       totalPrice: totalPrice,
       specialInstructions: specialInstructions,
+      itemImage: data?.image
     };
     // console.log(ItemDataObject, "shahItemDataObject");
     dispatch(addToCartNew(ItemDataObject));
@@ -647,7 +648,7 @@ export const Details = () => {
                     mr: 1,
                   }}
                 />
-                Add to Cart
+               {search ? "Update Cart" : "Add to cart"}
               </Typography>
               <Typography variant="body1" component="span">
                 +KWD {totalPrice}
