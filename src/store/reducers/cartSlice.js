@@ -33,10 +33,15 @@ const cartSlice = createSlice({
     },
 
     updateCartItemQuantity: (state, action) => {
-      const { id, quantity, totalPrice } = action.payload;
-      const itemIndex = state.cart.findIndex((cartItem) => cartItem.id === id);
+      const { itemCode, quantity } = action.payload;
+      const itemIndex = state.cart.findIndex(
+        (cartItem) => cartItem.item_code === itemCode
+      );
 
       if (itemIndex !== -1) {
+        const itemTotalPrice = state.cart[itemIndex].totalPrice;
+        const pricePerItem = itemTotalPrice / state.cart[itemIndex].quantity;
+        state.cart[itemIndex].totalPrice = pricePerItem * quantity;
         state.cart[itemIndex].quantity = quantity;
       }
 
@@ -65,8 +70,7 @@ const cartSlice = createSlice({
         0
       );
       state.total = state.cart.reduce(
-        (total, item) =>
-          Number(total).toFixed(2) + Number(item.totalPrice).toFixed(2),
+        (total, item) => total + Number(item.totalPrice),
         0
       );
     },

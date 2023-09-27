@@ -20,10 +20,7 @@ import getMenuItemDetails, {
 import { Divider, alpha } from "@mui/material";
 import IncDec from "../../components/Input/InputWithIncDec";
 import { AddShoppingCartRounded } from "@mui/icons-material";
-import {
-  updateCartItem,
-  addToCart,
-} from "../../store/reducers/cartSlice";
+import { updateCartItem, addToCart } from "../../store/reducers/cartSlice";
 import addToCartApiCall from "../../api/cart/addToCart";
 
 export const Details = () => {
@@ -42,7 +39,7 @@ export const Details = () => {
   const [sideVariant, setSideVariant] = React.useState([]);
   const [totalPrice, setTotalPrice] = React.useState();
   const [specialInstructions, setSpecialInstructions] = React.useState("");
-  const { search } = useLocation()
+  const { search } = useLocation();
   const {
     data: menuItemDetails,
     isLoading,
@@ -107,7 +104,20 @@ export const Details = () => {
 
     const total = calculateTotal();
     setTotalPrice(total);
-  }, [toppingVariant, sizeVariant, quantity, sideVariant]);
+  }, [toppingVariant, sizeVariant, quantity, sideVariant, menuItemDetails]);
+
+  React.useEffect(() => {
+    const cartItem = cart.find(
+      (item) => item.item_code === searchParams.get("item_code")
+    );
+
+    setCartItem(cartItem);
+    setQuantity(cartItem?.quantity || 1);
+    setSizeVariant(cartItem?.variants?.sizeVariant || null);
+    setToppingVariant(cartItem?.variants?.toppingVariant || []);
+    setSideVariant(cartItem?.variants?.sideVariant || []);
+    setTotalPrice(cartItem?.totalPrice);
+  }, [searchParams, cart]);
 
   const checkIfItemIsInCart = () => {
     return cart.find(
@@ -120,30 +130,17 @@ export const Details = () => {
   };
 
   const getCartItemPrice = () => {
-    return `+KWD ${Number(cartItem?.price).toFixed(3)}`;
+    return `+KWD ${Number(cartItem?.price).toFixed(2)}`;
   };
 
   // i-e KWD 1.750 => 1.750 as a number
   const menuItemPriceWithoutCurrency = () => {
-    return Number(menuItemDetails?.data?.price?.split(" ")[1]).toFixed(3);
+    return Number(menuItemDetails?.data?.price?.split(" ")[1]).toFixed(2);
   };
 
   const getFormattedPrice = (price) => {
-    return `+KWD ${Number(price).toFixed(3)}`;
+    return `+KWD ${Number(price).toFixed(2)}`;
   };
-
-  React.useEffect(() => {
-    const cartItem = cart.find(
-      (item) => item.item_code === searchParams.get("item_code")
-    );
-
-    setCartItem(cartItem);
-    setQuantity(cartItem?.quantity || 1);
-    setSizeVariant(cartItem?.variants?.sizeVariant || null);
-    setToppingVariant(cartItem?.variants?.toppingVariant || []);
-    setSideVariant(cartItem?.variants?.sideVariant || []);
-    setTotalPrice(cartItem?.totalPrice || 0);
-  }, [searchParams, cart]);
 
   const checkIfToppingIsAdded = (name_en) => {
     return toppingVariant.find((item) => item.name_en === name_en);
@@ -272,22 +269,6 @@ export const Details = () => {
     });
   };
 
-  // const addToCartHandler = (itemData) => {
-  //   const itemCartObj = {
-  //     ...itemData,
-  //     item_id: itemData.id,
-  //     variant_quantity: 1
-  //   };
-
-  //   addToCart(itemCartObj, token)
-  //     .then((resp) => {
-  //       console.log(resp);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
     var ItemDataObject = {
@@ -301,9 +282,9 @@ export const Details = () => {
         toppingVariant: toppingVariant,
         sideVariant: sideVariant,
       },
-      totalPrice: Number(totalPrice).toFixed(3),
+      totalPrice: Number(totalPrice).toFixed(2),
       specialInstructions: specialInstructions,
-      itemImage: data?.image
+      itemImage: data?.image,
     };
     // console.log(ItemDataObject, "shahItemDataObject");
 
@@ -326,7 +307,7 @@ export const Details = () => {
 
       dispatch(addToCart(ItemDataObject));
       // addToCartHandler(ItemDataObject)
-      navigate(-1)
+      navigate(-1);
     }
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
     // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));
@@ -645,10 +626,12 @@ export const Details = () => {
                     mr: 1,
                   }}
                 />
-                {checkIfItemIsInCart() && search ? "Update Cart" : "Add to Cart"}
+                {checkIfItemIsInCart() && search
+                  ? "Update Cart"
+                  : "Add to Cart"}
               </Typography>
               <Typography variant="body1" component="span">
-                +KWD {Number(totalPrice).toFixed(3)}
+                +KWD {Number(totalPrice).toFixed(2)}
               </Typography>
             </Button>
           </Stack>

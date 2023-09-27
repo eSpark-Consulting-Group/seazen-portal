@@ -14,89 +14,92 @@ import updateCartApiCall from "../../../api/cart/updateCart";
 import * as reduxCart from "../../../store/reducers/cartSlice";
 
 function CartItem(props) {
-  const { 
-    quantity, 
-    id, 
+  const {
+    quantity,
+    id,
     cart_id,
-    menu_item_name_en, 
-    unit_price, 
+    menu_item_name_en,
+    unit_price,
     itemName,
     totalPrice,
-    itemImage, 
-    // variant, 
+    itemImage,
+    // variant,
     cartRefetch,
-    item_code 
+    item_code,
   } = props;
 
-  const variant = "450g"
-  
+  const variant = "450g";
+
   const [updatedQuantity, setUpdatedQuantity] = React.useState(quantity);
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
 
   const updateCartHandler = useQuery({
-    queryFn: () => updateCartApiCall({
-      "cart_id" : cart_id,
-      "quantity" : updatedQuantity,
-    }, token),
+    queryFn: () =>
+      updateCartApiCall(
+        {
+          cart_id: cart_id,
+          quantity: updatedQuantity,
+        },
+        token
+      ),
     onSuccess: (data) => {
-      console.log(data, "data")
+      console.log(data, "data");
     },
-    enabled: false
+    enabled: false,
   });
 
   function onIncrease() {
     dispatch(
       reduxCart.updateCartItemQuantity({
-        id: id,
-        itemCode:item_code,
+        itemCode: item_code,
         quantity: updatedQuantity + 1,
       })
     );
     setUpdatedQuantity((prev) => prev + 1);
     setTimeout(() => {
-      updateCartHandler.refetch()
-      cartRefetch()
-    }, 100)
+      updateCartHandler.refetch();
+      cartRefetch();
+    }, 100);
   }
 
-
   const { data, refetch } = useQuery({
-    queryFn: () => deleteCart(
-      {
-        cart_id: cart_id,
-        item_id: "", 
-        item_code: ""
-      }, token),
+    queryFn: () =>
+      deleteCart(
+        {
+          cart_id: cart_id,
+          item_id: "",
+          item_code: "",
+        },
+        token
+      ),
     onSuccess: (data) => {
-      console.log(data, "data")
+      console.log(data, "data");
     },
-    enabled: false
+    enabled: false,
   });
 
   const onDelete = () => {
     dispatch(reduxCart.removeFromCart(id));
-    refetch()
+    refetch();
     setTimeout(() => {
-      cartRefetch()
-    }, 100)
-  }
+      cartRefetch();
+    }, 100);
+  };
 
   function onDecrease() {
     dispatch(
       reduxCart.updateCartItemQuantity({
-        id: id,
-        itemCode:item_code,
-        quantity: updatedQuantity - 1
+        itemCode: item_code,
+        quantity: updatedQuantity - 1,
       })
     );
     setUpdatedQuantity((prev) => prev - 1);
     setTimeout(() => {
-      updateCartHandler.refetch()
-      cartRefetch()
-    }, 100)
-
+      updateCartHandler.refetch();
+      cartRefetch();
+    }, 100);
   }
 
   function getItemName() {
@@ -144,7 +147,9 @@ function CartItem(props) {
             disableRipple
             disableElevation
             endIcon={<EditTwoToneIcon />}
-            onClick={()=>{navigate(`${paths.details}/${id}?item_code=${item_code}`)}}
+            onClick={() => {
+              navigate(`${paths.details}/${id}?item_code=${item_code}`);
+            }}
             sx={{
               p: 0,
               minHeight: "auto",
@@ -172,10 +177,9 @@ function CartItem(props) {
           height: "72px",
         }}
       >
-        <Typography
-          align="center"
-          fontWeight={600}
-        >{`KWD ${((unit_price || totalPrice) * updatedQuantity).toFixed(2)}`}</Typography>
+        <Typography align="center" fontWeight={600}>
+          {`KWD ${Number(totalPrice).toFixed(2)}`}
+        </Typography>
         <IncDec
           quantity={updatedQuantity}
           onIncrease={onIncrease}

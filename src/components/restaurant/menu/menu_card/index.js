@@ -69,7 +69,7 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
 
     const quantity = cart.reduce((acc, cartItem) => {
       if (cartItem.id === id) {
-        return acc + 1;
+        return acc + cartItem.quantity;
       }
       return acc;
     }, 0);
@@ -78,12 +78,14 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
   };
 
   const getExtraItemName = () => {
-    const itemIndex = cart.findIndex((cartItem) => cartItem.id === id);
+    // const itemIndex = cart?.findIndex((cartItem) => cartItem.id === id);
 
-    if (itemIndex === -1) {
-      return 0;
-    }
-    return cart[itemIndex].sideVariant;
+    // if (itemIndex === -1) {
+    //   return 0;
+    // }
+    // return cart[itemIndex].sideVariant;
+
+    return [{ name_en: "rice" }, { name_en: "plate peppers" }];
   };
 
   return (
@@ -189,11 +191,11 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
       </Stack>
       {menuCardDropdownOpen && (
         <Stack
-          spacing={1}
+          spacing={0.5}
           sx={{
             width: "85%",
             backgroundColor: "common.white",
-            p: 2,
+            p: 1,
             borderBottomLeftRadius: (theme) => theme.shape.borderRadius,
             borderBottomRightRadius: (theme) => theme.shape.borderRadius,
           }}

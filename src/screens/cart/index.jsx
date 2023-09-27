@@ -124,14 +124,9 @@ function CartPage() {
   };
 
   const getItemTotal = () => {
-    return cartItems
-      .reduce((acc, cartItem) => {
-        return (
-          acc + (cartItem.unit_price || cartItem.totalPrice) * cartItem.quantity
-        );
-        // return acc + 100 * cartItem.quantity;
-      }, 0)
-      .toFixed(2);
+    return cartItems.reduce((acc, cartItem) => {
+      return acc + Number(cartItem.totalPrice);
+    }, 0).toFixed(2);
   };
 
   const getTipAmount = () => {
@@ -152,7 +147,7 @@ function CartPage() {
       Number(getTipAmount()) -
       Number(getDiscountAmount()) +
       Number(getDeliveryCharge())
-    ).toFixed(2 );
+    ).toFixed(2);
   };
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(
