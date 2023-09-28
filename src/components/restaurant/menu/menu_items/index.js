@@ -3,6 +3,7 @@ import "./style.css";
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useSearchParams } from "react-router-dom";
+import { isEmpty } from "lodash";
 
 const menu_categories = [
   "Burrito in a Bowl",
@@ -18,7 +19,7 @@ const menu_categories = [
   "Soft drinks",
 ];
 
-const MenuItems = () => {
+const MenuItems = ({ itemCategoryList }) => {
   let [searchParams, setSearchParams] = useSearchParams();
 
   const handleMenuItemClick = (category) => {
@@ -46,9 +47,9 @@ const MenuItems = () => {
                 padding: "0",
               }}
             >
-              <span className="dropdown_icon_container_menu">
+              <div className="dropdown_icon_container_menu">
                 <img src="/assets/img/menu_Icon.svg" alt="chevron_down_icon" />
-              </span>
+              </div>
             </Dropdown.Toggle>
 
             <Dropdown.Menu
@@ -61,7 +62,7 @@ const MenuItems = () => {
                 border: "none",
               }}
             >
-              {menu_categories.map((category, index) => (
+              {/* {menu_categories.map((category, index) => (
                 <Dropdown.Item
                   key={`menu_category_drop_${index}`}
                   onClick={() => {
@@ -70,21 +71,55 @@ const MenuItems = () => {
                 >
                   {category}
                 </Dropdown.Item>
-              ))}
+              ))} */}
+              {!isEmpty(itemCategoryList)
+                ? itemCategoryList?.map((category, index) => (
+                    <Dropdown.Item
+                      key={category.id}
+                      onClick={() => {
+                        handleMenuItemClick(category?.name_en);
+                      }}
+                    >
+                      {category?.name_en}
+                    </Dropdown.Item>
+                  ))
+                : menu_categories.map((category, index) => (
+                    <Dropdown.Item
+                      key={`menu_category_drop_${index}`}
+                      onClick={() => {
+                        handleMenuItemClick(category);
+                      }}
+                    >
+                      {category}
+                    </Dropdown.Item>
+                  ))}
             </Dropdown.Menu>
           </Dropdown>
         </div>
         <div className="menu_itmes_text_container">
-          {menu_categories.map((category, index) => (
-            <button
-              key={`menu_category_${index}`}
-              onClick={() => {
-                handleMenuItemClick(category);
-              }}
-            >
-              {category}
-            </button>
-          ))}
+          {!isEmpty(itemCategoryList)
+            ? itemCategoryList?.map((category, index) => (
+                <button
+                  style={{ color: "black" }}
+                  key={category?.id}
+                  onClick={() => {
+                    handleMenuItemClick(category?.name_en);
+                  }}
+                >
+                  {category?.name_en}
+                </button>
+              ))
+            : menu_categories.map((category, index) => (
+                <button
+                  style={{ color: "black" }}
+                  key={index}
+                  onClick={() => {
+                    handleMenuItemClick(category);
+                  }}
+                >
+                  {category}
+                </button>
+              ))}
         </div>
       </div>
     </div>

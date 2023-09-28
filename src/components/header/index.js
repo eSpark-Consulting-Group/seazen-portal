@@ -44,7 +44,7 @@ const Navbar = (props) => {
       >
         {variant !== NavbarVariants.backWithProfile && (
           <div
-            className="icon-btn"
+            className="iconaccount-btn"
             onClick={() => {
               navigate(paths.profile);
             }}
@@ -95,7 +95,8 @@ const Navbar = (props) => {
           </div>
 
           <div className="icon-btn">
-            <img src="/assets/img/Icon - Search.svg" alt="search icon" />
+            <img src="/assets/img/Icon - Search.svg" alt="search icon"
+              onClick={() => {navigate(paths.search)}} />
           </div>
         </div>
       )}

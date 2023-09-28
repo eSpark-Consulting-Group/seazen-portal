@@ -4,9 +4,9 @@ import ProfileHeader from '../../components/header/profileHeader'
 
 export const Profile = () => {
   return (
-    <div>
+    <>
         <ProfileHeader/>
         <ProfileInformation/>
-    </div>
+    </>
   )
 }

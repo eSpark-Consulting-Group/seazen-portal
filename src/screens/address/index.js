@@ -7,6 +7,7 @@ import { AppartmentAdress } from "../../components/address/forms/appartmentForm"
 import { OfficeAdress } from "../../components/address/forms/officeForm";
 import { useNavigate } from "react-router";
 import { paths } from "../../routes/paths";
+import MyAddresses from "../../components/header/myAdresses";
 
 const AddressForm = () => {
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
@@ -39,13 +40,13 @@ const AddressForm = () => {
 
   return (
     <div className="button-style">
-      <AddressHeader />
+      <MyAddresses title="Add New Address" />
       <AddressTypeSelector
         addressType={addressType}
         handleAddressTypeChange={handleAddressTypeChange}
       />
 
-      <div className="edit-container">
+      <div className="edit-container px-3">
         <p className="address-name">Salmiya</p>
         <button className="edit-button" onClick={() => navigate(paths.location)}>
           <span className="edit-text">Edit Location</span>

@@ -35,6 +35,9 @@ function CustomerRegistration() {
     },
   });
 
+  const { first_name, last_name } = formikCustomerRegistration.errors
+  const isFormError = first_name || last_name
+
   return (
     <Stack
       sx={{
@@ -132,6 +135,7 @@ function CustomerRegistration() {
         <Button
           size="large"
           variant="contained"
+          disabled={!!isFormError}
           fullWidth
           onClick={formikCustomerRegistration.handleSubmit}
         >

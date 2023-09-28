@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../../components/header/index";
 import Slider from "../../components/carousel/slider/index";
 import DraggableSlider from "../../components/draggableSlider";
@@ -6,8 +6,31 @@ import { Footer } from "../../components/footer/footerContent";
 import RestaurantsOrderTypeButton from "../../components/category/button";
 import "../../components/carousel/slider/style.css";
 import "./style.css";
+import { useQuery } from "@tanstack/react-query";
+import emailLogin from "../../api/home/userLogin";
+import { useDispatch, useSelector } from "react-redux";
+import { addToken } from "../../store/reducers/authSlice";
 
 const Home = () => {
+  const isToken = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
+  const defaultUser = { 
+    email : "ikram2001@gmail.com",
+    password : "12345678"
+  } 
+    const { data, refetch } = useQuery({
+      queryFn: () => emailLogin(defaultUser),
+      onSuccess: (data) => {
+        dispatch(addToken(data.data.token));
+      }
+    });
+
+    useEffect(() => {
+      if (!isToken) {
+        refetch()
+      }
+    }, [isToken])
+  
   return (
     <div className="home-styling container-fluid">
       <Navbar />

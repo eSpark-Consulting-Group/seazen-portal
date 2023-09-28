@@ -5,28 +5,105 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import IncDec from "../../Input/InputWithIncDec";
+import deleteCart from "../../../api/cart/deleteCartItem";
+import { useQuery } from "@tanstack/react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { paths } from "../../../routes/paths";
+import updateCartApiCall from "../../../api/cart/updateCart";
+import * as reduxCart from "../../../store/reducers/cartSlice";
 
 function CartItem(props) {
-  const { item, quantity } = props;
+  const {
+    quantity,
+    id,
+    cart_id,
+    menu_item_name_en,
+    unit_price,
+    itemName,
+    totalPrice,
+    itemImage,
+    // variant,
+    cartRefetch,
+    item_code,
+  } = props;
 
-  const { name, price, image, variant } = item;
+  const variant = "450g";
 
   const [updatedQuantity, setUpdatedQuantity] = React.useState(quantity);
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
+
+  const updateCartHandler = useQuery({
+    queryFn: () =>
+      updateCartApiCall(
+        {
+          cart_id: cart_id,
+          quantity: updatedQuantity,
+        },
+        token
+      ),
+    onSuccess: (data) => {
+      console.log(data, "data");
+    },
+    enabled: false,
+  });
 
   function onIncrease() {
-    console.log("onIncrease");
-
+    dispatch(
+      reduxCart.updateCartItemQuantity({
+        itemCode: item_code,
+        quantity: updatedQuantity + 1,
+      })
+    );
     setUpdatedQuantity((prev) => prev + 1);
+    setTimeout(() => {
+      updateCartHandler.refetch();
+      cartRefetch();
+    }, 100);
   }
 
-  function onDecrease() {
-    console.log("onDecrease");
+  const { data, refetch } = useQuery({
+    queryFn: () =>
+      deleteCart(
+        {
+          cart_id: cart_id,
+          item_id: "",
+          item_code: "",
+        },
+        token
+      ),
+    onSuccess: (data) => {
+      console.log(data, "data");
+    },
+    enabled: false,
+  });
 
+  const onDelete = () => {
+    dispatch(reduxCart.removeFromCart(id));
+    refetch();
+    setTimeout(() => {
+      cartRefetch();
+    }, 100);
+  };
+
+  function onDecrease() {
+    dispatch(
+      reduxCart.updateCartItemQuantity({
+        itemCode: item_code,
+        quantity: updatedQuantity - 1,
+      })
+    );
     setUpdatedQuantity((prev) => prev - 1);
+    setTimeout(() => {
+      updateCartHandler.refetch();
+      cartRefetch();
+    }, 100);
   }
 
   function getItemName() {
-    return `${name} (${variant})`;
+    return `${menu_item_name_en || itemName} (${variant})`;
   }
 
   return (
@@ -51,7 +128,7 @@ function CartItem(props) {
             },
           }}
         >
-          <img src={image} alt={name} />
+          <img src={itemImage} alt={menu_item_name_en || itemName} />
         </Box>
 
         <Stack
@@ -70,6 +147,9 @@ function CartItem(props) {
             disableRipple
             disableElevation
             endIcon={<EditTwoToneIcon />}
+            onClick={() => {
+              navigate(`${paths.details}/${id}?item_code=${item_code}`);
+            }}
             sx={{
               p: 0,
               minHeight: "auto",
@@ -97,20 +177,18 @@ function CartItem(props) {
           height: "72px",
         }}
       >
-        <Typography
-          align="center"
-          fontWeight={600}
-        >{`KWD ${price}`}</Typography>
+        <Typography align="center" fontWeight={600}>
+          {`KWD ${Number(totalPrice).toFixed(2)}`}
+        </Typography>
         <IncDec
           quantity={updatedQuantity}
           onIncrease={onIncrease}
           onDecrease={onDecrease}
+          onDelete={onDelete}
           IncButtonProps={{
             disabled: updatedQuantity === 10,
           }}
-          DecButtonProps={{
-            disabled: updatedQuantity === 1,
-          }}
+          isSingleItem={updatedQuantity === 1}
         />
       </Stack>
     </Stack>

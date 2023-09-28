@@ -4,11 +4,10 @@ import "./style.css";
 import { paths } from "../../../routes/paths";
 import { styled } from "@mui/material/styles";
 
-
 const StyledItemPrice = styled("div")(({ theme }) => ({
   color: theme.palette.themeColor.main,
-   // Add any other styles you need for the item price here
- }));
+  // Add any other styles you need for the item price here
+}));
 
 const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
   const navigate = useNavigate();
@@ -19,7 +18,12 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
     <div className="details_outer_container px-3 px-sm-4">
       <div className="details_inner_div w-100">
         <div className="logo_info_container">
-          <img src="/assets/img/Trapani_logo.svg" alt="restaurant_logo" />
+          {restaurantDetail?.name_en === "Trapani" && (
+            <img src="/assets/img/Trapani_logo.svg" alt="restaurant_logo" />
+          )}
+          {restaurantDetail?.name_en === "Recco" && (
+            <img src={restaurantDetail?.logo} alt="restaurant_logo" />
+          )}
           <StyledItemPrice
             className="information_container"
             onClick={() => {
@@ -37,7 +41,7 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
           </StyledItemPrice>
         </div>
         <StyledItemPrice className="tag_line">
-          A modern take on the Babylonian experience
+          {restaurantDetail?.slogan_en}
         </StyledItemPrice>
       </div>
     </div>

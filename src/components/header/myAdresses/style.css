@@ -12,25 +12,21 @@
   margin-bottom: 45px;
 }
 .left-icons img {
-  width: 24px;
-  height: 24px;
-  opacity: 1;
-  position: absolute;
-  top: 30px;
-  left: 32px;
+    height: 24px;
+    opacity: 1;
+    position: absolute;
+    top: 30px;
 }
 .right-icons img {
-  width: 24px;
   height: 20px;
   opacity: 1;
   position: absolute;
   top: 31px;
-  left: 325px;
+  /* left: 325px; */
+  margin-left: -8px;
 }
 .logo h3 {
   top: 30px;
-  left: 101px;
-  width: 174px;
   height: 22px;
   text-align: center;
   font: normal normal bold 18px/24px Montserrat;
@@ -38,14 +34,15 @@
   color: #1f2933;
   opacity: 1;
   position: absolute;
-}
-
-@media screen and (max-width: 500px) and (min-width: 380px){
-.logo h3{
-  left: 135px;
-}
-.right-icons img{
-  left: 380px;
+  margin-left: -91px;
 
 }
-}
+
+/* @media screen and (max-width: 500px) and (min-width: 380px) {
+  .logo h3 {
+    left: 135px;
+  }
+  .right-icons img {
+    left: 380px;
+  }
+} */

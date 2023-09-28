@@ -9,6 +9,7 @@ import dineInIcon from "./dinein-icon.svg";
 import { useNavigate } from "react-router";
 import { paths } from "../../routes/paths";
 import { useMediaQuery } from "@mui/material";
+import { useSelector } from "react-redux";
 
 const bull = (
   <Box
@@ -18,6 +19,39 @@ const bull = (
     •
   </Box>
 );
+
+const images = [
+  {
+    name: "first card image",
+    image: "/assets/img/restaurants-1-6.svg",
+    service: { doesDelivery: false, isNear: true },
+  },
+  {
+    name: "second card image",
+    image: "/assets/img/restaurants-1-6.svg",
+    service: { doesDelivery: true, isNear: true },
+  },
+  {
+    name: "third card image",
+    image: "/assets/img/restaurants-3-6.svg",
+    service: { doesDelivery: true, isNear: false },
+  },
+  {
+    name: "fourth card image",
+    image: "/assets/img/restaurants-4-6.svg",
+    service: { doesDelivery: true, isNear: true },
+  },
+  {
+    name: "fifth card image",
+    image: "/assets/img/restaurants-5-6.svg",
+    service: { doesDelivery: false, isNear: true },
+  },
+  {
+    name: "sixth card image",
+    image: "/assets/img/restaurants-6-6.svg",
+    service: { doesDelivery: false, isNear: false },
+  },
+];
 
 const icons = [
   {
@@ -78,15 +112,15 @@ export const restaurantThemeColor = {
   // },
 };
 
-const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
+const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
   const navigate = useNavigate();
   const captions = [
     icons,
-    icons.slice(0, 3),
+    [icons[0], icons[1], icons[3]],
     icons,
     icons,
-    icons.slice(0, 2),
-    icons.slice(1),
+    [icons[0], icons[1], icons[3]],
+    [icons[1], icons[3]],
   ];
 
   const isMediumScreen = useMediaQuery(
@@ -95,37 +129,89 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const isSmallScreen = useMediaQuery(
     "(max-width: 500px) and (min-width: 385px)"
   );
-  const isSmallerScreen = useMediaQuery("(max-width: 350px)");
+  const isSmallerScreen = useMediaQuery(
+    "(max-width: 350px ) (min-width: 290px)"
+  );
+  const isVerySmallScreen = useMediaQuery("(max-width: 290px)");
 
   // Adjust cardWidth to apply 120px width to screens less than 350px
   const cardWidth = isSmallScreen
     ? isMediumScreen
       ? 180
       : isSmallerScreen
-      ? 170
+      ? 180
       : 190
     : isSmallerScreen
     ? 170
-    : 164;
-  const getCardClassName = () => {
+    : isVerySmallScreen
+    ? 145
+    : 161;
+
+  const getCardClassName = (service) => {
     if (orderTypeFilter) {
-      return orderTypeFilter === "delivery"
-        ? "restaurantCard-border-delivery"
-        : "restaurantCard-border-near";
-    } else {
-      return "restaurantCard-no-border";
+      const { delivery, near, selectedNow } = orderTypeFilter;
+      const { doesDelivery, isNear } = service;
+      if (delivery && !near) {
+        return doesDelivery && "restaurantCard-border-delivery";
+      }
+
+      if (!delivery && near) {
+        return isNear && "restaurantCard-border-near";
+      }
+
+      if (delivery && near) {
+        if (doesDelivery && isNear) {
+          return selectedNow === "delivery"
+            ? "restaurantCard-border-delivery"
+            : "restaurantCard-border-near";
+        }
+        if (!doesDelivery && isNear) {
+          return "restaurantCard-border-near";
+        }
+        if (!isNear && doesDelivery) {
+          return "restaurantCard-border-delivery";
+        }
+      }
+
+      if (!doesDelivery && !isNear) {
+        return "restaurantCard-no-border";
+      }
     }
   };
 
-  const getClassNameAccordingToFilter = (orderTypeId) => {
+  const getClassNameAccordingToFilter = (orderTypeId, service) => {
     if (
       orderTypeId === clickedButtonIndex &&
       orderTypeFilter &&
       orderTypeId !== 1
     ) {
-      return orderTypeFilter === "delivery"
-        ? "button-icons-styles-delivery"
-        : "button-icons-styles-near";
+      const { delivery, near, selectedNow } = orderTypeFilter;
+      const { doesDelivery, isNear } = service;
+      if (delivery && !near) {
+        return doesDelivery && "button-icons-styles-delivery";
+      }
+
+      if (!delivery && near) {
+        return isNear && "button-icons-styles-near";
+      }
+
+      if (delivery && near) {
+        if (doesDelivery && isNear) {
+          return selectedNow === "delivery"
+            ? "button-icons-styles-delivery"
+            : "button-icons-styles-near";
+        }
+        if (!doesDelivery && isNear) {
+          return "button-icons-styles-near";
+        }
+        if (!isNear && doesDelivery) {
+          return "button-icons-styles-delivery";
+        }
+      }
+
+      if (!doesDelivery && !isNear) {
+        return "button-icons-styles-none";
+      }
     }
   };
 
@@ -134,56 +220,111 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter }) => {
   const iconHeight = "9px";
 
   const goToRestaurantMenuPage = (restaurant) => {
-    navigate(paths.menu + `/${restaurant}`);
+    navigate(paths.menu + `/restaurant/${restaurant}`);
   };
-
   return (
-    <div className="restaurantCard-container">
-      {Object.keys(restaurantThemeColor).map((restaurant, index) => (
-        <div
-          key={index}
-          className={`restaurantCards restaurantCard-${
-            isSmallScreen ? "small" : "large"
-          } ${getCardClassName()}`}
-        >
-          <Card
-            sx={{
-              width: cardWidth,
-              borderRadius: 1,
-            }}
-            className="restaurantCards"
-            onClick={() => {
-              goToRestaurantMenuPage(restaurant);
-            }}
-          >
-            <img
-              className="restaurantCard-img"
-              src={`/assets/img/${15 + index * 2}.png`}
-              alt={`Card ${index + 1}`}
-            />
+    <div className="restaurantCard-container container-fluid">
+      {Object.keys(restaurantThemeColor).map((restaurant, index) => {
+        if (restaurantsData && (index === 0)) {
+          return (
             <div
-              className={`svg-container ${
-                clickedButtonIndex !== null ? "expanded" : "collapsed"
-              }`}
+              key={index}
+              className={`restaurantCards restaurantCard-${
+                isSmallScreen ? "small" : "large"
+              } ${getCardClassName(images[index].service)}`}
             >
-              <div className="inner-svg-container">
-                {captions[index].map((icon, i) => {
-                  return (
-                    <div key={i} className="icon-row">
-                      <img
-                        className={getClassNameAccordingToFilter(icon.id)}
-                        src={icon.image}
-                        alt={`Icon ${i + 1}`}
-                        style={{ width: iconWidth, height: iconHeight }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
+              <Card
+                sx={{
+                  width: "100%",
+                  borderRadius: "10px",
+                }}
+                className="restaurantCards"
+                onClick={() => {
+                  goToRestaurantMenuPage(restaurantsData[index]?.id);
+                }}
+              >
+                <img
+                  className="restaurantCard-img"
+                  src={restaurantsData[index]?.image}
+                  alt={`Card ${index + 1}`}
+                />
+                <div
+                  className={`svg-container ${
+                    clickedButtonIndex !== null ? "expanded" : "collapsed"
+                  }`}
+                >
+                  <div className="inner-svg-container">
+                    {captions[index].map((icon, i) => {
+                      return (
+                        <div key={i} className="icon-row">
+                          <img
+                            className={getClassNameAccordingToFilter(
+                              icon.id,
+                              images[index].service
+                            )}
+                            src={icon.image}
+                            alt={`Icon ${i + 1}`}
+                            style={{ width: iconWidth, height: iconHeight }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </Card>
             </div>
-          </Card>
-        </div>
-      ))}
+          );
+        } else {
+          return (
+            <div
+              key={index}
+              className={`restaurantCards restaurantCard-${
+                isSmallScreen ? "small" : "large"
+              } ${getCardClassName(images[index].service)}`}
+            >
+              <Card
+                sx={{
+                  width: "100%",
+                  borderRadius: "10px",
+                }}
+                className="restaurantCards"
+                // onClick={() => {
+                //   goToRestaurantMenuPage(restaurant.split(" ")[1]);
+                // }}
+              >
+                <img
+                  className="restaurantCard-img"
+                  src={images[index].image}
+                  alt={`Card ${index + 1}`}
+                />
+                <div
+                  className={`svg-container ${
+                    clickedButtonIndex !== null ? "expanded" : "collapsed"
+                  }`}
+                >
+                  <div className="inner-svg-container">
+                    {captions[index].map((icon, i) => {
+                      return (
+                        <div key={i} className="icon-row">
+                          <img
+                            className={getClassNameAccordingToFilter(
+                              icon.id,
+                              images[index].service
+                            )}
+                            src={icon.image}
+                            alt={`Icon ${i + 1}`}
+                            style={{ width: iconWidth, height: iconHeight }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </Card>
+            </div>
+          );
+        }
+      })}
     </div>
   );
 };

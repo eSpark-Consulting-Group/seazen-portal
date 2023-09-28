@@ -18,6 +18,7 @@ import { Branches } from "../screens/branches";
 import Addresses from "../screens/myAdresses";
 import MyOrderScreen from "../screens/myorder";
 import Receipt from "../screens/receipt";
+import SearchScreen from "../screens/searchPage";
 
 export const paths = {
   home: "/",
@@ -37,16 +38,17 @@ export const paths = {
   privacy_policy: "privacy-policy",
   terms: "/terms",
   address: "/address",
-  details: "/details",
+  details: "/menu-item-details",
   branches: "/branches",
   addresses: "/my-addresses",
+  search: "search",
 };
 
 export const routes = {
   home: "/",
   error: "*",
-  menu: "/menu/:restaurant/:option?",
-  details: "/details",
+  menu: "/menu/:restaurant/:id/:option?",
+  details: "/menu-item-details/:id",
   address: "/address",
   cart: "/cart",
   myorder: "profile/order",
@@ -63,6 +65,7 @@ export const routes = {
   terms: "/terms",
   branches: "/branches",
   addresses: "/my-addresses",
+  search: "/search",
 };
 
 export const publicRoutes = {
@@ -160,6 +163,11 @@ export const publicRoutes = {
     name: "Receipt",
     path: routes.receipt,
     component: <Receipt />,
+  },
+  [paths.search]: {
+    name: "Search",
+    path: routes.search,
+    component: <SearchScreen />,
   },
 };
 

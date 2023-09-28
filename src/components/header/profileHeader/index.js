@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./style.css";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { paths } from "../../../routes/paths";
 
 const ProfileHeader = (props) => {
@@ -8,6 +8,7 @@ const ProfileHeader = (props) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isCountryPopupOpen, setIsCountryPopupOpen] = useState(false);
+  const [currentFlag, setCurrentFlag] = useState("/assets/img/flag1.svg"); // Default flag
   const navigate = useNavigate();
 
   const togglePopup = () => {
@@ -18,6 +19,11 @@ const ProfileHeader = (props) => {
     setSelectedCountry(country);
     setIsPopupOpen(false); // Close the first popup
     setIsCountryPopupOpen(!isCountryPopupOpen);
+  };
+
+  const handleConfirmCountryChange = () => {
+    setCurrentFlag(selectedCountry.flag);
+    setIsCountryPopupOpen(false);
   };
 
   const countries = [
@@ -33,10 +39,10 @@ const ProfileHeader = (props) => {
     <nav className="profile-header">
       <div
         className="profileHeaderaccount"
-        onClick={() => navigate(paths.home)}
+        onClick={()=>navigate(paths.home)}
       >
-        <div className="profileHeaderaccount-icon">
-          <img src="/assets/img/Group 330.svg" alt="Account Icon" />
+        <div className="profileHeaderaccount-icon" >
+          <img src="/assets/img/Group 330.svg" alt="Account Icon"/>
         </div>
       </div>
       <div className="profileHeaderlogo">
@@ -45,7 +51,7 @@ const ProfileHeader = (props) => {
       {showFlagOption && (
         <div className="profileHeaderflag-profile">
           <div className="profileHeadercircle-container" onClick={togglePopup}>
-            <img src="/assets/img/flag1.svg" alt="Default Flag" />
+            <img src={currentFlag} alt="Flag" />
           </div>
           {isPopupOpen && (
             <div
@@ -55,7 +61,11 @@ const ProfileHeader = (props) => {
           )}
           {isPopupOpen && (
             <div className="profileHeaderpopup">
-              <h2>Select which country to order from</h2>
+              <div>
+                <div className="profileHeaderpopup-heading" >
+                  <h2>Select which country to order from</h2>
+                </div>
+              </div>
               <div className="profileHeadercountry-list">
                 {countries.map((country, index) => (
                   <div
@@ -88,7 +98,7 @@ const ProfileHeader = (props) => {
               </p>
               <div className="profileHeaderselected-country">
                 <div className="profileHeadercountry-info">
-                  <img src="/assets/img/flag1.svg" alt="Default Flag" />
+                  <img src={currentFlag} alt="Current Flag" />
                   <h2>Kuwait</h2>
                 </div>
                 <img
@@ -109,18 +119,18 @@ const ProfileHeader = (props) => {
                   className="profileHeaderbutton-cancel"
                   onClick={() => setIsCountryPopupOpen(false)}
                 >
-                  <span className="profileHeadercancel-text">Cancel</span>
+                  <span className="profileHeadercancel-text">Back</span>
                 </button>
                 <button
                   className="profileHeaderbutton-confirm"
-                  onClick={() => setIsCountryPopupOpen(false)}
+                  onClick={handleConfirmCountryChange}
                 >
                   <span className="profileHeaderconfirm-text">Confirm</span>
                 </button>
               </div>
             </div>
           )}
-        </div>  
+        </div>
       )}
       <div className="profileHeaderoption">
         <div className="profileHeaderoption-icon">

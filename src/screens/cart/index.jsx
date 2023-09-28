@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -15,54 +15,85 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { ReactComponent as DollarIcon } from "../../assets/icons/dollar.svg";
 import { ReactComponent as KNETIcon } from "../../assets/icons/knet.svg";
 import { paths } from "../../routes/paths";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material";
 import { setThemeColor } from "../../store/reducers/themeSlice";
-import { useDispatch } from "react-redux";
-
-let CART_ITEMS = [
-  {
-    id: 1,
-    item: {
-      name: "Burrito Vegetarian in a Bowl",
-      price: 15.58,
-      image: "/assets/img/7.png",
-      variant: "450g",
-    },
-    quantity: 1,
-  },
-  {
-    id: 2,
-    item: {
-      name: "Burrito Vegetarian in a Bowl",
-      price: 15.58,
-      image: "/assets/img/7.png",
-      variant: "450g",
-    },
-    quantity: 1,
-  },
-  {
-    id: 3,
-    item: {
-      name: "Burrito Vegetarian in a Bowl",
-      price: 15.58,
-      image: "/assets/img/7.png",
-      variant: "450g",
-    },
-    quantity: 1,
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import "./style.css";
+import { useQuery } from "@tanstack/react-query";
+import cartList from "../../api/cart/cartList";
+import CircularProgress from "@mui/material/CircularProgress";
+import checkout from "../../api/cart/checkout";
 
 function CartPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [tipValue, setTipValue] = React.useState(0.25);
-  const [cartItems, setCartItems] = React.useState(CART_ITEMS);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [cartItems, setCartItems] = React.useState();
+  const [specialIns, setSpecialIns] = React.useState("");
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
-  const DISCOUNT_AMOUNT = Number(1).toFixed(3);
-  const DELIVERY_CHARGE = Number(1).toFixed(3);
+  const DISCOUNT_AMOUNT = Number(1).toFixed(2);
+  const DELIVERY_CHARGE = Number(1).toFixed(2);
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  // Function to handle opening the dialog
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+
+  // Function to handle closing the dialog
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
+  const token = useSelector((state) => state.auth.token);
+  const cart = useSelector((state) => state.cart.cart);
+
+  const checkoutData = {
+    payment_method_id: "1",
+    order_total_price: "2.10",
+    currency_id: "3",
+    country_id: "3",
+    restaurant_id: "2",
+    branch_id: "1",
+    driver_id: "1",
+    address_id: "1",
+    service_type: "pickup",
+    tip_id: "1",
+    pick_from_store: "",
+    pickup_from_car: "",
+    delivery_charges: "0",
+    promo_code: "Test1",
+    comments: specialIns,
+  };
+
+  useEffect(() => {
+    setCartItems(cart);
+    setIsLoading(false);
+  }, [cart]);
+
+  const checkoutHandler = () => {
+    checkout(checkoutData, token)
+      .then((res) => {
+        const checkoutUrl = res.data.checkout_url;
+        window.open(checkoutUrl, "_blank"); // '_blank' opens the URL in a new tab
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     let isCartEmpty = searchParams.get("empty");
+
+    if (cart.length > 0) {
+      setCartItems(cart);
+    }
 
     if (isCartEmpty === "true") {
       setCartItems((prevState) => {
@@ -72,14 +103,34 @@ function CartPage() {
     }
   }, []);
 
+  useEffect(() => {
+    cartRefetch();
+  }, []);
+
+  const cartRefetch = () => {
+    if (cart.length == 0) {
+      setTimeout(() => {
+        cartList(token)
+          .then((res) => {
+            setCartItems(res.data);
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            setCartItems([]);
+            setIsLoading(false);
+          });
+      }, 500);
+    }
+  };
+
   const getItemTotal = () => {
-    return CART_ITEMS.reduce((acc, cartItem) => {
-      return acc + cartItem.item.price * cartItem.quantity;
-    }, 0).toFixed(3);
+    return cartItems.reduce((acc, cartItem) => {
+      return acc + Number(cartItem.totalPrice);
+    }, 0).toFixed(2);
   };
 
   const getTipAmount = () => {
-    return tipValue.toFixed(3);
+    return tipValue.toFixed(2);
   };
 
   const getDiscountAmount = () => {
@@ -96,7 +147,26 @@ function CartPage() {
       Number(getTipAmount()) -
       Number(getDiscountAmount()) +
       Number(getDeliveryCharge())
-    ).toFixed(3);
+    ).toFixed(2);
+  };
+  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
+  const [selectedSchedule, setSelectedSchedule] = useState(
+    "14 August 2023, ASAP"
+  );
+
+  const scheduleOptions = [
+    "14 August 2023, ASAP",
+    "12 August 2023, 11:00 pm - 11:30 pm",
+    "12 August 2023, 11:30 pm - 12:00 am",
+    "12 August 2023, 12:00 am - 12:30 am",
+    "12 August 2023, 12:30 am - 01:00 am",
+    "12 August 2023, 01:00 am - 01:30 am",
+    "12 August 2023, 01:30 am - 02:00 am",
+  ];
+
+  const handleScheduleOptionClick = (option) => {
+    setSelectedSchedule(option);
+    setOpenSchedulePopup(false); // Close the dialog after selecting an option
   };
 
   return (
@@ -125,7 +195,7 @@ function CartPage() {
             boxShadow: (theme) => theme.shadows[16],
           }}
           edge="start"
-          onClick={() => navigate(paths.home)}
+          onClick={() => navigate(-1)}
         >
           <ArrowBackRoundedIcon fontSize="medium" />
         </IconButton>
@@ -139,6 +209,11 @@ function CartPage() {
         >
           Your Cart
         </Typography>
+        <div className="cartHeaderoption">
+          <div className="cartHeaderoption-icon">
+            <img src="/assets/img/Group 256.svg" alt="Option Icon" />
+          </div>
+        </div>
       </Stack>
 
       {cartItems && cartItems.length > 0 ? (
@@ -278,8 +353,17 @@ function CartPage() {
                     </Typography>
                   </Stack>
                 </Typography>
-                <Typography variant="h5" sx={{ color: "#026754" }}>
-                  14 August, ASAP
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: "#026754",
+                    fontFamily: "Titillium Web, sans-serif", // Set the font family
+                    fontWeight: 600, // Set the font weight
+                    fontSize: "14px", // Set the font size
+                    lineHeight: "24px", // Set the line height
+                  }}
+                >
+                  {selectedSchedule}
                 </Typography>
               </Stack>
             </Stack>
@@ -304,20 +388,85 @@ function CartPage() {
                   fontSize: "16px",
                 },
               }}
+              onClick={() => setOpenSchedulePopup(true)}
             >
               Schedule
             </Button>
           </Stack>
+          <Dialog
+            open={openSchedulePopup}
+            onClose={() => setOpenSchedulePopup(false)}
+            sx={{
+              margin: "0",
+              textAlign: "center",
+            }}
+            PaperProps={{
+              sx: {
+                overflow: "visible",
+                margin: "0",
+                height: "275px",
+                bottom: "0",
+                position: "fixed",
+                width: "375px",
+                left: "0",
+                borderBottomLeftRadius: "0px",
+                borderBottomRightRadius: "0px",
+                paddingTop: "20px",
+                "@media (max-width: 600px)": {
+                  width: "100%",
+                },
+              },
+            }}
+          >
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={() => setOpenSchedulePopup(false)}
+              sx={{
+                position: "absolute",
+                top: "-16px",
+                right: "18px",
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <DialogTitle>Select time</DialogTitle>
+            <DialogContent
+              sx={{
+                fontFamily: "Titillium Web, sans-serif", // Set the font family
+                fontWeight: 600, // Set the font weight
+              }}
+            >
+              {scheduleOptions.map((option, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleScheduleOptionClick(option)}
+                  style={{
+                    cursor: "pointer",
 
+                    color: selectedSchedule === option ? "#026754" : "inherit",
+                  }}
+                >
+                  {option}
+                </div>
+              ))}
+            </DialogContent>
+          </Dialog>
           <Stack spacing={2}>
             <Typography variant="h5">
               Your Items
-              {CART_ITEMS.length > 0 ? ` (s)` : ""}
+              {cartItems.length > 0 ? ` (s)` : ""}
             </Typography>
 
-            {CART_ITEMS.length > 0 ? (
-              CART_ITEMS.map((cartItem) => {
-                return <CartItem key={cartItem.id} {...cartItem} />;
+            {cartItems.length > 0 ? (
+              cartItems.map((cartItem) => {
+                return (
+                  <CartItem
+                    key={cartItem.id}
+                    {...cartItem}
+                    cartRefetch={cartRefetch}
+                  />
+                );
               })
             ) : (
               <Typography variant="body1">No items in your cart</Typography>
@@ -327,8 +476,17 @@ function CartPage() {
           <TextField
             id="special-instructions"
             placeholder="Special Instructions (Optional)"
+            InputProps={{ disableUnderline: true }}
             multiline
+            onChange={(text) => setSpecialIns(text.target.value)}
+            value={specialIns}
             rows={2}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                background: "#FAFAFA",
+                border: "none",
+              },
+            }}
             variant="outlined"
           />
 
@@ -338,6 +496,7 @@ function CartPage() {
             variant="outlined"
             sx={{
               "& .MuiOutlinedInput-root": {
+                background: "#FAFAFA",
                 "& input": {
                   "&::placeholder": {
                     fontWeight: 700,
@@ -357,12 +516,71 @@ function CartPage() {
                   }}
                   disableElevation
                   disableRipple
+                  onClick={handleDialogOpen} // Open the dialog on button click
                 >
                   Apply
                 </Button>
               ),
             }}
           />
+
+          {/* Dialog */}
+          <Dialog
+            open={isDialogOpen}
+            onClose={handleDialogClose}
+            sx={{
+              "& .MuiDialog-paper": {
+                height: "178px",
+                width: "327px",
+                textAlign: "center",
+                overflowY: "hidden",
+
+                "@media (min-width: 600px)": {
+                  left: "0",
+                  position: "fixed",
+                  margin: "20px",
+                },
+              },
+            }}
+          >
+            <DialogTitle>
+              <img src="/assets/img/exclaim.svg"></img>
+            </DialogTitle>
+            <DialogContent sx={{ padding: "0" }}>
+              <div
+                style={{
+                  font: "normal normal bold 16px/18px Titillium Web",
+                  color: "#959FA8",
+                }}
+              >
+                You&apos;ve entered an invalid <br /> Promo Code!
+              </div>
+              <Button
+                onClick={handleDialogClose}
+                sx={{
+                  background: "#98694E 0% 0% no-repeat padding-box",
+                  border: "1px solid #707070",
+                  borderRadius: "12px",
+                  opacity: "1",
+                  width: "116px",
+                  height: "29px",
+                  marginTop: "20px",
+                  "&:hover": {
+                    background: "#98694E 0% 0% no-repeat padding-box",
+                  },
+                }}
+              >
+                <span
+                  style={{
+                    font: "normal normal 600 16px/24px Titillium Web",
+                    color: "#ffffff",
+                  }}
+                >
+                  Go Back
+                </span>
+              </Button>
+            </DialogContent>
+          </Dialog>
 
           <Stack spacing={2}>
             <Typography variant="h5" fontWeight={500}>
@@ -405,7 +623,7 @@ function CartPage() {
                   />
 
                   <Typography variant="body1" fontWeight={600}>
-                    {`KWD ${Number(tip).toFixed(3)}`}
+                    {`KWD ${Number(tip).toFixed(2)}`}
                   </Typography>
                 </Box>
               ))}
@@ -419,7 +637,7 @@ function CartPage() {
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="body1">
                 Item
-                {CART_ITEMS.length > 1 ? `(s)` : ""} Total
+                {cartItems.length > 1 ? `(s)` : ""} Total
               </Typography>
               <Typography variant="body1">{`KWD ${getItemTotal()}`}</Typography>
             </Stack>
@@ -473,15 +691,7 @@ function CartPage() {
                   name: "KNET",
                 },
                 {
-                  icon: (
-                    <CreditCardOutlinedIcon
-                      fontSize="large"
-                      sx={{
-                        ml: 0.5,
-                        mb: 1,
-                      }}
-                    />
-                  ),
+                  icon: <img src="/assets/img/credit card.png"></img>,
                   name: "Credit Card",
                 },
               ].map((method) => (
@@ -526,38 +736,67 @@ function CartPage() {
             </Stack>
           </Stack>
 
-          <Button variant="contained" size="large">
+          <Button
+            onClick={() => checkoutHandler()}
+            variant="contained"
+            size="large"
+          >
             Pay Now
           </Button>
         </React.Fragment>
       ) : (
-        <Stack justifyContent="center" alignItems="center" sx={{ pt: 5 }}>
-          <Typography variant="h5" fontWeight={500}>
-            Your cart is empty
-          </Typography>
+        <>
+          {" "}
+          {!isLoading ? (
+            <Stack justifyContent="center" alignItems="center" sx={{ pt: 15 }}>
+              <Typography variant="h5" fontWeight={500}>
+                Your cart is empty
+              </Typography>
 
-          <Box>
-            <img src="/assets/img/cart.svg" alt="Empty Cart" />
-          </Box>
+              <Box sx={{ pt: 5 }}>
+                <img src="/assets/img/cart.svg" alt="Empty Cart" />
+              </Box>
 
-          <Typography
-            variant="body1"
-            align="center"
-            fontWeight={400}
-            gutterBottom
-            gap={1}
-            sx={{
-              whiteSpace: "pre-line",
-              mb: 2,
-            }}
-          >
-            {`Looks like you have not added anything\n to your cart.\n Go ahead & explore something`}
-          </Typography>
+              <Typography
+                variant="body1"
+                align="center"
+                fontWeight={400}
+                gutterBottom
+                gap={1}
+                sx={{
+                  whiteSpace: "pre-line",
+                  mb: 2,
+                  pt: 4,
+                }}
+              >
+                {`Looks like you have not added anything\n to your cart.\n Go ahead & explore something`}
+              </Typography>
 
-          <Button variant="contained" size="large" onClick={() => navigate(-1)}>
-            Back
-          </Button>
-        </Stack>
+              <Button
+                sx={{
+                  width: "184px",
+                  height: "56px",
+                  mt: 5,
+                }}
+                variant="contained"
+                size="large"
+                onClick={() => navigate(-1)}
+              >
+                Back
+              </Button>
+            </Stack>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "100px !important",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
+        </>
       )}
     </Stack>
   );

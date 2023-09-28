@@ -40,7 +40,7 @@ const Address = ({ address }) => {
   return (
     <div className='orderaddress-text'>
         <p>Office - Seazen Ardia</p>
-        <pre className="orderformatted-address">{formattedAddress}</pre>
+        <p className="orderformatted-address">{formattedAddress}</p>
     </div>
   )
 }

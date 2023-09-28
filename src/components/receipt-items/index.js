@@ -2,7 +2,7 @@ import React from 'react'
 import '../../screens/receipt/style.css'
 
 const ReceiptItem = () => {
-  const randomFloat = (Math.random() * 10 + 10).toFixed(3);
+  const randomFloat = (Math.random() * 10 + 10).toFixed(2);
   
   return (
     <div className='receipt-items'>

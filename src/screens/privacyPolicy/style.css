@@ -72,3 +72,13 @@
   top: 645px;
   left: 15px;
 }
+
+@media (max-width: 600px) {
+  .privacy-paragraph-title ,
+  .privacy-paragraphOne,
+  .privacy-paragraphTwo,
+  .privacy-paragraph-title-two,
+  .privacy-paragraphThree {
+    width: 100%;
+  }
+}

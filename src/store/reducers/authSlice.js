@@ -21,10 +21,12 @@ const authSlice = createSlice({
     error: null,
   },
   reducers: {
-    // reducers
-  },
+    addToken: (state, action) => {
+      state.token = action.payload
+    },
+  }
 });
 
-// export const {} = authSlice.actions;
+export const { addToken } = authSlice.actions;
 
 export default authSlice.reducer;

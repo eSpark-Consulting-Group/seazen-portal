@@ -46,7 +46,7 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
 
   return (
     <div className="branches-container">
-      <div className="branch-info">
+      <div className="branch-info mx-4 ">
         <div className="branches-heading">
           <h1>{name}</h1>
         </div>
