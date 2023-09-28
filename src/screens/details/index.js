@@ -167,7 +167,7 @@ export const Details = () => {
       // Add the option with the variantId and quantity
       setToppingVariant((prevToppingVariant) => [
         ...prevToppingVariant,
-        { ...option, variantId, quantity: 1 },
+        { ...option, variantId, option_id: option.id, quantity: 1 },
       ]);
     }
   };
@@ -188,7 +188,7 @@ export const Details = () => {
       // Add the option with the variantId
       setSideVariant((prevSideVariant) => [
         ...prevSideVariant,
-        { ...option, variantId },
+        { ...option, option_id: option.id, variantId },
       ]);
     }
   };
@@ -201,7 +201,7 @@ export const Details = () => {
       setSizeVariant(null);
     } else {
       // Add the variantId to the selected size option
-      const sizeWithVariantId = { ...option, variantId };
+      const sizeWithVariantId = { ...option, option_id: option.id, variantId };
       setSizeVariant(sizeWithVariantId);
     }
   };
@@ -235,7 +235,10 @@ export const Details = () => {
         return updatedToppingVariant;
       } else {
         // If the topping doesn't exist, add it with quantity 1
-        return [...prevToppingVariant, { ...option, quantity: 1 }];
+        return [
+          ...prevToppingVariant,
+          { ...option, option_id: option.id, quantity: 1 }
+        ];
       }
     });
   };
@@ -268,6 +271,55 @@ export const Details = () => {
 
       return prevToppingVariant; // No change if topping doesn't exist
     });
+  };
+
+  const variantsForApi = (variantID, optionId, quantity) => {
+    const { data } = menuItemDetails;
+    const dataVariants = data.variants.find((val) => val.id === variantID);
+    if (!dataVariants) return [];
+    const dataOptions = dataVariants.options?.map((val, index) => {
+      return {
+        option_id: val.id,
+        option_quantity:
+          val.id == (optionId[index] || optionId) ? quantity || 1 : 0
+      };
+    });
+    return dataOptions;
+  };
+
+  const getSelectedItemsIds = (selectedItems) => {
+    const idsArr = selectedItems.map((val) => val.id);
+
+    return idsArr;
+  };
+
+  const addToCartApiHandler = (cartItem) => {
+    const cartItemDataForApi = {
+      item_code: cartItem.item_code,
+      item_id: cartItem.id,
+      quantity: cartItem.quantity,
+      cart_id: "3",
+      topping_variant_id: "2",
+      side_variant_id: "3",
+      size_variant_id: "1",
+      size_variant: variantsForApi(1, cartItem.variants.sizeVariant.id),
+      topping_variant: variantsForApi(
+        2,
+        getSelectedItemsIds(cartItem.variants.toppingVariant),
+        cartItem.variants.toppingVariant[0].quantity
+      ),
+      side_variant: variantsForApi(
+        3,
+        getSelectedItemsIds(cartItem.variants.sideVariant)
+      )
+    };
+    addToCartApiCall(cartItemDataForApi, token)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleAddToCart = () => {
@@ -308,7 +360,7 @@ export const Details = () => {
       };
 
       dispatch(addToCart(ItemDataObject));
-      // addToCartHandler(ItemDataObject)
+      addToCartApiHandler(ItemDataObject)
       navigate(-1);
     }
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
