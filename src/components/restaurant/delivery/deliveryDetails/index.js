@@ -5,7 +5,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from "react";
 import { styled } from "@mui/material/styles"; // Import styled from MUI
 import { lighten } from "@mui/material/styles";
-import DeliveryTime from "./deliverTime";
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
@@ -123,7 +122,6 @@ const DeliveryDetails = () => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <DeliveryTime/>
       </div>
     </StyledOuterContainer>
   );
