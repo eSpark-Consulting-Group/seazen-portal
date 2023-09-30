@@ -4,7 +4,6 @@ import getAllPopularItems, {
   GET_ALL_POPULAR_ITEMS_QUERY_KEY,
 } from "../../api/home/getAllPopularItems";
 import "./style.css";
-import { extractPriceAndCurrency } from "../../utils/items";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
 
