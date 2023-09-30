@@ -408,7 +408,7 @@ export const Details = () => {
                       sx={{
                         py: 0.5,
                         px: 1.5,
-                        borderRadius: 999,
+                        // borderRadius: 999,
                         backgroundColor: (theme) =>
                           alpha(theme.palette.themeColor.main, 0.12),
                         height: "40px",
