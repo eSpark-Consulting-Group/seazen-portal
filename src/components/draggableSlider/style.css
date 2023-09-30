@@ -73,7 +73,7 @@ body {
 
 .price-wrapper {
   position: relative;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .box-text {
@@ -86,7 +86,7 @@ body {
 }
 
 .caption-image {
-  padding-top: 70px;
+  padding-top: 74px;
   padding-left: 16px;
 }
 
@@ -95,9 +95,9 @@ body {
   
 }
 
-.first-card-additional-text {
+/* .first-card-additional-text {
   padding-top: 17px;
-}
+} */
   
 .text-style {
   text-align: center;
@@ -109,7 +109,7 @@ body {
 }
 
 .inline-text {
-  margin-top: -22px;
+  margin-top: -30px;
   text-align: center;
   padding-left: 17px;
   font: normal normal bold 18px/22px Titillium Web;
@@ -118,7 +118,7 @@ body {
   opacity: 1;
   position: absolute;
   left: 26%;
-  bottom: -6px;
+  /* bottom: -6px; */
 }
 
 .first-card-caption-image {
@@ -126,6 +126,6 @@ body {
 }
 
 .third-card-caption-image {
-  padding-top: 67px;
-  padding-left: 38px;
+  padding-top: 74px;
+  /* padding-left: 38px; */
 }
