@@ -9,7 +9,7 @@ export const DetailsHeader = (props) => {
   const navigate = useNavigate();
 
   return (
-    <header className="container-fluid">
+    <header className="container-fluid detailsheaderheader">
       <img className="detailsHeaderBackground container-fluid" src={image} />
       <div
         className="detailsheaderarrowicons-style pointer"

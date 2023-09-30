@@ -363,7 +363,13 @@ export const Details = () => {
                   justifyContent="space-between"
                   alignItems="center"
                 >
-                  <Typography variant="h5" component="div">
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    sx={{
+                      marginLeft: "12px !important",
+                    }}
+                  >
                     {menuItemDetails?.data?.name_en}
                   </Typography>
 
@@ -372,12 +378,19 @@ export const Details = () => {
                     component="div"
                     sx={{
                       color: (theme) => theme.palette.themeColor.main,
+                      marginRight: "15px !important",
                     }}
                   >
                     483 Kcal
                   </Typography>
                 </Stack>
-                <Typography variant="body2" component="div">
+                <Typography
+                  variant="body2"
+                  component="div"
+                  sx={{
+                    marginLeft: "12px !important",
+                  }}
+                >
                   {menuItemDetails?.data?.description_en}
                 </Typography>
               </>
@@ -398,22 +411,21 @@ export const Details = () => {
                         borderRadius: 999,
                         backgroundColor: (theme) =>
                           alpha(theme.palette.themeColor.main, 0.12),
+                        height: "40px",
+                        borderRadius: "16px",
                       }}
                     >
-                      <Typography
-                        variant="h6"
-                        component="div"
-                        fontWeight="normal"
-                      >
+                      <Typography variant="h6" component="div" fontWeight="600">
                         {variant?.name_en}
 
                         <Typography
                           variant="subtitle2"
                           component="sub"
                           color="GrayText"
-                          fontWeight="light"
+                          fontWeight="600"
                           sx={{
                             ml: 0.5,
+                            top: "-1px",
                           }}
                         >
                           {variant.name_en === "Choose the Size"
@@ -445,6 +457,7 @@ export const Details = () => {
                     </Stack>
 
                     {variant?.options?.map((option, index) => {
+                      const isLastItem = variant?.options?.length - 1 === index;
                       return (
                         <Fragment key={option?.id}>
                           <Stack
@@ -452,6 +465,15 @@ export const Details = () => {
                             spacing={0.5}
                             justifyContent="space-between"
                             alignItems="center"
+                            sx={{
+                              marginLeft: "-7px !important",
+                              color:
+                                variant.name_en === "Extra Topping" &&
+                                isLastItem
+                                  ? "#e0e0e0"
+                                  : "", // Apply grey background to last item in Extra Topping section
+                                  
+                            }}
                           >
                             <FormControlLabel
                               checked={
@@ -474,20 +496,35 @@ export const Details = () => {
                               }}
                               control={<Checkbox color="themeColor" />}
                               label={option?.name_en}
+                              disabled={
+                                variant.name_en === "Extra Topping" &&
+                                isLastItem &&
+                                !checkIfToppingIsAdded(option?.name_en)
+                              }
                             />
-                            <p
-                              style={{
-                                fontSize: "10px",
-                                paddingTop: "5px",
-                                marginRight: "10px",
-                              }}
-                            >{`(Each +KWD ${option?.unit_price})`}</p>
-                            {variant.name_en === "Extra Topping" ? (
+
+                            {variant.name_en === "Extra Topping" && (
+                              <p
+                                style={{
+                                  fontSize: "10px",
+                                  paddingTop: "5px",
+                                  
+                                  marginRight:
+                                variant.name_en === "Extra Topping" &&
+                                isLastItem
+                                  ? "160px"
+                                  : "90px", // Apply grey background to last item in Extra Topping section
+                                }}
+                              >{`(Each +KWD ${option?.unit_price})`}</p>
+                            )}
+
+                            {variant.name_en === "Extra Topping" &&
+                            !isLastItem ? (
                               <IncDec
+                              
                                 IncButtonProps={{
                                   disabled:
-                                    getExtraToppingQuantity(option) === 7 ||
-                                    !checkIfToppingIsAdded(option?.name_en),
+                                    getExtraToppingQuantity(option) >= 7,
                                 }}
                                 DecButtonProps={{
                                   disabled: !checkIfToppingIsAdded(
@@ -503,17 +540,23 @@ export const Details = () => {
                                   handleRemoveToppingQuantity(option);
                                 }}
                               />
-                            ) : (
+                            ) : null}
+                            {variant.name_en === "Choose the Size" ||
+                            variant.name_en === "Extra Sides" ? (
                               <Typography
                                 variant="body1"
                                 component="div"
                                 sx={{
                                   color: "common.black",
+                                  marginRight: "10px !important",
                                 }}
                               >
-                                {getFormattedPrice(option?.unit_price)}
+                                {variant.name_en === "Choose the Size" &&
+                                index === 0
+                                  ? ""
+                                  : getFormattedPrice(option?.unit_price)}
                               </Typography>
-                            )}
+                            ) : null}
                           </Stack>
 
                           {variant?.options?.length - 1 !== index && (
@@ -531,13 +574,21 @@ export const Details = () => {
             multiline
             rows={4}
             placeholder="Special instructions (Optional)"
+            InputProps={{
+              classes: {
+                notchedOutline: "custom-notched-outline", // Add a custom class to override the styles
+              },
+            }}
             sx={{
-              mt: 2,
+              "& .custom-notched-outline": {
+                border: "none", // Remove the border
+              },
+              background: "#FAFAFA 0% 0% no-repeat padding-box",
+              bordeRadius: "16px",
             }}
             onChange={handleSpecialInstructionsChange}
             fullWidth
           />
-
           <Stack
             spacing={0}
             alignItems="center"
@@ -607,7 +658,8 @@ export const Details = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                backgroundColor: (theme) => theme.palette.themeColor.light,
+                backgroundColor: (theme) =>
+                  `${theme.palette.themeColor.light} !important`,
                 "&:hover": {
                   backgroundColor: (theme) => theme.palette.themeColor.light,
                 },
@@ -621,6 +673,7 @@ export const Details = () => {
                 sx={{
                   display: "flex",
                   alignItems: "center",
+                  color: "white",
                 }}
               >
                 <AddShoppingCartRounded
@@ -632,7 +685,13 @@ export const Details = () => {
                   ? "Update Cart"
                   : "Add to Cart"}
               </Typography>
-              <Typography variant="body1" component="span">
+              <Typography
+                variant="body1"
+                component="span"
+                sx={{
+                  color: "white",
+                }}
+              >
                 +KWD {Number(totalPrice).toFixed(2)}
               </Typography>
             </Button>
