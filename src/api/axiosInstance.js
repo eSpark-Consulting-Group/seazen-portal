@@ -1,9 +1,6 @@
 // Create Axios instance with interceptors
 import axios from "axios";
 
-const maxRetries = 2;
-let retryCount = 0;
-
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
   timeout: 3000,
@@ -13,10 +10,14 @@ const axiosInstance = axios.create({
   },
 });
 
+// Create a cancel token source.
+const cancelTokenSource = axios.CancelToken.source();
+
 // Request interceptor to limit the number of retries
 axiosInstance.interceptors.request.use((config) => {
-  config.retry = 3; // Set the maximum number of retries
+  config.retry = 2; // Set the maximum number of retries (including the initial request)
   config.retryDelay = 1000; // Set the delay between retries in milliseconds
+  config.cancelToken = cancelTokenSource.token; // Associate the request with the cancel token
   return config;
 });
 
@@ -33,6 +34,9 @@ axiosInstance.interceptors.response.use(
     if (response && response.status === 0 && config.retry) {
       // Reduce the number of retries
       config.retry--;
+
+      // Cancel any pending retries to prevent multiple retries
+      cancelTokenSource.cancel("Request canceled due to mixed content error");
 
       // Create a new promise to retry the request after a delay
       const retryPromise = new Promise((resolve) => {
