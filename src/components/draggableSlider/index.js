@@ -55,7 +55,7 @@ export default function App() {
       </div>
       <CustomCarousel imageInfo={popularDishes}>
         {popularDishes.map((info, index) => {
-          const { currency, price } = extractPriceAndCurrency(info.price);
+          const { currency, formattedPrice } = extractPriceAndCurrency(info.price);
           return (
             <Box
               id={info.id}
@@ -65,7 +65,7 @@ export default function App() {
               caption={info.name_en}
               captionImage={info.logo}
               additionalText={currency}
-              inlineText={price}
+              inlineText={formattedPrice}
               isFirstCard={index === 0}
             />
           );

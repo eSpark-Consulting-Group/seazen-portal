@@ -8,8 +8,9 @@ export const extractPriceAndCurrency = (priceInfo) => {
     // Extract the currency and price as separate values.
     const currency = match[1];
     const price = parseFloat(match[2]);
+    const formattedPrice = price.toFixed(2);
 
-    return { currency, price };
+    return { currency, formattedPrice };
   } else {
     // Return null if no match is found.
     return null;
