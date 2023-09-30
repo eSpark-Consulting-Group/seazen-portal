@@ -45,9 +45,6 @@ const DeliveryConditionalComponent = ({
   const dispatch = useDispatch();
   const { data: itemDetail } = getAllItemsByCategoryResponse || {};
   const { data: itemCategoryList } = getItemsCategoryResponse || {};
-  console.log(itemDetail,"shahitemDetail");
-  console.log(itemCategoryList,"shahitemCategory");
-
 
   useEffect(() => {
     dispatch(getCategoryItemList(getAllItemsByCategoryResponse?.data));

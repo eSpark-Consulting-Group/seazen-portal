@@ -4,6 +4,9 @@ import getAllPopularItems, {
   GET_ALL_POPULAR_ITEMS_QUERY_KEY,
 } from "../../api/home/getAllPopularItems";
 import "./style.css";
+import { extractPriceAndCurrency } from "../../utils/items";
+import { useNavigate } from "react-router-dom";
+import { paths } from "../../routes/paths";
 
 export default function App() {
   const imageInfo = [
@@ -31,7 +34,7 @@ export default function App() {
   ];
 
   const {
-    data: poularDishes,
+    data: popularDishesResponse,
     isLoading,
     error,
     isError,
@@ -43,22 +46,26 @@ export default function App() {
     },
   });
 
+  const { data: popularDishes } = popularDishesResponse || {};
+
   return (
     <div className="App">
       <div className="slider-tile">
         <h3>Popular Dishes</h3>
       </div>
-      <CustomCarousel imageInfo={imageInfo}>
-        {imageInfo.map((info, index) => {
+      <CustomCarousel imageInfo={popularDishes}>
+        {popularDishes.map((info, index) => {
+          const { currency, price } = extractPriceAndCurrency(info.price);
           return (
             <Box
+              id={info.id}
               key={index}
               index={index}
-              imageUrl={info.imageUrl}
-              caption={info.caption}
-              captionImage={info.captionImage}
-              additionalText={info.additionalText}
-              inlineText={info.inlineText}
+              imageUrl={info.item_image}
+              caption={info.name_en}
+              captionImage={info.logo}
+              additionalText={currency}
+              inlineText={price}
               isFirstCard={index === 0}
             />
           );
@@ -129,6 +136,7 @@ function CustomCarousel(props) {
 }
 
 function Box({
+  id,
   index,
   imageUrl,
   caption,
@@ -144,9 +152,19 @@ function Box({
     ? "third-card-caption-image"
     : "";
   const additionalTextClass = isFirstCard ? "first-card-additional-text" : "";
+  const navigate = useNavigate();
 
   return (
-    <div className="box">
+    <div
+      className="box"
+      onClick={() => {
+        navigate(paths.details + "/" + id, {
+          state: {
+            id: id,
+          },
+        });
+      }}
+    >
       <img className="box-image" src={imageUrl} alt="Image" />
       <div className="box-caption">
         <img
