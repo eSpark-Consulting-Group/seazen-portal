@@ -3,7 +3,6 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
-  timeout: 3000,
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -15,8 +14,8 @@ const cancelTokenSource = axios.CancelToken.source();
 
 // Request interceptor to limit the number of retries
 axiosInstance.interceptors.request.use((config) => {
-  config.retry = 2; // Set the maximum number of retries (including the initial request)
-  config.retryDelay = 1000; // Set the delay between retries in milliseconds
+  config.retry = 1; // Set the maximum number of retries (including the initial request)
+  config.retryDelay = 3000; // Set the delay between retries in milliseconds
   config.cancelToken = cancelTokenSource.token; // Associate the request with the cancel token
   return config;
 });
