@@ -53,10 +53,11 @@ function CartPage() {
 
   const token = useSelector((state) => state.auth.token);
   const cart = useSelector((state) => state.cart.cart);
+  const totalPrice = useSelector((state) => state.cart.total);
 
   const checkoutData = {
     payment_method_id: "1",
-    order_total_price: "2.10",
+    order_total_price: totalPrice,
     currency_id: "3",
     country_id: "3",
     restaurant_id: "2",

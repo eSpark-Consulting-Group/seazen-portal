@@ -23,7 +23,7 @@ function CartItem(props) {
     itemName,
     totalPrice,
     itemImage,
-    // variant,
+     // variant,
     cartRefetch,
     item_code,
   } = props;
@@ -68,9 +68,9 @@ function CartItem(props) {
     queryFn: () =>
       deleteCart(
         {
-          cart_id: cart_id,
-          item_id: "",
-          item_code: "",
+          cart_id: "3",
+          item_id: id,
+          item_code: item_code,
         },
         token
       ),
