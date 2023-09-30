@@ -39,7 +39,6 @@ export default function App() {
     isError,
   } = useQuery({
     queryKey: [GET_ALL_POPULAR_ITEMS_QUERY_KEY],
-    retry: 1,
     queryFn: () => getAllPopularItems(),
     onSuccess: (data) => {
       console.log("data", data);

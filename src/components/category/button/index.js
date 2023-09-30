@@ -134,7 +134,6 @@ const RestaurantsOrderTypeButton = () => {
     error: resturantsDataError,
     isError: resturantsDataIsError,
   } = useQuery({
-    retry: 1,
     queryKey: [GET_ALL_RESTAURANTS_QUERY_KEY],
     queryFn: getAllRestaurants,
 
