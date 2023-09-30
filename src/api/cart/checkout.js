@@ -1,8 +1,7 @@
-import axiosInstance from "../axiosInstance";
 import API_ENDPOINTS from "../endpoints";
 
 // // we will use this function with react-query
-const baseURL = "http://34.133.246.217/api/v1";
+const baseURL = process.env.REACT_APP_BASE_URL;
 const checkout = async (data, token) => {
   const response = fetch(baseURL + API_ENDPOINTS.CART.CHECKOUT, {
     headers: {

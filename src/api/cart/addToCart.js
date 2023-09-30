@@ -1,20 +1,35 @@
 import axiosInstance from "../axiosInstance";
 import API_ENDPOINTS from "../endpoints";
+import { handleApiError } from "../utils/errorHandling";
 
-// we will use this function with react-query
 const addToCartApiCall = async (cartItem, token) => {
-    const { data } = await axiosInstance.post(
+  try {
+    // Check if the token is valid and available.
+    if (!token) {
+      throw new Error("Token is missing or invalid.");
+    }
+
+    // Make the POST request with the provided token and cart item.
+    const response = await axiosInstance.post(
       API_ENDPOINTS.CART.ADD_TO_CART,
       cartItem,
       {
         headers: {
-            Authorization: 'Bearer ' + token
-        }
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
-    return data;
-  };
-  
-export default addToCartApiCall;
-  
 
+    // Check the response status code.
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+  } catch (error) {
+    // Handle network errors or other exceptions.
+    handleApiError(error);
+  }
+};
+
+export default addToCartApiCall;
