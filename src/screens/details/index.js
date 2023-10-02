@@ -23,6 +23,7 @@ import { AddShoppingCartRounded } from "@mui/icons-material";
 import { updateCartItem, addToCart } from "../../store/reducers/cartSlice";
 import addToCartApiCall from "../../api/cart/addToCart";
 import { paths } from "../../routes/paths";
+import updateCartApiCall from "../../api/cart/updateCart";
 
 export const Details = () => {
   const { id } = useParams();
@@ -294,32 +295,45 @@ export const Details = () => {
   };
 
   const addToCartApiHandler = (cartItem) => {
+    const sideVariant = cartItem.variants.sideVariant[0]?.variantId
+    const sizeVariant = cartItem.variants.sizeVariant?.variantId
+    const toppingVariant = cartItem.variants.toppingVariant[0]?.variantId
+
     const cartItemDataForApi = {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
       quantity: cartItem.quantity,
-      cart_id: "3",
-      topping_variant_id: "2",
-      side_variant_id: "3",
-      size_variant_id: "1",
-      size_variant: variantsForApi(1, cartItem.variants.sizeVariant.id),
+      cart_id: cartItem.cart_id || '5',
+      topping_variant_id: toppingVariant,
+      side_variant_id: sideVariant,
+      size_variant_id: sizeVariant,
+      size_variant: variantsForApi(sizeVariant, cartItem.variants.sizeVariant.id),
       topping_variant: variantsForApi(
-        2,
+        toppingVariant,
         getSelectedItemsIds(cartItem.variants.toppingVariant),
-        cartItem.variants.toppingVariant[0].quantity
+        cartItem.variants.toppingVariant[0]?.quantity
       ),
       side_variant: variantsForApi(
-        3,
+        sideVariant,
         getSelectedItemsIds(cartItem.variants.sideVariant)
       )
     };
-    addToCartApiCall(cartItemDataForApi, token)
+
+    if(checkIfItemIsInCart()){
+      updateCartApiCall(cartItemDataForApi, token)
       .then((res) => {
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
       });
+    } else {
+      addToCartApiCall(cartItemDataForApi, token)
+      .then((res) => {
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
   };
 
   const handleAddToCart = () => {
@@ -338,6 +352,7 @@ export const Details = () => {
       totalPrice: Number(totalPrice).toFixed(2),
       specialInstructions: specialInstructions,
       itemImage: data?.image,
+      restaurant_id: data.restaurant_id,
     };
     // console.log(ItemDataObject, "shahItemDataObject");
 
@@ -350,6 +365,7 @@ export const Details = () => {
       };
 
       dispatch(updateCartItem(ItemDataObject));
+      addToCartApiHandler(ItemDataObject)
       navigate(paths.cart);
     } else {
       const item_code = uuidv4();
@@ -366,7 +382,7 @@ export const Details = () => {
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
     // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));
     // dispatch(addExtraSides({ id: id, extraSides: sideVariant }));
-  };
+  }; 
 
   return (
     <div>
@@ -677,7 +693,7 @@ export const Details = () => {
                   }
                 }}
                 IncButtonProps={{
-                  disabled: quantity === 10,
+                  // disabled: quantity === 10,
                   sx: {
                     color: "common.white",
                     backgroundColor: (theme) => theme.palette.themeColor.light,

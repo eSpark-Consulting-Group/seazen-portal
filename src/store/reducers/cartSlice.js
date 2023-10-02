@@ -12,7 +12,11 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const item = action.payload;
-      state.cart.push(item);
+      if(item.length){
+        state.cart = item
+      } else{
+        state.cart.push(item);
+      }
 
       state.totalItems = state.totalItems + 1;
       state.totalQuantity = state.cart.reduce(

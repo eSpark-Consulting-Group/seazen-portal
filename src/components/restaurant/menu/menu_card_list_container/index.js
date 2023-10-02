@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 const MenuCardListContainer = () => {
   const navigate = useNavigate();
   const cartTotal = useSelector((state) => state.cart.total);
+  const cartTotalItems = useSelector((state) => state.cart.cart.length);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryList = useSelector(
@@ -115,7 +116,7 @@ const MenuCardListContainer = () => {
               backgroundColor: (theme) => theme.palette.themeColor.light,
             }}
           >
-            0
+            {cartTotalItems}
           </Box>
           <Typography>Your Cart</Typography>
         </Stack>
