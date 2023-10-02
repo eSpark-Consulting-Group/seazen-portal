@@ -32,7 +32,9 @@ const MenuCardListContainer = () => {
   };
 
   return (
-    <div>
+    <div
+      className="scrollable-container"
+    >
       <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-5">
         <div className="menu_card_list_inner_container">
           <div
@@ -67,19 +69,22 @@ const MenuCardListContainer = () => {
           </div>
 
           <Stack spacing={1.5}>
-            {categoryList?.map((item, index) => (
-              <MenuCard
-                key={index}
-                foodItem={item.name_en}
-                foodIngredients={item.description_en}
-                foodPrice={item.price}
-                foodImage={item.image}
-                id={item.id}
-                showSubTractButton={
-                  item.has_extras === false && item.has_options === false
-                }
-              />
-            ))}
+            {categoryList?.map(
+              (item, index) =>
+                index < 20 && (
+                  <MenuCard
+                    key={index}
+                    foodItem={item.name_en}
+                    foodIngredients={item.description_en}
+                    foodPrice={item.price}
+                    foodImage={item.image}
+                    id={item.id}
+                    showSubTractButton={
+                      item.has_extras === false && item.has_options === false
+                    }
+                  />
+                )
+            )}
           </Stack>
 
           {/* <div className="comment_button_container">
@@ -91,6 +96,7 @@ const MenuCardListContainer = () => {
       </div>
       <Box
         sx={{
+          position: "fixed",
           cursor: "pointer",
           bottom: 0,
           px: 2,
@@ -99,6 +105,7 @@ const MenuCardListContainer = () => {
           alignItems: "center",
           justifyContent: "space-between",
           width: "100%",
+          maxWidth: "375px",
           borderTopLeftRadius: (theme) => theme.spacing(2),
           borderTopRightRadius: (theme) => theme.spacing(2),
           backgroundColor: (theme) => theme.palette.themeColor.main,

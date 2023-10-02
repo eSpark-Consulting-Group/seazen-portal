@@ -128,3 +128,10 @@
   height: 30px;
   margin: 10px 0px;
 }
+
+.scrollable-container {
+  max-height: calc(100vh - 100px);
+  overflow-y: scroll;
+  scrollbar-width: none; /* Hide the scrollbar in Firefox */
+  -ms-overflow-style: none; /* Hide the scrollbar in IE and Edge */
+}

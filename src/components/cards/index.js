@@ -33,17 +33,17 @@ const images = [
   },
   {
     name: "third card image",
-    image: "/assets/img/restaurants-3-6.svg",
+    image: "/assets/img/restaurants-1-6.svg",
     service: { doesDelivery: true, isNear: false },
   },
   {
     name: "fourth card image",
-    image: "/assets/img/restaurants-4-6.svg",
+    image: "/assets/img/restaurants-5-6.svg",
     service: { doesDelivery: true, isNear: true },
   },
   {
     name: "fifth card image",
-    image: "/assets/img/restaurants-5-6.svg",
+    image: "/assets/img/restaurants-2-6.svg",
     service: { doesDelivery: false, isNear: true },
   },
   {
@@ -112,7 +112,11 @@ export const restaurantThemeColor = {
   // },
 };
 
-const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
+const BasicCard = ({
+  clickedButtonIndex,
+  orderTypeFilter,
+  restaurantsData,
+}) => {
   const navigate = useNavigate();
   const captions = [
     icons,
@@ -225,7 +229,7 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
   return (
     <div className="restaurantCard-container container-fluid">
       {Object.keys(restaurantThemeColor).map((restaurant, index) => {
-        if (restaurantsData && (index === 0)) {
+        if (restaurantsData && (index === 0 || index === 1)) {
           return (
             <div
               key={index}
@@ -274,56 +278,57 @@ const BasicCard = ({ clickedButtonIndex, orderTypeFilter,restaurantsData }) => {
               </Card>
             </div>
           );
-        } else {
-          return (
-            <div
-              key={index}
-              className={`restaurantCards restaurantCard-${
-                isSmallScreen ? "small" : "large"
-              } ${getCardClassName(images[index].service)}`}
-            >
-              <Card
-                sx={{
-                  width: "100%",
-                  borderRadius: "10px",
-                }}
-                className="restaurantCards"
-                // onClick={() => {
-                //   goToRestaurantMenuPage(restaurant.split(" ")[1]);
-                // }}
-              >
-                <img
-                  className="restaurantCard-img"
-                  src={images[index].image}
-                  alt={`Card ${index + 1}`}
-                />
-                <div
-                  className={`svg-container ${
-                    clickedButtonIndex !== null ? "expanded" : "collapsed"
-                  }`}
-                >
-                  <div className="inner-svg-container">
-                    {captions[index].map((icon, i) => {
-                      return (
-                        <div key={i} className="icon-row">
-                          <img
-                            className={getClassNameAccordingToFilter(
-                              icon.id,
-                              images[index].service
-                            )}
-                            src={icon.image}
-                            alt={`Icon ${i + 1}`}
-                            style={{ width: iconWidth, height: iconHeight }}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </Card>
-            </div>
-          );
         }
+        // } else {
+        //   return (
+        //     <div
+        //       key={index}
+        //       className={`restaurantCards restaurantCard-${
+        //         isSmallScreen ? "small" : "large"
+        //       } ${getCardClassName(images[index].service)}`}
+        //     >
+        //       <Card
+        //         sx={{
+        //           width: "100%",
+        //           borderRadius: "10px",
+        //         }}
+        //         className="restaurantCards"
+        //         // onClick={() => {
+        //         //   goToRestaurantMenuPage(restaurant.split(" ")[1]);
+        //         // }}
+        //       >
+        //         <img
+        //           className="restaurantCard-img"
+        //           src={images[index].image}
+        //           alt={`Card ${index + 1}`}
+        //         />
+        //         <div
+        //           className={`svg-container ${
+        //             clickedButtonIndex !== null ? "expanded" : "collapsed"
+        //           }`}
+        //         >
+        //           <div className="inner-svg-container">
+        //             {captions[index].map((icon, i) => {
+        //               return (
+        //                 <div key={i} className="icon-row">
+        //                   <img
+        //                     className={getClassNameAccordingToFilter(
+        //                       icon.id,
+        //                       images[index].service
+        //                     )}
+        //                     src={icon.image}
+        //                     alt={`Icon ${i + 1}`}
+        //                     style={{ width: iconWidth, height: iconHeight }}
+        //                   />
+        //                 </div>
+        //               );
+        //             })}
+        //           </div>
+        //         </div>
+        //       </Card>
+        //     </div>
+        //   );
+        // }
       })}
     </div>
   );
