@@ -8,6 +8,11 @@ import { styled } from "@mui/material/styles";
 import "./style.css";
 import { paths } from "../../../../routes/paths";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  removeFromCart,
+  updateCartMenuItemQuantity,
+} from "../../../../store/reducers/cartSlice";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
@@ -23,7 +28,14 @@ const AddToCartButton = styled("div")(({ theme }) => ({
   // Add any other button styles you need here
 }));
 
-const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
+const MenuCard = ({
+  foodItem,
+  foodIngredients,
+  foodPrice,
+  foodImage,
+  id,
+  showSubTractButton,
+}) => {
   const plusIcon = "/assets/img/Icon - Plus.svg";
   const minusIcon = "/assets/img/Icon-Minus.svg";
   const trashIcon = "/assets/img/Icon-Trash.svg";
@@ -36,7 +48,9 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
   const cart = useSelector((state) => state.cart.cart);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  let conditionalIcon = foodItemQuantity < 2 ? trashIcon : minusIcon;
   const handlersAndStates = [
     {
       handler: (count) => setExtraItemCount_1(count),
@@ -62,6 +76,44 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
     }
     return true;
   };
+
+  function handleClickAdd() {
+    setFoodItemQuantity(foodItemQuantity + 1);
+    if (checkIfItemIsInCart()) {
+      dispatch(
+        updateCartMenuItemQuantity({
+          id: id,
+          quantity: foodItemQuantity + 1,
+        })
+      );
+    } else {
+      dispatch(
+        addToCart({
+          id: id,
+          itemName: foodItem,
+          totalPrice: foodPriceWithoutCurrency(),
+          quantity: foodItemQuantity,
+        })
+      );
+    }
+  }
+
+  function handleClickSubtract() {
+    setFoodItemQuantity(foodItemQuantity - 1);
+
+    if (foodItemQuantity === 1) {
+      dispatch(removeFromCart(id));
+    }
+
+    if (foodItemQuantity > 1) {
+      dispatch(
+        updateCartMenuItemQuantity({
+          id: id,
+          quantity: foodItemQuantity - 1,
+        })
+      );
+    }
+  }
 
   const getItemQuantity = () => {
     // there can be multiple items with same id but different sideVariant
@@ -170,22 +222,45 @@ const MenuCard = ({ foodItem, foodIngredients, foodPrice, foodImage, id }) => {
             <StyledItemPrice className="menu_card_qunatity_label">{`${getItemQuantity()}x`}</StyledItemPrice>
           )}
           <div className="menu_card_add_to_cart_button_container">
-            <AddToCartButton
-              onClick={() => {
-                navigate(paths.details + "/" + id, {
-                  state: {
-                    id: id,
-                  },
-                });
-              }}
-              className="menu_card_add_to_cart_button pointer"
-            >
-              <img
-                src={plusIcon}
-                alt="button_icon"
-                style={{ width: 16, height: 16 }}
-              />
-            </AddToCartButton>
+            {showSubTractButton ? (
+              <>
+                <AddToCartButton
+                  onClick={handleClickAdd}
+                  className="menu_card_add_to_cart_button pointer"
+                >
+                  <img
+                    src={plusIcon}
+                    alt="button_icon"
+                    style={{ width: 16, height: 16 }}
+                  />
+                </AddToCartButton>
+                {foodItemQuantity > 0 && (
+                  <AddToCartButton
+                    onClick={handleClickSubtract}
+                    className="menu_card_add_to_cart_button pointer"
+                  >
+                    <img src={conditionalIcon} alt="button_icon" />
+                  </AddToCartButton>
+                )}
+              </>
+            ) : (
+              <AddToCartButton
+                onClick={() => {
+                  navigate(paths.details + "/" + id, {
+                    state: {
+                      id: id,
+                    },
+                  });
+                }}
+                className="menu_card_add_to_cart_button pointer"
+              >
+                <img
+                  src={plusIcon}
+                  alt="button_icon"
+                  style={{ width: 16, height: 16 }}
+                />
+              </AddToCartButton>
+            )}
           </div>
         </div>
       </Stack>

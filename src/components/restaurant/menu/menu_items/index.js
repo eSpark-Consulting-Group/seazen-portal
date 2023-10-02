@@ -62,22 +62,12 @@ const MenuItems = ({ itemCategoryList }) => {
                 border: "none",
               }}
             >
-              {/* {menu_categories.map((category, index) => (
-                <Dropdown.Item
-                  key={`menu_category_drop_${index}`}
-                  onClick={() => {
-                    handleMenuItemClick(category);
-                  }}
-                >
-                  {category}
-                </Dropdown.Item>
-              ))} */}
               {!isEmpty(itemCategoryList)
                 ? itemCategoryList?.map((category, index) => (
                     <Dropdown.Item
                       key={category.id}
                       onClick={() => {
-                        handleMenuItemClick(category?.name_en);
+                        handleMenuItemClick(category?.id);
                       }}
                     >
                       {category?.name_en}
@@ -103,7 +93,7 @@ const MenuItems = ({ itemCategoryList }) => {
                   style={{ color: "black" }}
                   key={category?.id}
                   onClick={() => {
-                    handleMenuItemClick(category?.name_en);
+                    handleMenuItemClick(category?.id);
                   }}
                 >
                   {category?.name_en}
