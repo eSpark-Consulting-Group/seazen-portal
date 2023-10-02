@@ -10,7 +10,10 @@ import getListItemByCategory, {
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getCategoryItemList } from "../../../../../store/reducers/resturantsSlice";
-import getItemCategoryList, { GET_ITEM_CATEGORY_LIST } from "../../../../../api/restaurant/getItemCategoryList";
+import getItemCategoryList, {
+  GET_ITEM_CATEGORY_LIST,
+} from "../../../../../api/restaurant/getItemCategoryList";
+import { useSearchParams } from "react-router-dom";
 
 const DeliveryConditionalComponent = ({
   locationDeliver,
@@ -20,15 +23,21 @@ const DeliveryConditionalComponent = ({
   resturantId,
   errorMessage,
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const {
     data: getAllItemsByCategoryResponse,
     isLoading: itemsByCategoryLoading,
     error: itemsByCategoryError,
     isError: itemsByCategoryIsError,
   } = useQuery({
-    queryKey: [GET_CATEGORY_LIST_ITEM, resturantId],
-    queryFn: () => getListItemByCategory(resturantId),
-
+    queryKey: [
+      GET_CATEGORY_LIST_ITEM,
+      resturantId,
+      searchParams.get("category"),
+    ],
+    queryFn: () =>
+      getListItemByCategory(resturantId, searchParams.get("category")),
     onSuccess: (data) => {},
   });
   const {
@@ -51,7 +60,7 @@ const DeliveryConditionalComponent = ({
   }, [getAllItemsByCategoryResponse]);
   return (
     <>
-      <DeliveryDetails/>
+      <DeliveryDetails />
       {locationDeliver && <ErrorInformation errorMessage={errorMessage} />}
       <MenuItems itemDetail={itemDetail} itemCategoryList={itemCategoryList} />
       <MenuCardListContainer itemDetail={itemDetail} />

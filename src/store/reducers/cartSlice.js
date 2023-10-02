@@ -59,6 +59,29 @@ const cartSlice = createSlice({
       );
     },
 
+    updateCartMenuItemQuantity: (state, action) => {
+      const { id, quantity } = action.payload;
+      const itemIndex = state.cart.findIndex(
+        (cartItem) => cartItem.id === id
+      );
+
+      if (itemIndex !== -1) {
+        const itemTotalPrice = state.cart[itemIndex].totalPrice;
+        const pricePerItem = itemTotalPrice / state.cart[itemIndex].quantity;
+        state.cart[itemIndex].totalPrice = pricePerItem * quantity;
+        state.cart[itemIndex].quantity = quantity;
+      }
+
+      state.totalQuantity = state.cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+      state.total = state.cart.reduce(
+        (total, item) => total + Number(item.totalPrice),
+        0
+      );
+    },
+
     updateCartItem: (state, action) => {
       const item = action.payload;
       const itemIndex = state.cart.findIndex(
@@ -126,6 +149,7 @@ export const {
   addToCart,
   updateCartItem,
   updateCartItemQuantity,
+  updateCartMenuItemQuantity,
   removeFromCart,
   addSizeVariant,
   addExtraToppings,
