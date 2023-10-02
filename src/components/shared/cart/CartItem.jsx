@@ -26,6 +26,7 @@ function CartItem(props) {
      // variant,
     cartRefetch,
     item_code,
+    item_id,
   } = props;
 
   const variant = "450g";
@@ -59,7 +60,7 @@ function CartItem(props) {
     );
     setUpdatedQuantity((prev) => prev + 1);
     setTimeout(() => {
-      updateCartHandler.refetch();
+      // updateCartHandler.refetch();
       cartRefetch();
     }, 100);
   }
@@ -68,9 +69,9 @@ function CartItem(props) {
     queryFn: () =>
       deleteCart(
         {
-          cart_id: "3",
+          cart_id,
           item_id: id,
-          item_code: item_code,
+          item_code,
         },
         token
       ),
@@ -97,7 +98,7 @@ function CartItem(props) {
     );
     setUpdatedQuantity((prev) => prev - 1);
     setTimeout(() => {
-      updateCartHandler.refetch();
+      // updateCartHandler.refetch();
       cartRefetch();
     }, 100);
   }
@@ -186,7 +187,7 @@ function CartItem(props) {
           onDecrease={onDecrease}
           onDelete={onDelete}
           IncButtonProps={{
-            disabled: updatedQuantity === 10,
+            // disabled: updatedQuantity === 10,
           }}
           isSingleItem={updatedQuantity === 1}
         />
