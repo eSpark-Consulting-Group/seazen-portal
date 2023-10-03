@@ -60,6 +60,8 @@ const MenuItems = ({ itemCategoryList }) => {
                 fontSize: "11pt",
                 fontWeight: "bold",
                 border: "none",
+                maxHeight: "300px",
+                overflowY: "scroll",
               }}
             >
               {!isEmpty(itemCategoryList)

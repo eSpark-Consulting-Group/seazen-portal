@@ -12,9 +12,9 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const item = action.payload;
-      if(item.length){
-        state.cart = item
-      } else{
+      if (item.length) {
+        state.cart = item;
+      } else {
         state.cart.push(item);
       }
 
@@ -60,15 +60,11 @@ const cartSlice = createSlice({
     },
 
     updateCartMenuItemQuantity: (state, action) => {
-      const { id, quantity } = action.payload;
-      const itemIndex = state.cart.findIndex(
-        (cartItem) => cartItem.id === id
-      );
+      const { id, quantity, totalPrice } = action.payload;
+      const itemIndex = state.cart.findIndex((cartItem) => cartItem.id === id);
 
       if (itemIndex !== -1) {
-        const itemTotalPrice = state.cart[itemIndex].totalPrice;
-        const pricePerItem = itemTotalPrice / state.cart[itemIndex].quantity;
-        state.cart[itemIndex].totalPrice = pricePerItem * quantity;
+        state.cart[itemIndex].totalPrice = totalPrice;
         state.cart[itemIndex].quantity = quantity;
       }
 
@@ -136,8 +132,8 @@ const cartSlice = createSlice({
       if (itemIndex !== -1) {
         const item = state.cart[itemIndex];
         state.totalItems -= item.quantity;
-        state.totalQuantity -= item.totalPrice * item.quantity;
-        state.total -= item.totalPrice * item.quantity;
+        state.totalQuantity -= item.quantity;
+        state.total -= item.totalPrice;
 
         state.cart.splice(itemIndex, 1);
       }
