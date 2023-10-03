@@ -15,7 +15,8 @@
   height: 100%;
   display: flex;
   flex-direction: row;
-  column-gap: 20px;
+  column-gap: 10px;
+  margin-left: 30px;
 }
 
 .menu_dropdown_container {
@@ -27,7 +28,7 @@
 }
 
 .menu_itmes_text_container {
-  width: 270px;
+  width: 290px;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -51,13 +52,16 @@
 .dropdown_icon_container_menu {
   display: inline-block;
   background-color: #ebeef0;
-  padding: 10px;
+  /* padding: 10px; */
   border-radius: 10px;
+  width: 40px;
+  height: 40px;
 }
 
 .dropdown_icon_container_menu img {
   width: 20px;
   padding: 0;
+  margin-top: 13px;
 }
 
 .dropdown-toggle::after {
