@@ -31,9 +31,9 @@ const MenuCardListContainer = () => {
 
   // const itemQuantity= useSelector((state) => state.)
   const toggleSearch = () => {
+    setFilteredItems(categoryList)
     setOpen(true);
     setIsSearchOpen(!isSearchOpen);
-    setFilteredItems(categoryList)
   };
 
   const handleClose = () => {

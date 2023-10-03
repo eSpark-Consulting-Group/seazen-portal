@@ -151,7 +151,8 @@
 .InputModal{
   width: 100%;
   padding: 10px 20px;
-  border-radius: 15px #C0CDD7;
+  border: 1px solid #C0CDD7;
+  border-radius: 15px;
   font-weight: 600;
   color: #959FA8;
   
