@@ -172,6 +172,17 @@
 
 .profile-footer {
   margin-top: 70px;
+  position: relative;
+
+}
+.profile-footer .footer-container {
+  bottom: -77px;
+}
+
+@media screen and (max-width: 320px) {
+  .profile-footer .footer-container {
+    bottom: -150px;
+  }
 }
 
 @media screen and (max-width: 450px) and (min-width: 400px) {

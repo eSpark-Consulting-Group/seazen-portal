@@ -340,7 +340,7 @@ export const Details = () => {
     const { data } = menuItemDetails;
     var ItemDataObject = {
       id: data?.id,
-      itemName: data?.description_en,
+      itemName: data?.name_en,
       discountedPrice: data?.discounted_price,
       price: data?.price,
       quantity: quantity,

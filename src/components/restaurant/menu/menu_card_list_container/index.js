@@ -7,6 +7,7 @@ import MenuCard from "../menu_card/index.js";
 import "./style.css";
 import { paths } from "../../../../routes/paths.jsx";
 import { useSelector } from "react-redux";
+import { CircularProgress } from "@mui/material";
 
 const MenuCardListContainer = () => {
   const navigate = useNavigate();
@@ -32,7 +33,8 @@ const MenuCardListContainer = () => {
   };
 
   return (
-    <div className="scrollable-container">
+  <div className="scrollable-container-wrapper">
+      <div className="scrollable-container">
       <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-5">
         <div className="menu_card_list_inner_container">
           <div
@@ -65,22 +67,34 @@ const MenuCardListContainer = () => {
               </div>
             </div>
           </div>
-
-          <Stack spacing={1.5}>
-            {categoryList?.map((item, index) =>  (
-              <MenuCard
-                key={index}
-                foodItem={item.name_en}
-                foodIngredients={item.description_en}
-                foodPrice={item.price}
-                foodImage={item.image}
-                id={item.id}
-                showSubTractButton={
-                  item.has_extras === false && item.has_options === false
-                }
-              />
-            ))}
-          </Stack>
+          <>
+            {!categoryList && (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "0px !important"
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            )}
+            <Stack spacing={1.5}>
+              {categoryList?.map((item, index) => (
+                <MenuCard
+                  key={index}
+                  foodItem={item.name_en}
+                  foodIngredients={item.description_en}
+                  foodPrice={item.price}
+                  foodImage={item.image}
+                  id={item.id}
+                  showSubTractButton={
+                    item.has_extras === false && item.has_options === false
+                  }
+                />
+              ))}
+            </Stack>
+          </>
 
           {/* <div className="comment_button_container">
           <button>
@@ -135,6 +149,7 @@ const MenuCardListContainer = () => {
         </Box>
       </Box>
     </div>
+  </div>
   );
 };
 

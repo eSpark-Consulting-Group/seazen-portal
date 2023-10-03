@@ -183,9 +183,9 @@ const MyOrderScreen = () => {
                 />
               ) : null
             )}
-            <div className={`${styles.comment_section}`}>
+            {/* <div className={`${styles.comment_section}`}>
             <FooterSection />
-            </div>
+            </div> */}
             
           </div>
         )}

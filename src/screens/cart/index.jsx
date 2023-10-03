@@ -35,7 +35,7 @@ function CartPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [tipValue, setTipValue] = React.useState(0.25);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [cartItems, setCartItems] = React.useState();
   const [specialIns, setSpecialIns] = React.useState("");
   const [restaurantLogo, setRestaurantLogo] = React.useState("");
@@ -79,7 +79,6 @@ function CartPage() {
 
   useEffect(() => {
     setCartItems(cart);
-    setIsLoading(false);
   }, [cart]);
 
   const checkoutHandler = () => {
@@ -128,6 +127,7 @@ function CartPage() {
   const cartRefetch = () => {
     if (cart.length == 0) {
       setTimeout(() => {
+        setIsLoading(true)
         cartList(token)
           .then((res) => {
             const resData = res.data.map((val) => {

@@ -5,6 +5,7 @@
   display: flex;
   justify-content: center;
   padding: 26px 0;
+  margin-bottom: 30px;
 }
 
 .menu_card_list_inner_container {
@@ -14,6 +15,15 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.menu-items-wrapper {
+  height: 500px;
+  width: 105%;
+  /* height: 100%; */
+  overflow-y: scroll;
+  padding-right: 25px; /* Increase/decrease this value for cross-browser compatibility */
+  box-sizing: content-box
 }
 
 .comment_button_container {
@@ -134,4 +144,17 @@
   overflow-y: scroll;
   scrollbar-width: none; /* Hide the scrollbar in Firefox */
   -ms-overflow-style: none; /* Hide the scrollbar in IE and Edge */
+  width: 107%;
+  margin-left: -5px;
+}
+.scrollable-container-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 425px) {
+  .scrollable-container  {
+    width: 102%;
+  }
 }
