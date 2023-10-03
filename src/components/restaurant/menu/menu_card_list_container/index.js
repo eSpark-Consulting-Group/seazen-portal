@@ -7,38 +7,70 @@ import MenuCard from "../menu_card/index.js";
 import "./style.css";
 import { paths } from "../../../../routes/paths.jsx";
 import { useSelector } from "react-redux";
+import { Modal } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+
 
 const MenuCardListContainer = () => {
+
   const navigate = useNavigate();
   const cartTotal = useSelector((state) => state.cart.total);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [open, setOpen] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState('');
+
   const categoryList = useSelector(
     (state) => state?.resturants?.listItemByCategory
   );
 
+  const [filteredItems, setFilteredItems] = useState(categoryList);
+
+
   // const itemQuantity= useSelector((state) => state.)
   const toggleSearch = () => {
+    setOpen(true);
     setIsSearchOpen(!isSearchOpen);
+    setFilteredItems(categoryList)
   };
 
+  const handleClose = () => {
+    setOpen(false);
+    setIsSearchOpen(!isSearchOpen);
+  }
+
+  const filterItems = (query) => {
+    const lowercasedQuery = query.toLowerCase();
+    const filtered = categoryList.filter((item) => {
+      const itemName = item.name_en.toLowerCase();
+      const itemIngredients = item.description_en.toLowerCase();
+      return itemName.includes(lowercasedQuery) || itemIngredients.includes(lowercasedQuery);
+    });
+    setFilteredItems(filtered);
+  };
+
+  const handleSearchChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+    filterItems(query);
+
+  };
   return (
     <div>
       <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-5">
         <div className="menu_card_list_inner_container">
           <div
-            className={`card_list_title_search_container ${
-              isSearchOpen ? "expanded_search" : ""
-            }`}
+            className={`card_list_title_search_container ${isSearchOpen ? "expanded_search" : ""
+              }`}
           >
             <div className="card_list_title">
               {searchParams.get("category") || "Burrito in a Bowl"}
             </div>
             <div className={`search ${isSearchOpen ? "expanded_search" : ""}`}>
               <div
-                className={`searchwrapper ${
-                  isSearchOpen ? "expanded_search" : ""
-                }`}
+                className={`searchwrapper ${isSearchOpen ? "expanded_search" : ""
+                  }`}
               >
                 <img
                   src="/assets/img/Icon - Search.svg"
@@ -50,9 +82,9 @@ const MenuCardListContainer = () => {
                   <input
                     type="text"
                     placeholder="Search"
-                    className={`searchbar ${
-                      isSearchOpen ? "expanded_search" : ""
-                    }`}
+                    className={`searchbar ${isSearchOpen ? "expanded_search" : ""
+                      }`}
+
                   />
                 )}
               </div>
@@ -122,6 +154,39 @@ const MenuCardListContainer = () => {
           KWD {Number(cartTotal).toFixed(2) || Number(0).toFixed(2)}
         </Box>
       </Box>
+      <Modal
+        sx={{
+          overflow: 'scroll',
+        }}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div className="Modal_Search_Item">
+          <div className="closebtnmodal">
+            <nav className="closebtn">
+              <CloseIcon sx={{ color: "#000" }} onClick={handleClose} />
+            </nav>
+          </div>
+          <div className="InputSearchModal">
+            <input type="text" className="InputModal" placeholder="Search" value={searchQuery} onChange={(event) => handleSearchChange(event)} />
+          </div>
+          
+            {filteredItems?.map((item, index) => (
+              <div className="categoryItemsList" key={index+1}>
+                <MenuCard
+                  key={index}
+                  foodItem={item.name_en}
+                  foodIngredients={item.description_en}
+                  foodPrice={item.price}
+                  foodImage={item.image}
+                  id={item.id}
+                />
+              </div>
+            ))}
+        </div>
+      </Modal>
     </div>
   );
 };

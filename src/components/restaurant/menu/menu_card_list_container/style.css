@@ -5,6 +5,7 @@
   display: flex;
   justify-content: center;
   padding: 26px 0;
+  position: relative;
 }
 
 .menu_card_list_inner_container {
@@ -127,4 +128,89 @@
   display: flex;
   height: 30px;
   margin: 10px 0px;
+}
+
+.Modal_Search_Item{
+  position: absolute;
+  width: 100%;
+  background-color: none;
+}
+.closebtnmodal{
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px;
+}
+.InputSearchModal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 25px; 
+  height: 45px;
+}
+
+.InputModal{
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px #C0CDD7;
+  font-weight: 600;
+  color: #959FA8;
+  
+}
+.closebtn{
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.categoryItemsList{
+  margin: 25px;
+}
+.categoryItems{
+  margin: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .Nav_Image_Container img {
+    width: 100%;
+  }
+  .Nav_Image_Container {
+    margin-right: -50px !important;
+  }
+  .shopping_container {
+    margin-right: 65px !important;
+  }
+} 
+
+ @media screen and (max-width: 350px) {
+  .Nav_Image_Container img {
+    width: 100%;
+  }
+
+  .shopping_container {
+    margin-right: 12px !important;
+  }
+  .Nav_Image_Container {
+    margin-left: -59px;
+  }
+  .back_button {
+    margin-left: 65px !important;
+  }
 }
