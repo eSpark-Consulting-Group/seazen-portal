@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import Box from "@mui/material/Box";
@@ -56,6 +56,11 @@ const MenuCard = ({
 
   const cart = useSelector((state) => state.cart.cart);
 
+  useEffect(() => {
+    const quantity = getItemQuantity();
+    setFoodItemQuantity(quantity);
+  }, []);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -102,7 +107,8 @@ const MenuCard = ({
           id: id,
           itemName: foodItem,
           totalPrice: foodPriceWithoutCurrency(),
-          quantity: foodItemQuantity,
+          quantity: foodItemQuantity + 1,
+          itemImage: foodImage,
         })
       );
     }

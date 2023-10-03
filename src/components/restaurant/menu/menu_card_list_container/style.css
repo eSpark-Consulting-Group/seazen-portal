@@ -144,8 +144,7 @@
   overflow-y: scroll;
   scrollbar-width: none; /* Hide the scrollbar in Firefox */
   -ms-overflow-style: none; /* Hide the scrollbar in IE and Edge */
-  width: 107%;
-  margin-left: -5px;
+  width: 100%;
 }
 .scrollable-container-wrapper {
   width: 100%;
@@ -153,8 +152,3 @@
   overflow: hidden;
 }
 
-@media screen and (max-width: 425px) {
-  .scrollable-container  {
-    width: 102%;
-  }
-}

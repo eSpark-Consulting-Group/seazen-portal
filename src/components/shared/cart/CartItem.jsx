@@ -29,7 +29,7 @@ function CartItem(props) {
     item_id,
   } = props;
 
-  const variant = "450g";
+  // const variant = "450g";
 
   const [updatedQuantity, setUpdatedQuantity] = React.useState(quantity);
   const navigate = useNavigate();
@@ -104,7 +104,8 @@ function CartItem(props) {
   }
 
   function getItemName() {
-    return `${menu_item_name_en || itemName} (${variant})`;
+    // return `${menu_item_name_en || itemName} (${variant})`;
+    return `${menu_item_name_en || itemName}`;
   }
 
   return (
@@ -129,7 +130,7 @@ function CartItem(props) {
             },
           }}
         >
-          <img src={itemImage} alt={menu_item_name_en || itemName} />
+          <img style={{borderRadius:"8px"}} src={itemImage} alt={menu_item_name_en || itemName} />
         </Box>
 
         <Stack

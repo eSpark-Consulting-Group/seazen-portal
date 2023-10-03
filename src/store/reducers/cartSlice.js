@@ -36,6 +36,13 @@ const cartSlice = createSlice({
       state.total = total;
     },
 
+    resetCart: (state) => {
+      state.cart = [];
+      state.total = 0;
+      state.totalItems = 0;
+      state.totalQuantity = 0;
+    },
+
     updateCartItemQuantity: (state, action) => {
       const { itemCode, quantity } = action.payload;
       const itemIndex = state.cart.findIndex(
@@ -69,6 +76,10 @@ const cartSlice = createSlice({
       }
 
       state.totalQuantity = state.cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+      state.totalItems = state.cart.reduce(
         (total, item) => total + item.quantity,
         0
       );
@@ -151,6 +162,7 @@ export const {
   addExtraToppings,
   addExtraSides,
   updateCartInfo,
+  resetCart,
 } = cartSlice.actions;
 
 export const selectCart = (state) => state.cart;

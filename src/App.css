@@ -3,17 +3,16 @@
   justify-content: space-between;
   align-items: stretch;
   min-height: 100vh;
-  max-height: 100vh;
   background: #ffffff 0% 0% no-repeat;
   overflow-y: hidden;
   overflow-x: hidden;
 }
 
-@media screen and (max-width: 350px) {
+/* @media screen and (max-width: 350px) {
   .container_main {
     margin-right: -56px;
   }
-}
+} */
 
 .design-section {
   flex: 1;

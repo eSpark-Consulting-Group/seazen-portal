@@ -26,15 +26,10 @@
 }
 
 .footer-container {
-  margin-bottom: -32px;
-  position: absolute;
-  bottom: 33px;
-}
-
-@media screen and (max-width: 320px) {
-  .footer-container {
-    bottom: -100px;
-}
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  z-index: 999; /* Set an appropriate z-index value */
 }
 
 /* @media screen and (max-width: 500px) and (min-width: 400px) {
