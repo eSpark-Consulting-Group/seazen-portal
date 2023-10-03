@@ -82,9 +82,9 @@ const OrderScreen = () => {
       <AddressSection />
       <OrderIdSection />
       <ContactUs />
-     <div className="orderconfirm-footer">
+     {/* <div className="orderconfirm-footer">
       <FooterSection />
-     </div>
+     </div> */}
     </div>
   );
 };
