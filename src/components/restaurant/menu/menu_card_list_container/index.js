@@ -36,7 +36,6 @@ const MenuCardListContainer = () => {
     setFilteredItems(categoryList)
   };
 
-<<<<<<< HEAD
   const handleClose = () => {
     setOpen(false);
     setIsSearchOpen(!isSearchOpen);
@@ -65,16 +64,6 @@ const MenuCardListContainer = () => {
     filterItems(query);
 
   };
-=======
-  const getCategoryName = () => {
-    let category = searchParams.get("category");
-    if (category) {
-      return categoryList?.find((item) => item.id === category)?.name_en;
-    }
-    return "All";
-  };
-
->>>>>>> 552c0cd674e89d2cd304aaaab270cfd87b60d2ab
   return (
     <div className="scrollable-container">
       <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-5">
