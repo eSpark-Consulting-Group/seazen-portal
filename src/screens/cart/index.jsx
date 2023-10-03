@@ -28,6 +28,8 @@ import { useQuery } from "@tanstack/react-query";
 import cartList from "../../api/cart/cartList";
 import CircularProgress from "@mui/material/CircularProgress";
 import checkout from "../../api/cart/checkout";
+import getRestaurantDetails from "../../api/restaurant/getRestaurantDetails";
+import { addToCart } from "../../store/reducers/cartSlice";
 
 function CartPage() {
   const navigate = useNavigate();
@@ -36,6 +38,7 @@ function CartPage() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [cartItems, setCartItems] = React.useState();
   const [specialIns, setSpecialIns] = React.useState("");
+  const [restaurantLogo, setRestaurantLogo] = React.useState("");
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
   const DISCOUNT_AMOUNT = Number(1).toFixed(2);
   const DELIVERY_CHARGE = Number(1).toFixed(2);
@@ -54,10 +57,11 @@ function CartPage() {
   const token = useSelector((state) => state.auth.token);
   const cart = useSelector((state) => state.cart.cart);
   const totalPrice = useSelector((state) => state.cart.total);
+  const dispatch = useDispatch();
 
   const checkoutData = {
     payment_method_id: "1",
-    order_total_price: totalPrice,
+    order_total_price: totalPrice + tipValue,
     currency_id: "3",
     country_id: "3",
     restaurant_id: "2",
@@ -81,8 +85,8 @@ function CartPage() {
   const checkoutHandler = () => {
     checkout(checkoutData, token)
       .then((res) => {
-        const checkoutUrl = res.data.checkout_url;
-        window.open(checkoutUrl, "_blank"); // '_blank' opens the URL in a new tab
+        const checkoutRedirectUrl = res.data.payment_methods[0].redirect_url;
+        window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
       })
       .catch((err) => {
         console.log(err);
@@ -106,14 +110,48 @@ function CartPage() {
 
   useEffect(() => {
     cartRefetch();
+    getRestaurantLogo(cart[0]?.restaurant_id)
   }, []);
+
+  const getRestaurantLogo = (restaurantId) => {
+    setTimeout(() => {
+      getRestaurantDetails(restaurantId)
+        .then((res) => {
+          setRestaurantLogo(res.data.logo);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, 500);
+  };
 
   const cartRefetch = () => {
     if (cart.length == 0) {
       setTimeout(() => {
         cartList(token)
           .then((res) => {
-            setCartItems(res.data);
+            const resData = res.data.map((val) => {
+              return {
+                  id: val?.item_id,
+                  cart_id: val.cart_id,
+                  itemName: val?.menu_item_name_en,
+                  discountedPrice: val?.discounted_price,
+                  price: val?.unit_price,
+                  quantity: val.quantity,
+                  variants: {
+                    sizeVariant: {...val.size_variant[0], variantId: val.size_variant_id },
+                    toppingVariant: val.topping_variant.map((value) => ({...value, variantId: val.topping_variant_id })),
+                    sideVariant: val.side_variant.map((value) => ({...value, variantId: val.side_variant_id })),
+                  },
+                  item_code: val.item_code,
+                  specialInstructions: "",
+                  itemImage: val?.menu_item_image,
+                  restaurant_id: 1,
+                  totalPrice: Number(val.quantity * val.unit_price).toFixed(2) 
+              }
+            })
+            // setCartItems(resData);
+            dispatch(addToCart(resData));
             setIsLoading(false);
           })
           .catch((err) => {
@@ -239,13 +277,14 @@ function CartPage() {
                 width: "132px",
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "end",
                 "& img": {
-                  width: "100%",
+                  // width: "100%",
                   height: "auto",
                 },
               }}
             >
-              <img src="/assets/img/Group 15.svg" alt="Restaurant Logo" />
+              {restaurantLogo && <img src={restaurantLogo} alt="Restaurant Logo" />}
             </Box>
           </Stack>
 

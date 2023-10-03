@@ -15,6 +15,7 @@ const MenuCardListContainer = () => {
 
   const navigate = useNavigate();
   const cartTotal = useSelector((state) => state.cart.total);
+  const cartTotalItems = useSelector((state) => state.cart.cart.length);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [open, setOpen] = useState(false);
@@ -35,11 +36,19 @@ const MenuCardListContainer = () => {
     setFilteredItems(categoryList)
   };
 
+<<<<<<< HEAD
   const handleClose = () => {
     setOpen(false);
     setIsSearchOpen(!isSearchOpen);
   }
-
+  const getCategoryName = () => {
+    let category = searchParams.get("category");
+    if (category) {
+      return categoryList?.find((item) => item.id === category)?.name_en;
+    }
+    return "All";
+  };
+  
   const filterItems = (query) => {
     const lowercasedQuery = query.toLowerCase();
     const filtered = categoryList.filter((item) => {
@@ -56,6 +65,16 @@ const MenuCardListContainer = () => {
     filterItems(query);
 
   };
+=======
+  const getCategoryName = () => {
+    let category = searchParams.get("category");
+    if (category) {
+      return categoryList?.find((item) => item.id === category)?.name_en;
+    }
+    return "All";
+  };
+
+>>>>>>> 552c0cd674e89d2cd304aaaab270cfd87b60d2ab
   return (
     <div>
       <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-5">
@@ -64,9 +83,7 @@ const MenuCardListContainer = () => {
             className={`card_list_title_search_container ${isSearchOpen ? "expanded_search" : ""
               }`}
           >
-            <div className="card_list_title">
-              {searchParams.get("category") || "Burrito in a Bowl"}
-            </div>
+            <div className="card_list_title">{getCategoryName()}</div>
             <div className={`search ${isSearchOpen ? "expanded_search" : ""}`}>
               <div
                 className={`searchwrapper ${isSearchOpen ? "expanded_search" : ""
@@ -100,6 +117,9 @@ const MenuCardListContainer = () => {
                 foodPrice={item.price}
                 foodImage={item.image}
                 id={item.id}
+                showSubTractButton={
+                  item.has_extras === false && item.has_options === false
+                }
               />
             ))}
           </Stack>
@@ -138,7 +158,7 @@ const MenuCardListContainer = () => {
               backgroundColor: (theme) => theme.palette.themeColor.light,
             }}
           >
-            0
+            {cartTotalItems}
           </Box>
           <Typography>Your Cart</Typography>
         </Stack>

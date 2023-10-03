@@ -12,7 +12,11 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const item = action.payload;
-      state.cart.push(item);
+      if(item.length){
+        state.cart = item
+      } else{
+        state.cart.push(item);
+      }
 
       state.totalItems = state.totalItems + 1;
       state.totalQuantity = state.cart.reduce(
@@ -36,6 +40,29 @@ const cartSlice = createSlice({
       const { itemCode, quantity } = action.payload;
       const itemIndex = state.cart.findIndex(
         (cartItem) => cartItem.item_code === itemCode
+      );
+
+      if (itemIndex !== -1) {
+        const itemTotalPrice = state.cart[itemIndex].totalPrice;
+        const pricePerItem = itemTotalPrice / state.cart[itemIndex].quantity;
+        state.cart[itemIndex].totalPrice = pricePerItem * quantity;
+        state.cart[itemIndex].quantity = quantity;
+      }
+
+      state.totalQuantity = state.cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+      state.total = state.cart.reduce(
+        (total, item) => total + Number(item.totalPrice),
+        0
+      );
+    },
+
+    updateCartMenuItemQuantity: (state, action) => {
+      const { id, quantity } = action.payload;
+      const itemIndex = state.cart.findIndex(
+        (cartItem) => cartItem.id === id
       );
 
       if (itemIndex !== -1) {
@@ -122,6 +149,7 @@ export const {
   addToCart,
   updateCartItem,
   updateCartItemQuantity,
+  updateCartMenuItemQuantity,
   removeFromCart,
   addSizeVariant,
   addExtraToppings,

@@ -2,22 +2,21 @@ import axiosInstance from "../axiosInstance";
 import API_ENDPOINTS from "../endpoints";
 import { handleApiError } from "../utils/errorHandling";
 
-const deleteCart = async (cartID, token) => {
+const deleteCart = async (deleteItemData, token) => {
   try {
     // Check if the token is valid and available.
     if (!token) {
       throw new Error("Token is missing or invalid.");
-    }
+    } 
 
     // Make the DELETE request with the provided token and cart ID.
-    const response = await axiosInstance.delete(API_ENDPOINTS.CART.DELETE_CART, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      data: {
-        cartID: cartID,
-      },
-    });
+    const response = await axiosInstance.post(API_ENDPOINTS.CART.DELETE_CART, 
+      deleteItemData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
     // Check the response status code.
     if (response.status === 200) {
