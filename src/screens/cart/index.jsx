@@ -114,13 +114,15 @@ function CartPage() {
 
   const getRestaurantLogo = (restaurantId) => {
     setTimeout(() => {
-      getRestaurantDetails(restaurantId)
+      if(restaurantId) {
+        getRestaurantDetails(restaurantId)
         .then((res) => {
           setRestaurantLogo(res.data.logo);
         })
         .catch((err) => {
           console.log(err);
         });
+      }
     }, 500);
   };
 
@@ -150,7 +152,7 @@ function CartPage() {
                   totalPrice: Number(val.quantity * val.unit_price).toFixed(2) 
               }
             })
-            // setCartItems(resData);
+            setCartItems(resData);
             dispatch(addToCart(resData));
             setIsLoading(false);
           })

@@ -94,3 +94,7 @@ iframe#webpack-dev-server-client-overlay {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.hide-chat-icon {
+  display: none !important;
+}

@@ -88,7 +88,7 @@ export const Details = () => {
 
       // Check if itemTotal is NaN and set it to 0.00 if NaN
       if (isNaN(itemTotal)) {
-        itemTotal = 0.0;
+        itemTotal = Number(menuItemPriceWithoutCurrency());
       }
 
       if (quantity > 1) {
@@ -276,7 +276,7 @@ export const Details = () => {
 
   const variantsForApi = (variantID, optionId, quantity) => {
     const { data } = menuItemDetails;
-    const dataVariants = data.variants.find((val) => val.id === variantID);
+    const dataVariants = data.variants?.find((val) => val.id === variantID);
     if (!dataVariants) return [];
     const dataOptions = dataVariants.options?.map((val, index) => {
       return {
@@ -295,9 +295,9 @@ export const Details = () => {
   };
 
   const addToCartApiHandler = (cartItem) => {
-    const sideVariant = cartItem.variants.sideVariant[0]?.variantId
-    const sizeVariant = cartItem.variants.sizeVariant?.variantId
-    const toppingVariant = cartItem.variants.toppingVariant[0]?.variantId
+    const sideVariant = cartItem.variants?.sideVariant[0]?.variantId
+    const sizeVariant = cartItem.variants?.sizeVariant?.variantId
+    const toppingVariant = cartItem.variants?.toppingVariant[0]?.variantId
 
     const cartItemDataForApi = {
       item_code: cartItem.item_code,
@@ -307,15 +307,15 @@ export const Details = () => {
       topping_variant_id: toppingVariant,
       side_variant_id: sideVariant,
       size_variant_id: sizeVariant,
-      size_variant: variantsForApi(sizeVariant, cartItem.variants.sizeVariant.id),
+      size_variant: variantsForApi(sizeVariant, cartItem.variants?.sizeVariant?.id),
       topping_variant: variantsForApi(
         toppingVariant,
-        getSelectedItemsIds(cartItem.variants.toppingVariant),
-        cartItem.variants.toppingVariant[0]?.quantity
+        getSelectedItemsIds(cartItem.variants?.toppingVariant),
+        cartItem.variants?.toppingVariant[0]?.quantity
       ),
       side_variant: variantsForApi(
         sideVariant,
-        getSelectedItemsIds(cartItem.variants.sideVariant)
+        getSelectedItemsIds(cartItem.variants?.sideVariant)
       )
     };
 
@@ -720,7 +720,7 @@ export const Details = () => {
               size="large"
               variant="contained"
               fullWidth
-              disabled={!sizeVariant}
+              disabled={menuItemDetails?.data.has_variants && !sizeVariant}
               sx={{
                 py: 2,
                 display: "flex",

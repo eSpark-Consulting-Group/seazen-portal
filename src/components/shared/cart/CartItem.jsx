@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { paths } from "../../../routes/paths";
 import updateCartApiCall from "../../../api/cart/updateCart";
 import * as reduxCart from "../../../store/reducers/cartSlice";
+import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
 
 function CartItem(props) {
   const {
@@ -32,24 +33,25 @@ function CartItem(props) {
   // const variant = "450g";
 
   const [updatedQuantity, setUpdatedQuantity] = React.useState(quantity);
+  const [imageNotFound, setImageNotFound] = useState(false);
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
 
-  const updateCartHandler = useQuery({
-    queryFn: () =>
-      updateCartApiCall(
-        {
-          cart_id: cart_id,
-          quantity: updatedQuantity,
-        },
-        token
-      ),
-    onSuccess: (data) => {
-      console.log(data, "data");
-    },
-    enabled: false,
-  });
+  // const updateCartHandler = useQuery({
+  //   queryFn: () =>
+  //     updateCartApiCall(
+  //       {
+  //         cart_id: cart_id,
+  //         quantity: updatedQuantity,
+  //       },
+  //       token
+  //     ),
+  //   onSuccess: (data) => {
+  //     console.log(data, "data");
+  //   },
+  //   enabled: false,
+  // });
 
   function onIncrease() {
     dispatch(
@@ -130,7 +132,30 @@ function CartItem(props) {
             },
           }}
         >
-          <img style={{borderRadius:"8px"}} src={itemImage} alt={menu_item_name_en || itemName} />
+            {imageNotFound ? (
+              <Box
+                sx={{
+                  height: 68,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "common.white",
+                  borderRadius: "8px"
+                }}
+              >
+                <ImageNotSupportedIcon fontSize="large"></ImageNotSupportedIcon>
+
+                <Typography variant="caption">No Image Found</Typography>
+              </Box>
+            ) : (
+              <img
+                onError={() => setImageNotFound(true)}
+                style={{ borderRadius: "8px" }}
+                src={itemImage}
+                alt={menu_item_name_en || itemName}
+              />
+            )}
         </Box>
 
         <Stack
