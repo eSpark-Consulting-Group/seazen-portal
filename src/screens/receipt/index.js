@@ -44,17 +44,17 @@ const Receipt = () => {
   ];
   const [tipValue, setTipValue] = React.useState(0.25);
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
-  const DISCOUNT_AMOUNT = Number(1).toFixed(2);
-  const DELIVERY_CHARGE = Number(1).toFixed(2);
+  const DISCOUNT_AMOUNT = Number(1).toFixed(3);
+  const DELIVERY_CHARGE = Number(1).toFixed(3);
 
   const getItemTotal = () => {
     return CART_ITEMS.reduce((acc, cartItem) => {
       return acc + cartItem.item.price * cartItem.quantity;
-    }, 0).toFixed(2);
+    }, 0).toFixed(3);
   };
 
   const getTipAmount = () => {
-    return tipValue.toFixed(2);
+    return tipValue.toFixed(3);
   };
 
   const getDiscountAmount = () => {
@@ -70,7 +70,7 @@ const Receipt = () => {
       Number(getTipAmount()) -
       Number(getDiscountAmount()) +
       Number(getDeliveryCharge())
-    ).toFixed(2);
+    ).toFixed(3);
   };
 
   const currentDate = new Date();

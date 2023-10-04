@@ -81,6 +81,12 @@ const DeliveryDetails = () => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
+        <span style={{
+          borderLeft: "1.5px solid #C3D8D4",
+          height: "30px",
+          marginTop:"8px",
+          
+        }}></span>
         <div className="right_dropdown_container">
           <div className="right_dropdown_container_heading_container">
             Delivery Time

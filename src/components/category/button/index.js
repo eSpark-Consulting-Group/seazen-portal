@@ -78,11 +78,11 @@ const OrderTypeButtonExpandable = ({
         src={iconSrc}
         alt="Icon"
         className="orderTypebutton-icon"
-        onClick={handleClick}
+      onClick={handleClick}
       />
       {((isButtonExpanded.expanded && isButtonExpanded.id === id) ||
         !isButtonExpanded.expanded) && (
-        <span className={`orderTypebutton-text`}>{text}</span>
+        <span onClick={handleClick}  className={`orderTypebutton-text`}>{text}</span>
       )}
       <span className="orderTypebutton-content">
         {isButtonExpanded.expanded && isButtonExpanded.id === id && (

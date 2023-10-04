@@ -132,16 +132,16 @@ export const Details = () => {
   };
 
   const getCartItemPrice = () => {
-    return `+KWD ${Number(cartItem?.price).toFixed(2)}`;
+    return `+KWD ${Number(cartItem?.price).toFixed(3)}`;
   };
 
   // i-e KWD 1.750 => 1.750 as a number
   const menuItemPriceWithoutCurrency = () => {
-    return Number(menuItemDetails?.data?.price?.split(" ")[1]).toFixed(2);
+    return Number(menuItemDetails?.data?.price?.split(" ")[1]).toFixed(3);
   };
 
   const getFormattedPrice = (price) => {
-    return `+KWD ${Number(price).toFixed(2)}`;
+    return `+KWD ${Number(price).toFixed(3)}`;
   };
 
   const checkIfToppingIsAdded = (name_en) => {
@@ -349,7 +349,7 @@ export const Details = () => {
         toppingVariant: toppingVariant,
         sideVariant: sideVariant,
       },
-      totalPrice: Number(totalPrice).toFixed(2),
+      totalPrice: Number(totalPrice).toFixed(3),
       specialInstructions: specialInstructions,
       itemImage: data?.image,
       restaurant_id: data.restaurant_id,
@@ -457,6 +457,7 @@ export const Details = () => {
                   component="div"
                   sx={{
                     marginLeft: "12px !important",
+                    fontWeight:"normal",
                   }}
                 >
                   {menuItemDetails?.data?.description_en}
@@ -652,7 +653,7 @@ export const Details = () => {
                 border: "none", // Remove the border
               },
               background: "#FAFAFA 0% 0% no-repeat padding-box",
-              bordeRadius: "16px",
+              borderRadius: "16px",
             }}
             onChange={handleSpecialInstructionsChange}
             fullWidth
@@ -704,9 +705,9 @@ export const Details = () => {
                   },
                 }}
                 DecButtonProps={{
-                  disabled: quantity === 0,
+                  // disabled: quantity === 0,
                   sx: {
-                    color: "common.white",
+                    color: "common.white ",
                     backgroundColor: (theme) => theme.palette.themeColor.light,
                     "&:hover": {
                       backgroundColor: (theme) =>
@@ -760,7 +761,7 @@ export const Details = () => {
                   color: "white",
                 }}
               >
-                +KWD {Number(totalPrice).toFixed(2)}
+                +KWD {Number(totalPrice).toFixed(3)}
               </Typography>
             </Button>
           </Stack>

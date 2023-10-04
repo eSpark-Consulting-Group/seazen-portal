@@ -1,7 +1,7 @@
 import React from "react";
 import Carousel from "better-react-carousel";
 import MyDot from "../sliderDots";
-import './style.css';
+import "./style.css";
 
 const slides = [
   { src: "/assets/img/slider1.png", alt: "Slide 1" },
@@ -15,31 +15,22 @@ const Slider = () => {
     <div className="hover-slider">
       <Carousel
         dot={MyDot}
-        responsiveLayout={[
-          {
-            breakpoint: 800,
-            cols: 1,
-            rows: 1,
-            gap: 10,
-            loop: true,
-            
-          },
-        ]}
         cols={1}
         rows={1}
         gap={10}
         showDots={true}
         hideArrow={true}
         loop={true}
-        autoplay={false}
-        
+        autoplay={2000}
       >
         {slides.map((slide, index) => (
           <Carousel.Item key={index}>
-          <div className="carouselBanner">
-            <img width="100%" src={slide.src} alt={slide.alt} />
-            <div className="caption"><span className="caption-style">Order Now</span></div>
-          </div>
+            <div className="carouselBanner">
+              <img width="100%" src={slide.src} alt={slide.alt} />
+              <div className="caption">
+                <span className="caption-style">Order Now</span>
+              </div>
+            </div>
           </Carousel.Item>
         ))}
       </Carousel>

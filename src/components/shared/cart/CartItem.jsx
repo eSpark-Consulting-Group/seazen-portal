@@ -205,7 +205,7 @@ function CartItem(props) {
         }}
       >
         <Typography align="center" fontWeight={600}>
-          {`KWD ${Number(totalPrice).toFixed(2)}`}
+          {`KWD ${Number(totalPrice).toFixed(3)}`}
         </Typography>
         <IncDec
           quantity={updatedQuantity}
