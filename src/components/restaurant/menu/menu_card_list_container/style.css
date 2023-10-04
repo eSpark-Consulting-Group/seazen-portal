@@ -93,6 +93,7 @@
   height: 30px;
   background-color: white;
 }
+
 .search.expanded_search .searchicon {
   width: 25px;
   height: 25px;
@@ -130,34 +131,41 @@
   margin: 10px 0px;
 }
 
-.Modal_Search_Item{
+.Modal_Search_Item {
   position: absolute;
-  width: 100%;
-  background-color: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 375px;
+  padding: 0 25px;
 }
-.closebtnmodal{
+
+
+.closebtnmodal {
   display: flex;
   justify-content: flex-end;
-  padding: 20px;
+  padding: 20px 0;
 }
-.InputSearchModal{
+
+.InputSearchModal {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px 25px; 
+  /* padding: 20px 25px; */
   height: 45px;
 }
 
-.InputModal{
+.InputModal {
   width: 100%;
   padding: 10px 20px;
   border: 1px solid #C0CDD7;
   border-radius: 15px;
   font-weight: 600;
   color: #959FA8;
-  
+
 }
-.closebtn{
+
+.closebtn {
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -166,11 +174,14 @@
   align-items: center;
   justify-content: center;
 }
-.categoryItemsList{
-  margin: 25px;
+
+@media (max-width: 600px) {
+  .Modal_Search_Item {
+    width: 100%;
+  }
 }
-.categoryItems{
-  margin: 10px;
+.categoryItemsList {
+  margin-top: 25px; 
 }
 
 
@@ -188,7 +199,8 @@
 
 
 
-@media screen and (max-width: 500px) and (min-width: 380px) {
+
+/* @media screen and (max-width: 500px) and (min-width: 380px) {
   .Nav_Image_Container img {
     width: 100%;
   }
@@ -198,9 +210,9 @@
   .shopping_container {
     margin-right: 65px !important;
   }
-} 
+}  */
 
- @media screen and (max-width: 350px) {
+/* @media screen and (max-width: 350px) {
   .Nav_Image_Container img {
     width: 100%;
   }
@@ -208,16 +220,21 @@
   .shopping_container {
     margin-right: 12px !important;
   }
+
   .Nav_Image_Container {
     margin-left: -59px;
   }
+
   .back_button {
     margin-left: 65px !important;
   }
-.scrollable-container {
-  max-height: calc(100vh - 100px);
-  overflow-y: scroll;
-  scrollbar-width: none; /* Hide the scrollbar in Firefox */
-  -ms-overflow-style: none; /* Hide the scrollbar in IE and Edge */
-}
- }
+
+  .scrollable-container {
+    max-height: calc(100vh - 100px);
+    overflow-y: scroll;
+    scrollbar-width: none;
+    /* Hide the scrollbar in Firefox *
+    -ms-overflow-style: none;
+    /* Hide the scrollbar in IE and Edge *
+  }
+} */
