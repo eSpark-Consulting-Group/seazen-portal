@@ -166,9 +166,6 @@ const MenuCardListContainer = () => {
         </Box>
       </Box>
       <Modal
-        sx={{
-          overflow: 'scroll',
-        }}
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -184,18 +181,20 @@ const MenuCardListContainer = () => {
             <input type="text" className="InputModal" placeholder="Search" value={searchQuery} onChange={(event) => handleSearchChange(event)} />
           </div>
           
-            {filteredItems?.map((item, index) => (
-              <div className="categoryItemsList" key={index+1}>
-                <MenuCard
-                  key={index}
-                  foodItem={item.name_en}
-                  foodIngredients={item.description_en}
-                  foodPrice={item.price}
-                  foodImage={item.image}
-                  id={item.id}
-                />
-              </div>
-            ))}
+            <div className="list-menu-cards">
+              {filteredItems?.map((item, index) => (
+                <div className="categoryItemsList" key={index+1}>
+                  <MenuCard
+                    key={index}
+                    foodItem={item.name_en}
+                    foodIngredients={item.description_en}
+                    foodPrice={item.price}
+                    foodImage={item.image}
+                    id={item.id}
+                  />
+                </div>
+              ))}
+            </div>
         </div>
       </Modal>
     </div>

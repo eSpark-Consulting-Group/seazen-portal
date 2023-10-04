@@ -181,9 +181,14 @@
   }
 }
 .categoryItemsList {
-  margin-top: 25px; 
+  margin-bottom: 10px; 
 }
 
+.list-menu-cards{
+  height: 670px;
+  overflow: auto;
+  margin-top: 10px;
+}
 
 
 
