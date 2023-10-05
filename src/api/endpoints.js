@@ -11,10 +11,10 @@ const API_ENDPOINTS = {
   },
   CART: {
     ADD_TO_CART: "/add-to-cart",
-    CART_LIST: "cart-list",
+    CART_LIST: "/cart-list",
     DELETE_CART: "/delete-cart",
     UPDATE_CART: "/update-cart",
-    CHECKOUT: "checkout/process"
+    CHECKOUT: "/checkout/process"
   },
   PAYMENT_METHOD: {
     PAYMENT: "/payment-method",

@@ -7,12 +7,10 @@ import { useLocation } from "react-router";
 function App() {
   const currentURL = useLocation();
   const getChatURLs = (URL) => {
-    const validURLs = ["/", "/profile/order", "/orderplace", "/branches"];
-    return validURLs.includes(URL);
+    return URL.includes("/delivery");
   } 
-
+  const element = document.getElementById('fc_frame');
   useEffect(() => {
-    const element = document.getElementById('fc_frame');
     if(!element){
       const script = document.createElement('script');
       script.src = '//fw-cdn.com/2159361/2855124.js';
@@ -20,10 +18,10 @@ function App() {
       document.body.appendChild(script);
     }
 
-    if (getChatURLs(currentURL.pathname)) {
-      element?.classList.remove("hide-chat-icon");
+    if (!getChatURLs(currentURL.pathname)) {
+      element?.classList.remove("chat-icon-placement");
     } else {
-      element?.classList.add("hide-chat-icon");
+      element?.classList.add("chat-icon-placement");
     }
 
   }, [currentURL])
