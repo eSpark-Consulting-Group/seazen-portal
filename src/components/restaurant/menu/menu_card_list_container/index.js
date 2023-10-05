@@ -9,6 +9,7 @@ import { paths } from "../../../../routes/paths.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress } from "@mui/material";
 import { resetCart } from "../../../../store/reducers/cartSlice.js";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const MenuCardListContainer = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const MenuCardListContainer = () => {
   const cartTotalItems = useSelector((state) => state.cart.totalQuantity);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [showList, setShowList] = useState([]);
   const categoryList = useSelector(
     (state) => state?.resturants?.listItemByCategory
   );
@@ -28,6 +30,11 @@ const MenuCardListContainer = () => {
     }
   },[cartTotalItems])
 
+  useEffect(()=>{
+    // console.log(categoryList?.slice(0, 10), "categoryList?.slice(0, 10)")
+    setShowList(categoryList?.slice(0, 10))
+  },[categoryList])
+  
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
   };
@@ -40,9 +47,16 @@ const MenuCardListContainer = () => {
     return "All";
   };
 
+  const fetchMoreData = () => {
+    const currentLength = showList?.length;
+    const newItems = categoryList.slice(currentLength, currentLength + 10);
+    setShowList([...showList, ...newItems]);
+    console.log(newItems,"fetchMoreData")
+  }
+
   return (
     <div className="scrollable-container-wrapper">
-      <div className="scrollable-container">
+      <div className="scrollable-container" id="scrollableDiv">
         <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-5">
           <div className="menu_card_list_inner_container">
             <div
@@ -90,7 +104,15 @@ const MenuCardListContainer = () => {
                 </Box>
               )}
               <Stack spacing={1.5}>
-                {categoryList?.map((item, index) => (
+                <InfiniteScroll
+                  dataLength={showList?.length}
+                  next={fetchMoreData}
+                  hasMore={true}
+                  loader={<h4>Loading...</h4>}
+                  scrollThreshold={0.9}
+                  scrollableTarget="scrollableDiv"
+                >
+                {showList?.map((item, index) => (
                   <MenuCard
                     key={index}
                     foodItem={item.name_en}
@@ -103,6 +125,7 @@ const MenuCardListContainer = () => {
                     }
                   />
                 ))}
+                </InfiniteScroll>
               </Stack>
             </>
 
