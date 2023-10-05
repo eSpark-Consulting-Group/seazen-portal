@@ -120,6 +120,8 @@ const DeliveryDetails = () => {
                 fontWeight: "bold",
                 border: "none",
                 transform: "translate(0px, -22px)",
+                top:"12px",
+
               }}
             >
               <Dropdown.Item href="#/action-1">Option 1</Dropdown.Item>

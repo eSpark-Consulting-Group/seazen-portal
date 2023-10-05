@@ -13,6 +13,7 @@ function IncDec(props) {
     onIncrease, 
     onDecrease, 
     IncButtonProps, 
+    DecButtonProps,
     isSingleItem, 
     onDelete 
   } =
@@ -41,7 +42,9 @@ function IncDec(props) {
             border: "1px solid #DCDFE3",
             color: "black",
             p: 0.5,
+          ...DecButtonProps?.sx,
           }}
+        {...DecButtonProps}
           
         >
           <RemoveRoundedIcon fontSize="small" />

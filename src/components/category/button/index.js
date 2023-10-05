@@ -28,13 +28,13 @@ const OrderTypeButtonExpandable = ({
   const [filterClassNear, setToggleFilterClassNear] = useState(false);
   const [filterSelectedNow, setFilterSelectedNow] = useState();
 
-  useEffect(() => {
-    if (expanded === false) {
-      handleOrderTypeFilter(false, false, filterSelectedNow);
-      setToggleFilterClassDelivery(false);
-      setToggleFilterClassNear(false);
-    }
-  }, [expanded]);
+  // useEffect(() => {
+  //   if (expanded === false) {
+  //     handleOrderTypeFilter(false, false, filterSelectedNow);
+  //     setToggleFilterClassDelivery(false);
+  //     setToggleFilterClassNear(false);
+  //   }
+  // }, [expanded]);
 
   useEffect(() => {
     handleOrderTypeFilter(
@@ -62,12 +62,19 @@ const OrderTypeButtonExpandable = ({
     if (id !== 1) {
       setToggleExpanded(!expanded);
       setIsButtonExpanded({ expanded: !expanded, id: id });
+  
+      if (!expanded) {
+        // Set the delivery filter as active by default when expanding the button
+        setToggleFilterClassDelivery(true);
+        setToggleFilterClassNear(false);
+        setFilterSelectedNow("delivery");
+      }
     } else {
       setIsButtonExpanded({ expanded: false });
     }
+  
     handleButtonClickIndex(id);
   };
-
   return (
     <div
       className={`custom-button ${isButtonExpanded.expanded && isButtonExpanded.id === id ? "expanded" : ""} ${

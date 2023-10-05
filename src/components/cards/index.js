@@ -8,7 +8,7 @@ import cateringIcon from "./catering-icon.svg";
 import dineInIcon from "./dinein-icon.svg";
 import { useNavigate } from "react-router";
 import { paths } from "../../routes/paths";
-import { useMediaQuery } from "@mui/material";
+// import { useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 
 const bull = (
@@ -127,29 +127,29 @@ const BasicCard = ({
     [icons[1], icons[3]],
   ];
 
-  const isMediumScreen = useMediaQuery(
-    "(max-width: 400px) and (min-width: 385px)"
-  );
-  const isSmallScreen = useMediaQuery(
-    "(max-width: 500px) and (min-width: 385px)"
-  );
-  const isSmallerScreen = useMediaQuery(
-    "(max-width: 350px ) (min-width: 290px)"
-  );
-  const isVerySmallScreen = useMediaQuery("(max-width: 290px)");
+  // const isMediumScreen = useMediaQuery(
+  //   "(max-width: 400px) and (min-width: 385px)"
+  // );
+  // const isSmallScreen = useMediaQuery(
+  //   "(max-width: 500px) and (min-width: 385px)"
+  // );
+  // const isSmallerScreen = useMediaQuery(
+  //   "(max-width: 350px ) (min-width: 290px)"
+  // );
+  // const isVerySmallScreen = useMediaQuery("(max-width: 290px)");
 
-  // Adjust cardWidth to apply 120px width to screens less than 350px
-  const cardWidth = isSmallScreen
-    ? isMediumScreen
-      ? 180
-      : isSmallerScreen
-      ? 180
-      : 190
-    : isSmallerScreen
-    ? 170
-    : isVerySmallScreen
-    ? 145
-    : 161;
+  // // Adjust cardWidth to apply 120px width to screens less than 350px
+  // const cardWidth = isSmallScreen
+  //   ? isMediumScreen
+  //     ? 180
+  //     : isSmallerScreen
+  //     ? 180
+  //     : 190
+  //   : isSmallerScreen
+  //   ? 170
+  //   : isVerySmallScreen
+  //   ? 145
+  //   : 161;
 
   const getCardClassName = (service) => {
     if (orderTypeFilter) {
@@ -157,6 +157,7 @@ const BasicCard = ({
       const { doesDelivery, isNear } = service;
       if (delivery && !near) {
         return doesDelivery && "restaurantCard-border-delivery";
+        
       }
 
       if (!delivery && near) {
@@ -233,14 +234,14 @@ const BasicCard = ({
           return (
             <div
               key={index}
-              className={`restaurantCards restaurantCard-${
-                isSmallScreen ? "small" : "large"
-              } ${getCardClassName(images[index].service)}`}
+              className={`restaurantCards restaurantCard-large ${getCardClassName(images[index].service)}`}
             >
               <Card
                 sx={{
                   width: "100%",
                   borderRadius: "10px",
+                  boxShadow:"none",
+                  border:"none",
                 }}
                 className="restaurantCards"
                 onClick={() => {
