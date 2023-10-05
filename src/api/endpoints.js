@@ -11,10 +11,11 @@ const API_ENDPOINTS = {
   },
   CART: {
     ADD_TO_CART: "/add-to-cart",
-    CART_LIST: "cart-list",
+    CART_LIST: "/cart-list",
     DELETE_CART: "/delete-cart",
     UPDATE_CART: "/update-cart",
-    CHECKOUT: "checkout/process"
+    CHECKOUT: "/checkout/process",
+    CLEAR_CART: "/empty-cart"
   },
   PAYMENT_METHOD: {
     PAYMENT: "/payment-method",
@@ -22,6 +23,9 @@ const API_ENDPOINTS = {
   },
   MENU: {
     GET_MENU_ITEM_DETAILS: "/restaurant/",
+  },
+  COMMON: {
+    GET_ALL_COUNTRIES: "/common/countries",
   },
 };
 

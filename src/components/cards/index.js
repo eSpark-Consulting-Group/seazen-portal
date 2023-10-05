@@ -224,6 +224,7 @@ const BasicCard = ({
   const iconHeight = "9px";
 
   const goToRestaurantMenuPage = (restaurant) => {
+    localStorage.setItem("restaurantID", restaurant)
     navigate(paths.menu + `/restaurant/${restaurant}`);
   };
   return (

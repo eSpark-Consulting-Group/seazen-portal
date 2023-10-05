@@ -2,14 +2,29 @@ import React, { useState, useRef, useEffect } from "react";
 import "./style.css";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../../routes/paths";
+import countryList from "../../../api/common/getAllCountries";
+import { useDispatch, useSelector } from "react-redux";
+import { resetCart } from "../../../store/reducers/cartSlice";
+import clearCart from "../../../api/cart/clearCart";
 
 const ProfileHeader = (props) => {
   const { showFlagOption } = props;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isCountryPopupOpen, setIsCountryPopupOpen] = useState(false);
   const [currentFlag, setCurrentFlag] = useState("/assets/img/flag1.svg"); // Default flag
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+
+  useEffect(() => {
+   const isCountry = localStorage.getItem("country")
+   if(isCountry){
+    setCurrentFlag(JSON.parse(isCountry).flag);
+   }
+    fetchAllCountries()
+  }, [])
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -22,18 +37,28 @@ const ProfileHeader = (props) => {
   };
 
   const handleConfirmCountryChange = () => {
+    clearCartItems()
     setCurrentFlag(selectedCountry.flag);
+    localStorage.setItem("country", JSON.stringify(selectedCountry))
     setIsCountryPopupOpen(false);
   };
 
-  const countries = [
-    { name: "Bahrian", flag: "/assets/img/flag2.svg" },
-    { name: "Kuwait", flag: "/assets/img/flag1.svg" },
-    { name: "Oman", flag: "/assets/img/flag4.svg" },
-    { name: "Qatar", flag: "/assets/img/flag3.svg" },
-    { name: "Saudi Arabia", flag: "/assets/img/flag6.svg" },
-    { name: "UAE", flag: "/assets/img/flag5.svg" },
-  ];
+  const fetchAllCountries = () => {
+    countryList().then((res) => {
+      setCountries(res.data)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+  
+  const clearCartItems = () => {
+    dispatch(resetCart());
+    clearCart(token).then((res) => {
+      console.log(res)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
 
   return (
     <nav className="profile-header">
@@ -73,8 +98,8 @@ const ProfileHeader = (props) => {
                     key={index}
                     onClick={() => toggleCountryPopup(country)}
                   >
-                    <img src={country.flag} alt={country.name} />
-                    <p className="profileHeadercountry-name">{country.name}</p>
+                    <img src={country.flag} alt={country.name_en} />
+                    <p className="profileHeadercountry-name">{country.name_en}</p>
                   </div>
                 ))}
               </div>
@@ -106,8 +131,8 @@ const ProfileHeader = (props) => {
                   src="/assets/img/sign.svg"
                 ></img>
                 <div className="profileHeadercountry-info">
-                  <img src={selectedCountry.flag} alt={selectedCountry.name} />
-                  <h2>{selectedCountry.name}</h2>
+                  <img src={selectedCountry.flag} alt={selectedCountry.name_en} />
+                  <h2>{selectedCountry.name_en}</h2>
                 </div>
               </div>
               <br></br>
