@@ -9,6 +9,7 @@ import { paths } from "../../../../routes/paths.jsx";
 import { useSelector } from "react-redux";
 import { Modal } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import { Button } from "react-bootstrap";
 
 
 const MenuCardListContainer = () => {
@@ -26,12 +27,11 @@ const MenuCardListContainer = () => {
     (state) => state?.resturants?.listItemByCategory
   );
 
-  const [filteredItems, setFilteredItems] = useState(categoryList);
+  const [filteredItems, setFilteredItems] = useState([]);
 
 
   // const itemQuantity= useSelector((state) => state.)
   const toggleSearch = () => {
-    setFilteredItems(categoryList)
     setOpen(true);
     setIsSearchOpen(!isSearchOpen);
   };
@@ -61,9 +61,13 @@ const MenuCardListContainer = () => {
   const handleSearchChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
+    if(query === ""){
+      setFilteredItems([]);
+      return;
+    }
     filterItems(query);
-
   };
+
   return (
     <div className="scrollable-container">
       <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-5">
@@ -173,9 +177,9 @@ const MenuCardListContainer = () => {
       >
         <div className="Modal_Search_Item">
           <div className="closebtnmodal">
-            <nav className="closebtn">
+            <Button className="closebtn">
               <CloseIcon sx={{ color: "#000" }} onClick={handleClose} />
-            </nav>
+            </Button>
           </div>
           <div className="InputSearchModal">
             <input type="text" className="InputModal" placeholder="Search" value={searchQuery} onChange={(event) => handleSearchChange(event)} />
