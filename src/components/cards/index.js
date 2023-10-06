@@ -24,7 +24,7 @@ const images = [
   {
     name: "first card image",
     image: "/assets/img/restaurants-1-6.svg",
-    service: { doesDelivery: false, isNear: true },
+    service: { doesDelivery: true, isNear: true },
   },
   {
     name: "second card image",
@@ -34,7 +34,7 @@ const images = [
   {
     name: "third card image",
     image: "/assets/img/restaurants-1-6.svg",
-    service: { doesDelivery: true, isNear: false },
+    service: { doesDelivery: true, isNear: true },
   },
   {
     name: "fourth card image",
@@ -44,12 +44,12 @@ const images = [
   {
     name: "fifth card image",
     image: "/assets/img/restaurants-2-6.svg",
-    service: { doesDelivery: false, isNear: true },
+    service: { doesDelivery: true, isNear: true },
   },
   {
     name: "sixth card image",
     image: "/assets/img/restaurants-6-6.svg",
-    service: { doesDelivery: false, isNear: false },
+    service: { doesDelivery: true, isNear: true },
   },
 ];
 
@@ -155,13 +155,13 @@ const BasicCard = ({
     if (orderTypeFilter) {
       const { delivery, near, selectedNow } = orderTypeFilter;
       const { doesDelivery, isNear } = service;
-      if (delivery && !near) {
-        return doesDelivery && "restaurantCard-border-delivery";
-        
-      }
+    if (delivery && !near) {
+    return doesDelivery ? "restaurantCard-border-delivery " + (clickedButtonIndex !== null ? "expanded" : "another-class") : "";
+}
 
       if (!delivery && near) {
-        return isNear && "restaurantCard-border-near";
+    return isNear ? "restaurantCard-border-near " + (clickedButtonIndex !== null ? "expanded" : "another-class") : "";
+
       }
 
       if (delivery && near) {
@@ -178,9 +178,7 @@ const BasicCard = ({
         }
       }
 
-      if (!doesDelivery && !isNear) {
-        return "restaurantCard-no-border";
-      }
+     
     }
   };
 

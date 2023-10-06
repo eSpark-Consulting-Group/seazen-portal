@@ -141,3 +141,7 @@
     left: 133px;
   }
 } */
+
+.another-class{
+  border: none !important;
+}
