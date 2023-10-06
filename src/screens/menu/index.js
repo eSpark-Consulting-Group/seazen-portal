@@ -14,6 +14,7 @@ import getRestaurantBranchHours, {
 const Menu = () => {
   const location = useLocation();
   const { id } = useParams();
+  const country = JSON.parse(localStorage.getItem("country"))
   const {
     data: restaurantDetailResponse,
     isLoading,
@@ -21,7 +22,7 @@ const Menu = () => {
     isError,
   } = useQuery({
     queryKey: [GET_RESTAURANT_DETAILS_QUERY_KEY],
-    queryFn: () => getRestaurantDetails(id),
+    queryFn: () => getRestaurantDetails(id, country.id),
     onSuccess: (data) => {},
   });
   const { data: restaurantDetail } = restaurantDetailResponse || {};

@@ -30,6 +30,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import checkout from "../../api/cart/checkout";
 import getRestaurantDetails from "../../api/restaurant/getRestaurantDetails";
 import { addToCart } from "../../store/reducers/cartSlice";
+import applyPromoCode from "../../api/cart/promocode";
+import CancelIcon from '@mui/icons-material/Cancel';
 
 function CartPage() {
   const navigate = useNavigate();
@@ -39,15 +41,11 @@ function CartPage() {
   const [cartItems, setCartItems] = React.useState();
   const [specialIns, setSpecialIns] = React.useState("");
   const [restaurantLogo, setRestaurantLogo] = React.useState("");
+  const [promoCode, setPromoCode] = React.useState("");
+  const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
-  const DISCOUNT_AMOUNT = Number(1).toFixed(2);
   const DELIVERY_CHARGE = Number(1).toFixed(2);
   const [isDialogOpen, setDialogOpen] = useState(false);
-
-  // Function to handle opening the dialog
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  };
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
@@ -58,6 +56,29 @@ function CartPage() {
   const cart = useSelector((state) => state.cart.cart);
   const totalPrice = useSelector((state) => state.cart.total);
   const dispatch = useDispatch();
+  const restaurantId = localStorage.getItem("restaurantID")
+  
+  // Function to handle opening the dialog
+  const handleDialogOpen = () => {
+    applyPromoCode(
+      {
+        restaurant_id: restaurantId,
+        promo_code: promoCode
+      },
+      token
+    )
+      .then((res) => {
+        if (res.message == "Invalid promo code") {
+          setDialogOpen(true);
+          return;
+        }
+        setPromoDiscount(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setDialogOpen(true);
+      });
+  };
 
   const checkoutData = {
     payment_method_id: "1",
@@ -113,9 +134,10 @@ function CartPage() {
   }, []);
 
   const getRestaurantLogo = (restaurantId) => {
+    const country = JSON.parse(localStorage.getItem("country"))
     setTimeout(() => {
       if(restaurantId) {
-        getRestaurantDetails(restaurantId)
+        getRestaurantDetails(restaurantId, country.id)
         .then((res) => {
           setRestaurantLogo(res.data.logo);
         })
@@ -174,12 +196,21 @@ function CartPage() {
     return tipValue.toFixed(2);
   };
 
-  const getDiscountAmount = () => {
-    return DISCOUNT_AMOUNT;
-  };
-
   const getDeliveryCharge = () => {
     return DELIVERY_CHARGE;
+  };
+
+  const getPromoDiscount = () => {
+    let discount = 0
+    if(promoDiscount.discount_type == "percentage"){
+      discount = getItemTotal() / 100 * promoDiscount.discount_value
+      promoDiscount.message = `${promoDiscount.discount_value}% Discount Applied`
+    }
+    return discount
+  }
+
+  const getDiscountAmount = () => {
+    return Number(getPromoDiscount()).toFixed(2);
   };
 
   const getGrandTotal = () => {
@@ -187,7 +218,8 @@ function CartPage() {
       Number(getItemTotal()) +
       Number(getTipAmount()) -
       Number(getDiscountAmount()) +
-      Number(getDeliveryCharge())
+      Number(getDeliveryCharge()) - 
+      Number(getPromoDiscount())
     ).toFixed(2);
   };
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
@@ -534,8 +566,10 @@ function CartPage() {
 
           <TextField
             id="promo-code"
+            value={promoCode}
             placeholder="Promo Code"
             variant="outlined"
+            onChange={(e) => setPromoCode(e.target.value)}
             sx={{
               "& .MuiOutlinedInput-root": {
                 background: "#FAFAFA",
@@ -565,7 +599,10 @@ function CartPage() {
               ),
             }}
           />
-
+          {/* {promoDiscount.message && <div className="promo-message-wrapper">
+             <p>{promoDiscount.message}</p> 
+             <span onClick={() => setPromoDiscount({})}><CancelIcon className="promo-cancel-icon" fontSize="small" color="grey" /></span>
+          </div>} */}
           {/* Dialog */}
           <Dialog
             open={isDialogOpen}

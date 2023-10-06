@@ -2,6 +2,9 @@ import React from "react";
 import Carousel from "better-react-carousel";
 import MyDot from "../sliderDots";
 import './style.css';
+import { useEffect } from "react";
+import getAllRestaurantsBanner from "../../../api/home/getAllRestaurantsBanner";
+import { useState } from "react";
 
 const slides = [
   { src: "/assets/img/slider1.png", alt: "Slide 1" },
@@ -10,7 +13,21 @@ const slides = [
   { src: "/assets/img/2.png", alt: "Slide 4" },
 ];
 
+
 const Slider = () => {
+
+  const [restaurantBanner, setRestaurantBanner] = useState([]);
+  const country = JSON.parse(localStorage.getItem("country"));
+  useEffect(() => {
+    getAllRestaurantsBanner(country.id)
+      .then((res) => {
+        setRestaurantBanner(res.data);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <div className="hover-slider">
       <Carousel
@@ -34,10 +51,10 @@ const Slider = () => {
         autoplay={false}
         
       >
-        {slides.map((slide, index) => (
+        {restaurantBanner.map((slide, index) => (
           <Carousel.Item key={index}>
           <div className="carouselBanner">
-            <img width="100%" src={slide.src} alt={slide.alt} />
+            <img width="100%" src={slide.banner} alt="restaurant banner" />
             <div className="caption"><span className="caption-style">Order Now</span></div>
           </div>
           </Carousel.Item>

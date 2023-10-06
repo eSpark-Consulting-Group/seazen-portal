@@ -24,6 +24,7 @@ const DeliveryConditionalComponent = ({
   errorMessage,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const country = JSON.parse(localStorage.getItem("country"))
 
   const {
     data: getAllItemsByCategoryResponse,
@@ -37,7 +38,7 @@ const DeliveryConditionalComponent = ({
       searchParams.get("category"),
     ],
     queryFn: () =>
-      getListItemByCategory(resturantId, searchParams.get("category")),
+      getListItemByCategory(resturantId, searchParams.get("category"), country.id),
     onSuccess: (data) => {},
   });
   const {

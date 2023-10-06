@@ -118,6 +118,7 @@ const RestaurantsOrderTypeButton = () => {
   });
   const [orderTypeFilter, setOrderTypeFilter] = useState();
   const dispatch = useDispatch();
+  const country = JSON.parse(localStorage.getItem("country"))
 
   const handleButtonClickIndex = (index) => {
     if (index === clickedButtonIndex) {
@@ -135,7 +136,7 @@ const RestaurantsOrderTypeButton = () => {
     isError: resturantsDataIsError,
   } = useQuery({
     queryKey: [GET_ALL_RESTAURANTS_QUERY_KEY],
-    queryFn: getAllRestaurants,
+    queryFn: () => getAllRestaurants(country.id),
 
     onSuccess: (data) => {},
   });
@@ -210,11 +211,13 @@ const RestaurantsOrderTypeButton = () => {
         })}
       </div>
       {/* Pass the clickedButtonIndex to BasicCard */}
-      <BasicCard
-        clickedButtonIndex={clickedButtonIndex}
-        orderTypeFilter={orderTypeFilter}
-        restaurantsData={restaurantsData}
-      />
+      {restaurantsData?.length > 0 && (
+        <BasicCard
+          clickedButtonIndex={clickedButtonIndex}
+          orderTypeFilter={orderTypeFilter}
+          restaurantsData={restaurantsData}
+        />
+      )}
     </>
   );
 };

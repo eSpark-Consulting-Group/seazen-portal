@@ -31,6 +31,7 @@ export default function App() {
       inlineText: "6.450",
     },
   ];
+  const country = JSON.parse(localStorage.getItem("country"))
 
   const {
     data: popularDishesResponse,
@@ -39,7 +40,7 @@ export default function App() {
     isError,
   } = useQuery({
     queryKey: [GET_ALL_POPULAR_ITEMS_QUERY_KEY],
-    queryFn: () => getAllPopularItems(),
+    queryFn: () => getAllPopularItems(country.id),
     onSuccess: (data) => {
       console.log("data", data);
     },
