@@ -5,6 +5,9 @@ const API_ENDPOINTS = {
   },
   RESTAURANT: {
     GET_RESTAURANT_DETAIL: "/restaurant/",
+    GET_BRANCHES_AND_HOURS(restaurantId, language = "en") {
+      return `/restaurant/${restaurantId}/branches?language=${language}`;
+    },
   },
   USER: {
     EMAIL_LOGIN: "/email-login",

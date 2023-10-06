@@ -39,7 +39,7 @@ export const paths = {
   terms: "/terms",
   address: "/address",
   details: "/menu-item-details",
-  branches: "/branches",
+  branches: "/restaurant/",
   addresses: "/my-addresses",
   search: "search",
 };
@@ -63,7 +63,7 @@ export const routes = {
   guest_profile: "/guest-profile",
   privacy_policy: "/privacy-policy",
   terms: "/terms",
-  branches: "/branches",
+  branches: "/restaurant/:id/branches",
   addresses: "/my-addresses",
   search: "/search",
 };
