@@ -105,6 +105,8 @@
   opacity: 1;
   margin-left: 4px;
   margin-right: 4px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+
 }
 
 .orderTypebutton-style-two-active {

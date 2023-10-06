@@ -40,8 +40,8 @@ function CartPage() {
   const [specialIns, setSpecialIns] = React.useState("");
   const [restaurantLogo, setRestaurantLogo] = React.useState("");
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
-  const DISCOUNT_AMOUNT = Number(1).toFixed(2);
-  const DELIVERY_CHARGE = Number(1).toFixed(2);
+  const DISCOUNT_AMOUNT = Number(1).toFixed(3);
+  const DELIVERY_CHARGE = Number(1).toFixed(3);
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   // Function to handle opening the dialog
@@ -149,7 +149,7 @@ function CartPage() {
                   specialInstructions: "",
                   itemImage: val?.menu_item_image,
                   restaurant_id: 1,
-                  totalPrice: Number(val.quantity * val.unit_price).toFixed(2) 
+                  totalPrice: Number(val.quantity * val.unit_price).toFixed(3) 
               }
             })
             setCartItems(resData);
@@ -167,11 +167,11 @@ function CartPage() {
   const getItemTotal = () => {
     return cartItems.reduce((acc, cartItem) => {
       return acc + Number(cartItem.totalPrice);
-    }, 0).toFixed(2);
+    }, 0).toFixed(3);
   };
 
   const getTipAmount = () => {
-    return tipValue.toFixed(2);
+    return tipValue.toFixed(3);
   };
 
   const getDiscountAmount = () => {
@@ -188,7 +188,7 @@ function CartPage() {
       Number(getTipAmount()) -
       Number(getDiscountAmount()) +
       Number(getDeliveryCharge())
-    ).toFixed(2);
+    ).toFixed(3);
   };
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(
@@ -665,7 +665,7 @@ function CartPage() {
                   />
 
                   <Typography variant="body1" fontWeight={600}>
-                    {`KWD ${Number(tip).toFixed(2)}`}
+                    {`KWD ${Number(tip).toFixed(3)}`}
                   </Typography>
                 </Box>
               ))}

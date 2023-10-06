@@ -28,15 +28,19 @@
 }
 
 .menu_itmes_text_container {
-  width: 290px;
+  width: 305px;
   height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  column-gap: 10px;
+  column-gap: 20px;
   align-items: center;
   color: #1f2933;
   overflow-x: scroll;
+}
+
+.menu_itmes_text_container::-webkit-scrollbar {
+  display: none;
 }
 
 .menu_itmes_text_container button {

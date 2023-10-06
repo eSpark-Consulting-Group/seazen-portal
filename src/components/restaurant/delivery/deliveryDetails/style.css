@@ -58,3 +58,7 @@
 .dropdown-menu.show {
   transform: translate(0px, 37px) !important;
 }
+
+.dropdown-menu.show::-webkit-scrollbar{
+  display: none;
+}
