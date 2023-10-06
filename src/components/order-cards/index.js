@@ -19,10 +19,7 @@ const OrderCard = ({ item, handleReorder, handleReceipt }) => {
   const iconPath = `/assets/img/${item.icon}`;
 
   return (
-    <Card
-      className={styles.card}
-      style={{ border: "1px solid #C0CDD7", marginTop: "10px" }}
-    >
+    <Card style={{ border: "1px solid #C0CDD7", marginTop: "10px" }}>
       <div className={styles.cardNav}>
         <img src="/assets/img/Group 15.svg" alt="" />
         <div className={styles.cardNavTags}>

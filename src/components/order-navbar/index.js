@@ -9,7 +9,6 @@ const OrderNavbar = () => {
 
   return (
     <div className={styles.myOrderscreenNav}>
-      {" "}
       <IconButton
         onClick={() => {
           navigate(paths.profile);
@@ -26,7 +25,6 @@ const OrderNavbar = () => {
         My Orders
       </Typography>
       <IconButton className={styles.brandLogo}>
-        {" "}
         <img src="/assets/img/Group 259.png" alt="" />
       </IconButton>
     </div>

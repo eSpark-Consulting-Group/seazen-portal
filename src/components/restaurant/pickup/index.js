@@ -19,10 +19,10 @@ const PickupDetails = () => {
   };
 
   return (
-    <StyledOuterContainer className={styles.pickupOuterContainer}>
-      <div className={styles.pickupInnerContainer}>
-        <div className={styles.pickupLeftDropdownContainer}>
-          <div className={styles.pickupLeftDropdownContainerHeadingContainer}>
+    <StyledOuterContainer className={styles.deliveryOuterContainer}>
+      <div className={styles.deliveryInnerContainer}>
+        <div className={styles.deliveryLeftDropdownContainer}>
+          <div className={styles.deliveryLeftDropdownContainerHeadingContainer}>
             Pickup from
           </div>
           <Dropdown style={{ width: "163px" }}>
@@ -84,8 +84,10 @@ const PickupDetails = () => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <div className={styles.pickupRightDropdownContainer}>
-          <div className={styles.pickupRightDropdownContainerHeadingContainer}>
+        <div className={styles.deliveryRightDropdownContainer}>
+          <div
+            className={styles.deliveryRightDropdownContainerHeadingContainer}
+          >
             Pickup Time
           </div>
           <Dropdown style={{ width: "163px" }}>

@@ -1,7 +1,6 @@
 import React from "react";
 import ContactButton from "../../../contact_button";
 import styles from "./style.module.css";
-import { Style } from "@mui/icons-material";
 
 const DineInSuccess = ({
   firstName,

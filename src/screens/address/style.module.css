@@ -15,7 +15,7 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 .addressButton:hover {
-  background-color:#bd8d72;
+  background-color: #bd8d72;
   color: #ecf0f1;
 }
 
@@ -140,13 +140,11 @@
   opacity: 1;
 }
 
-@media screen and (max-width: 500px) and (min-width: 380px){
-  .editContainer{
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .editContainer {
     margin-left: 30px;
   }
-  .addressButton{
+  .addressButton {
     margin-left: 30px;
   }
 }
-
-

@@ -16,8 +16,8 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
   };
 
   return (
-    <div className={styles.detailsOuterContainer}>
-      <div className={styles.detailsInnerDiv}>
+    <div className={`${styles.detailsOuterContainer} px-3 px-sm-4`}>
+      <div className={`${styles.detailsInnerDiv} w-100`}>
         <div className={styles.logoInfoContainer}>
           <img src="/assets/img/Trapani_logo.svg" alt="restaurant_logo" />
           <StyledItemPrice

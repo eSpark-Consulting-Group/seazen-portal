@@ -1,20 +1,20 @@
-.pickupOuterContainer {
-  width: 100%;
+.deliveryOuterContainer {
+  /* width: 100%; */
   height: 48px;
   display: flex;
   justify-content: center;
   background-color: #e0ecea;
 }
 
-.pickupInnerContainer {
-  width: 326px;
+.deliveryInnerContainer {
+  /* width: 326px; */
   height: 100%;
   display: flex;
   color: #323f4b;
   font-family: Titillium Web;
 }
 
-.pickupLeftDropdownContainer {
+.deliveryLeftDropdownContainer {
   width: 163px;
   height: 100%;
   text-align: center;
@@ -22,13 +22,13 @@
   flex-direction: column;
 }
 
-.pickupLeftDropdownContainerHeadingContainer,
-.pickupRightDropdownContainerHeadingContainer {
+.deliveryLeftDropdownContainerHeadingContainer,
+.deliveryRightDropdownContainerHeadingContainer {
   font-size: 10pt;
   font-weight: 400;
 }
 
-.pickupRightDropdownContainer {
+.deliveryRightDropdownContainer {
   width: 163px;
   height: 100%;
   display: flex;

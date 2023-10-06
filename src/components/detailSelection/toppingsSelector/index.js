@@ -7,8 +7,6 @@ import { lighten } from "@mui/material/styles";
 import { Checkbox } from "@mui/material";
 import { useTheme } from "@mui/material/styles"; // Import useTheme from MUI
 
-
-
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.92), // Apply the background color
   // Add any other styles you need for the outer container here
@@ -80,7 +78,7 @@ export default function ToppingSelection() {
   };
 
   const checkboxStyle = {
-    color: isChecked ? theme.palette.themeColor.main : '',
+    color: isChecked ? theme.palette.themeColor.main : "",
   };
   return (
     <div>
@@ -111,7 +109,6 @@ export default function ToppingSelection() {
                       disabled={isLastItem}
                       onChange={handleCheckboxChange}
                       style={checkboxStyle}
-                      
                     />
                     <span
                       className={`${styles.customCheckbox} ${
@@ -124,14 +121,17 @@ export default function ToppingSelection() {
                         isLastItem ? styles.disabledText : ""
                       }`}
                     >
-                      {name} <span className={styles.extraToppingInstruction}>(Each +KWD 0.500)</span>
+                      {name}{" "}
+                      <span className={styles.extraToppingInstruction}>
+                        (Each +KWD 0.500)
+                      </span>
                     </label>
                   </div>
                   {!isLastItem && (
                     <div className={styles.leftSectionCounter}>
                       <button
                         onClick={() => handleDecrement(name)} // Use the topping name here
-                       className={styles.counterButtonRight}
+                        className={styles.counterButtonRight}
                       >
                         <span className={styles.counterIconLeft}>-</span>
                       </button>

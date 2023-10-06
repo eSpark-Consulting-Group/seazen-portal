@@ -35,11 +35,9 @@ const Navbar = (props) => {
   }, []);
 
   return (
-    <nav
-      className={`${styles.nav} d-flex align-items-center justify-content-between p-2`}
-    >
+    <nav className={`d-flex align-items-center justify-content-between p-2`}>
       <div
-        className={`d-flex align-items-center ${styles.iconBtnContainer}`}
+        className={`d-flex align-items-center`}
         style={{
           columnGap: "10px",
         }}
@@ -82,7 +80,7 @@ const Navbar = (props) => {
       )}
       {variant !== NavbarVariants.backWithProfile && (
         <div
-          className={`d-flex align-items-center ${styles.iconBtnContainer}`}
+          className={`d-flex align-items-center`}
           style={{
             columnGap: "10px",
           }}

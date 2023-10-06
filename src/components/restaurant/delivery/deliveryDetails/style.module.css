@@ -44,14 +44,9 @@
   color: #323f4b !important;
   font-family: Titillium Web !important;
   font-size: 9pt !important;
-  font-weight: bold !important;
+  font-weight: 700 !important;
   border: none !important;
   padding: 0 !important;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  margin: 4px auto;
-  gap: 5px;
 }
 
 .dropdownIconContainer {

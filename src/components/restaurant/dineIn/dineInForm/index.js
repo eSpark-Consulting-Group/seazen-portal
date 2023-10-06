@@ -22,7 +22,7 @@ const DineInForm = ({
   handleSpecialRequirementsChange,
   handleSubmit,
 }) => {
-  const customStyles = {
+  const style = {
     control: (baseStyles, state) => ({
       ...baseStyles,
       borderColor: state.isFocused ? "#C0CDD7" : "#C0CDD7",
@@ -88,7 +88,7 @@ const DineInForm = ({
                 required
               />
               <input
-                className={styles.lastNameInput}
+                className={styles.firstNameInput}
                 type="text"
                 name="lastName"
                 placeholder="Last Name"
@@ -97,9 +97,11 @@ const DineInForm = ({
                 required
               />
             </div>
-            <div className={styles.dineInFormContactDetailsPhonenumberContainer}>
+            <div
+              className={styles.dineInFormContactDetailsPhonenumberContainer}
+            >
               <input
-                className={styles.countryCodeInput}
+                className={styles.firstNameInput}
                 type="text"
                 name="CountryCode"
                 placeholder="+965"
@@ -108,7 +110,7 @@ const DineInForm = ({
                 required
               />
               <input
-                className={styles.phoneNumberInput}
+                className={styles.firstNameInput}
                 type="text"
                 name="PhoneNumber"
                 placeholder="Mobile Number"
@@ -130,7 +132,7 @@ const DineInForm = ({
                 value={selectBranch}
                 options={dummy_options}
                 onChange={handleChangeSelectBranch}
-                styles={customStyles}
+                styles={style}
                 getOptionLabel={(e) => (
                   <div
                     style={{
@@ -154,7 +156,7 @@ const DineInForm = ({
                 value={seatingArea}
                 options={dummy_options}
                 onChange={handleChangeSeatingArea}
-                styles={customStyles}
+                styles={style}
                 getOptionLabel={(e) => (
                   <div
                     style={{
@@ -178,7 +180,7 @@ const DineInForm = ({
                 value={numberOfPersons}
                 options={dummy_options}
                 onChange={handleChangeNumberOfPersons}
-                styles={customStyles}
+                styles={style}
                 getOptionLabel={(e) => (
                   <div
                     style={{

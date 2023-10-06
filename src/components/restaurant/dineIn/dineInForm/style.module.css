@@ -135,14 +135,14 @@
   color: #959fa8;
   resize: none;
 }
-.countryCodeInput {
+/* .countryCodeInput {
   width: 160px;
   height: 52px;
   background: #fafafa 0% 0% no-repeat padding-box;
   border: 1px solid #c0cdd7;
   border-radius: 12px;
   opacity: 1;
-}
+} */
 
 .countryCodeInput:focus {
   outline: none;

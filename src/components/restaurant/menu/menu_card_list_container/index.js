@@ -24,102 +24,95 @@ const MenuCardListContainer = () => {
 
   return (
     <div>
-    <div className={`${styles.menuCardListOuterContainer} px-3 px-sm-4 pt-3 pt-sm-4 pb-5`}>
-      <div className={styles.menuCardListInnerContainer}>
-        <div
-          className={`${styles.cardListTitleSearchContainer} ${
-            isSearchOpen ? styles.expanded_search : ""
-          }`}
-        >
-          <div className={styles.cardListTitle}>
-            {searchParams.get("category") || "Burrito in a Bowl"}
-          </div>
-          <div className={`${styles.search} ${isSearchOpen ? styles.expanded_search : ""}`}>
+      <div
+        className={`${styles.menuCardListOuterContainer} px-3 px-sm-4 pt-3 pt-sm-4 pb-5`}
+      >
+        <div className={styles.menuCardListInnerContainer}>
+          <div
+            className={`${styles.cardListTitleSearchContainer} ${
+              isSearchOpen ? styles.expanded_search : ""
+            }`}
+          >
+            <div className={styles.cardListTitle}>
+              {searchParams.get("category") || "Burrito in a Bowl"}
+            </div>
             <div
-              className={`${styles.searchwrapper} ${
+              className={`${styles.search} ${
                 isSearchOpen ? styles.expanded_search : ""
               }`}
             >
-              <img
-                src="/assets/img/Icon - Search.svg"
-                alt="search_icon"
-                className={styles.searchIcon}
-                onClick={toggleSearch}
-              />
-              <input
-                type="text"
-                placeholder="Search"
-                className={`${styles.searchbar} ${isSearchOpen ? styles.expanded_search : ""}`}
-              />
+              <div
+                className={`${styles.searchwrapper} ${
+                  isSearchOpen ? styles.expanded_search : ""
+                }`}
+              >
+                <img
+                  src="/assets/img/Icon - Search.svg"
+                  alt="search_icon"
+                  className={styles.searchIcon}
+                  onClick={toggleSearch}
+                />
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className={`${styles.searchbar} ${
+                    isSearchOpen ? styles.expanded_search : ""
+                  }`}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <Stack spacing={1.5}>
-          <MenuCard
-            foodItem={foodItem}
-            foodIngredients={foodIngredients}
-            foodCurrency={foodCurrency}
-            foodPrice={foodPrice}
-            foodImage={foodImage}
-          />
-          <MenuCard
-            foodItem={foodItem}
-            foodIngredients={foodIngredients}
-            foodCurrency={foodCurrency}
-            foodPrice={foodPrice}
-            foodImage={foodImage}
-          />
-          <MenuCard
-            foodItem={foodItem}
-            foodIngredients={foodIngredients}
-            foodCurrency={foodCurrency}
-            foodPrice={foodPrice}
-            foodImage={foodImage}
-          />
-        </Stack>
+          <Stack spacing={1.5}>
+            <MenuCard
+              foodItem={foodItem}
+              foodIngredients={foodIngredients}
+              foodCurrency={foodCurrency}
+              foodPrice={foodPrice}
+              foodImage={foodImage}
+            />
+            <MenuCard
+              foodItem={foodItem}
+              foodIngredients={foodIngredients}
+              foodCurrency={foodCurrency}
+              foodPrice={foodPrice}
+              foodImage={foodImage}
+            />
+            <MenuCard
+              foodItem={foodItem}
+              foodIngredients={foodIngredients}
+              foodCurrency={foodCurrency}
+              foodPrice={foodPrice}
+              foodImage={foodImage}
+            />
+          </Stack>
 
-        
-
-        {/* <div className={styles.commentButtonContainer}>
+          {/* <div className={styles.commentButtonContainer}>
           <button>
             <img src="/assets/img/comment_icon.svg" alt="comment_icon" />
           </button>
         </div> */}
+        </div>
       </div>
-    </div>
-    <Box
-          sx={{
-            cursor: "pointer",
-            bottom: 0,
-            px: 2,
-            py: 1.5,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-            borderTopLeftRadius: (theme) => theme.spacing(2),
-            borderTopRightRadius: (theme) => theme.spacing(2),
-            backgroundColor: (theme) => theme.palette.themeColor.main,
-          }}
-          onClick={() => {
-            navigate(paths.cart);
-          }}
-        >
-          <Stack direction="row" alignItems="center" spacing={1.5}>
-            <Box
-              sx={{
-                py: 0.5,
-                px: 2,
-                borderRadius: 1,
-                backgroundColor: (theme) => theme.palette.themeColor.light,
-              }}
-            >
-              0
-            </Box>
-            <Typography>Your Cart</Typography>
-          </Stack>
-
+      <Box
+        sx={{
+          cursor: "pointer",
+          bottom: 0,
+          px: 2,
+          py: 1.5,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "100%",
+          borderTopLeftRadius: (theme) => theme.spacing(2),
+          borderTopRightRadius: (theme) => theme.spacing(2),
+          backgroundColor: (theme) => theme.palette.themeColor.main,
+        }}
+        onClick={() => {
+          navigate(paths.cart);
+        }}
+      >
+        <Stack direction="row" alignItems="center" spacing={1.5}>
           <Box
             sx={{
               py: 0.5,
@@ -128,10 +121,23 @@ const MenuCardListContainer = () => {
               backgroundColor: (theme) => theme.palette.themeColor.light,
             }}
           >
-            KWD 0.00
+            0
           </Box>
+          <Typography>Your Cart</Typography>
+        </Stack>
+
+        <Box
+          sx={{
+            py: 0.5,
+            px: 2,
+            borderRadius: 1,
+            backgroundColor: (theme) => theme.palette.themeColor.light,
+          }}
+        >
+          KWD 0.00
         </Box>
-        </div>
+      </Box>
+    </div>
   );
 };
 

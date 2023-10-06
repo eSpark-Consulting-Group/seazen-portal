@@ -33,7 +33,7 @@ const MenuItems = () => {
       <div className={styles.menuItemInnerContainer}>
         <div className={styles.menuDropdownContainer}>
           <Dropdown>
-            <Dropdown.Toggle 
+            <Dropdown.Toggle
               variant="success"
               className={styles.dropdownToggle}
               id="dropdown-basic"

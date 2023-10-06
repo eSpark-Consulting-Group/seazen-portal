@@ -36,12 +36,12 @@
 }
 
 /* .searchBarPlaceholder */
-.searchBarPlaceholder {
+.searchBar::placeholder {
   font: normal normal normal 15px Titillium Web;
 }
 
 /* .searchBarFocus */
-.searchBarFocus {
+.searchBar:focus {
   border: 1px solid #fdfcfc;
 }
 
@@ -51,7 +51,7 @@
 }
 
 /* .searchExpanded.element */
-.searchExpandedElement {
+.searchExpanded .element {
   transform: translateX(-100%);
 }
 

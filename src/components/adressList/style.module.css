@@ -122,12 +122,12 @@
   opacity: 1;
   margin-bottom: 0px;
 }
-.additionalAddresses {
+/* .additionalAddresses {
   font-size: 6px;
   font-weight: 300;
   color: #40484e;
   margin-top: 5px;
-}
+} */
 
 .addressesDetails {
   top: 35px;

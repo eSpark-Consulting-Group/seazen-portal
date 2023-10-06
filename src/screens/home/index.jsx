@@ -15,9 +15,9 @@ const Home = () => {
         <Slider />
       </div>
       <RestaurantsOrderTypeButton />
-     {/* <BasicCard /> */}
+      {/* <BasicCard /> */}
       <DraggableSlider />
-      <Footer showFooterSection={true}/>
+      <Footer showFooterSection={true} />
     </div>
   );
 };
