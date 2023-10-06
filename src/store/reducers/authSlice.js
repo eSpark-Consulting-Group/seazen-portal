@@ -22,9 +22,9 @@ const authSlice = createSlice({
   },
   reducers: {
     addToken: (state, action) => {
-      state.token = action.payload
+      state.token = action.payload;
     },
-  }
+  },
 });
 
 export const { addToken } = authSlice.actions;

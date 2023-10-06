@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Navbar, { NavbarVariants } from "../../components/header";
@@ -8,6 +8,9 @@ import { MuiOtpInput } from "mui-one-time-password-input";
 import { Footer } from "../../components/footer/footerContent";
 import { paths } from "../../routes/paths";
 import InfoModal from "../../components/modal/InfoModal";
+import { useMutation } from "@tanstack/react-query";
+import verifyOTP from "../../api/customer/verifyOTP";
+import resendOTP from "../../api/customer/resendOTP";
 
 const MODAL_INFO_TYPE = {
   INVALID_OTP: "invalid-otp",
@@ -17,6 +20,8 @@ const MODAL_INFO_TYPE = {
 function PhoneNumberVerificationOTP() {
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+
   const [otpTimeout, setOtpTimeout] = React.useState(60);
   const [infoType, setInfoType] = React.useState(MODAL_INFO_TYPE.INVALID_OTP);
   const [open, setOpen] = React.useState(false);
@@ -24,14 +29,31 @@ function PhoneNumberVerificationOTP() {
 
   const handleChange = (otp) => {
     setOtp(otp);
-    if (otp.length === 6) {
-      navigate(paths.home);
-    }
   };
+
+  const { mutate: verifyOtp } = useMutation({
+    mutationFn: verifyOTP,
+    onSuccess: (data) => {
+      navigate(paths.customer_registration);
+    },
+    onError: (error) => {
+      setInfoType(MODAL_INFO_TYPE.INVALID_OTP);
+      setOpen(true);
+    },
+  });
+
+  const { mutate: resendOtp } = useMutation({
+    mutationFn: resendOTP,
+    onSuccess: (data) => {
+      setOtpTimeout(60);
+      setOpen(false);
+      setOtp("");
+    },
+  });
 
   useEffect(() => {
     if (otpTimeout > 0) {
-      let timer1 = setTimeout(() => setOtpTimeout(otpTimeout - 1), 100);
+      let timer1 = setTimeout(() => setOtpTimeout(otpTimeout - 1), 1000);
 
       return () => {
         clearTimeout(timer1);
@@ -40,9 +62,11 @@ function PhoneNumberVerificationOTP() {
   }, [otpTimeout]);
 
   const validateOTP = () => {
-    setOtpTimeout(60);
-    setInfoType(MODAL_INFO_TYPE.INVALID_OTP);
-    setOpen(true);
+    const mobile_country_code = "+" + searchParams.get("mobile_country_code");
+    const mobile_number = searchParams.get("mobile_number");
+
+    console.log(mobile_country_code, mobile_number, otp, searchParams);
+    verifyOtp({ mobile_country_code, mobile_number, otp });
   };
 
   useEffect(() => {
@@ -123,9 +147,11 @@ function PhoneNumberVerificationOTP() {
               },
             }}
             onClick={() => {
-              setOtpTimeout(60);
-              setOpen(false);
-              setOtp("");
+              resendOtp({
+                mobile_country_code:
+                  "+" + searchParams.get("mobile_country_code"),
+                mobile_number: searchParams.get("mobile_number"),
+              });
             }}
           >
             Resend OTP
@@ -145,9 +171,10 @@ function PhoneNumberVerificationOTP() {
         }
         actionButtonLabel="Resend OTP"
         actionButtonOnClick={() => {
-          setOtpTimeout(60);
-          setOpen(false);
-          setOtp("");
+          resendOtp({
+            mobile_country_code: "+" + searchParams.get("mobile_country_code"),
+            mobile_number: searchParams.get("mobile_number"),
+          });
         }}
       />
     </>

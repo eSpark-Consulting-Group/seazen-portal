@@ -1,5 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Navbar, { NavbarVariants } from "../../components/header";
@@ -7,12 +12,56 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { Footer } from "../../components/footer/footerContent";
 import { paths } from "../../routes/paths";
+import customerRegistration from "../../api/customer/customerRegistration";
 
 function PhoneNumberVerificationIndex() {
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+
+  const [mobileCountryCode, setMobileCountryCode] = React.useState("");
+  const [mobileNumber, setMobileNumber] = React.useState("");
+
+  const handleChange = (event) => {
+    const { id, value } = event.target;
+
+    if (id === "country-code") {
+      setMobileCountryCode(value);
+    } else if (id === "phone-number") {
+      setMobileNumber(value);
+    }
+  };
+
   const sendOTP = () => {
-    navigate(paths.phone_verification_otp);
+    // remove + from mobileCountryCode
+    const mobileCountryCodeWithoutPlus = mobileCountryCode.substring(1);
+
+    // navigate with query params
+    navigate(
+      paths.phone_verification_otp +
+        "?" +
+        createSearchParams({
+          mobile: mobileNumber,
+          mobile_country_code: mobileCountryCodeWithoutPlus,
+        })
+    );
+  };
+
+  const { mutate: registration, isLoading } = useMutation({
+    mutationFn: customerRegistration,
+    onSuccess: (data) => {
+      sendOTP();
+    },
+  });
+
+  const handleCustomerRegistration = () => {
+    registration({
+      first_name: searchParams.get("first_name"),
+      last_name: searchParams.get("last_name"),
+      email: searchParams.get("email"),
+      mobile_number: mobileNumber,
+      mobile_country_code: mobileCountryCode,
+    });
   };
 
   return (
@@ -51,6 +100,8 @@ function PhoneNumberVerificationIndex() {
               sx={{
                 flex: 1,
               }}
+              value={mobileCountryCode}
+              onChange={handleChange}
             />
 
             <TextField
@@ -61,10 +112,17 @@ function PhoneNumberVerificationIndex() {
               sx={{
                 flex: 3,
               }}
+              value={mobileNumber}
+              onChange={handleChange}
             />
           </Stack>
 
-          <Button size="large" variant="contained" onClick={sendOTP}>
+          <Button
+            size="large"
+            variant="contained"
+            onClick={handleCustomerRegistration}
+            disabled={isLoading}
+          >
             Continue
           </Button>
 
