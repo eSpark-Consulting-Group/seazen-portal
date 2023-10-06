@@ -11,7 +11,7 @@ import { CircularProgress } from "@mui/material";
 import { resetCart } from "../../../../store/reducers/cartSlice.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const MenuCardListContainer = () => {
+const MenuCardListContainer = ({itemCategoryList}) => {
   const navigate = useNavigate();
   const originalCartTotal = useSelector((state) => state.cart.total);
   const cartTotal = originalCartTotal < 0 ? 0 : originalCartTotal;
@@ -42,7 +42,7 @@ const MenuCardListContainer = () => {
   const getCategoryName = () => {
     let category = searchParams.get("category");
     if (category) {
-      return categoryList?.find((item) => item.id === category)?.name_en;
+      return itemCategoryList?.find((item) => item.id == category)?.name_en;
     }
     return "All";
   };

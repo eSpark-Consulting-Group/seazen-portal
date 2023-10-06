@@ -70,7 +70,7 @@ const DeliveryConditionalComponent = ({
       <DeliveryDetails />
       {locationDeliver && <ErrorInformation errorMessage={errorMessage} />}
       <MenuItems itemDetail={itemDetail} itemCategoryList={itemCategoryList} />
-      <MenuCardListContainer itemDetail={itemDetail} />
+      <MenuCardListContainer itemDetail={itemDetail} itemCategoryList={itemCategoryList} />
     </>
   );
 };
