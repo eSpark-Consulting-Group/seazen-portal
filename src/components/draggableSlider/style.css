@@ -88,7 +88,9 @@ body {
 
 .caption-image {
   padding-top: 74px;
-  padding-left: 16px;
+  /* padding-left: 16px; */
+  display: flex;
+  margin: auto;
 }
 
 .caption-image img {
@@ -122,11 +124,11 @@ body {
   /* bottom: -6px; */
 }
 
-.first-card-caption-image {
+/* .first-card-caption-image {
   padding-top: 74px;
-}
+} */
 
-.third-card-caption-image {
+/* .third-card-caption-image {
   padding-top: 74px;
-  /* padding-left: 38px; */
-}
+  padding-left: 38px;
+} */

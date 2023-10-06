@@ -57,7 +57,7 @@ export default function IconPositionTabs({
       value={value}
       onChange={handleChange}
       aria-label="options tabs"
-      TabIndicatorProps={{ sx: { backgroundColor: "#323F4B" } }}
+      TabIndicatorProps={{ sx: { backgroundColor: "#323F4B",  overflow:"visible", } }}
       sx={{
         backgroundColor: (theme) =>
           lighten(theme.palette.themeColor.light, 0.95),
@@ -73,6 +73,7 @@ export default function IconPositionTabs({
           fontWeight: "700",
         },
         "& button.Mui-selected": { color: "#323F4B" },
+        "& .MuiTabs-scroller":{overflow:"visible !important"}
       }}
     >
       <Tab
@@ -81,7 +82,7 @@ export default function IconPositionTabs({
         }}
         iconPosition="start"
         label={
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center"  }}>
             <DineInIcon />
             <span style={{ marginLeft: "8px", fontWeight: 600 }}>Dine In</span>
           </div>
@@ -93,7 +94,7 @@ export default function IconPositionTabs({
           minWidth: "80px",
           color: "#323F4B",
           minHeight: "38px",
-          marginRight: "8px",
+          // marginRight: "8px",
         }}
       />
       <Tab
@@ -114,7 +115,7 @@ export default function IconPositionTabs({
           minWidth: "80px",
           color: "#323F4B",
           minHeight: "38px",
-          marginRight: "8px",
+          // marginRight: "8px",
         }}
       />
       <Tab
@@ -135,7 +136,7 @@ export default function IconPositionTabs({
           minWidth: "80px",
           color: "#323F4B",
           minHeight: "38px",
-          marginRight: "8px",
+          // marginRight: "8px",
         }}
       />
       <Tab

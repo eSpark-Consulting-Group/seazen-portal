@@ -134,16 +134,16 @@ export const Details = () => {
   };
 
   const getCartItemPrice = () => {
-    return `+KWD ${Number(cartItem?.price).toFixed(2)}`;
+    return `+KWD ${Number(cartItem?.price).toFixed(3)}`;
   };
 
   // i-e KWD 1.750 => 1.750 as a number
   const menuItemPriceWithoutCurrency = () => {
-    return Number(menuItemDetails?.data?.price?.split(" ")[1]).toFixed(2);
+    return Number(menuItemDetails?.data?.price?.split(" ")[1]).toFixed(3);
   };
 
   const getFormattedPrice = (price) => {
-    return `+KWD ${Number(price).toFixed(2)}`;
+    return `+KWD ${Number(price).toFixed(3)}`;
   };
 
   const checkIfToppingIsAdded = (name_en) => {
@@ -240,7 +240,7 @@ export const Details = () => {
         // If the topping doesn't exist, add it with quantity 1
         return [
           ...prevToppingVariant,
-          { ...option, option_id: option.id, quantity: 1 }
+          { ...option, option_id: option.id, quantity: 1 },
         ];
       }
     });
@@ -284,7 +284,7 @@ export const Details = () => {
       return {
         option_id: val.id,
         option_quantity:
-          val.id == (optionId[index] || optionId) ? quantity || 1 : 0
+          val.id == (optionId[index] || optionId) ? quantity || 1 : 0,
       };
     });
     return dataOptions;
@@ -297,19 +297,22 @@ export const Details = () => {
   };
 
   const addToCartApiHandler = (cartItem) => {
-    const sideVariant = cartItem.variants?.sideVariant[0]?.variantId
-    const sizeVariant = cartItem.variants?.sizeVariant?.variantId
-    const toppingVariant = cartItem.variants?.toppingVariant[0]?.variantId
+    const sideVariant = cartItem.variants?.sideVariant[0]?.variantId;
+    const sizeVariant = cartItem.variants?.sizeVariant?.variantId;
+    const toppingVariant = cartItem.variants?.toppingVariant[0]?.variantId;
 
     const cartItemDataForApi = {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
       quantity: cartItem.quantity,
-      cart_id: cartItem.cart_id || '5',
+      cart_id: cartItem.cart_id || "5",
       topping_variant_id: toppingVariant,
       side_variant_id: sideVariant,
       size_variant_id: sizeVariant,
-      size_variant: variantsForApi(sizeVariant, cartItem.variants?.sizeVariant?.id),
+      size_variant: variantsForApi(
+        sizeVariant,
+        cartItem.variants?.sizeVariant?.id
+      ),
       topping_variant: variantsForApi(
         toppingVariant,
         getSelectedItemsIds(cartItem.variants?.toppingVariant),
@@ -318,23 +321,21 @@ export const Details = () => {
       side_variant: variantsForApi(
         sideVariant,
         getSelectedItemsIds(cartItem.variants?.sideVariant)
-      )
+      ),
     };
 
-    if(checkIfItemIsInCart()){
+    if (checkIfItemIsInCart()) {
       updateCartApiCall(cartItemDataForApi, token)
-      .then((res) => {
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {})
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       addToCartApiCall(cartItemDataForApi, token)
-      .then((res) => {
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {})
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -365,7 +366,7 @@ export const Details = () => {
         toppingVariant: toppingVariant,
         sideVariant: sideVariant,
       },
-      totalPrice: Number(totalPrice).toFixed(2),
+      totalPrice: Number(totalPrice).toFixed(3),
       specialInstructions: specialInstructions,
       itemImage: data?.image,
       restaurant_id: data.restaurant_id,
@@ -381,7 +382,7 @@ export const Details = () => {
       };
 
       dispatch(updateCartItem(ItemDataObject));
-      addToCartApiHandler(ItemDataObject)
+      addToCartApiHandler(ItemDataObject);
       navigate(paths.cart);
     } else {
       const item_code = uuidv4();
@@ -392,13 +393,13 @@ export const Details = () => {
       };
 
       dispatch(addToCart(ItemDataObject));
-      addToCartApiHandler(ItemDataObject)
+      addToCartApiHandler(ItemDataObject);
       navigate(-1);
     }
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
     // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));
     // dispatch(addExtraSides({ id: id, extraSides: sideVariant }));
-  }; 
+  };
 
   return (
     <div>
@@ -417,18 +418,22 @@ export const Details = () => {
               right: 3 * 8,
               backgroundColor: (theme) => theme.palette.themeColor.main,
               color: "white",
-              px: 2,
-              py: 1,
               borderRadius: "12px",
               zIndex: 1,
+              width: "121px",
+              height: "35px",
+              display: "flex",
+              justifyContent: "center",
+              paddingTop: "6px",
             }}
           >
-            <Typography variant="body1" component="div">
+            <Typography variant="body1" component="div" >
               <Typography
                 variant="subtitle2"
                 component="sup"
                 sx={{
                   mr: 0.5,
+                  fontWeight: "400",
                 }}
               >
                 KWD
@@ -473,6 +478,7 @@ export const Details = () => {
                   component="div"
                   sx={{
                     marginLeft: "12px !important",
+                    fontWeight: "normal",
                   }}
                 >
                   {menuItemDetails?.data?.description_en}
@@ -556,7 +562,6 @@ export const Details = () => {
                                 isLastItem
                                   ? "#e0e0e0"
                                   : "", // Apply grey background to last item in Extra Topping section
-                                  
                             }}
                           >
                             <FormControlLabel
@@ -582,7 +587,6 @@ export const Details = () => {
                               label={option?.name_en}
                               disabled={
                                 variant.name_en === "Extra Topping" &&
-                                isLastItem &&
                                 !checkIfToppingIsAdded(option?.name_en)
                               }
                             />
@@ -592,12 +596,12 @@ export const Details = () => {
                                 style={{
                                   fontSize: "10px",
                                   paddingTop: "5px",
-                                  
+
                                   marginRight:
-                                variant.name_en === "Extra Topping" &&
-                                isLastItem
-                                  ? "160px"
-                                  : "90px", // Apply grey background to last item in Extra Topping section
+                                    variant.name_en === "Extra Topping" &&
+                                    isLastItem
+                                      ? "160px"
+                                      : "90px", 
                                 }}
                               >{`(Each +KWD ${option?.unit_price})`}</p>
                             )}
@@ -605,7 +609,6 @@ export const Details = () => {
                             {variant.name_en === "Extra Topping" &&
                             !isLastItem ? (
                               <IncDec
-                              
                                 IncButtonProps={{
                                   disabled:
                                     getExtraToppingQuantity(option) >= 7,
@@ -668,7 +671,7 @@ export const Details = () => {
                 border: "none", // Remove the border
               },
               background: "#FAFAFA 0% 0% no-repeat padding-box",
-              bordeRadius: "16px",
+              borderRadius: "16px",
             }}
             onChange={handleSpecialInstructionsChange}
             fullWidth
@@ -720,7 +723,7 @@ export const Details = () => {
                   },
                 }}
                 DecButtonProps={{
-                  disabled: quantity === 0,
+                  // disabled: quantity === 0,
                   sx: {
                     color: "common.white",
                     backgroundColor: (theme) => theme.palette.themeColor.light,
@@ -776,7 +779,7 @@ export const Details = () => {
                   color: "white",
                 }}
               >
-                +KWD {Number(totalPrice).toFixed(2)}
+                +KWD {Number(totalPrice).toFixed(3)}
               </Typography>
             </Button>
           </Stack>

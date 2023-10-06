@@ -70,7 +70,7 @@ export default function App() {
               caption={info.name_en}
               captionImage={info.logo}
               additionalText={info.currency_code}
-              inlineText={info.price.toFixed(2)}
+              inlineText={info.price.toFixed(3)}
               isFirstCard={index === 0}
             />
           );
