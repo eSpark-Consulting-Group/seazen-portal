@@ -19,14 +19,18 @@ const authSlice = createSlice({
     isAuthenticated: false,
     isLoading: false,
     error: null,
+    country: {}
   },
   reducers: {
     addToken: (state, action) => {
       state.token = action.payload
     },
+    addCountry: (state, action) => {
+      state.country = action.payload
+    },
   }
 });
 
-export const { addToken } = authSlice.actions;
+export const { addToken, addCountry } = authSlice.actions;
 
 export default authSlice.reducer;

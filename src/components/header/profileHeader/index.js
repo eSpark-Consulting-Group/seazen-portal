@@ -6,6 +6,7 @@ import countryList from "../../../api/common/getAllCountries";
 import { useDispatch, useSelector } from "react-redux";
 import { resetCart } from "../../../store/reducers/cartSlice";
 import clearCart from "../../../api/cart/clearCart";
+import { addCountry } from "../../../store/reducers/authSlice";
 
 const ProfileHeader = (props) => {
   const { showFlagOption } = props;
@@ -40,6 +41,7 @@ const ProfileHeader = (props) => {
     clearCartItems()
     setCurrentFlag(selectedCountry.flag);
     localStorage.setItem("country", JSON.stringify(selectedCountry))
+    dispatch(addCountry(selectedCountry));
     setIsCountryPopupOpen(false);
   };
 

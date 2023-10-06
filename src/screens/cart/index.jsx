@@ -128,16 +128,17 @@ function CartPage() {
     }
   }, []);
 
+  const country = useSelector((state) => state.auth.country);
+
   useEffect(() => {
     cartRefetch();
     getRestaurantLogo(cart[0]?.restaurant_id)
-  }, []);
+  }, [country]);
 
   const getRestaurantLogo = (restaurantId) => {
-    const country = JSON.parse(localStorage.getItem("country"))
     setTimeout(() => {
       if(restaurantId) {
-        getRestaurantDetails(restaurantId, country.id)
+        getRestaurantDetails(restaurantId, country?.id)
         .then((res) => {
           setRestaurantLogo(res.data.logo);
         })

@@ -6,6 +6,7 @@ import getAllPopularItems, {
 import "./style.css";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
+import { useSelector } from "react-redux";
 
 export default function App() {
   const imageInfo = [
@@ -31,20 +32,25 @@ export default function App() {
       inlineText: "6.450",
     },
   ];
-  const country = JSON.parse(localStorage.getItem("country"))
+  const country = useSelector((state) => state.auth.country);
 
   const {
     data: popularDishesResponse,
     isLoading,
     error,
     isError,
+    refetch
   } = useQuery({
     queryKey: [GET_ALL_POPULAR_ITEMS_QUERY_KEY],
-    queryFn: () => getAllPopularItems(country.id),
+    queryFn: () => getAllPopularItems(country?.id),
     onSuccess: (data) => {
       console.log("data", data);
     },
   });
+
+  useEffect(() => {
+    refetch()
+  },[country])
 
   const { data: popularDishes } = popularDishesResponse || {};
 

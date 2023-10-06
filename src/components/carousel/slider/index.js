@@ -5,6 +5,7 @@ import './style.css';
 import { useEffect } from "react";
 import getAllRestaurantsBanner from "../../../api/home/getAllRestaurantsBanner";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const slides = [
   { src: "/assets/img/slider1.png", alt: "Slide 1" },
@@ -17,9 +18,10 @@ const slides = [
 const Slider = () => {
 
   const [restaurantBanner, setRestaurantBanner] = useState([]);
-  const country = JSON.parse(localStorage.getItem("country"));
+  const country = useSelector((state) => state.auth.country);
   useEffect(() => {
-    getAllRestaurantsBanner(country.id)
+    if(country){
+      getAllRestaurantsBanner(country?.id)
       .then((res) => {
         setRestaurantBanner(res.data);
         console.log(res);
@@ -27,7 +29,8 @@ const Slider = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+    }
+  }, [country]);
   return (
     <div className="hover-slider">
       <Carousel
