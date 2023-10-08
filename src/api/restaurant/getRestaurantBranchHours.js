@@ -12,7 +12,7 @@ const getRestaurantBranchHours = async (restaurantId) => {
       API_ENDPOINTS.RESTAURANT.GET_RESTAURANT_DETAIL +
         `${restaurantId}` +
         "/branches" +
-        "/?language=en"
+        "?language=en"
     );
     return data;
   } catch (error) {
