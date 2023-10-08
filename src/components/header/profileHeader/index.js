@@ -15,17 +15,19 @@ const ProfileHeader = (props) => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isCountryPopupOpen, setIsCountryPopupOpen] = useState(false);
   const [currentFlag, setCurrentFlag] = useState("/assets/img/flag1.svg"); // Default flag
+  const [currentCountryName, setCountryName] = useState("Kuwait"); // Default flag
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
-   const isCountry = localStorage.getItem("country")
-   if(isCountry){
-    setCurrentFlag(JSON.parse(isCountry).flag);
-   }
-    fetchAllCountries()
-  }, [])
+    const isCountry = localStorage.getItem("country");
+    if (isCountry) {
+      setCurrentFlag(JSON.parse(isCountry).flag);
+      setCountryName(JSON.parse(isCountry).name_en);
+    }
+    fetchAllCountries();
+  }, []);
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -34,42 +36,49 @@ const ProfileHeader = (props) => {
   const toggleCountryPopup = (country) => {
     setSelectedCountry(country);
     setIsPopupOpen(false); // Close the first popup
-    setIsCountryPopupOpen(!isCountryPopupOpen);
+    if(country.name_en !== currentCountryName){
+      setIsCountryPopupOpen(!isCountryPopupOpen);
+    }
   };
 
   const handleConfirmCountryChange = () => {
-    clearCartItems()
+    clearCartItems();
     setCurrentFlag(selectedCountry.flag);
-    localStorage.setItem("country", JSON.stringify(selectedCountry))
+    setCountryName(selectedCountry.name_en);
+    localStorage.setItem("country", JSON.stringify(selectedCountry));
     dispatch(addCountry(selectedCountry));
     setIsCountryPopupOpen(false);
   };
 
   const fetchAllCountries = () => {
-    countryList().then((res) => {
-      setCountries(res.data)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
-  
+    countryList()
+      .then((res) => {
+        setCountries(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const clearCartItems = () => {
     dispatch(resetCart());
-    clearCart(token).then((res) => {
-      console.log(res)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
+    clearCart(token)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <nav className="profile-header">
       <div
         className="profileHeaderaccount"
-        onClick={()=>navigate(paths.home)}
+        onClick={() => navigate(paths.home)}
       >
-        <div className="profileHeaderaccount-icon" >
-          <img src="/assets/img/Group 330.svg" alt="Account Icon"/>
+        <div className="profileHeaderaccount-icon">
+          <img src="/assets/img/Group 330.svg" alt="Account Icon" />
         </div>
       </div>
       <div className="profileHeaderlogo">
@@ -89,7 +98,7 @@ const ProfileHeader = (props) => {
           {isPopupOpen && (
             <div className="profileHeaderpopup">
               <div>
-                <div className="profileHeaderpopup-heading" >
+                <div className="profileHeaderpopup-heading">
                   <h2>Select which country to order from</h2>
                 </div>
               </div>
@@ -101,7 +110,9 @@ const ProfileHeader = (props) => {
                     onClick={() => toggleCountryPopup(country)}
                   >
                     <img src={country.flag} alt={country.name_en} />
-                    <p className="profileHeadercountry-name">{country.name_en}</p>
+                    <p className="profileHeadercountry-name">
+                      {country.name_en}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -126,15 +137,26 @@ const ProfileHeader = (props) => {
               <div className="profileHeaderselected-country">
                 <div className="profileHeadercountry-info">
                   <img src={currentFlag} alt="Current Flag" />
-                  <h2>Kuwait</h2>
+                  <h2>
+                    {currentCountryName === "United Arab Emirates"
+                      ? "UAE"
+                      : currentCountryName}
+                  </h2>
                 </div>
                 <img
                   className="profileHeadergreater-sign"
                   src="/assets/img/sign.svg"
                 ></img>
                 <div className="profileHeadercountry-info">
-                  <img src={selectedCountry.flag} alt={selectedCountry.name_en} />
-                  <h2>{selectedCountry.name_en}</h2>
+                  <img
+                    src={selectedCountry.flag}
+                    alt={selectedCountry.name_en}
+                  />
+                  <h2>
+                    {selectedCountry.name_en === "United Arab Emirates"
+                      ? "UAE"
+                      : selectedCountry.name_en}
+                  </h2>
                 </div>
               </div>
               <br></br>
