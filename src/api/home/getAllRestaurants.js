@@ -5,11 +5,11 @@ import { handleApiError } from "../utils/errorHandling";
 export const GET_ALL_RESTAURANTS_QUERY_KEY =
   "get_all_restaurants_query_key";
 
-const getAllRestaurants = async () => {
+const getAllRestaurants = async (country_id) => {
   try {
     // Make the GET request to fetch all restaurants.
     const { data } = await axiosInstance.get(
-      API_ENDPOINTS.HOME.GET_ALL_RESTAURANT + "?country_id=3"
+      API_ENDPOINTS.HOME.GET_ALL_RESTAURANT + "?country_id=" + country_id
     );
     return data;
   } catch (error) {

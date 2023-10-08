@@ -8,7 +8,7 @@ import getListItemByCategory, {
   GET_CATEGORY_LIST_ITEM,
 } from "../../../../../api/restaurant/getListItemsByCategory";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCategoryItemList } from "../../../../../store/reducers/resturantsSlice";
 import getItemCategoryList, {
   GET_ITEM_CATEGORY_LIST,
@@ -24,12 +24,14 @@ const DeliveryConditionalComponent = ({
   errorMessage,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const country = useSelector((state) => state.auth.country);
 
   const {
     data: getAllItemsByCategoryResponse,
     isLoading: itemsByCategoryLoading,
     error: itemsByCategoryError,
     isError: itemsByCategoryIsError,
+    refetch
   } = useQuery({
     queryKey: [
       GET_CATEGORY_LIST_ITEM,
@@ -37,9 +39,14 @@ const DeliveryConditionalComponent = ({
       searchParams.get("category"),
     ],
     queryFn: () =>
-      getListItemByCategory(resturantId, searchParams.get("category")),
+      getListItemByCategory(resturantId, searchParams.get("category"), country?.id),
     onSuccess: (data) => {},
   });
+
+  useEffect(() => {
+    refetch()
+  },[country])
+  
   const {
     data: getItemsCategoryResponse,
     isLoading: ItemsCategoryLoading,
@@ -63,7 +70,7 @@ const DeliveryConditionalComponent = ({
       <DeliveryDetails />
       {locationDeliver && <ErrorInformation errorMessage={errorMessage} />}
       <MenuItems itemDetail={itemDetail} itemCategoryList={itemCategoryList} />
-      <MenuCardListContainer itemDetail={itemDetail} />
+      <MenuCardListContainer itemDetail={itemDetail} itemCategoryList={itemCategoryList} />
     </>
   );
 };

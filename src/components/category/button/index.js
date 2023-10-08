@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import getAllRestaurants, {
   GET_ALL_RESTAURANTS_QUERY_KEY,
 } from "../../../api/home/getAllRestaurants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getResturants } from "../../../store/reducers/resturantsSlice";
 import { useEffect } from "react";
 
@@ -125,6 +125,7 @@ const RestaurantsOrderTypeButton = () => {
   });
   const [orderTypeFilter, setOrderTypeFilter] = useState();
   const dispatch = useDispatch();
+  const country = useSelector((state) => state.auth.country);
 
   const handleButtonClickIndex = (index) => {
     if (index === clickedButtonIndex) {
@@ -140,9 +141,10 @@ const RestaurantsOrderTypeButton = () => {
     isLoading: resturantsDataLoading,
     error: resturantsDataError,
     isError: resturantsDataIsError,
+    refetch
   } = useQuery({
     queryKey: [GET_ALL_RESTAURANTS_QUERY_KEY],
-    queryFn: getAllRestaurants,
+    queryFn: () => getAllRestaurants(country.id),
 
     onSuccess: (data) => {},
   });
@@ -151,6 +153,10 @@ const RestaurantsOrderTypeButton = () => {
   useEffect(() => {
     dispatch(getResturants(restaurantsData));
   }, [restaurantsData]);
+  
+  useEffect(() => {
+    refetch()
+  }, [country]);
 
   const handleOrderTypeFilter = (
     deliveryFilter,
@@ -217,11 +223,13 @@ const RestaurantsOrderTypeButton = () => {
         })}
       </div>
       {/* Pass the clickedButtonIndex to BasicCard */}
-      <BasicCard
-        clickedButtonIndex={clickedButtonIndex}
-        orderTypeFilter={orderTypeFilter}
-        restaurantsData={restaurantsData}
-      />
+      {restaurantsData?.length > 0 && (
+        <BasicCard
+          clickedButtonIndex={clickedButtonIndex}
+          orderTypeFilter={orderTypeFilter}
+          restaurantsData={restaurantsData}
+        />
+      )}
     </>
   );
 };

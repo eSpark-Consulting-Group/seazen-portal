@@ -20,10 +20,11 @@ import getMenuItemDetails, {
 import { Divider, alpha } from "@mui/material";
 import IncDec from "../../components/Input/InputWithIncDec";
 import { AddShoppingCartRounded } from "@mui/icons-material";
-import { updateCartItem, addToCart } from "../../store/reducers/cartSlice";
+import { updateCartItem, addToCart, resetCart } from "../../store/reducers/cartSlice";
 import addToCartApiCall from "../../api/cart/addToCart";
 import { paths } from "../../routes/paths";
 import updateCartApiCall from "../../api/cart/updateCart";
+import clearCart from "../../api/cart/clearCart";
 
 export const Details = () => {
   const { id } = useParams();
@@ -42,6 +43,7 @@ export const Details = () => {
   const [totalPrice, setTotalPrice] = React.useState();
   const [specialInstructions, setSpecialInstructions] = React.useState("");
   const { search } = useLocation();
+  const restaurant_id = localStorage.getItem("restaurantID")
   const {
     data: menuItemDetails,
     isLoading,
@@ -49,7 +51,7 @@ export const Details = () => {
     isError,
   } = useQuery({
     queryKey: [GET_MENU_ITEM_DETAILS_QUERY_KEY],
-    queryFn: () => getMenuItemDetails(id, 1, 1),
+    queryFn: () => getMenuItemDetails(id, restaurant_id, restaurant_id),
     onSuccess: (data) => {
       console.log("data", data);
     },
@@ -337,8 +339,22 @@ export const Details = () => {
     }
   };
 
+  const clearCartItems = () => {
+    dispatch(resetCart());
+    clearCart(token).then((res) => {
+      console.log(res)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
+
+    if(cart.length > 0 && data.restaurant_id !== cart[0]?.restaurant_id){
+      clearCartItems()
+    }
+
     var ItemDataObject = {
       id: data?.id,
       itemName: data?.name_en,
