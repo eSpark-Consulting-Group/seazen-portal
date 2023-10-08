@@ -96,19 +96,17 @@
   height: 42px;
   background-color: #f0f0f0;
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   cursor: pointer;
   position: absolute;
   left: 263px;
-  top: 22px;
+  top: -27px;
   border: 1px solid #c0cdd7;
 }
 
 .profileHeadercircle-container img {
   width: 42px;
   height: 42px;
+  border-radius: 50%;
 }
 
 .profileHeaderpopup {
@@ -120,7 +118,9 @@
   padding: 20px;
   border-radius: 17px;
   z-index: 2; /* Place above the overlay */
-  bottom: -15px;
+  bottom: 0px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
 }
 .profileHeaderpopupWrapper {
   position: relative;
@@ -155,8 +155,8 @@
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 24px;
-  margin-left: 13px;
-  margin-right: -41px;
+  /* margin-left: 13px;
+  margin-right: -41px; */
 }
 
 .profileHeaderselected-country {
@@ -166,7 +166,7 @@
   padding-right: 24px;
   justify-content: space-between;
   padding-left: 47px;
-  padding-right: 40px;
+  padding-right: 43px;
 }
 
 .profileHeadercountry {
@@ -268,10 +268,11 @@
 .profileHeadercountry-info img {
   width: 42px;
   height: 42px;
+  border-radius: 50%;
 }
 
 .profileHeadercountry-info h2 {
-  margin-top: auto; /* Push the h2 element to the bottom */
+  padding-top: 2px; /* Push the h2 element to the bottom */
 }
 
 .profileHeadersymbol {
@@ -291,9 +292,9 @@
 }
 
 .profileHeadergreater-sign {
-  position: absolute;
-  top: 109px;
-  left: 163px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 20px;
   text-align: center;
   font: normal normal bold 24px/18px Montserrat;
   letter-spacing: 0px;
@@ -404,7 +405,6 @@
     left: 151px;
   }
 }
-
 
 @media screen and (max-width: 500px) and (min-width: 400px) {
   .profileHeaderlogo {

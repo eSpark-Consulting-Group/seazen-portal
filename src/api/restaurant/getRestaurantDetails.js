@@ -5,13 +5,13 @@ import { handleApiError } from "../utils/errorHandling";
 export const GET_RESTAURANT_DETAILS_QUERY_KEY =
   "get_restaurant_details_query_key";
 
-const getRestaurantDetails = async (restaurantId) => {
+const getRestaurantDetails = async (restaurantId, country_id) => {
   try {
     // Make the GET request to fetch restaurant details.
     const { data } = await axiosInstance.get(
       API_ENDPOINTS.RESTAURANT.GET_RESTAURANT_DETAIL +
         `${restaurantId}` +
-        "?country_id=3&language=en"
+        "?country_id=" + country_id + "&language=en"
     );
     return data;
   } catch (error) {

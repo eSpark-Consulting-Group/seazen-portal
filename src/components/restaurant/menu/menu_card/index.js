@@ -163,6 +163,7 @@ const MenuCard = ({
       alignItems="center"
       sx={{
         width: "100%",
+        marginTop: "10px"
       }}
     >
       <Stack

@@ -53,64 +53,64 @@ const images = [
   },
 ];
 
-const icons = [
-  {
+const icons = {
+  delivery_status: {
     id: 2,
     orderType: "delivery",
     image: deliveryIcon,
   },
-  {
+  pickup_status: {
     id: 3,
     orderType: "pickUp",
     image: pickupIcon,
   },
-  {
+  catering_status: {
     id: 1,
     orderType: "catering",
     image: cateringIcon,
   },
-  {
+  dinein_status: {
     id: 0,
     orderType: "dineIn",
     image: dineInIcon,
   },
-];
-
-export const restaurantThemeColor = {
-  "Restaurant 1": {
-    main: "#003964",
-    light: "#095371",
-  },
-  "Restaurant 2": {
-    main: "#424E1F",
-    light: "#596732",
-  },
-  "Restaurant 3": {
-    main: "#026754",
-    light: "#308979",
-    contrastText: "#fff",
-  },
-  "Restaurant 4": {
-    main: "#172931",
-    light: "#2E4A57",
-  },
-  "Restaurant 5": {
-    main: "#2A3549",
-    light: "#435067",
-  },
-  "Restaurant 6": {
-    main: "#0E1220",
-    light: "#293046",
-  },
-  // "Restaurant 7": {
-  //   main: "#101F4A",
-  //   light: "#101F4A",
-  // },
-  // "Restaurant 8": {
-  //   main: "#9C0B2A",
-  //   light: "#B51739",
-  // },
 };
+
+// export const restaurantThemeColor = {
+//   "Restaurant 1": {
+//     main: "#003964",
+//     light: "#095371",
+//   },
+//   "Restaurant 2": {
+//     main: "#424E1F",
+//     light: "#596732",
+//   },
+//   "Restaurant 3": {
+//     main: "#026754",
+//     light: "#308979",
+//     contrastText: "#fff",
+//   },
+//   "Restaurant 4": {
+//     main: "#172931",
+//     light: "#2E4A57",
+//   },
+//   "Restaurant 5": {
+//     main: "#2A3549",
+//     light: "#435067",
+//   },
+//   "Restaurant 6": {
+//     main: "#0E1220",
+//     light: "#293046",
+//   },
+//   // "Restaurant 7": {
+//   //   main: "#101F4A",
+//   //   light: "#101F4A",
+//   // },
+//   // "Restaurant 8": {
+//   //   main: "#9C0B2A",
+//   //   light: "#B51739",
+//   // },
+// };
 
 const BasicCard = ({
   clickedButtonIndex,
@@ -217,17 +217,33 @@ const BasicCard = ({
       }
     }
   };
+  const getServicesIcon = (serviceName) => {
+    return (
+      <div className="icon-row">
+      <img
+        className={getClassNameAccordingToFilter(
+          icons[serviceName].id,
+          images[1].service
+        )}
+        src={ icons[serviceName]?.image}
+        // alt={`Icon ${i + 1}`}
+        style={{ width: iconWidth, height: iconHeight }}
+      />
+    </div>
+    )
+  }
 
   // Define the width and height for the SVG icons
   const iconWidth = "7px";
   const iconHeight = "9px";
 
   const goToRestaurantMenuPage = (restaurant) => {
+    localStorage.setItem("restaurantID", restaurant)
     navigate(paths.menu + `/restaurant/${restaurant}`);
   };
   return (
     <div className="restaurantCard-container container-fluid">
-      {Object.keys(restaurantThemeColor).map((restaurant, index) => {
+      {restaurantsData.map((restaurant, index) => {
         if (restaurantsData && (index === 0 || index === 1)) {
           return (
             <div
@@ -243,12 +259,12 @@ const BasicCard = ({
                 }}
                 className="restaurantCards"
                 onClick={() => {
-                  goToRestaurantMenuPage(restaurantsData[index]?.id);
+                  goToRestaurantMenuPage(restaurant?.id);
                 }}
               >
                 <img
                   className="restaurantCard-img"
-                  src={restaurantsData[index]?.image}
+                  src={restaurant?.image}
                   alt={`Card ${index + 1}`}
                 />
                 <div
@@ -257,21 +273,10 @@ const BasicCard = ({
                   }`}
                 >
                   <div className="inner-svg-container">
-                    {captions[index].map((icon, i) => {
-                      return (
-                        <div key={i} className="icon-row">
-                          <img
-                            className={getClassNameAccordingToFilter(
-                              icon.id,
-                              images[index].service
-                            )}
-                            src={icon.image}
-                            alt={`Icon ${i + 1}`}
-                            style={{ width: iconWidth, height: iconHeight }}
-                          />
-                        </div>
-                      );
-                    })}
+                    {restaurant.catering_status && getServicesIcon("catering_status")}
+                    {restaurant.delivery_status && getServicesIcon("delivery_status")}
+                    {restaurant.dinein_status && getServicesIcon("dinein_status")}
+                    {restaurant.pickup_status && getServicesIcon("pickup_status")}
                   </div>
                 </div>
               </Card>

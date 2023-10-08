@@ -32,4 +32,20 @@
   }
 } */
 
+.promo-message-wrapper {
+  margin-top: 0px !important;
+  display: flex;
+  align-items: center;
+}
+.promo-message-wrapper p{
+  font-size: 12px;
+  margin: 0px !important;
+  color: green;
+}
+.promo-message-wrapper .promo-cancel-icon{
+  color: gray;
+  cursor: pointer;
+  margin-top: 4px;
+
+}
 
