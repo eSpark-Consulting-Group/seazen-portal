@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -28,15 +27,16 @@ const App = () => {
   const [open, setOpen] = useState(false);
   // const [isLoading, setIsloading] = useState(false);
 
-  // const fetchFunction = async () => {
-  //   getAllAddress(isToken).then((res) => {
-  //     if (res.success === "ok") {
-  //        dispatch(getAddress(res.data));
-  //     }
-  //    });
-  // }
+  const fetchFunction = async () => {
+    getAllAddress(isToken).then((res) => {
+      if (res.success === "ok") {
+        dispatch(getAddress(res.data));
+        setOpen(false);
+      }
+    });
+  };
 
-  const {isLoading, refetch} = useQuery({
+  const { isLoading, refetch } = useQuery({
     queryFn: () => getAllAddress(isToken),
     onSuccess: (data) => {
       dispatch(getAddress(data.data));
@@ -46,8 +46,7 @@ const App = () => {
   const deleteAddress = (id) => {
     deleteAddressApiCall(id, isToken).then((res) => {
       if (res.statusCode === 200) {
-        refetch();
-        setOpen(false);
+        fetchFunction();
       }
     });
   };

@@ -13,23 +13,24 @@
     text-align: center;
 }
 
-.progress-bar{
+.progress-bar {
     height: 530px;
     justify-content: center;
     align-items: center;
     display: flex;
 }
 
-.bar{
+.bar {
     color: #1F2933;
 }
 
 .info-window-box {
     display: flex;
     flex-direction: column;
-    padding:8px 18px;
-    text-align:center;
-    transform: translate3d(-50%,-100%,0);
+    width: 75%;
+    padding: 8px 10px;
+    text-align: center;
+    transform: translate3d(-50%, -100%, 0);
     background-color: white;
     border-radius: 12px;
     border: 1px solid #707070;
@@ -42,10 +43,11 @@
 .info-window-box h5 {
     font: normal 700 14px/21px Titillium Web;
     color: #1F2933;
+    font-size: 14px;
 }
 
 .marker {
-        z-index: 100;
+    z-index: 100;
     position: absolute;
     top: 42.55%;
     left: 45.8%;

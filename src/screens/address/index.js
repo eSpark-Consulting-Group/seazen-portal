@@ -49,58 +49,32 @@ const AddressForm = () => {
   });
   const [clickEv, setClickEv] = useState(false);
 
-  // useEffect(() => {
-  //   if (location.state.edit) {
-  //     if (location.state.data.address_type.toLowerCase() === addressType) {
-  //       setAddress({
-  //         block: "",
-  //         street: "",
-  //         avenue: "",
-  //         house_no: "",
-  //         address_label: "",
-  //         additional_direction: "",
-  //         building: "",
-  //         floor: "",
-  //         apartment_no: "",
-  //         company_name: "",
-  //         country_code: "",
-  //         mobile_number: "",
-  //         address_type: "",
-  //         latitude: location.state.latlng.lat,
-  //         longitude: location.state.latlng.lng,
-  //       });
-  //     }
-  //   }
-  // }, [location.state.data.address_type, addressType]);
-
   useLayoutEffect(() => {
     if (location.state.edit) {
-        const state = location.state.data;
-        setAddress({
-          block: state.block ? state.block : "",
-          street: state.street ? state.street : "",
-          avenue: state.avenue ? state.avenue : "",
-          house_no: state.house_no ? state.house_no : "",
-          address_label: state.address_label ? state.address_label : "",
-          additional_direction: state.additional_direction
-            ? state.additional_direction
-            : "",
-          building: state.building ? state.building : "",
-          floor: state.floor ? state.floor : "",
-          apartment_no: state.apartment_no ? state.apartment_no : "",
-          company_name: state.company_name ? state.company_name : "",
-          country_code: state.phone_country_code
-            ? state.phone_country_code
-            : "",
-          mobile_number: state.phone_no ? state.phone_no : "",
-          address_type: state.address_type.toLowerCase()
-            ? state.address_type.toLowerCase()
-            : "",
-          latitude: location.state.latlng.lat,
-          longitude: location.state.latlng.lng,
-        });
-        setAddressType(state.address_type.toLowerCase());
-      }
+      const state = location.state.data;
+      setAddress({
+        block: state.block ? state.block : "",
+        street: state.street ? state.street : "",
+        avenue: state.avenue ? state.avenue : "",
+        house_no: state.house_no ? state.house_no : "",
+        address_label: state.address_label ? state.address_label : "",
+        additional_direction: state.additional_direction
+          ? state.additional_direction
+          : "",
+        building: state.building ? state.building : "",
+        floor: state.floor ? state.floor : "",
+        apartment_no: state.apartment_no ? state.apartment_no : "",
+        company_name: state.company_name ? state.company_name : "",
+        country_code: state.phone_country_code ? state.phone_country_code : "",
+        mobile_number: state.phone_no ? state.phone_no : "",
+        address_type: state.address_type.toLowerCase()
+          ? state.address_type.toLowerCase()
+          : "",
+        latitude: location.state.latlng.lat,
+        longitude: location.state.latlng.lng,
+      });
+      setAddressType(state.address_type.toLowerCase());
+    }
   }, [location.state.edit]);
 
   const handleAddressTypeChange = (type) => {
@@ -112,6 +86,21 @@ const AddressForm = () => {
       floorErr: false,
       companyNameErr: false,
     });
+    setAddress((prevState) => ({
+      ...prevState,
+      block: "",
+      street: "",
+      avenue: "",
+      house_no: "",
+      address_label: "",
+      additional_direction: "",
+      building: "",
+      floor: "",
+      apartment_no: "",
+      company_name: "",
+      country_code: "",
+      mobile_number: "",
+    }));
   };
 
   const handleChange = (key, value) => {
@@ -142,17 +131,17 @@ const AddressForm = () => {
     addAddressApiCall(address, token).then((res) => {
       if (res.success === "ok") {
         navigate(paths.addresses);
-      } 
+      }
     });
   };
 
-    const updateApiCall = () => {
-      updateAddressApiCall(address, location.state.data.id,token).then((res) => {
-        if (res.success === "ok") {
-          navigate(paths.addresses);
-        }
-      });
-    };
+  const updateApiCall = () => {
+    updateAddressApiCall(address, location.state.data.id, token).then((res) => {
+      if (res.success === "ok") {
+        navigate(paths.addresses);
+      }
+    });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -172,21 +161,21 @@ const AddressForm = () => {
     if (addressType === "appartment") {
       if (address.building !== "") {
         setClickEv(false);
-         if (location.state.edit) {
-           updateApiCall();
-         } else {
-           apiCall();
-         }
+        if (location.state.edit) {
+          updateApiCall();
+        } else {
+          apiCall();
+        }
       }
     }
     if (addressType === "office") {
       if (address.floor !== "" || address.company_name !== "") {
         setClickEv(false);
-         if (location.state.edit) {
-           updateApiCall();
-         } else {
-           apiCall();
-         }
+        if (location.state.edit) {
+          updateApiCall();
+        } else {
+          apiCall();
+        }
       }
     }
   };

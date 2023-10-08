@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import {
@@ -8,18 +8,21 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 
-import {
-  setKey,
-  geocode,
-  RequestType,
-} from "react-geocode";
+import { setKey, geocode, RequestType } from "react-geocode";
 
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from "use-places-autocomplete";
 
-import {Stack, Button, Typography, IconButton, CircularProgress} from "@mui/material";
+import {
+  Box,
+  Stack,
+  Button,
+  Typography,
+  IconButton,
+  CircularProgress,
+} from "@mui/material";
 import SvgIcon from "@mui/material/SvgIcon";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
@@ -38,11 +41,18 @@ import "@reach/combobox/styles.css";
 import { ReactComponent as ProfileIcon } from "../../assets/icons/profile.svg";
 // import SearchIcon from "../../assets/icons/Icon - Search.jpg";
 import LocationGreen from "../../assets/icons/location-green.png";
+import LocationRed from "../../assets/icons/location-red.png";
 
 // import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { paths } from "../../routes/paths";
 
 import "./style.css";
+import { useQuery } from "@tanstack/react-query";
+import getRestaurantBranchHours, {
+  GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
+} from "../../api/restaurant/getRestaurantBranchHours";
+import { useDispatch } from "react-redux";
+import { addAddressDetail } from "../../store/reducers/addressSlice";
 
 const containerStyle = {
   width: "100%",
@@ -62,18 +72,21 @@ const defaultMapOptions = {
   draggable: true,
 };
 
-const lib = ["places"]
+const lib = ["places"];
 
 function LocationPage() {
   const navigate = useNavigate();
   const location = useLocation();
+
   const { isLoaded } = useLoadScript({
     id: "google-map-script",
+    // eslint-disable-next-line no-undef
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     libraries: lib,
   });
-  
+
   useEffect(() => {
+    // eslint-disable-next-line no-undef
     setKey(process.env.REACT_APP_GOOGLE_API_KEY);
   }, []);
 
@@ -81,20 +94,20 @@ function LocationPage() {
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [address, setAddress] = useState("");
   const [autocomplete, setAutocomplete] = useState(null);
+  const [distanceIsFar, setDistanceIsFar] = useState(false);
   const mapRef = useRef();
 
+  useEffect(() => {
+    if (location?.state?.latlng !== undefined) {
+      const lat = location?.state?.latlng.lat;
+      const lng = location?.state?.latlng.lng;
+      setCenter({ lat, lng });
+      setAddress(location?.state?.name);
+    }
+  }, [location?.state]);
 
   useEffect(() => {
-    if (location.state !== null) {
-      const lat = location.state.latlng.lat;
-      const lng = location.state.latlng.lng;
-      setCenter({ lat, lng });
-      setAddress(location.state.name);
-    }
-  }, [location.state]);
-
-  React.useEffect(() => {
-    if (location.state === null) {
+    if (location?.state?.latlng === undefined) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           setCenter({
@@ -108,9 +121,38 @@ function LocationPage() {
     }
   }, []);
 
+  const { data } = useQuery({
+    queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY],
+    queryFn: () => getRestaurantBranchHours(location.state.restaurant_id),
+    onSuccess: (data) => {},
+  });
+
+  useLayoutEffect(() => {
+    if (data) {
+      if (data?.status === "ok") {
+        data.data?.forEach((res) => {
+          const resLat = +res.latitude;
+          const resLng = +res.longitude;
+
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            center.lat,
+            center.lng
+          );
+
+          if (distance > 50) {
+            setDistanceIsFar(true);
+          } else {
+            setDistanceIsFar(false);
+          }
+        });
+      }
+    }
+  }, [data, center]);
+
   const getAdd = async (lat, lng) => {
     geocode(RequestType.LATLNG, `${lat},${lng}`, {
-      location_type: "ROOFTOP",
       enable_address_descriptor: true,
     })
       .then(({ results }) => {
@@ -120,7 +162,9 @@ function LocationPage() {
         setAddress(address);
         setCenter({ lat, lng });
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const onLoad = (autocompleteInstance) => {
@@ -137,17 +181,41 @@ function LocationPage() {
     }
   };
 
-    const handleLoad = (map) => {
-      mapRef.current = map;
+  const handleLoad = (map) => {
+    mapRef.current = map;
+  };
+
+  const handleCenterChanged = async () => {
+    if (!mapRef.current) return;
+    const lat = await mapRef?.current?.center?.lat();
+    const lng = await mapRef?.current?.center?.lng();
+    getAdd(lat, lng);
+  };
+
+  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1);
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
   }
-  
-    const handleCenterChanged  = async() => {
-      if (!mapRef.current) return;
-      const lat = await mapRef?.current?.center?.lat();
-      const lng = await mapRef?.current?.center?.lng();
-      
-      getAdd(lat, lng);
+
+  function deg2rad(deg) {
+    return deg * (Math.PI / 180);
   }
+
+  const confirmLocation = () => {
+    navigate(paths.address, {
+      state: { name: address, latlng: center },
+    });
+  };
 
   return (
     <Stack
@@ -202,23 +270,25 @@ function LocationPage() {
           </IconButton>
         </Stack>
 
-       {isLoaded ? <Autocomplete
-          className="autocomplete"
-          onLoad={onLoad}
-          onPlaceChanged={onPlaceChanged}
-        >
-          <div className="dp-fl">
-            {/* <img src={SearchIcon} alt="Search Icon" className="icon" /> */}
-            <input
-              id="autocomplete"
-              type="text"
-              placeholder="Search an address"
-              className="input"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </div>
-        </Autocomplete> : null}
+        {isLoaded ? (
+          <Autocomplete
+            className="autocomplete"
+            onLoad={onLoad}
+            onPlaceChanged={onPlaceChanged}
+          >
+            <div className="dp-fl">
+              {/* <img src={SearchIcon} alt="Search Icon" className="icon" /> */}
+              <input
+                id="autocomplete"
+                type="text"
+                placeholder="Search an address"
+                className="input"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+            </div>
+          </Autocomplete>
+        ) : null}
 
         {/* <PlacesAutocomplete
           setSelected={setCenter}
@@ -228,10 +298,10 @@ function LocationPage() {
         />  */}
       </Stack>
       {!isLoaded ? (
-       <div className="progress-bar"> 
-        <CircularProgress className="bar" />
+        <div className="progress-bar">
+          <CircularProgress className="bar" />
         </div>
-       ) : (
+      ) : (
         <GoogleMap
           onLoad={handleLoad}
           onDragEnd={handleCenterChanged}
@@ -243,8 +313,8 @@ function LocationPage() {
           mapContainerClassName="GOOGLE"
         >
           <div className="marker">
-            <img src={LocationGreen} />
-          </div> 
+            <img src={distanceIsFar ? LocationRed : LocationGreen} />
+          </div>
 
           {/* <MarkerF
             position={{
@@ -256,18 +326,24 @@ function LocationPage() {
             }}
           /> */}
 
-            {/* <InfoWindowF
+          {/* <InfoWindowF
               position={{
                 lat: center.lat,
                 lng: center.lng,
               }} */}
 
-              {/* <Box className="info-window-box">
-                <Typography variant="h5">Restaurant Name</Typography>
-                <Typography variant="h5">Restaurant Location</Typography>
-              </Box> */}
-              
-            {/* </InfoWindowF> */}
+          {distanceIsFar ? (
+            <Box className="info-window-box">
+              <Typography variant="h5">
+                {location.state.restaurantName} dosen&apos;t deliver here
+              </Typography>
+              <Typography variant="h5">
+                Please choose another location
+              </Typography>
+            </Box>
+          ) : null}
+
+          {/* </InfoWindowF> */}
         </GoogleMap>
       )}
 
@@ -289,11 +365,7 @@ function LocationPage() {
           fullWidth
           variant="contained"
           className="confirm-button"
-          onClick={() => {
-            navigate(paths.address, {
-              state: { name: address, latlng: center },
-            });
-          }}
+          onClick={() => confirmLocation()}
           disabled={address === ""}
         >
           Confirm Your Location
