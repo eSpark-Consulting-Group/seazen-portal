@@ -12,7 +12,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { Footer } from "../../components/footer/footerContent";
 import { paths } from "../../routes/paths";
-import customerRegistration from "../../api/customer/customerRegistration";
+import mobileLogin from "../../api/customer/mobileLogin";
 
 function PhoneNumberVerificationIndex() {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ function PhoneNumberVerificationIndex() {
   };
 
   const { mutate: registration, isLoading } = useMutation({
-    mutationFn: customerRegistration,
+    mutationFn: mobileLogin,
     onSuccess: (data) => {
       sendOTP();
     },
@@ -56,10 +56,7 @@ function PhoneNumberVerificationIndex() {
 
   const handleCustomerRegistration = () => {
     registration({
-      first_name: searchParams.get("first_name"),
-      last_name: searchParams.get("last_name"),
-      email: searchParams.get("email"),
-      mobile_number: mobileNumber,
+      mobile: mobileNumber,
       mobile_country_code: mobileCountryCode,
     });
   };

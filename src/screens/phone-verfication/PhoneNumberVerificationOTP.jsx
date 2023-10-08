@@ -63,9 +63,8 @@ function PhoneNumberVerificationOTP() {
 
   const validateOTP = () => {
     const mobile_country_code = "+" + searchParams.get("mobile_country_code");
-    const mobile_number = searchParams.get("mobile_number");
+    const mobile_number = searchParams.get("mobile");
 
-    console.log(mobile_country_code, mobile_number, otp, searchParams);
     verifyOtp({ mobile_country_code, mobile_number, otp });
   };
 
@@ -150,7 +149,7 @@ function PhoneNumberVerificationOTP() {
               resendOtp({
                 mobile_country_code:
                   "+" + searchParams.get("mobile_country_code"),
-                mobile_number: searchParams.get("mobile_number"),
+                mobile_number: searchParams.get("mobile"),
               });
             }}
           >
@@ -173,7 +172,7 @@ function PhoneNumberVerificationOTP() {
         actionButtonOnClick={() => {
           resendOtp({
             mobile_country_code: "+" + searchParams.get("mobile_country_code"),
-            mobile_number: searchParams.get("mobile_number"),
+            mobile_number: searchParams.get("mobile"),
           });
         }}
       />

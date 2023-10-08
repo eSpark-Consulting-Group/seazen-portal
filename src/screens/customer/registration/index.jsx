@@ -1,7 +1,11 @@
 import React from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { createSearchParams, useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -9,6 +13,11 @@ import Typography from "@mui/material/Typography";
 import Navbar, { NavbarVariants } from "../../../components/header";
 import { Footer } from "../../../components/footer/footerContent";
 import { paths } from "../../../routes/paths";
+import { addUserInfo } from "../../../store/reducers/authSlice";
+import { useDispatch } from "react-redux";
+
+const dispatch = useDispatch();
+const [searchParams] = useSearchParams();
 
 const initialState = {
   first_name: "",
@@ -35,9 +44,10 @@ function CustomerRegistration() {
     initialValues: initialState,
     validationSchema: registrationSchema,
     onSubmit: (values) => {
-      navigate(
-        paths.phone_verification_index + "?" + createSearchParams(values)
-      );
+      const mobileCountryCode = "+" + searchParams.get("mobile_country_code");
+      const mobile = searchParams.get("mobile");
+      dispatch(addUserInfo({ values, mobileCountryCode, mobile }));
+      navigate(paths.location + "?" + createSearchParams(values));
     },
   });
 
