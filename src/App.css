@@ -3,17 +3,16 @@
   justify-content: space-between;
   align-items: stretch;
   min-height: 100vh;
-  max-height: 100vh;
   background: #ffffff 0% 0% no-repeat;
   overflow-y: hidden;
   overflow-x: hidden;
 }
 
-@media screen and (max-width: 350px) {
+/* @media screen and (max-width: 350px) {
   .container_main {
     margin-right: -56px;
   }
-}
+} */
 
 .design-section {
   flex: 1;
@@ -62,6 +61,45 @@ h6 {
     max-width: 375px;
   }
 }
+@media screen and (min-width: 601px) {
+  #fc_frame {
+    left: 290px !important;
+  }
+}
 
-iframe#webpack-dev-server-client-overlay{display:none!important}
+iframe#webpack-dev-server-client-overlay {
+  display: none !important;
+}
+
+/* scrollbar styles
+  should be very thin and only thuumb should be visible
+*/
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.hide-chat-icon {
+  display: none !important;
+}
+
+.specific-page-body-style #fc_frame{
+  bottom: 52px !important;
+}
 

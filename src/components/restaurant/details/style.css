@@ -6,6 +6,8 @@
   height: 55px;
   margin-bottom: 12px;
   background-color: white;
+  margin-top: -12px;
+
 }
 
 .details_inner_div {
@@ -28,7 +30,7 @@
   width: 100%;
   font-family: Titillium Web;
   font-weight: 400;
-  font-size: 12pt;
+  font-size: 12px;
   color: #7f8fa6;
   margin-top: 8px;
 }

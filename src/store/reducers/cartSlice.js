@@ -12,9 +12,9 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const item = action.payload;
-      if(item.length){
-        state.cart = item
-      } else{
+      if (item.length) {
+        state.cart = item;
+      } else {
         state.cart.push(item);
       }
 
@@ -34,6 +34,13 @@ const cartSlice = createSlice({
       var total = state.total + Number(item.totalPrice);
 
       state.total = total;
+    },
+
+    resetCart: (state) => {
+      state.cart = [];
+      state.total = 0;
+      state.totalItems = 0;
+      state.totalQuantity = 0;
     },
 
     updateCartItemQuantity: (state, action) => {
@@ -60,19 +67,19 @@ const cartSlice = createSlice({
     },
 
     updateCartMenuItemQuantity: (state, action) => {
-      const { id, quantity } = action.payload;
-      const itemIndex = state.cart.findIndex(
-        (cartItem) => cartItem.id === id
-      );
+      const { id, quantity, totalPrice } = action.payload;
+      const itemIndex = state.cart.findIndex((cartItem) => cartItem.id === id);
 
       if (itemIndex !== -1) {
-        const itemTotalPrice = state.cart[itemIndex].totalPrice;
-        const pricePerItem = itemTotalPrice / state.cart[itemIndex].quantity;
-        state.cart[itemIndex].totalPrice = pricePerItem * quantity;
+        state.cart[itemIndex].totalPrice = totalPrice;
         state.cart[itemIndex].quantity = quantity;
       }
 
       state.totalQuantity = state.cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+      state.totalItems = state.cart.reduce(
         (total, item) => total + item.quantity,
         0
       );
@@ -136,8 +143,8 @@ const cartSlice = createSlice({
       if (itemIndex !== -1) {
         const item = state.cart[itemIndex];
         state.totalItems -= item.quantity;
-        state.totalQuantity -= item.totalPrice * item.quantity;
-        state.total -= item.totalPrice * item.quantity;
+        state.totalQuantity -= item.quantity;
+        state.total -= item.totalPrice;
 
         state.cart.splice(itemIndex, 1);
       }
@@ -155,6 +162,7 @@ export const {
   addExtraToppings,
   addExtraSides,
   updateCartInfo,
+  resetCart,
 } = cartSlice.actions;
 
 export const selectCart = (state) => state.cart;

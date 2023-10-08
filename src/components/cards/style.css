@@ -43,14 +43,14 @@
 }
 
 .restaurantCards {
-  transition: transform 0.3s, box-shadow 0.3s;
+  /* transition: transform 0.3s, box-shadow 0.3s; */
   cursor: pointer;
   border-radius: 12px;
 }
 
 .restaurantCard-img {
   width: 99%;
-  height: 80px;
+  height: 74px;
   object-fit: cover;
   margin-bottom: -6.5px;
   border: 1px solid white;
@@ -141,3 +141,7 @@
     left: 133px;
   }
 } */
+
+.another-class{
+  border: none !important;
+}

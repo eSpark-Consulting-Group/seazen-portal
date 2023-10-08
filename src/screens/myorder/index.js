@@ -20,7 +20,7 @@ const MyOrderScreen = () => {
   ]);
   const [state, setState] = useState("Delivery");
 
-  const randomPrice = (Math.random() * 10).toFixed(2);
+  const randomPrice = (Math.random() * 10).toFixed(3);
   const randomOrderId = Math.floor(Math.random() * 1000000);
   const currentDate = new Date();
   const formattedDate = formatDateToCustomFormat(currentDate);
@@ -183,9 +183,9 @@ const MyOrderScreen = () => {
                 />
               ) : null
             )}
-            <div className={`${styles.comment_section}`}>
+            {/* <div className={`${styles.comment_section}`}>
             <FooterSection />
-            </div>
+            </div> */}
             
           </div>
         )}

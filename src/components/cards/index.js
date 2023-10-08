@@ -8,7 +8,7 @@ import cateringIcon from "./catering-icon.svg";
 import dineInIcon from "./dinein-icon.svg";
 import { useNavigate } from "react-router";
 import { paths } from "../../routes/paths";
-import { useMediaQuery } from "@mui/material";
+// import { useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 
 const bull = (
@@ -24,7 +24,7 @@ const images = [
   {
     name: "first card image",
     image: "/assets/img/restaurants-1-6.svg",
-    service: { doesDelivery: false, isNear: true },
+    service: { doesDelivery: true, isNear: true },
   },
   {
     name: "second card image",
@@ -34,7 +34,7 @@ const images = [
   {
     name: "third card image",
     image: "/assets/img/restaurants-1-6.svg",
-    service: { doesDelivery: true, isNear: false },
+    service: { doesDelivery: true, isNear: true },
   },
   {
     name: "fourth card image",
@@ -44,73 +44,73 @@ const images = [
   {
     name: "fifth card image",
     image: "/assets/img/restaurants-2-6.svg",
-    service: { doesDelivery: false, isNear: true },
+    service: { doesDelivery: true, isNear: true },
   },
   {
     name: "sixth card image",
     image: "/assets/img/restaurants-6-6.svg",
-    service: { doesDelivery: false, isNear: false },
+    service: { doesDelivery: true, isNear: true },
   },
 ];
 
-const icons = [
-  {
+const icons = {
+  delivery_status: {
     id: 2,
     orderType: "delivery",
     image: deliveryIcon,
   },
-  {
+  pickup_status: {
     id: 3,
     orderType: "pickUp",
     image: pickupIcon,
   },
-  {
+  catering_status: {
     id: 1,
     orderType: "catering",
     image: cateringIcon,
   },
-  {
+  dinein_status: {
     id: 0,
     orderType: "dineIn",
     image: dineInIcon,
   },
-];
-
-export const restaurantThemeColor = {
-  "Restaurant 1": {
-    main: "#003964",
-    light: "#095371",
-  },
-  "Restaurant 2": {
-    main: "#424E1F",
-    light: "#596732",
-  },
-  "Restaurant 3": {
-    main: "#026754",
-    light: "#308979",
-    contrastText: "#fff",
-  },
-  "Restaurant 4": {
-    main: "#172931",
-    light: "#2E4A57",
-  },
-  "Restaurant 5": {
-    main: "#2A3549",
-    light: "#435067",
-  },
-  "Restaurant 6": {
-    main: "#0E1220",
-    light: "#293046",
-  },
-  // "Restaurant 7": {
-  //   main: "#101F4A",
-  //   light: "#101F4A",
-  // },
-  // "Restaurant 8": {
-  //   main: "#9C0B2A",
-  //   light: "#B51739",
-  // },
 };
+
+// export const restaurantThemeColor = {
+//   "Restaurant 1": {
+//     main: "#003964",
+//     light: "#095371",
+//   },
+//   "Restaurant 2": {
+//     main: "#424E1F",
+//     light: "#596732",
+//   },
+//   "Restaurant 3": {
+//     main: "#026754",
+//     light: "#308979",
+//     contrastText: "#fff",
+//   },
+//   "Restaurant 4": {
+//     main: "#172931",
+//     light: "#2E4A57",
+//   },
+//   "Restaurant 5": {
+//     main: "#2A3549",
+//     light: "#435067",
+//   },
+//   "Restaurant 6": {
+//     main: "#0E1220",
+//     light: "#293046",
+//   },
+//   // "Restaurant 7": {
+//   //   main: "#101F4A",
+//   //   light: "#101F4A",
+//   // },
+//   // "Restaurant 8": {
+//   //   main: "#9C0B2A",
+//   //   light: "#B51739",
+//   // },
+// };
 
 const BasicCard = ({
   clickedButtonIndex,
@@ -127,40 +127,41 @@ const BasicCard = ({
     [icons[1], icons[3]],
   ];
 
-  const isMediumScreen = useMediaQuery(
-    "(max-width: 400px) and (min-width: 385px)"
-  );
-  const isSmallScreen = useMediaQuery(
-    "(max-width: 500px) and (min-width: 385px)"
-  );
-  const isSmallerScreen = useMediaQuery(
-    "(max-width: 350px ) (min-width: 290px)"
-  );
-  const isVerySmallScreen = useMediaQuery("(max-width: 290px)");
+  // const isMediumScreen = useMediaQuery(
+  //   "(max-width: 400px) and (min-width: 385px)"
+  // );
+  // const isSmallScreen = useMediaQuery(
+  //   "(max-width: 500px) and (min-width: 385px)"
+  // );
+  // const isSmallerScreen = useMediaQuery(
+  //   "(max-width: 350px ) (min-width: 290px)"
+  // );
+  // const isVerySmallScreen = useMediaQuery("(max-width: 290px)");
 
-  // Adjust cardWidth to apply 120px width to screens less than 350px
-  const cardWidth = isSmallScreen
-    ? isMediumScreen
-      ? 180
-      : isSmallerScreen
-      ? 180
-      : 190
-    : isSmallerScreen
-    ? 170
-    : isVerySmallScreen
-    ? 145
-    : 161;
+  // // Adjust cardWidth to apply 120px width to screens less than 350px
+  // const cardWidth = isSmallScreen
+  //   ? isMediumScreen
+  //     ? 180
+  //     : isSmallerScreen
+  //     ? 180
+  //     : 190
+  //   : isSmallerScreen
+  //   ? 170
+  //   : isVerySmallScreen
+  //   ? 145
+  //   : 161;
 
   const getCardClassName = (service) => {
     if (orderTypeFilter) {
       const { delivery, near, selectedNow } = orderTypeFilter;
       const { doesDelivery, isNear } = service;
-      if (delivery && !near) {
-        return doesDelivery && "restaurantCard-border-delivery";
-      }
+    if (delivery && !near) {
+    return doesDelivery ? "restaurantCard-border-delivery " + (clickedButtonIndex !== null ? "expanded" : "another-class") : "";
+}
 
       if (!delivery && near) {
-        return isNear && "restaurantCard-border-near";
+    return isNear ? "restaurantCard-border-near " + (clickedButtonIndex !== null ? "expanded" : "another-class") : "";
+
       }
 
       if (delivery && near) {
@@ -177,9 +178,7 @@ const BasicCard = ({
         }
       }
 
-      if (!doesDelivery && !isNear) {
-        return "restaurantCard-no-border";
-      }
+     
     }
   };
 
@@ -218,38 +217,54 @@ const BasicCard = ({
       }
     }
   };
+  const getServicesIcon = (serviceName) => {
+    return (
+      <div className="icon-row">
+      <img
+        className={getClassNameAccordingToFilter(
+          icons[serviceName].id,
+          images[1].service
+        )}
+        src={ icons[serviceName]?.image}
+        // alt={`Icon ${i + 1}`}
+        style={{ width: iconWidth, height: iconHeight }}
+      />
+    </div>
+    )
+  }
 
   // Define the width and height for the SVG icons
   const iconWidth = "7px";
   const iconHeight = "9px";
 
   const goToRestaurantMenuPage = (restaurant) => {
+    localStorage.setItem("restaurantID", restaurant)
     navigate(paths.menu + `/restaurant/${restaurant}`);
   };
   return (
     <div className="restaurantCard-container container-fluid">
-      {Object.keys(restaurantThemeColor).map((restaurant, index) => {
+      {restaurantsData.map((restaurant, index) => {
         if (restaurantsData && (index === 0 || index === 1)) {
           return (
             <div
               key={index}
-              className={`restaurantCards restaurantCard-${
-                isSmallScreen ? "small" : "large"
-              } ${getCardClassName(images[index].service)}`}
+              className={`restaurantCards restaurantCard-large ${getCardClassName(images[index].service)}`}
             >
               <Card
                 sx={{
                   width: "100%",
                   borderRadius: "10px",
+                  boxShadow:"none",
+                  border:"none",
                 }}
                 className="restaurantCards"
                 onClick={() => {
-                  goToRestaurantMenuPage(restaurantsData[index]?.id);
+                  goToRestaurantMenuPage(restaurant?.id);
                 }}
               >
                 <img
                   className="restaurantCard-img"
-                  src={restaurantsData[index]?.image}
+                  src={restaurant?.image}
                   alt={`Card ${index + 1}`}
                 />
                 <div
@@ -258,21 +273,10 @@ const BasicCard = ({
                   }`}
                 >
                   <div className="inner-svg-container">
-                    {captions[index].map((icon, i) => {
-                      return (
-                        <div key={i} className="icon-row">
-                          <img
-                            className={getClassNameAccordingToFilter(
-                              icon.id,
-                              images[index].service
-                            )}
-                            src={icon.image}
-                            alt={`Icon ${i + 1}`}
-                            style={{ width: iconWidth, height: iconHeight }}
-                          />
-                        </div>
-                      );
-                    })}
+                    {restaurant.catering_status && getServicesIcon("catering_status")}
+                    {restaurant.delivery_status && getServicesIcon("delivery_status")}
+                    {restaurant.dinein_status && getServicesIcon("dinein_status")}
+                    {restaurant.pickup_status && getServicesIcon("pickup_status")}
                   </div>
                 </div>
               </Card>

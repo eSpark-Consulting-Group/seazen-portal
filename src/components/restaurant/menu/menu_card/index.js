@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import ExtraItems from "../extraItems";
+import { useDispatch, useSelector } from "react-redux";
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import "./style.css";
+import ExtraItems from "../extraItems";
 import { paths } from "../../../../routes/paths";
-import { useDispatch, useSelector } from "react-redux";
+import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
 import {
   addToCart,
   removeFromCart,
   updateCartMenuItemQuantity,
 } from "../../../../store/reducers/cartSlice";
+import "./style.css";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
@@ -45,7 +47,19 @@ const MenuCard = ({
   const [menuCardDropdownOpen, setMenuCardDropdownOpen] = useState(false);
   const [extraItemCount_1, setExtraItemCount_1] = useState(0);
   const [extraItemCount_2, setExtraItemCount_2] = useState(0);
+
+  const [imageNotFound, setImageNotFound] = useState(false);
+
+  const onImageError = () => {
+    setImageNotFound(true);
+  };
+
   const cart = useSelector((state) => state.cart.cart);
+
+  useEffect(() => {
+    const quantity = getItemQuantity();
+    setFoodItemQuantity(quantity);
+  }, []);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -65,7 +79,7 @@ const MenuCard = ({
 
   // i-e KWD 1.750 => 1.750 as a number
   const foodPriceWithoutCurrency = () => {
-    return Number(foodPrice.split(" ")[1]);
+    return Number(foodPrice.split(" ")[1]).toFixed(3);
   };
 
   const checkIfItemIsInCart = () => {
@@ -84,6 +98,7 @@ const MenuCard = ({
         updateCartMenuItemQuantity({
           id: id,
           quantity: foodItemQuantity + 1,
+          totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
         })
       );
     } else {
@@ -92,7 +107,8 @@ const MenuCard = ({
           id: id,
           itemName: foodItem,
           totalPrice: foodPriceWithoutCurrency(),
-          quantity: foodItemQuantity,
+          quantity: foodItemQuantity + 1,
+          itemImage: foodImage,
         })
       );
     }
@@ -109,6 +125,7 @@ const MenuCard = ({
       dispatch(
         updateCartMenuItemQuantity({
           id: id,
+          totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity - 1),
           quantity: foodItemQuantity - 1,
         })
       );
@@ -146,6 +163,7 @@ const MenuCard = ({
       alignItems="center"
       sx={{
         width: "100%",
+        marginTop: "10px"
       }}
     >
       <Stack
@@ -174,7 +192,31 @@ const MenuCard = ({
             className="menu_card_image_container pointer"
             onClick={() => setMenuCardDropdownOpen(!menuCardDropdownOpen)}
           >
-            <img className="food-image" src={foodImage} alt="menu_card_image" />
+            {imageNotFound ? (
+              <Box
+                sx={{
+                  width: 100,
+                  height: 100,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "common.white",
+                  borderRadius: "8px",
+                }}
+              >
+                <ImageNotSupportedIcon fontSize="large"></ImageNotSupportedIcon>
+
+                <Typography variant="caption">No Image Found</Typography>
+              </Box>
+            ) : (
+              <img
+                className="food-image"
+                src={foodImage}
+                alt="menu_card_image"
+                onError={onImageError}
+              />
+            )}
           </div>
           <div
             className="menu_card_price_text_container pointer"

@@ -23,8 +23,8 @@ body {
 .box-image{
   border-radius: 16px;
   box-shadow: 0px 3px 6px #314F7C29;
-  height: 140px;
-  width: 140px;
+  height: 143px;
+  width: 143px;
 
 }
 
@@ -88,7 +88,9 @@ body {
 
 .caption-image {
   padding-top: 74px;
-  padding-left: 16px;
+  /* padding-left: 16px; */
+  display: flex;
+  margin: auto;
 }
 
 .caption-image img {
@@ -122,11 +124,11 @@ body {
   /* bottom: -6px; */
 }
 
-.first-card-caption-image {
+/* .first-card-caption-image {
   padding-top: 74px;
-}
+} */
 
-.third-card-caption-image {
+/* .third-card-caption-image {
   padding-top: 74px;
-  /* padding-left: 38px; */
-}
+  padding-left: 38px;
+} */

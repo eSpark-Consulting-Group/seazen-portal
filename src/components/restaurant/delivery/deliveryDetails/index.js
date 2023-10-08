@@ -34,7 +34,7 @@ const DeliveryDetails = () => {
                 backgroundColor: "transparent",
                 color: "#323F4B",
                 fontFamily: "Titillium Web",
-                fontSize: "9pt",
+                fontSize: "10px",
                 fontWeight: "bold",
                 border: "none",
                 padding: "0",
@@ -81,6 +81,12 @@ const DeliveryDetails = () => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
+        <span style={{
+          borderLeft: "1.5px solid #C3D8D4",
+          height: "30px",
+          marginTop:"8px",
+          
+        }}></span>
         <div className="right_dropdown_container">
           <div className="right_dropdown_container_heading_container">
             Delivery Time
@@ -93,7 +99,7 @@ const DeliveryDetails = () => {
                 backgroundColor: "transparent",
                 color: "#323F4B",
                 fontFamily: "Titillium Web",
-                fontSize: "9pt",
+                fontSize: "10px",
                 fontWeight: "700",
                 border: "none",
                 padding: "0",
@@ -114,6 +120,8 @@ const DeliveryDetails = () => {
                 fontWeight: "bold",
                 border: "none",
                 transform: "translate(0px, -22px)",
+                top:"12px",
+
               }}
             >
               <Dropdown.Item href="#/action-1">Option 1</Dropdown.Item>

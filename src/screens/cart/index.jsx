@@ -30,24 +30,23 @@ import CircularProgress from "@mui/material/CircularProgress";
 import checkout from "../../api/cart/checkout";
 import getRestaurantDetails from "../../api/restaurant/getRestaurantDetails";
 import { addToCart } from "../../store/reducers/cartSlice";
+import applyPromoCode from "../../api/cart/promocode";
+import CancelIcon from '@mui/icons-material/Cancel';
 
 function CartPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [tipValue, setTipValue] = React.useState(0.25);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [cartItems, setCartItems] = React.useState();
   const [specialIns, setSpecialIns] = React.useState("");
   const [restaurantLogo, setRestaurantLogo] = React.useState("");
+  const [promoCode, setPromoCode] = React.useState("");
+  const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
-  const DISCOUNT_AMOUNT = Number(1).toFixed(2);
-  const DELIVERY_CHARGE = Number(1).toFixed(2);
+  const DISCOUNT_AMOUNT = Number(1).toFixed(3);
+  const DELIVERY_CHARGE = Number(1).toFixed(3);
   const [isDialogOpen, setDialogOpen] = useState(false);
-
-  // Function to handle opening the dialog
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  };
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
@@ -58,6 +57,29 @@ function CartPage() {
   const cart = useSelector((state) => state.cart.cart);
   const totalPrice = useSelector((state) => state.cart.total);
   const dispatch = useDispatch();
+  const restaurantId = localStorage.getItem("restaurantID")
+  
+  // Function to handle opening the dialog
+  const handleDialogOpen = () => {
+    applyPromoCode(
+      {
+        restaurant_id: restaurantId,
+        promo_code: promoCode
+      },
+      token
+    )
+      .then((res) => {
+        if (res.message == "Invalid promo code") {
+          setDialogOpen(true);
+          return;
+        }
+        setPromoDiscount(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setDialogOpen(true);
+      });
+  };
 
   const checkoutData = {
     payment_method_id: "1",
@@ -79,7 +101,6 @@ function CartPage() {
 
   useEffect(() => {
     setCartItems(cart);
-    setIsLoading(false);
   }, [cart]);
 
   const checkoutHandler = () => {
@@ -108,26 +129,31 @@ function CartPage() {
     }
   }, []);
 
+  const country = useSelector((state) => state.auth.country);
+
   useEffect(() => {
     cartRefetch();
     getRestaurantLogo(cart[0]?.restaurant_id)
-  }, []);
+  }, [country]);
 
   const getRestaurantLogo = (restaurantId) => {
     setTimeout(() => {
-      getRestaurantDetails(restaurantId)
+      if(restaurantId) {
+        getRestaurantDetails(restaurantId, country?.id)
         .then((res) => {
           setRestaurantLogo(res.data.logo);
         })
         .catch((err) => {
           console.log(err);
         });
+      }
     }, 500);
   };
 
   const cartRefetch = () => {
     if (cart.length == 0) {
       setTimeout(() => {
+        setIsLoading(true)
         cartList(token)
           .then((res) => {
             const resData = res.data.map((val) => {
@@ -147,10 +173,10 @@ function CartPage() {
                   specialInstructions: "",
                   itemImage: val?.menu_item_image,
                   restaurant_id: 1,
-                  totalPrice: Number(val.quantity * val.unit_price).toFixed(2) 
+                  totalPrice: Number(val.quantity * val.unit_price).toFixed(3) 
               }
             })
-            // setCartItems(resData);
+            setCartItems(resData);
             dispatch(addToCart(resData));
             setIsLoading(false);
           })
@@ -165,19 +191,28 @@ function CartPage() {
   const getItemTotal = () => {
     return cartItems.reduce((acc, cartItem) => {
       return acc + Number(cartItem.totalPrice);
-    }, 0).toFixed(2);
+    }, 0).toFixed(3);
   };
 
   const getTipAmount = () => {
     return tipValue.toFixed(2);
   };
 
-  const getDiscountAmount = () => {
-    return DISCOUNT_AMOUNT;
-  };
-
   const getDeliveryCharge = () => {
     return DELIVERY_CHARGE;
+  };
+
+  const getPromoDiscount = () => {
+    let discount = 0
+    if(promoDiscount.discount_type == "percentage"){
+      discount = getItemTotal() / 100 * promoDiscount.discount_value
+      promoDiscount.message = `${promoDiscount.discount_value}% Discount Applied`
+    }
+    return discount
+  }
+
+  const getDiscountAmount = () => {
+    return Number(getPromoDiscount()).toFixed(2);
   };
 
   const getGrandTotal = () => {
@@ -185,8 +220,9 @@ function CartPage() {
       Number(getItemTotal()) +
       Number(getTipAmount()) -
       Number(getDiscountAmount()) +
-      Number(getDeliveryCharge())
-    ).toFixed(2);
+      Number(getDeliveryCharge()) - 
+      Number(getPromoDiscount())
+    ).toFixed(3);
   };
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(
@@ -532,8 +568,10 @@ function CartPage() {
 
           <TextField
             id="promo-code"
+            value={promoCode}
             placeholder="Promo Code"
             variant="outlined"
+            onChange={(e) => setPromoCode(e.target.value)}
             sx={{
               "& .MuiOutlinedInput-root": {
                 background: "#FAFAFA",
@@ -563,7 +601,10 @@ function CartPage() {
               ),
             }}
           />
-
+          {/* {promoDiscount.message && <div className="promo-message-wrapper">
+             <p>{promoDiscount.message}</p> 
+             <span onClick={() => setPromoDiscount({})}><CancelIcon className="promo-cancel-icon" fontSize="small" color="grey" /></span>
+          </div>} */}
           {/* Dialog */}
           <Dialog
             open={isDialogOpen}
@@ -663,7 +704,7 @@ function CartPage() {
                   />
 
                   <Typography variant="body1" fontWeight={600}>
-                    {`KWD ${Number(tip).toFixed(2)}`}
+                    {`KWD ${Number(tip).toFixed(3)}`}
                   </Typography>
                 </Box>
               ))}

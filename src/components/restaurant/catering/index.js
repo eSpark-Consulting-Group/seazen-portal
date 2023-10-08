@@ -15,9 +15,9 @@ const CateringDetails = () => {
                     <ContactButton text={"Send Message"} color={"#2FA124"} icon_image="/assets/img/Icon - Message.svg"/>
                 </div>
             </div>
-            <div style={{marginLeft:"280px"}}>
+            {/* <div style={{marginLeft:"280px"}}>
             <FooterSection />
-        </div>
+        </div> */}
         </div>
     </div>);
 }
