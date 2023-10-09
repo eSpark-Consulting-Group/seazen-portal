@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from '../../screens/searchPage/style.module.css'
 import { paths } from '../../routes/paths';
 
-const SearchBar = ({ isSearchOpen, searchParams, toggleSearch, handleSearchItem, value }) => {
+const SearchBar = ({ handleSearchItem, value }) => {
   const navigate = useNavigate();
 
   return (
