@@ -99,3 +99,8 @@ iframe#webpack-dev-server-client-overlay {
   /* display: none !important; */
   bottom: 62px !important;
 }
+
+.specific-page-body-style #fc_frame{
+  bottom: 52px !important;
+}
+

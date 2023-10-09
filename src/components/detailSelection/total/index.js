@@ -31,7 +31,7 @@ const updateCartData =  {
 export default function PricingBox({ total }) {
 
   const { search } = useLocation()
-  const token = useSelector((state) => state.auth.token);
+  const token = localStorage.getItem("token");
 
   const addToCartHandler = useQuery({
     queryFn: () => addToCart(cartData, token),

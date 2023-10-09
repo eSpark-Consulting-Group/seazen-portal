@@ -12,6 +12,7 @@ const Navbar = (props) => {
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef(null);
+  const token = localStorage.getItem("token");
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -36,22 +37,19 @@ const Navbar = (props) => {
 
   return (
     <nav className={"d-flex align-items-center justify-content-between p-2"}>
+      {variant !== NavbarVariants.backWithProfile && (
+        <div
+          className="iconaccount-btn"
+          onClick={() => {
+            token ? navigate(paths.profile) : navigate(paths.guest_profile)
+          }}
+        >
+          <img src="/assets/img/account.svg" alt="Account Icon" />
+        </div>
+      )}
       <div
         className="d-flex align-items-center"
-        style={{
-          columnGap: "10px",
-        }}
       >
-        {variant !== NavbarVariants.backWithProfile && (
-          <div
-            className="iconaccount-btn"
-            onClick={() => {
-              navigate(paths.profile);
-            }}
-          >
-            <img src="/assets/img/account.svg" alt="Account Icon" />
-          </div>
-        )}
 
         {variant === NavbarVariants.backWithProfile && (
           <div

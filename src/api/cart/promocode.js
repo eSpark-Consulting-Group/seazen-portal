@@ -2,12 +2,17 @@ import axiosInstance from "../axiosInstance";
 import API_ENDPOINTS from "../endpoints";
 import { handleApiError } from "../utils/errorHandling";
 
-const emailLogin = async (cartItems) => {
+const applyPromoCode = async (promoCode ,token) => {
+
   try {
-    // Make the POST request to perform email login.
+    // Make the POST request to check promoCode valid or not.
     const { data } = await axiosInstance.post(
-      API_ENDPOINTS.USER.EMAIL_LOGIN,
-      cartItems
+      API_ENDPOINTS.CART.APPLY_PROMO_CODE, promoCode,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     return data;
   } catch (error) {
@@ -16,4 +21,4 @@ const emailLogin = async (cartItems) => {
   }
 };
 
-export default emailLogin;
+export default applyPromoCode;

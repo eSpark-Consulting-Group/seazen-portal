@@ -1,9 +1,41 @@
 import React, { useState } from "react";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import Stack from "@mui/material/Stack";
-import "./style.css";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import Navbar, { NavbarVariants } from "../../components/header";
+import updateProfile from "../../api/customer/updateProfile";
+import { paths } from "../../routes/paths";
+import "./style.css";
 
-export const EditForm = () => {
+const initialState = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  mobile_number: "",
+  mobile_country_code: "",
+};
+
+const updateProfileFormSchema = Yup.object().shape({
+  first_name: Yup.string()
+    .matches(/^[a-z ,.'-]+$/i)
+    .max(40)
+    .required(),
+  last_name: Yup.string()
+    .matches(/^[a-z ,.'-]+$/i)
+    .max(40)
+    .required(),
+  email: Yup.string().email(),
+  mobile_number: Yup.string().required(),
+  mobile_country_code: Yup.string().required(),
+});
+
+export const UpdateCustomerProfile = () => {
+  const navigate = useNavigate();
   // Initialize state variables for form fields
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -11,88 +43,191 @@ export const EditForm = () => {
   const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useState("");
 
-  // Function to handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const { mutate: updateCustomerProfile, isLoading } = useMutation({
+    mutationFn: updateProfile,
+    onSuccess: () => {
+      navigate(paths.guest_profile);
+    },
+  });
 
-    // Do something with the form data, e.g., send it to a server or perform validation
-    console.log("Form submitted:", {
-      firstName,
-      lastName,
-      email,
-      phone: `${countryCode} ${phone}`,
-    });
-  };
+  const formikUpdateCustomerProfile = useFormik({
+    initialValues: initialState,
+    validationSchema: updateProfileFormSchema,
+    onSubmit: (values) => {
+      updateCustomerProfile({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        mobile_country_code: countryCode,
+        mobile_number: phone,
+      });
+    },
+  });
+
+  const isFormError = Boolean(
+    formikUpdateCustomerProfile.errors.first_name ||
+      formikUpdateCustomerProfile.errors.last_name ||
+      formikUpdateCustomerProfile.errors.email ||
+      formikUpdateCustomerProfile.errors.mobile_country_code ||
+      formikUpdateCustomerProfile.errors.mobile_number
+  );
+
   return (
     <Stack
       sx={{
-        p: 3,
+        minHeight: "100vh",
+        color: "text.primary",
       }}
+      spacing={2}
     >
       <Navbar variant={NavbarVariants.backWithProfile} />
-      <div className="editProfile-style">
-        <h2>Edit Your Profile</h2>
-        <form className="editProfileform-style" onSubmit={handleSubmit}>
-          <div>
-            <input
-              type="text"
-              id="firstName"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              required
+      <Stack
+        spacing={5}
+        justifyContent="center"
+        sx={{
+          p: 3,
+          height: `calc(100vh - 56px)`,
+        }}
+      >
+        <Stack>
+          <Typography variant="h5" align="center" gutterBottom>
+            Edit Your Profile
+          </Typography>
+        </Stack>
+
+        <Stack spacing={1}>
+          <Stack direction="row" spacing={2}>
+            <TextField
+              fullWidth
+              id="first-name"
+              variant="outlined"
               placeholder="First Name"
-              className="editProfileleft-name"
+              sx={{
+                flex: 1,
+                "& .MuiInputBase-root.MuiOutlinedInput-root ::placeholder": {
+                  ...(Boolean(
+                    formikUpdateCustomerProfile.errors.first_name
+                  ) && {
+                    color: "error.main",
+                  }),
+                },
+              }}
+              name={"first_name"}
+              value={formikUpdateCustomerProfile.values.first_name}
+              onChange={formikUpdateCustomerProfile.handleChange}
+              error={
+                formikUpdateCustomerProfile.touched.first_name &&
+                Boolean(formikUpdateCustomerProfile.errors.first_name)
+              }
             />
-          </div>
-          <div>
-            <input
-              type="text"
-              id="lastName"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              required
+
+            <TextField
+              fullWidth
+              id="last-name"
+              variant="outlined"
               placeholder="Last Name"
-              className="editProfileright-name"
+              sx={{
+                flex: 1,
+                "& .MuiInputBase-root.MuiOutlinedInput-root ::placeholder": {
+                  ...(Boolean(formikUpdateCustomerProfile.errors.last_name) && {
+                    color: "error.main",
+                  }),
+                },
+              }}
+              name={"last_name"}
+              value={formikUpdateCustomerProfile.values.last_name}
+              onChange={formikUpdateCustomerProfile.handleChange}
+              error={
+                formikUpdateCustomerProfile.touched.last_name &&
+                Boolean(formikUpdateCustomerProfile.errors.last_name)
+              }
             />
-          </div>
-          <div>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="test@gmail.com"
-              className="editProfileemail-style"
+          </Stack>
+
+          <TextField
+            fullWidth
+            id="email"
+            variant="outlined"
+            placeholder="Email (optional)"
+            sx={{
+              flex: 1,
+            }}
+            name={"email"}
+            InputProps={{
+              autoComplete: "email",
+            }}
+            value={formikUpdateCustomerProfile.values.email}
+            onChange={formikUpdateCustomerProfile.handleChange}
+            error={
+              formikUpdateCustomerProfile.touched.email &&
+              Boolean(formikUpdateCustomerProfile.errors.email)
+            }
+            helperText={
+              formikUpdateCustomerProfile.touched.email &&
+              formikUpdateCustomerProfile.errors.email
+            }
+          />
+
+          <Stack direction="row" spacing={2}>
+            <TextField
+              fullWidth
+              id="mobile_country_code"
+              variant="outlined"
+              placeholder="+365"
+              sx={{
+                flex: 1,
+              }}
+              inputProps={{
+                autoComplete: "country-code",
+              }}
+              name={"mobile_country_code"}
+              value={formikUpdateCustomerProfile.values.mobile_country_code}
+              onChange={formikUpdateCustomerProfile.handleChange}
+              error={
+                formikUpdateCustomerProfile.touched.mobile_country_code &&
+                Boolean(formikUpdateCustomerProfile.errors.mobile_country_code)
+              }
+              helperText={
+                formikUpdateCustomerProfile.touched.mobile_country_code &&
+                formikUpdateCustomerProfile.errors.mobile_country_code
+              }
             />
-          </div>
-          <div>
-            <label htmlFor="phone">Phone:</label>
-            <input
-              type="text"
-              id="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-              placeholder="11223344"
-              className="editProfileright-number"
+
+            <TextField
+              fullWidth
+              id="mobile_number"
+              variant="outlined"
+              placeholder="Mobile Number"
+              sx={{
+                flex: 3,
+              }}
+              inputProps={{
+                autoComplete: "phone",
+              }}
+              name={"mobile_number"}
+              value={formikUpdateCustomerProfile.values.mobile_number}
+              onChange={formikUpdateCustomerProfile.handleChange}
+              error={
+                formikUpdateCustomerProfile.touched.mobile_number &&
+                Boolean(formikUpdateCustomerProfile.errors.mobile_number)
+              }
+              helperText={
+                formikUpdateCustomerProfile.touched.mobile_number &&
+                formikUpdateCustomerProfile.errors.mobile_number
+              }
             />
-          </div>
-          <div>
-            <input
-              type="text"
-              id="countryCode"
-              value={countryCode}
-              placeholder="965"
-              className="editProfileleft-code"
-              onChange={(e) => setCountryCode(e.target.value)}
-            />
-          </div>
-          <button className="editProfile-button" type="submit">
-            <span className="editProfile-text">Save Changes</span>
-          </button>
-        </form>
-      </div>
+          </Stack>
+          <Button
+            size="large"
+            variant="contained"
+            disabled={!!isFormError}
+            fullWidth
+            onClick={formikUpdateCustomerProfile.handleSubmit}
+          >
+            Continue
+          </Button>
+        </Stack>
+      </Stack>
     </Stack>
   );
 };

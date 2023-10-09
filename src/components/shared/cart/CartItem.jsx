@@ -35,7 +35,7 @@ function CartItem(props) {
   const [updatedQuantity, setUpdatedQuantity] = React.useState(quantity);
   const [imageNotFound, setImageNotFound] = useState(false);
   const navigate = useNavigate();
-  const token = useSelector((state) => state.auth.token);
+  const token = localStorage.getItem("token");
   const dispatch = useDispatch();
 
   // const updateCartHandler = useQuery({
@@ -205,7 +205,7 @@ function CartItem(props) {
         }}
       >
         <Typography align="center" fontWeight={600}>
-          {`KWD ${Number(totalPrice).toFixed(2)}`}
+          {`KWD ${Number(totalPrice).toFixed(3)}`}
         </Typography>
         <IncDec
           quantity={updatedQuantity}

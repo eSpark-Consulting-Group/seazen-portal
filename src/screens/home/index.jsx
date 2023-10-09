@@ -7,29 +7,48 @@ import RestaurantsOrderTypeButton from "../../components/category/button";
 import "../../components/carousel/slider/style.css";
 import "./style.css";
 import { useQuery } from "@tanstack/react-query";
-import emailLogin from "../../api/home/userLogin";
 import { useDispatch, useSelector } from "react-redux";
-import { addToken } from "../../store/reducers/authSlice";
+import { addCountry, addToken } from "../../store/reducers/authSlice";
+import countryList from "../../api/common/getAllCountries";
 
 const Home = () => {
-  const isToken = useSelector((state) => state.auth.token);
+  // const isToken = localStorage.getItem("token");
   const dispatch = useDispatch();
-  const defaultUser = { 
-    email : "ikram2001@gmail.com",
-    password : "12345678"
-  } 
-    const { data, refetch } = useQuery({
-      queryFn: () => emailLogin(defaultUser),
-      onSuccess: (data) => {
-        dispatch(addToken(data.data.token));
-      }
-    });
+  // const defaultUser = { 
+  //   email : "ikram2001@gmail.com",
+  //   password : "12345678"
+  // } 
+    // const { data, refetch } = useQuery({
+    //   queryFn: () => emailLogin(defaultUser),
+    //   onSuccess: (data) => {
+    //     dispatch(addToken(data.data.token));
+    //   }
+    // });
 
+    // useEffect(() => {
+    //   if (!isToken) {
+    //     refetch()
+    //   }
+    // }, [isToken])
+    
+    const isCountry = localStorage.getItem("country");
     useEffect(() => {
-      if (!isToken) {
-        refetch()
+      if (!isCountry) {
+        fetchAllCountries();
       }
-    }, [isToken])
+    }, []);
+  
+    const fetchAllCountries = () => {
+      countryList()
+        .then((res) => {
+          const defaultCountry = res.data.find((val) => val.is_default == "Yes");
+          localStorage.setItem("country", JSON.stringify(defaultCountry));
+          dispatch(addCountry(defaultCountry));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
   
   return (
     <div className="home-styling container-fluid">
