@@ -20,13 +20,37 @@ function App() {
       document.body.appendChild(script);
     }
 
-    if (getChatURLs(currentURL.pathname)) {
-      element?.classList.remove("hide-chat-icon");
-    } else {
-      element?.classList.add("hide-chat-icon");
-    }
+  //   if (getChatURLs(currentURL.pathname)) {
+  //     element?.classList.remove("hide-chat-icon");
+  //   } else {
+  //     element?.classList.add("hide-chat-icon");
+  //   }
 
-  }, [currentURL])
+  // }, [currentURL])
+  
+    // Check if the chat should be visible on the current page
+    const isChatVisible = getChatURLs(currentURL.pathname);
+  
+    if (element) {
+      if (isChatVisible) {
+        element.classList.remove("hide-chat-icon");
+      } else {
+        element.classList.add("hide-chat-icon");
+      }
+    }
+  
+    // Additional logic for page-specific CSS
+    if (currentURL.pathname === "/menu/restaurant/1/delivery") {
+      // Apply additional styles for the specific page
+      // For example, you can add a class to the body or any specific element
+      document.body.classList.add("specific-page-body-style");
+    } else {
+      // Remove the class for other pages
+      document.body.classList.remove("chat-icon");
+    }
+  
+  }, [currentURL]);
+  
 
   return (
     <div className="container_main">
