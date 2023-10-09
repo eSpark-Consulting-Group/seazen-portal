@@ -101,9 +101,10 @@ const MenuCardListContainer = ({itemCategoryList}) => {
               }`}
             >
               <div className="card_list_title">{getCategoryName()}</div>
-              <div
+              {/* <div
                 className={`search ${isSearchOpen ? "expanded_search" : ""}`}
-              >
+              > */}
+              <div className="search">
                 <div
                   className={`searchwrapper ${
                     isSearchOpen ? "expanded_search" : ""
