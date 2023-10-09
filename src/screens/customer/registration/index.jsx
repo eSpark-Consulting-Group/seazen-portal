@@ -1,12 +1,21 @@
 import React from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Navbar, { NavbarVariants } from "../../../components/header";
 import { Footer } from "../../../components/footer/footerContent";
+import { paths } from "../../../routes/paths";
+import { addUserInfo } from "../../../store/reducers/authSlice";
+import { useDispatch } from "react-redux";
+import updateProfile from "../../../api/customer/updateProfile";
 
 const initialState = {
   first_name: "",
@@ -16,27 +25,35 @@ const initialState = {
 
 const registrationSchema = Yup.object().shape({
   first_name: Yup.string()
-    .matches(/^[A-Za-z ]*$/)
+    .matches(/^[a-z ,.'-]+$/i)
     .max(40)
     .required(),
   last_name: Yup.string()
-    .matches(/^[A-Za-z ]*$/)
+    .matches(/^[a-z ,.'-]+$/i)
     .max(40)
     .required(),
-  email: Yup.string().email(),
+  email: Yup.string().email().required(),
 });
 
 function CustomerRegistration() {
+  const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
   const formikCustomerRegistration = useFormik({
     initialValues: initialState,
     validationSchema: registrationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      const mobileCountryCode = "+" + searchParams.get("mobile_country_code");
+      const mobile = searchParams.get("mobile");
+      dispatch(addUserInfo({ values, mobileCountryCode, mobile }));
+      // updateProfile(values).
+      navigate(paths.location + "?" + createSearchParams(values));
     },
   });
 
-  const { first_name, last_name } = formikCustomerRegistration.errors
-  const isFormError = first_name || last_name
+  const { first_name, last_name } = formikCustomerRegistration.errors;
+  const isFormError = first_name || last_name;
 
   return (
     <Stack
@@ -115,7 +132,7 @@ function CustomerRegistration() {
             fullWidth
             id="email"
             variant="outlined"
-            placeholder="Email (optional)"
+            placeholder="Email"
             sx={{
               flex: 1,
             }}

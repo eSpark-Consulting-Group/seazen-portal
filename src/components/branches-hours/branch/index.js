@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import "./style.css"
+import React, { useState, useEffect } from "react";
+import "./style.css";
 
 const RestaurantInfo = ({ restaurants }) => {
   return (
@@ -12,25 +12,27 @@ const RestaurantInfo = ({ restaurants }) => {
 };
 
 const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState("");
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const updateStatus = () => {
       const currentHour = currentTime.getHours();
       const currentMinute = currentTime.getMinutes();
-      const [openHour, closeHour] = weekdayHours.split(' - ').map(time => parseInt(time.split(':')[0]));
+      const [openHour, closeHour] = weekdayHours
+        .split(" - ")
+        .map((time) => parseInt(time.split(":")[0]));
 
       if (currentHour < openHour) {
-        setStatus('Closed');
+        setStatus("Closed");
       } else if (currentHour === openHour && currentMinute < 30) {
-        setStatus('Closed');
+        setStatus("Closed");
       } else if (currentHour < closeHour) {
-        setStatus('Open Now');
+        setStatus("Open Now");
       } else if (currentHour === closeHour && currentMinute < 30) {
-        setStatus('Closing Soon');
+        setStatus("Closing Soon");
       } else {
-        setStatus('Closed');
+        setStatus("Closed");
       }
     };
 
@@ -52,17 +54,29 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
         </div>
         <div className="branch-status-section">
           <div className="branch-status-container">
-            <div className={`branch-status-tag ${status.toLowerCase()} ${status === 'Closed' ? 'branch-closed' : status === 'Closing Soon' ? 'branch-closing-soon' : status === 'Open Now' ? 'branch-open-now' : ''}`}>
+            <div
+              className={`branch-status-tag ${status.toLowerCase()} ${
+                status === "Closed"
+                  ? "branch-closed"
+                  : status === "Closing Soon"
+                  ? "branch-closing-soon"
+                  : status === "Open Now"
+                  ? "branch-open-now"
+                  : ""
+              }`}
+            >
               {status.toUpperCase()}
             </div>
           </div>
         </div>
         <div>
-          <div className="branch-hours">
-            <div className="branch-timings">
-              <strong className="branch-weekdays">Weekdays:</strong><span className="branch-weekdaysHours"> {weekdayHours}</span>
+          <div className="branch-hours d-flex justify-content-center align-items-center">
+            <div className="branch-timings d-flex justify-content-center align-items-center">
+              <strong className="branch-weekdays">Weekdays:</strong>
+              <span className="branch-weekdaysHours"> {weekdayHours}</span>
               <div>
-                <strong className="branch-weekends">Weekends:</strong><span className="branch-weekendsHours"> {weekendHours}</span>
+                <strong className="branch-weekends">Weekends:</strong>
+                <span className="branch-weekendsHours"> {weekendHours}</span>
               </div>
             </div>
           </div>
@@ -72,7 +86,6 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
         </div>
       </div>
     </div>
-
   );
 };
 

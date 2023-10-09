@@ -7,7 +7,8 @@ const authSlice = createSlice({
       id: 1,
       name: "John Doe",
       email: "johndoe@example.com",
-      phone: "1234567890",
+      mobile_country_code: "+962",
+      mobile: "1234567890",
       address: "123, Lorem Ipsum, Lorem Ipsum, Lorem Ipsum",
       pincode: "123456",
       city: "Lorem Ipsum",
@@ -23,14 +24,26 @@ const authSlice = createSlice({
   },
   reducers: {
     addToken: (state, action) => {
-      state.token = action.payload
+      state.token = action.payload;
+      state.isAuthenticated = true;
+    },
+    addUserInfo: (state, action) => {
+      const {values, mobileCountryCode, mobile} = action.payload
+      const {first_name, last_name, email } = values
+      // console.log(values, "shah");
+      // console.log(mobileCountryCode, "shah");
+      // console.log(mobile, "shah");
+      state.name = first_name + last_name;
+      state.email = email;
+      state.mobile_country_code = mobileCountryCode;
+      state.mobile = mobile
     },
     addCountry: (state, action) => {
       state.country = action.payload
-    },
-  }
+    }, 
+  },
 });
 
-export const { addToken, addCountry } = authSlice.actions;
+export const { addToken, addUserInfo, addCountry } = authSlice.actions;
 
 export default authSlice.reducer;

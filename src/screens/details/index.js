@@ -33,7 +33,7 @@ export const Details = () => {
   const navigate = useNavigate();
 
   const cart = useSelector((state) => state.cart.cart);
-  const token = useSelector((state) => state.auth.token);
+  const token = localStorage.getItem("token");
 
   const [cartItem, setCartItem] = React.useState();
   const [quantity, setQuantity] = React.useState(1);

@@ -11,7 +11,7 @@ import { GuestProfile } from "../screens/guestProfile";
 import { PrivacyPolicy } from "../screens/privacyPolicy";
 import { Terms } from "../screens/terms";
 import CustomerRegistration from "../screens/customer/registration";
-import { EditForm } from "../screens/editForm";
+import { UpdateCustomerProfile } from "../screens/editForm";
 import AddressForm from "../screens/address";
 import { Details } from "../screens/details";
 import { Branches } from "../screens/branches";
@@ -30,16 +30,16 @@ export const paths = {
   location: "/location",
   orderplace: "orderplace",
   customer_registration: "/customer_registration",
-  phone_verification_index: "phone-verification",
+  phone_verification_index: "/phone-verification",
   phone_verification_otp: "/phone-verification/otp",
   profile: "/profile",
   update_profile: "/update_profile",
   guest_profile: "guest-profile",
-  privacy_policy: "privacy-policy",
+  privacy_policy: "/privacy-policy",
   terms: "/terms",
   address: "/address",
   details: "/menu-item-details",
-  branches: "/branches",
+  branches: "/restaurant/",
   addresses: "/my-addresses",
   search: "search",
 };
@@ -56,14 +56,14 @@ export const routes = {
   location: "/location",
   orderplace: "orderplace",
   customer_registration: "/customer_registration",
-  phone_verification_index: "guest-profile/phone-verification/",
+  phone_verification_index: "/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
   profile: "profile",
   update_profile: "/update_profile",
   guest_profile: "/guest-profile",
   privacy_policy: "/privacy-policy",
   terms: "/terms",
-  branches: "/branches",
+  branches: "/restaurant/:id/branches",
   addresses: "/my-addresses",
   search: "/search",
 };
@@ -107,7 +107,7 @@ export const publicRoutes = {
   [paths.update_profile]: {
     name: "Update Profile",
     path: routes.update_profile,
-    component: <EditForm />,
+    component: <UpdateCustomerProfile />,
   },
   [paths.customer_registration]: {
     name: "Customer Registration",
