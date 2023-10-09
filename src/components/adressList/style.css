@@ -16,6 +16,7 @@
   margin-bottom: 12px;
   padding: 10px 15px;
   opacity: 1;
+  cursor: pointer;
 }
 
 .addresses-header {
