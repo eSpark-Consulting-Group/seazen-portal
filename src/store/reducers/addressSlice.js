@@ -3,21 +3,29 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   addressData: [],
   addressDetail: {},
+  error: "",
+  isLoading: false,
 };
 
 const addressSlice = createSlice({
   name: "address",
   initialState,
   reducers: {
-    getAddress: (state, action) => {
-      state.addressData = action.payload;
+    isLoaded: (state) => {
+      state.isLoading = true;
     },
-    addAddressDetail: (state, action) => {
-      state.addressDetail = action.payload;
+    getAddress: (state, { payload }) => {
+      state.addressData = payload;
+      state.isLoading = false;
+    },
+    addAddressDetail: (state, { payload }) => {
+      if (payload.address === undefined) {
+        state.addressDetail = payload.currentAdd;
+      }
     },
   },
 });
 
-export const { getAddress, addAddressDetail } = addressSlice.actions;
+export const { isLoaded, getAddress, addAddressDetail } = addressSlice.actions;
 
 export default addressSlice.reducer;
