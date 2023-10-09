@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import {
   GoogleMap,
-  InfoWindowF,
+  MarkerF,
   useLoadScript,
   Autocomplete,
 } from "@react-google-maps/api";
@@ -85,12 +85,6 @@ function LocationPage() {
     libraries: lib,
   });
 
-  useEffect(() => {
-    // eslint-disable-next-line no-undef
-    setKey(process.env.REACT_APP_GOOGLE_API_KEY);
-  }, []);
-
-  // get current location of user and set it as center
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [address, setAddress] = useState("");
   const [autocomplete, setAutocomplete] = useState(null);
@@ -152,6 +146,8 @@ function LocationPage() {
   }, [data, center]);
 
   const getAdd = async (lat, lng) => {
+    // eslint-disable-next-line no-undef
+    setKey(process.env.REACT_APP_GOOGLE_API_KEY);
     geocode(RequestType.LATLNG, `${lat},${lng}`, {
       enable_address_descriptor: true,
     })
@@ -212,9 +208,15 @@ function LocationPage() {
   }
 
   const confirmLocation = () => {
-    navigate(paths.address, {
-      state: { name: address, latlng: center },
-    });
+    if (location?.state?.path === "/cart") {
+      navigate(paths.address, {
+        state: { name: address, latlng: center, path: location?.state?.path },
+      });
+    } else {
+      navigate(paths.address, {
+        state: { name: address, latlng: center },
+      });
+    }
   };
 
   return (
@@ -322,15 +324,9 @@ function LocationPage() {
               lng: center.lng,
             }}
             icon={{
-              url: LocationGreen,
+              url: LocationRed,
             }}
           /> */}
-
-          {/* <InfoWindowF
-              position={{
-                lat: center.lat,
-                lng: center.lng,
-              }} */}
 
           {distanceIsFar ? (
             <Box className="info-window-box">
@@ -342,8 +338,6 @@ function LocationPage() {
               </Typography>
             </Box>
           ) : null}
-
-          {/* </InfoWindowF> */}
         </GoogleMap>
       )}
 

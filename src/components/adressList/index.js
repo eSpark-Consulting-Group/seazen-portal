@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -17,7 +17,31 @@ import { paths } from "../../routes/paths";
 
 import "./style.css";
 
-const Card = ({ iconUrl, data, deleteAddress, setOpen, open }) => {
+const Card = (props) => {
+  const {
+    iconUrl,
+    data,
+    deleteAddress,
+    setOpen,
+    open,
+    selectCurrentAddress,
+    deselectCurrentAddress,
+    isSelected,
+    setIsSelected,
+    address,
+  } = props;
+
+  useEffect(() => {
+    if (address !== undefined) {
+      if (
+        parseFloat(address.lat) === parseFloat(+data.latitude) &&
+        parseFloat(address.lng) === parseFloat(+data.longitude)
+      ) {
+        setIsSelected(true);
+      }
+    }
+  }, [address, data]);
+
   const navigate = useNavigate();
   const latlng = { lat: data.latitude, lng: data.longitute };
 
@@ -30,13 +54,27 @@ const Card = ({ iconUrl, data, deleteAddress, setOpen, open }) => {
   };
 
   return (
-    <div className="addresses-container  container-fluid">
+    <div
+      className={[
+        "addresses-container  container-fluid",
+        isSelected ? "dark-bg" : "",
+      ].join(" ")}
+      onClick={() => {
+        !isSelected ? selectCurrentAddress(data) : deselectCurrentAddress();
+      }}
+    >
       <div className="addresses-header">
-        <img className="addresses-card-icon" src={iconUrl} alt="Icon" />
-        <p className="addresses-home-title">{data.address_type}</p>
-        <p className="addresses-home-title2">{data?.address}</p>
-      </div>
-      <div className="addresses-button-section">
+        <div className="addresses-title">
+          <div className="addresses-card-div">
+            <img className="addresses-card-icon" src={iconUrl} alt="Icon" />
+          </div>
+
+          <div className="addresses-titles">
+            <p className="addresses-home-title">{data.address_type}</p>
+            <p className="addresses-home-title2">{data?.address_type}</p>
+            {/* data.address */}
+          </div>
+        </div>
         <div className="addresses-button-container">
           <button className="addresses-delete-button" onClick={handleClickOpen}>
             <span className="addresses-delete-text">Delete</span>
@@ -52,8 +90,9 @@ const Card = ({ iconUrl, data, deleteAddress, setOpen, open }) => {
             <span className="addresses-edit-text">Edit</span>
           </button>
         </div>
-        <hr />
       </div>
+      <hr />
+
       <div className="addresses-content">
         <div className="addresses-details-and-map">
           <div className="addresses-details">
@@ -67,10 +106,10 @@ const Card = ({ iconUrl, data, deleteAddress, setOpen, open }) => {
               <p className="addresses-name">Building No: {data.building}</p>
             )}
 
-            <p className="addresses-name">{data.avenue}</p> 
+            <p className="addresses-name">{data.avenue}</p>
 
             {data.address_type.toLowerCase() === "apartment" ? (
-              <p className="addresses-name">{`Floor: ${data.floor}, Aprtment: ${data.apartment_no}`}</p>
+              <p className="addresses-name">{`Floor: ${data.floor}, Apartment: ${data.apartment_no}`}</p>
             ) : data.address_type.toLowerCase() === "office" ? (
               <p className="addresses-name">{`Floor: ${data.floor}, ${data.company_name}`}</p>
             ) : null}
@@ -156,6 +195,7 @@ const Card = ({ iconUrl, data, deleteAddress, setOpen, open }) => {
           <Button
             color="primary"
             autoFocus
+            className="delete-button"
             sx={{
               background: "#98694E 0% 0% no-repeat padding-box",
               border: "1px solid #707070",

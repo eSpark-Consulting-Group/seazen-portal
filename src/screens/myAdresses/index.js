@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -16,15 +17,24 @@ import { getAddress } from "../../store/reducers/addressSlice";
 import deleteAddressApiCall from "../../api/address/deleteAddress";
 
 import "./style.css";
+import { paths } from "../../routes/paths";
+import { getFullAddress } from "../../utils/getAddress";
 
 const App = () => {
   const isToken = useSelector((state) => state.auth.token);
-  const { addressData } = useSelector((state) => state.address);
+  const addressData = useSelector((state) => state.address.addressData);
+  // const isLoading = useSelector((state) => state.address.isLoading);
 
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // const [cardData, setCardData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState({});
+  const [selectedId, setSelectedId] = useState(null);
+  const [fullAddress, setFullAddress] = useState(null);
   // const [isLoading, setIsloading] = useState(false);
 
   const fetchFunction = async () => {
@@ -43,6 +53,39 @@ const App = () => {
     },
   });
 
+  const selectCurrentAddress = (item) => {
+    setSelectedId(item.id);
+    setSelectedAddress(item);
+    const selectedAddress = {
+      lat: +item.latitude,
+      lng: +item.longitude,
+    };
+
+    getFullAddress(selectedAddress.lat, selectedAddress.lng, setFullAddress);
+  };
+
+  useEffect(() => {
+    if (fullAddress !== null) {
+      localStorage.setItem("location", JSON.stringify(fullAddress));
+
+      if (location?.state?.path === "/cart") {
+        navigate(paths.cart);
+      }
+
+      if (
+        location?.state?.path === "/profile" ||
+        location?.state?.path === "/address"
+      ) {
+        navigate(paths.home);
+      }
+    }
+  }, [fullAddress, location]);
+
+  const deselectCurrentAddress = () => {
+    setIsSelected(false);
+    setSelectedAddress({});
+  };
+
   const deleteAddress = (id) => {
     deleteAddressApiCall(id, isToken).then((res) => {
       if (res.statusCode === 200) {
@@ -50,42 +93,6 @@ const App = () => {
       }
     });
   };
-
-  // const cardData = [
-  //   {
-  //     id: 1,
-  //     title: "Home  ",
-  //     title2: "Salmiya",
-  //     iconUrl: "/assets/img/salmiya home.svg",
-  //     name: "Salmiya",
-  //     block: "Block 11, Oman Street,",
-  //     home: "Home No: 33, ",
-  //     floor: "Floor: 2 Flat: 4",
-  //     AdditionalDirections: "Across BE School",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Appart",
-  //     title2: "Salmiya",
-  //     iconUrl: "/assets/img/salmiya appart.svg",
-  //     name: "Salmiya",
-  //     block: "Block 11, Oman Street,",
-  //     home: "Building No: 33, Sahar Building",
-  //     floor: "Floor: 10 Flat: 20",
-  //     AdditionalDirections: "Across BE School",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Office",
-  //     title2: "Salmiya",
-  //     iconUrl: "/assets/img/salmiya office.svg",
-  //     name: "Salmiya",
-  //     block: "Block 11, Oman Street,",
-  //     home: "Building No: 33, Sahar Building",
-  //     floor: "loor: 10, Seazen Office",
-  //     AdditionalDirections: "Across BE School",
-  //   },
-  // ];
 
   return (
     <div className="app ">
@@ -191,10 +198,19 @@ const App = () => {
                 open={open}
                 setOpen={setOpen}
                 deleteAddress={deleteAddress}
+                selectCurrentAddress={selectCurrentAddress}
+                deselectCurrentAddress={deselectCurrentAddress}
+                isSelected={isSelected}
+                setIsSelected={setIsSelected}
+                address={location?.state?.latlng}
               />
             </div>
           ))}
-      <AddressesButton />
+      <AddressesButton
+        restaurantName={location?.state?.restaurantName}
+        restaurant_id={location?.state?.restaurant_id}
+        path={location.state.path}
+      />
     </div>
   );
 };

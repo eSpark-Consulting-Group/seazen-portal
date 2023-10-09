@@ -1,14 +1,20 @@
-import React from 'react';
+import React from "react";
 import "./style.css";
 
 const AddressTypeButton = ({ type, addressType, onClick, edit }) => (
   <button
     onClick={() => onClick(type)}
-    className={addressType === type ? "active" : type}
+    className={
+      addressType === type
+        ? "active"
+        : type === "apartment"
+        ? "appartment"
+        : type
+    }
     disabled={edit ? true : false}
   >
     <img
-      src={`/assets/img/${type} - ${
+      src={`/assets/img/${type === "apartment" ? "appartment" : type} - ${
         addressType === type ? "white" : "black"
       }.svg`}
       alt={type}
@@ -38,7 +44,7 @@ const AddressTypeSelector = ({
       edit={edit}
     />
     <AddressTypeButton
-      type="appartment"
+      type="apartment"
       addressType={addressType}
       onClick={handleAddressTypeChange}
       edit={edit}
