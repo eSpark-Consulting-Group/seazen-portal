@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   Button,
   Dialog,
@@ -7,20 +9,41 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import "./style.css";
-import { AddressesButton } from "./addressesButton";
 
-const Card = ({
-  title,
-  title2,
-  iconUrl,
-  name,
-  block,
-  home,
-  floor,
-  AdditionalDirections,
-}) => {
-  const [open, setOpen] = useState(false); // State to control the dialog visibility
+// import { AddressesButton } from "./addressesButton";
+// import { useSelector } from "react-redux";
+
+import { paths } from "../../routes/paths";
+
+import "./style.css";
+
+const Card = (props) => {
+  const {
+    iconUrl,
+    data,
+    deleteAddress,
+    setOpen,
+    open,
+    selectCurrentAddress,
+    deselectCurrentAddress,
+    isSelected,
+    setIsSelected,
+    address,
+  } = props;
+
+  useEffect(() => {
+    if (address !== undefined) {
+      if (
+        parseFloat(address.lat) === parseFloat(+data.latitude) &&
+        parseFloat(address.lng) === parseFloat(+data.longitude)
+      ) {
+        setIsSelected(true);
+      }
+    }
+  }, [address, data]);
+
+  const navigate = useNavigate();
+  const latlng = { lat: data.latitude, lng: data.longitute };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -31,33 +54,73 @@ const Card = ({
   };
 
   return (
-    <div className="addresses-container  container-fluid">
+    <div
+      className={[
+        "addresses-container  container-fluid",
+        isSelected ? "dark-bg" : "",
+      ].join(" ")}
+      onClick={() => {
+        !isSelected ? selectCurrentAddress(data) : deselectCurrentAddress();
+      }}
+    >
       <div className="addresses-header">
-        <img className="addresses-card-icon" src={iconUrl} alt="Icon" />
-        <p className="addresses-home-title">{title}</p>
-        <p className="addresses-home-title2">{title2}</p>
-      </div>
-      <div className="addresses-button-section">
+        <div className="addresses-title">
+          <div className="addresses-card-div">
+            <img className="addresses-card-icon" src={iconUrl} alt="Icon" />
+          </div>
+
+          <div className="addresses-titles">
+            <p className="addresses-home-title">{data.address_type}</p>
+            <p className="addresses-home-title2">{data?.address_type}</p>
+            {/* data.address */}
+          </div>
+        </div>
         <div className="addresses-button-container">
           <button className="addresses-delete-button" onClick={handleClickOpen}>
             <span className="addresses-delete-text">Delete</span>
           </button>
-          <button className="addresses-edit-button">
+          <button
+            className="addresses-edit-button"
+            onClick={() =>
+              navigate(paths.address, {
+                state: { data: data, latlng, edit: true },
+              })
+            }
+          >
             <span className="addresses-edit-text">Edit</span>
           </button>
         </div>
-        <hr />
       </div>
+      <hr />
+
       <div className="addresses-content">
         <div className="addresses-details-and-map">
           <div className="addresses-details">
-            <p className="addresses-name">{name}</p>
-            <p className="addresses-name">{block}</p>
-            <p className="addresses-name">{home}</p>
-            <p className="addresses-name">{floor}</p>
-            <p className="additional-addresses">
-              Additional Directions; <br /> {AdditionalDirections}
+            <p className="addresses-name">
+              Block: {data.block}, Street:{data.street}
             </p>
+
+            {data.address_type === "house" ? (
+              <p className="addresses-name">House No: {data.house_no}</p>
+            ) : (
+              <p className="addresses-name">Building No: {data.building}</p>
+            )}
+
+            <p className="addresses-name">{data.avenue}</p>
+
+            {data.address_type.toLowerCase() === "apartment" ? (
+              <p className="addresses-name">{`Floor: ${data.floor}, Apartment: ${data.apartment_no}`}</p>
+            ) : data.address_type.toLowerCase() === "office" ? (
+              <p className="addresses-name">{`Floor: ${data.floor}, ${data.company_name}`}</p>
+            ) : null}
+
+            <p className="addresses-name">{data.address_label}</p>
+
+            {data.additional_direction !== "" ? (
+              <p className="additional-addresses">
+                Additional Directions: <br /> {data.additional_direction}
+              </p>
+            ) : null}
           </div>
         </div>
         <div className="addresses-map-section">
@@ -99,7 +162,7 @@ const Card = ({
               }}
             >
               Are you sure you want to
-              <br /> delete {title}?{" "}
+              <br /> delete {data.address_type}?{" "}
             </div>
           </DialogContentText>
         </DialogContent>
@@ -132,6 +195,7 @@ const Card = ({
           <Button
             color="primary"
             autoFocus
+            className="delete-button"
             sx={{
               background: "#98694E 0% 0% no-repeat padding-box",
               border: "1px solid #707070",
@@ -140,6 +204,7 @@ const Card = ({
               width: "116px",
               height: "29px",
             }}
+            onClick={() => deleteAddress(data.id)}
           >
             <span
               style={{

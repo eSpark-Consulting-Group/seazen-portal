@@ -16,6 +16,7 @@
     opacity: 1;
     position: absolute;
     top: 30px;
+    cursor: pointer;
 }
 .right-icons img {
   height: 20px;
@@ -34,8 +35,7 @@
   color: #1f2933;
   opacity: 1;
   position: absolute;
-  margin-left: -91px;
-
+  margin-left: -71px;
 }
 
 /* @media screen and (max-width: 500px) and (min-width: 380px) {

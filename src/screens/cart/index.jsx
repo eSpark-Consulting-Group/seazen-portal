@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -31,16 +31,18 @@ import checkout from "../../api/cart/checkout";
 import getRestaurantDetails from "../../api/restaurant/getRestaurantDetails";
 import { addToCart } from "../../store/reducers/cartSlice";
 import applyPromoCode from "../../api/cart/promocode";
-import CancelIcon from '@mui/icons-material/Cancel';
+import CancelIcon from "@mui/icons-material/Cancel";
 
 function CartPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [tipValue, setTipValue] = React.useState(0.25);
   const [isLoading, setIsLoading] = React.useState(false);
   const [cartItems, setCartItems] = React.useState();
   const [specialIns, setSpecialIns] = React.useState("");
   const [restaurantLogo, setRestaurantLogo] = React.useState("");
+  const [restaurantName, setRestaurantName] = React.useState("");
   const [promoCode, setPromoCode] = React.useState("");
   const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
@@ -57,14 +59,14 @@ function CartPage() {
   const cart = useSelector((state) => state.cart.cart);
   const totalPrice = useSelector((state) => state.cart.total);
   const dispatch = useDispatch();
-  const restaurantId = localStorage.getItem("restaurantID")
-  
+  const restaurantId = localStorage.getItem("restaurantID");
+
   // Function to handle opening the dialog
   const handleDialogOpen = () => {
     applyPromoCode(
       {
         restaurant_id: restaurantId,
-        promo_code: promoCode
+        promo_code: promoCode,
       },
       token
     )
@@ -133,19 +135,20 @@ function CartPage() {
 
   useEffect(() => {
     cartRefetch();
-    getRestaurantLogo(cart[0]?.restaurant_id)
+    getRestaurantLogo(cart[0]?.restaurant_id);
   }, [country]);
 
   const getRestaurantLogo = (restaurantId) => {
     setTimeout(() => {
-      if(restaurantId) {
+      if (restaurantId) {
         getRestaurantDetails(restaurantId, country?.id)
-        .then((res) => {
-          setRestaurantLogo(res.data.logo);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+          .then((res) => {
+            setRestaurantLogo(res.data.logo);
+            setRestaurantName(res.data.page_title_en);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     }, 500);
   };
@@ -153,29 +156,38 @@ function CartPage() {
   const cartRefetch = () => {
     if (cart.length == 0) {
       setTimeout(() => {
-        setIsLoading(true)
+        setIsLoading(true);
         cartList(token)
           .then((res) => {
             const resData = res.data.map((val) => {
               return {
-                  id: val?.item_id,
-                  cart_id: val.cart_id,
-                  itemName: val?.menu_item_name_en,
-                  discountedPrice: val?.discounted_price,
-                  price: val?.unit_price,
-                  quantity: val.quantity,
-                  variants: {
-                    sizeVariant: {...val.size_variant[0], variantId: val.size_variant_id },
-                    toppingVariant: val.topping_variant.map((value) => ({...value, variantId: val.topping_variant_id })),
-                    sideVariant: val.side_variant.map((value) => ({...value, variantId: val.side_variant_id })),
+                id: val?.item_id,
+                cart_id: val.cart_id,
+                itemName: val?.menu_item_name_en,
+                discountedPrice: val?.discounted_price,
+                price: val?.unit_price,
+                quantity: val.quantity,
+                variants: {
+                  sizeVariant: {
+                    ...val.size_variant[0],
+                    variantId: val.size_variant_id,
                   },
-                  item_code: val.item_code,
-                  specialInstructions: "",
-                  itemImage: val?.menu_item_image,
-                  restaurant_id: 1,
-                  totalPrice: Number(val.quantity * val.unit_price).toFixed(3) 
-              }
-            })
+                  toppingVariant: val.topping_variant.map((value) => ({
+                    ...value,
+                    variantId: val.topping_variant_id,
+                  })),
+                  sideVariant: val.side_variant.map((value) => ({
+                    ...value,
+                    variantId: val.side_variant_id,
+                  })),
+                },
+                item_code: val.item_code,
+                specialInstructions: "",
+                itemImage: val?.menu_item_image,
+                restaurant_id: 1,
+                totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
+              };
+            });
             setCartItems(resData);
             dispatch(addToCart(resData));
             setIsLoading(false);
@@ -189,9 +201,11 @@ function CartPage() {
   };
 
   const getItemTotal = () => {
-    return cartItems.reduce((acc, cartItem) => {
-      return acc + Number(cartItem.totalPrice);
-    }, 0).toFixed(3);
+    return cartItems
+      .reduce((acc, cartItem) => {
+        return acc + Number(cartItem.totalPrice);
+      }, 0)
+      .toFixed(3);
   };
 
   const getTipAmount = () => {
@@ -203,13 +217,13 @@ function CartPage() {
   };
 
   const getPromoDiscount = () => {
-    let discount = 0
-    if(promoDiscount.discount_type == "percentage"){
-      discount = getItemTotal() / 100 * promoDiscount.discount_value
-      promoDiscount.message = `${promoDiscount.discount_value}% Discount Applied`
+    let discount = 0;
+    if (promoDiscount.discount_type == "percentage") {
+      discount = (getItemTotal() / 100) * promoDiscount.discount_value;
+      promoDiscount.message = `${promoDiscount.discount_value}% Discount Applied`;
     }
-    return discount
-  }
+    return discount;
+  };
 
   const getDiscountAmount = () => {
     return Number(getPromoDiscount()).toFixed(2);
@@ -220,7 +234,7 @@ function CartPage() {
       Number(getItemTotal()) +
       Number(getTipAmount()) -
       Number(getDiscountAmount()) +
-      Number(getDeliveryCharge()) - 
+      Number(getDeliveryCharge()) -
       Number(getPromoDiscount())
     ).toFixed(3);
   };
@@ -320,7 +334,9 @@ function CartPage() {
                 },
               }}
             >
-              {restaurantLogo && <img src={restaurantLogo} alt="Restaurant Logo" />}
+              {restaurantLogo && (
+                <img src={restaurantLogo} alt="Restaurant Logo" />
+              )}
             </Box>
           </Stack>
 
@@ -346,7 +362,7 @@ function CartPage() {
                 }}
               >
                 <LocationOnIcon fontSize="small" sx={{ mr: 0.5 }} />
-                1234, Street Name, City Name, Country Name
+                {JSON.parse(localStorage.getItem("location"))?.address}
               </Typography>
             </Stack>
 
@@ -370,7 +386,16 @@ function CartPage() {
                   fontSize: "16px",
                 },
               }}
-              onClick={() => navigate(paths.location)}
+              onClick={() =>
+                navigate(paths.addresses, {
+                  state: {
+                    restaurant_id: cartItems[0].restaurant_id,
+                    restaurantName,
+                    path: location.pathname,
+                    latlng: JSON.parse(localStorage.getItem("location")),
+                  },
+                })
+              }
             >
               Change
             </Button>

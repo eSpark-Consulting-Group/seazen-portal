@@ -1,42 +1,81 @@
+/* .addresses-container { */
+/* display: flex; */
+/* height: 158px; */
+/* margin-top: 10px; */
+/* padding-top: 8px; */
+/* padding-bottom: 6px; */
+/* margin-left: 22px; */
+/* } */
+
 .addresses-container {
-  display: flex;
   width: 327px;
-  height: 148px;
-  background: #ffffff 0% 0% no-repeat padding-box;
-  box-shadow: 0px 0px 48px #314f7c1f;
+  background: #ffffff 0% 0% no-repeat border-box;
   border: 1px solid #c0cdd7;
   border-radius: 12px;
+  box-shadow: 0px 0px 48px #314f7c1f;
+  margin-bottom: 12px;
+  padding: 10px 15px;
   opacity: 1;
-  margin-top: 10px;
-  /* margin-left: 22px; */
+  cursor: pointer;
+}
+
+.addresses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.addresses-title {
+  display: flex;
+  align-items: center;
+}
+
+.dark-bg {
+  background-color: #eee;
+}
+
+.addresses-card-div {
+  width: 19px;
+  height: 17px;
+  margin-right: 3.8px;
 }
 
 .addresses-card-icon {
-  width: 19px;
-  height: 17px;
+  width: 100%;
   opacity: 1;
-  margin-left: 14px;
-  margin-top: 13px;
+  object-fit: contain;
+  /* margin-left: 14px;
+  margin-top: 13px; */
 }
 
 .addresses-home-title {
-  text-align: left;
-  font: normal normal bold 12px/28px Titillium Web;
+  font: normal normal bold 12px Titillium Web;
   letter-spacing: 0px;
   color: #40484e;
-  opacity: 1;
-  margin-top: -35px;
-  margin-left: 34px;
+  margin: 0px !important;
+  padding: 0px !important;
+  text-transform: capitalize;
+  /* text-align: left; */
+  /* opacity: 1; */
+  /* margin-top: -35px; */
+  /* margin-left: 34px; */
 }
 
 .addresses-home-title2 {
   text-align: left;
-  font: normal normal normal 10px/28px Titillium Web;
+  font: normal normal normal 10px Titillium Web;
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  margin-top: -30px;
-  margin-left: 34px;
+  margin: 0px !important;
+  padding: 0px !important;
+  /* margin-top: -30px; */
+  /* margin-left: 34px; */
+}
+
+.addresses-button-section {
+  display: flex;
+  align-items: center;
 }
 
 .addresses-delete-button {
@@ -49,6 +88,7 @@
   cursor: pointer;
   padding-top: 0px;
   margin-right: 10px;
+  z-index: 2000000;
 }
 
 .addresses-edit-button {
@@ -60,15 +100,17 @@
   opacity: 1;
   cursor: pointer;
   padding-top: 0px;
+  z-index: 2000000;
 }
 
-.addresses-button-section hr {
-  width: 298px;
-  height: 0px;
+.addresses-container hr {
+  width: 100%;
   border: 1px dashed #b1b1b1;
   opacity: 1;
-  margin-left: -57px;
-  margin-top: 10px;
+  margin: 5.5px 0px 9.5px;
+  /* height: 0px; */
+  /* margin-left: -57px; */
+  /* margin-top: 10px; */
 }
 
 .addresses-delete-text {
@@ -91,37 +133,44 @@
   top: -2px;
 }
 
-.addresses-details-and-map {
-  display: flex; /* Display children side by side */
-  align-items: center;
-}
+/* .addresses-details-and-map { */
+/* display: flex; Display children side by side */
+/* align-items: center; */
+/* } */
 
 .addresses-content {
-  margin-left: -300px;
-  margin-top: 48px;
+  display: flex;
+  justify-content: space-between;
+  /* margin-left: -300px; */
+  /* margin-top: 48px; */
+  /* padding-top: 5px; */
 }
 
 .addresses-button-container {
-  margin-left: 100px;
-  margin-top: 5px;
+  display: flex;
+  justify-content: end;
+  flex: 1;
+  /* margin-left: 100px; */
+  /* margin-top: 5px; */
 }
 
 .addresses-map-section {
-  top: 52px;
-  left: 225px;
   width: 83px;
   height: 83px;
-  /* border: 1px solid #c0cdd7; */
   border-radius: 12px;
   opacity: 1;
+  /* top: 52px; */
+  /* left: 225px; */
+  /* border: 1px solid #c0cdd7; */
   /* position: absolute; */
-  padding-left: 217px;
-  margin-top: -88px;
+  /* padding-left: 115px; */
+  /* margin-top: -42%; */
 }
 
 .addresses-map-section img {
-  width: 83px;
-  height: 83px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .addresses-name {
@@ -132,6 +181,7 @@
   opacity: 1;
   margin-bottom: 0px;
 }
+
 .additional-addresses {
   font-size: 6px;
   font-weight: 300;
@@ -139,10 +189,14 @@
   margin-top: 5px;
 }
 
-.addresses-details {
-  top: 35px;
-  left: 12px;
-  /* position: absolute; */
+/* .addresses-details { */
+/* top: 35px; */
+/* left: 12px; */
+/* position: absolute; */
+/* } */
+
+.delete-button:hover span {
+  color: #1f2933 !important;
 }
 
 /* @media screen and (max-width:500px) and (min-width:380px) {
