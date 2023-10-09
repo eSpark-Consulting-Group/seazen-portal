@@ -23,7 +23,7 @@
   /* height: 100%; */
   overflow-y: scroll;
   padding-right: 25px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box
+  box-sizing: content-box;
 }
 
 .comment_button_container {
@@ -134,10 +134,15 @@
   margin-left: 25px;
 } */
 
-.searchwrapper.expanded_search {
+/* .searchwrapper.expanded_search {
   display: flex;
   height: 30px;
   margin: 10px 0px;
+} */
+.searchwrapper {
+  position: relative;
+  top: 45px;
+  left:93%;
 }
 
 .Modal_Search_Item {
@@ -148,7 +153,6 @@
   width: 375px;
   padding: 0 25px;
 }
-
 
 .closebtnmodal {
   display: flex;
@@ -167,18 +171,17 @@
 .InputModal {
   width: 100%;
   padding: 10px 20px;
-  border: 1px solid #C0CDD7;
+  border: 1px solid #c0cdd7;
   border-radius: 15px;
   font-weight: 600;
-  color: #959FA8;
-
+  color: #959fa8;
 }
 
 .closebtn {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background-color: #FFF;
+  background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,13 +189,12 @@
 }
 
 .closebtn:hover {
-  background-color: #FFF;
+  background-color: #fff;
 }
 
 .closebtn:active {
-  background-color: #FFF !important;
+  background-color: #fff !important;
 }
-
 
 @media (max-width: 600px) {
   .Modal_Search_Item {
@@ -200,29 +202,15 @@
   }
 }
 .categoryItemsList {
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
-.list-menu-cards{
+.list-menu-cards {
   height: 670px;
   overflow: auto;
   margin-top: 10px;
+  padding-right: 10px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* @media screen and (max-width: 500px) and (min-width: 380px) {
   .Nav_Image_Container img {
@@ -236,7 +224,7 @@
   }
 }  */
 
- /* @media screen and (max-width: 350px) {
+/* @media screen and (max-width: 350px) {
   .Nav_Image_Container img {
     width: 100%;
   }
@@ -256,8 +244,8 @@
 .scrollable-container {
   max-height: calc(100vh - 550px);
   overflow-y: scroll;
-  scrollbar-width: none; 
-  -ms-overflow-style: none; 
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   width: 100%;
 }
 .scrollable-container-wrapper {
@@ -265,4 +253,3 @@
   height: 100%;
   overflow: hidden;
 }
-

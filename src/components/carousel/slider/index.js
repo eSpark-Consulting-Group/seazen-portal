@@ -4,8 +4,9 @@ import MyDot from "../sliderDots";
 import { useEffect } from "react";
 import getAllRestaurantsBanner from "../../../api/home/getAllRestaurantsBanner";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import './style.css';
+import { useDispatch, useSelector } from "react-redux";
+import "./style.css";
+import { getRestaurantsBanner } from "../../../store/reducers/resturantsSlice";
 
 const slides = [
   { src: "/assets/img/slider1.png", alt: "Slide 1" },
@@ -14,22 +15,26 @@ const slides = [
   { src: "/assets/img/2.png", alt: "Slide 4" },
 ];
 
-
 const Slider = () => {
-
-  const [restaurantBanner, setRestaurantBanner] = useState([]);
   const country = useSelector((state) => state.auth.country);
+  const restaurantBanner = useSelector(
+    (state) => state.resturants.resturantsBanner
+  );
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    if(country){
-      getAllRestaurantsBanner(country?.id)
-      .then((res) => {
-        setRestaurantBanner(res.data);
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
+    setTimeout(() => {
+      if (country && restaurantBanner.length == 0) {
+        getAllRestaurantsBanner(country?.id)
+          .then((res) => {
+            dispatch(getRestaurantsBanner(res.data));
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    }, 1000);
   }, [country]);
   return (
     <div className="hover-slider">
@@ -45,10 +50,12 @@ const Slider = () => {
       >
         {restaurantBanner.map((slide, index) => (
           <Carousel.Item key={index}>
-          <div className="carouselBanner">
-            <img width="100%" src={slide.banner} alt="restaurant banner" />
-            <div className="caption"><span className="caption-style">Order Now</span></div>
-          </div>
+            <div className="carouselBanner">
+              <img width="100%" src={slide.banner} alt="restaurant banner" />
+              <div className="caption">
+                <span className="caption-style">Order Now</span>
+              </div>
+            </div>
           </Carousel.Item>
         ))}
       </Carousel>

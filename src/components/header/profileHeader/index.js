@@ -7,6 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetCart } from "../../../store/reducers/cartSlice";
 import clearCart from "../../../api/cart/clearCart";
 import { addCountry } from "../../../store/reducers/authSlice";
+import {
+  getCategoryItemList,
+  getRestaurantsBanner,
+} from "../../../store/reducers/resturantsSlice";
 
 const ProfileHeader = (props) => {
   const { showFlagOption } = props;
@@ -36,7 +40,7 @@ const ProfileHeader = (props) => {
   const toggleCountryPopup = (country) => {
     setSelectedCountry(country);
     setIsPopupOpen(false); // Close the first popup
-    if(country.name_en !== currentCountryName){
+    if (country.name_en !== currentCountryName) {
       setIsCountryPopupOpen(!isCountryPopupOpen);
     }
   };
@@ -62,6 +66,8 @@ const ProfileHeader = (props) => {
 
   const clearCartItems = () => {
     dispatch(resetCart());
+    dispatch(getRestaurantsBanner([]));
+    dispatch(getCategoryItemList([]));
     clearCart(token)
       .then((res) => {
         console.log(res);
