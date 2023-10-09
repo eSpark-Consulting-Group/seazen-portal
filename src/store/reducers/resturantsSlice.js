@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   resturantsData: [],
+  resturantsBanner: [],
   listItemByCategory: null,
   details: [],
   nearbyRestaurants: [],
@@ -14,6 +15,9 @@ const resturantsSlice = createSlice({
   reducers: {
     getResturants: (state, action) => {
       state.resturantsData = action.payload;
+    },
+    getRestaurantsBanner: (state, action) => {
+      state.resturantsBanner = action.payload;
     },
     getCategoryItemList: (state, action) => {
       state.listItemByCategory = action.payload;
@@ -76,6 +80,7 @@ export const {
   getCategoryItemList,
   setVariantSize,
   setExtraToppings,
+  getRestaurantsBanner,
   setExtraToppingsCount,
   setSlides,
   setSlidesCount,

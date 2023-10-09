@@ -6,10 +6,19 @@ const API_ENDPOINTS = {
   },
   RESTAURANT: {
     GET_RESTAURANT_DETAIL: "/restaurant/",
-    GET_NEARBY_RESTAURANT: "/find-nearest-restaurants"
+    GET_NEARBY_RESTAURANT: "/find-nearest-restaurants",
+    GET_BRANCHES_AND_HOURS(restaurantId, language = "en") {
+      return `/restaurant/${restaurantId}/branches?language=${language}`;
+    },
   },
   USER: {
     EMAIL_LOGIN: "/email-login",
+    MOBILE_LOGIN: "/mobile-login",
+    CUSTOMER_REGISTRATION: "/customer/registration",
+    UPDATE_PROFILE: "/customer/update-profile",
+    VERIFY_OTP: "/customer/verify-otp",
+    RESEND_OTP: "/customer/resend-otp",
+    INFO: "/customer",
   },
   CART: {
     ADD_TO_CART: "/add-to-cart",

@@ -55,7 +55,7 @@ function CartPage() {
     setDialogOpen(false);
   };
 
-  const token = useSelector((state) => state.auth.token);
+  const token = localStorage.getItem("token");
   const cart = useSelector((state) => state.cart.cart);
   const totalPrice = useSelector((state) => state.cart.total);
   const dispatch = useDispatch();

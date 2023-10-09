@@ -10,7 +10,6 @@ import RestaurantsOrderTypeButton from "../../components/category/button";
 import "../../components/carousel/slider/style.css";
 
 import { useQuery } from "@tanstack/react-query";
-import emailLogin from "../../api/home/userLogin";
 import { useDispatch, useSelector } from "react-redux";
 import { addCountry, addToken } from "../../store/reducers/authSlice";
 import countryList from "../../api/common/getAllCountries";
@@ -24,26 +23,26 @@ import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import "./style.css";
 
 const Home = () => {
-  const isToken = useSelector((state) => state.auth.token);
+  // const isToken = localStorage.getItem("token");
   const addressDetail = useSelector((state) => state.address.addressDetail);
   const dispatch = useDispatch();
 
-  const defaultUser = {
-    email: "ikram2001@gmail.com",
-    password: "12345678",
-  };
+  // const defaultUser = {
+  //   email: "ikram2001@gmail.com",
+  //   password: "12345678",
+  // };
   const [userCurrentAddress, setUserCurrentAddress] = useState({
     latitude: 0,
     longitude: 0,
     service_type: "dinein",
   });
 
-  const { data, refetch } = useQuery({
-    queryFn: () => emailLogin(defaultUser),
-    onSuccess: (data) => {
-      dispatch(addToken(data.data.token));
-    },
-  });
+  // const { data, refetch } = useQuery({
+  //   queryFn: () => emailLogin(defaultUser),
+  //   onSuccess: (data) => {
+  //     dispatch(addToken(data.data.token));
+  //   },
+  // });
 
   useEffect(() => {
     if (addressDetail) {
@@ -121,31 +120,31 @@ const Home = () => {
   //   }
   // }, [addressData]);
 
-  useEffect(() => {
-    if (!isToken) {
-      refetch();
-    }
-  }, [isToken]);
-
-  const isCountry = localStorage.getItem("country");
-  useEffect(() => {
-    if (!isCountry) {
-      fetchAllCountries();
-    }
-  }, []);
-
-  const fetchAllCountries = () => {
-    countryList()
-      .then((res) => {
-        const defaultCountry = res.data.find((val) => val.is_default == "Yes");
-        localStorage.setItem("country", JSON.stringify(defaultCountry));
-        dispatch(addCountry(defaultCountry));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
+    // useEffect(() => {
+    //   if (!isToken) {
+    //     refetch()
+    //   }
+    // }, [isToken])
+    
+    const isCountry = localStorage.getItem("country");
+    useEffect(() => {
+      if (!isCountry) {
+        fetchAllCountries();
+      }
+    }, []);
+  
+    const fetchAllCountries = () => {
+      countryList()
+        .then((res) => {
+          const defaultCountry = res.data.find((val) => val.is_default == "Yes");
+          localStorage.setItem("country", JSON.stringify(defaultCountry));
+          dispatch(addCountry(defaultCountry));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+  
   return (
     <div className="home-styling container-fluid">
       <Navbar />

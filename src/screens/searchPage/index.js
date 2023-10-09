@@ -59,6 +59,7 @@ const SearchScreen = () => {
 
     const [isSearchOpen, setIsSearchOpen] = useState(true);
     const [searchParams, setSearchParams] = useSearchParams();
+    
     const [state, setState] = useState("All");
     const [category, setCategory] = useState([
         { type: "All", isActive: false },
@@ -101,8 +102,8 @@ const SearchScreen = () => {
     }
 
     return (
-        <div className={styles.page}>
-            <SearchBar value={searchQuery} handleSearchItem={(t) => handleSearchChange(t)} isSearchOpen={isSearchOpen} toggleSearch={toggleSearch} searchParams={searchParams} />
+        <div>
+            <SearchBar value={searchQuery} handleSearchItem={(t) => handleSearchChange(t)} />
 
             <div className={`${styles.search_tabs}`}>
 
@@ -121,9 +122,6 @@ const SearchScreen = () => {
             }
 
         </div>
-
-
-
     )
 }
 
