@@ -104,7 +104,7 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
                 {Object.keys(categoriesWiseList).map((val) => {
                   return (
                     <>
-                      <div id={val} class="card_list_title">
+                      <div id={val} className="card_list_title">
                         {
                           itemCategoryList?.find((item) => item.id == val)
                             ?.name_en
