@@ -95,8 +95,9 @@ iframe#webpack-dev-server-client-overlay {
   background: #555;
 }
 
-.hide-chat-icon {
-  display: none !important;
+.chat-icon-placement {
+  /* display: none !important; */
+  bottom: 62px !important;
 }
 
 .specific-page-body-style #fc_frame{
