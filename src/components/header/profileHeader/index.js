@@ -22,7 +22,7 @@ const ProfileHeader = (props) => {
   const [currentCountryName, setCountryName] = useState("Kuwait"); // Default flag
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth.token);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const isCountry = localStorage.getItem("country");

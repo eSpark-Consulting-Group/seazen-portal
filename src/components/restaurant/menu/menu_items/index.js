@@ -36,7 +36,6 @@ const MenuItems = ({ itemCategoryList }) => {
   };
 
   const scrollToElement = (id) => {
-    console.log(id, "isisisi");
     const container = document.getElementById(id);
     container.scrollIntoView({ behavior: "smooth" });
   };
@@ -138,14 +137,22 @@ const MenuItems = ({ itemCategoryList }) => {
               onChange={handleChange}
               variant="scrollable"
               scrollButtons={false}
+              textColor="black"
+              indicatorColor="black"
               aria-label="scrollable prevent tabs example"
+              sx={{
+                '& .MuiButtonBase-root':{
+                  textTransform:"none",
+                  minWidth:"60px"
+                }
+              }}
             >
               {itemCategoryList?.map((val) => {
                 return (
                   <Tab
                     onClick={() => scrollToElement(val.id)}
                     key={val.id}
-                    label={val.name_en}
+                    label={val.name_en.charAt(0).toUpperCase() + val.name_en.slice(1).toLowerCase()}               
                   />
                 );
               })}

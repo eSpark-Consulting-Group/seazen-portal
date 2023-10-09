@@ -98,3 +98,8 @@ iframe#webpack-dev-server-client-overlay {
 .hide-chat-icon {
   display: none !important;
 }
+
+.specific-page-body-style #fc_frame{
+  bottom: 52px !important;
+}
+

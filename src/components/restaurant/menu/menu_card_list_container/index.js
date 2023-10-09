@@ -10,6 +10,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress } from "@mui/material";
 import { resetCart } from "../../../../store/reducers/cartSlice.js";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Modal } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { Button } from "react-bootstrap";
 
 const MenuCardListContainer = ({ itemCategoryList }) => {
   const navigate = useNavigate();
@@ -18,11 +21,17 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
   const cartTotalItems = useSelector((state) => state.cart.totalQuantity);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [open, setOpen] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState("");
+
   const [showList, setShowList] = useState([]);
   const categoryList = useSelector(
     (state) => state?.resturants?.listItemByCategory
   );
   const dispatch = useDispatch();
+  const [filteredItems, setFilteredItems] = useState([]);
+
   // const itemQuantity= useSelector((state) => state.)
   useEffect(() => {
     if (cartTotalItems === 0) {
@@ -36,6 +45,12 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
   }, [categoryList]);
 
   const toggleSearch = () => {
+    setOpen(true);
+    setIsSearchOpen(!isSearchOpen);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
     setIsSearchOpen(!isSearchOpen);
   };
 
@@ -51,20 +66,41 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
         (val) => val.category_id == category_id
       ));
     });
+  const filterItems = (query) => {
+    const lowercasedQuery = query.toLowerCase();
+    const filtered = categoryList.filter((item) => {
+      const itemName = item.name_en.toLowerCase();
+      const itemIngredients = item.description_en.toLowerCase();
+      return (
+        itemName.includes(lowercasedQuery) ||
+        itemIngredients.includes(lowercasedQuery)
+      );
+    });
+    setFilteredItems(filtered);
+  };
+
+  const handleSearchChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+    if (query === "") {
+      setFilteredItems([]);
+      return;
+    }
+    filterItems(query);
+  };
+
   return (
     <div className="scrollable-container-wrapper">
       <div className="scrollable-container" id="scrollableDiv">
         <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-5">
           <div className="menu_card_list_inner_container">
-            <div
+            {/* <div
               className={`card_list_title_search_container ${
                 isSearchOpen ? "expanded_search" : ""
               }`}
             >
               <div className="card_list_title"></div>
-              <div
-                className={`search ${isSearchOpen ? "expanded_search" : ""}`}
-              >
+              <div className="search">
                 <div
                   className={`searchwrapper ${
                     isSearchOpen ? "expanded_search" : ""
@@ -87,7 +123,7 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
                   )}
                 </div>
               </div>
-            </div>
+            </div> */}
             <>
               {!categoryList && (
                 <Box
@@ -101,6 +137,14 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
                 </Box>
               )}
               <Stack spacing={1.5}>
+              {categoryList && <div className="searchwrapper">
+                          <img
+                            src="/assets/img/Icon - Search.svg"
+                            alt="search_icon"
+                            className="searchicon"
+                            onClick={toggleSearch}
+                          />
+                        </div>}
                 {Object.keys(categoriesWiseList).map((val) => {
                   return (
                     <>
@@ -188,6 +232,48 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
           </Box>
         </Box>
       </div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{
+          border: "none",
+          overflowY: "hidden",
+        }}
+      >
+        <div className="Modal_Search_Item">
+          <div className="closebtnmodal">
+            <Button className="closebtn">
+              <CloseIcon sx={{ color: "#000" }} onClick={handleClose} />
+            </Button>
+          </div>
+          <div className="InputSearchModal">
+            <input
+              type="text"
+              className="InputModal"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(event) => handleSearchChange(event)}
+            />
+          </div>
+
+          <div className="list-menu-cards">
+            {filteredItems?.map((item, index) => (
+              <div className="categoryItemsList" key={index + 1}>
+                <MenuCard
+                  key={index}
+                  foodItem={item.name_en}
+                  foodIngredients={item.description_en}
+                  foodPrice={item.price}
+                  foodImage={item.image}
+                  id={item.id}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
