@@ -81,7 +81,7 @@
 
 .branch-weekdays {
   text-align: center;
-  font: normal normal normal 6px/8px Titillium Web;
+  font: normal normal normal 7px/8px Titillium Web;
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
@@ -89,7 +89,7 @@
 }
 
 .branch-weekdaysHours {
-  font: normal normal normal 6px/8px Titillium Web;
+  font: normal normal normal 7px/8px Titillium Web;
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
@@ -98,7 +98,7 @@
 
 .branch-weekends {
   text-align: center;
-  font: normal normal normal 6px/8px Titillium Web;
+  font: normal normal normal 7px/8px Titillium Web;
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
@@ -107,7 +107,7 @@
 
 .branch-weekendsHours {
   text-align: center;
-  font: normal normal normal 6px/8px Titillium Web;
+  font: normal normal normal 7px/8px Titillium Web;
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;

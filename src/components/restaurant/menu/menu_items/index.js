@@ -57,11 +57,13 @@ const MenuItems = ({ itemCategoryList }) => {
                 backgroundColor: "#F0F6F5",
                 color: "#323F4B",
                 fontFamily: "Titillium Web",
-                fontSize: "11pt",
+                fontSize: "14px",
                 fontWeight: "bold",
                 border: "none",
                 maxHeight: "300px",
                 overflowY: "scroll",
+                marginTop:"12px",
+                borderRadius:"0 0 16px 16px"
               }}
             >
               {!isEmpty(itemCategoryList)

@@ -6,7 +6,7 @@
 
 .carouselBanner {
   border-radius: 20px;
-  /* margin: 0px 10px 0px 10px; */
+  margin: 0px 10px 0px 10px;
   position: relative;
 }
 
@@ -39,14 +39,26 @@
   padding-left: 27px;
 }
 
-.bEjuCR{
+/* .bEjuCR{
   grid-template-columns: repeat(4,100%);
 
-}
+} */
+
+
 
 @media screen and (max-width: 767px){
   .gZzsDe {
     display: flex;
 }
+
 }
+
+
+@media screen and (min-width:600px) {
+  .dluTbn{
+    overflow: visible;
+    margin: 0;
+  }
+}
+
 

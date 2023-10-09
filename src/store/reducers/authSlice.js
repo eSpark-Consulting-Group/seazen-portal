@@ -20,6 +20,7 @@ const authSlice = createSlice({
     isAuthenticated: false,
     isLoading: false,
     error: null,
+    country: {}
   },
   reducers: {
     addToken: (state, action) => {
@@ -36,10 +37,13 @@ const authSlice = createSlice({
       state.email = email;
       state.mobile_country_code = mobileCountryCode;
       state.mobile = mobile
-    } 
+    },
+    addCountry: (state, action) => {
+      state.country = action.payload
+    }, 
   },
 });
 
-export const { addToken, addUserInfo } = authSlice.actions;
+export const { addToken, addUserInfo, addCountry } = authSlice.actions;
 
 export default authSlice.reducer;

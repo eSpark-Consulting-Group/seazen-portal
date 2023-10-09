@@ -79,7 +79,7 @@ const MenuCard = ({
 
   // i-e KWD 1.750 => 1.750 as a number
   const foodPriceWithoutCurrency = () => {
-    return Number(foodPrice.split(" ")[1]);
+    return Number(foodPrice.split(" ")[1]).toFixed(3);
   };
 
   const checkIfItemIsInCart = () => {
@@ -163,6 +163,7 @@ const MenuCard = ({
       alignItems="center"
       sx={{
         width: "100%",
+        marginTop: "10px"
       }}
     >
       <Stack

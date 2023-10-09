@@ -32,10 +32,12 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
             onClick={() => {
               handleBranchHoursClick();
             }}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", fontSize: "12px", marginRight: "5px" }}
           >
             {"Branches & Hours "}
-            <span>
+            <span
+              style={{ marginLeft: "16px", position: "relative", top: "2px" }}
+            >
               <img
                 src="/assets/img/information_icon.svg"
                 alt="information_icon"

@@ -9,7 +9,8 @@ import "./style.css";
 import { useQuery } from "@tanstack/react-query";
 import emailLogin from "../../api/home/userLogin";
 import { useDispatch, useSelector } from "react-redux";
-import { addToken } from "../../store/reducers/authSlice";
+import { addCountry, addToken } from "../../store/reducers/authSlice";
+import countryList from "../../api/common/getAllCountries";
 
 const Home = () => {
   const isToken = useSelector((state) => state.auth.token);
@@ -30,6 +31,25 @@ const Home = () => {
         refetch()
       }
     }, [isToken])
+    
+    const isCountry = localStorage.getItem("country");
+    useEffect(() => {
+      if (!isCountry) {
+        fetchAllCountries();
+      }
+    }, []);
+  
+    const fetchAllCountries = () => {
+      countryList()
+        .then((res) => {
+          const defaultCountry = res.data.find((val) => val.is_default == "Yes");
+          localStorage.setItem("country", JSON.stringify(defaultCountry));
+          dispatch(addCountry(defaultCountry));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
   
   return (
     <div className="home-styling container-fluid">
