@@ -100,6 +100,7 @@ const AddressForm = () => {
       company_name: "",
       country_code: "",
       mobile_number: "",
+      address_type: type,
     }));
   };
 
@@ -130,7 +131,20 @@ const AddressForm = () => {
   const apiCall = () => {
     addAddressApiCall(address, token).then((res) => {
       if (res.success === "ok") {
-        navigate(paths.addresses);
+        if (location?.state?.path === "/cart") {
+          const addToStorage = {
+            lat: location?.state?.latlng?.lat,
+            lng: location?.state?.latlng?.lng,
+            address: location?.state?.name,
+          };
+
+          localStorage.setItem("location", JSON.stringify(addToStorage));
+          navigate(paths.cart);
+        } else if (location?.state?.path === "/profile") {
+          navigate(paths.addresses, { state: { path: location.state.path } });
+        } else {
+          navigate(paths.addresses, { state: { path: location.pathname } });
+        }
       }
     });
   };
@@ -138,7 +152,14 @@ const AddressForm = () => {
   const updateApiCall = () => {
     updateAddressApiCall(address, location.state.data.id, token).then((res) => {
       if (res.success === "ok") {
-        navigate(paths.addresses);
+        if (
+          location?.state?.path === "/cart" ||
+          location?.state?.path === "/profile"
+        ) {
+          navigate(paths.addresses, { state: { path: location.state.path } });
+        } else {
+          navigate(paths.addresses, { state: { path: location.pathname } });
+        }
       }
     });
   };
@@ -158,7 +179,7 @@ const AddressForm = () => {
         }
       }
     }
-    if (addressType === "appartment") {
+    if (addressType === "apartment") {
       if (address.building !== "") {
         setClickEv(false);
         if (location.state.edit) {
@@ -188,7 +209,7 @@ const AddressForm = () => {
         } else {
           setErrorState((prev) => ({ ...prev, blockErr: false }));
         }
-      } else if (addressType === "appartment") {
+      } else if (addressType === "apartment") {
         if (address.building === "") {
           setErrorState((prev) => ({ ...prev, buildingErr: true }));
         } else {
@@ -261,7 +282,7 @@ const AddressForm = () => {
             errorState={errorState.blockErr}
           />
         )}
-        {addressType === "appartment" && (
+        {addressType === "apartment" && (
           <AppartmentAdress
             handleChange={handleChange}
             address={address}

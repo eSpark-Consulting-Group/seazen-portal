@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -35,6 +35,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 
 function CartPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [tipValue, setTipValue] = React.useState(0.25);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -361,7 +362,7 @@ function CartPage() {
                 }}
               >
                 <LocationOnIcon fontSize="small" sx={{ mr: 0.5 }} />
-                1234, Street Name, City Name, Country Name
+                {JSON.parse(localStorage.getItem("location"))?.address}
               </Typography>
             </Stack>
 
@@ -386,10 +387,12 @@ function CartPage() {
                 },
               }}
               onClick={() =>
-                navigate(paths.location, {
+                navigate(paths.addresses, {
                   state: {
                     restaurant_id: cartItems[0].restaurant_id,
                     restaurantName,
+                    path: location.pathname,
+                    latlng: JSON.parse(localStorage.getItem("location")),
                   },
                 })
               }
