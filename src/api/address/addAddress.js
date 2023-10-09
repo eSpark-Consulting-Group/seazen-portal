@@ -9,7 +9,6 @@ const addAddressApiCall = async (body, token) => {
       throw new Error("Token is missing or invalid.");
     }
 
-    // Make the POST request with the provided token and cart item.
     const response = await axiosInstance.post(
       API_ENDPOINTS.ADDRESS.ADDRESS,
       body,

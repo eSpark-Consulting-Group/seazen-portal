@@ -6,6 +6,7 @@ const API_ENDPOINTS = {
   },
   RESTAURANT: {
     GET_RESTAURANT_DETAIL: "/restaurant/",
+    GET_NEARBY_RESTAURANT: "/find-nearest-restaurants"
   },
   USER: {
     EMAIL_LOGIN: "/email-login",

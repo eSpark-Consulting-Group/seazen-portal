@@ -9,7 +9,7 @@ const deleteAddressApiCall = async (addressId, token) => {
       throw new Error("Token is missing or invalid.");
     }
 
-    // Make the DELETE request with the provided token and cart ID.
+    // Make the DELETE request with the provided ID.
     const response = await axiosInstance.delete(
       `${API_ENDPOINTS.ADDRESS.ADDRESS}/${addressId}`,
       {

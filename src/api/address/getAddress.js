@@ -10,7 +10,7 @@ const getAllAddress = async (token) => {
       // throw new Error("Token is missing or invalid.");
     }
 
-    // Make the GET request to fetch all restaurants.
+    // Make the GET request to fetch all addresses.
     const { data } = await axiosInstance.get(API_ENDPOINTS.ADDRESS.ADDRESS, {
       headers: {
         Authorization: `Bearer ${token}`,

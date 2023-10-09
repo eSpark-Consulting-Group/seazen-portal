@@ -9,7 +9,7 @@ const updateAddressApiCall = async (body, addressId, token) => {
       throw new Error("Token is missing or invalid.");
     }
 
-    // Make the POST request with the provided token and cart item.
+    // Make the PUT request with the provided id and address data.
     const response = await axiosInstance.put(
       `${API_ENDPOINTS.ADDRESS.ADDRESS}/${addressId}`,
       body,
