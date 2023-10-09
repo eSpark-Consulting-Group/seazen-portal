@@ -17,6 +17,7 @@ const API_ENDPOINTS = {
     UPDATE_PROFILE: "/customer/update-profile",
     VERIFY_OTP: "/customer/verify-otp",
     RESEND_OTP: "/customer/resend-otp",
+    INFO: "/customer",
   },
   CART: {
     ADD_TO_CART: "/add-to-cart",

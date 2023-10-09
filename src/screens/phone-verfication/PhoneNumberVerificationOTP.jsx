@@ -11,6 +11,7 @@ import InfoModal from "../../components/modal/InfoModal";
 import { useMutation } from "@tanstack/react-query";
 import verifyOTP from "../../api/customer/verifyOTP";
 import resendOTP from "../../api/customer/resendOTP";
+import getUserInfo from "../../api/customer/getUserInfo";
 
 const MODAL_INFO_TYPE = {
   INVALID_OTP: "invalid-otp",
@@ -34,7 +35,14 @@ function PhoneNumberVerificationOTP() {
   const { mutate: verifyOtp } = useMutation({
     mutationFn: verifyOTP,
     onSuccess: (data) => {
-      navigate(paths.customer_registration);
+      // console.log(data, "shahData");
+      localStorage.setItem("token", data.data.token);
+      getUserInfo(data.data.token).then((res) => {
+        const { first_name, last_name } = res.data;
+        first_name && last_name
+          ? navigate(paths.home)
+          : navigate(paths.customer_registration);
+      });
     },
     onError: (error) => {
       setInfoType(MODAL_INFO_TYPE.INVALID_OTP);

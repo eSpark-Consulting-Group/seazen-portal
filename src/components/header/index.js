@@ -12,6 +12,7 @@ const Navbar = (props) => {
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef(null);
+  const token = localStorage.getItem("token");
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -40,7 +41,7 @@ const Navbar = (props) => {
         <div
           className="iconaccount-btn"
           onClick={() => {
-            navigate(paths.profile);
+            token ? navigate(paths.profile) : navigate(paths.guest_profile)
           }}
         >
           <img src="/assets/img/account.svg" alt="Account Icon" />
