@@ -7,12 +7,10 @@ import { useLocation } from "react-router";
 function App() {
   const currentURL = useLocation();
   const getChatURLs = (URL) => {
-    const validURLs = ["/", "/profile/order", "/orderplace", "/branches"];
-    return validURLs.includes(URL);
+    return URL.includes("/delivery");
   } 
-
+  const element = document.getElementById('fc_frame');
   useEffect(() => {
-    const element = document.getElementById('fc_frame');
     if(!element){
       const script = document.createElement('script');
       script.src = '//fw-cdn.com/2159361/2855124.js';
