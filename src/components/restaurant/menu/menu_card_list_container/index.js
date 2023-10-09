@@ -11,7 +11,7 @@ import { CircularProgress } from "@mui/material";
 import { resetCart } from "../../../../store/reducers/cartSlice.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const MenuCardListContainer = ({itemCategoryList}) => {
+const MenuCardListContainer = ({ itemCategoryList }) => {
   const navigate = useNavigate();
   const originalCartTotal = useSelector((state) => state.cart.total);
   const cartTotal = originalCartTotal < 0 ? 0 : originalCartTotal;
@@ -24,36 +24,33 @@ const MenuCardListContainer = ({itemCategoryList}) => {
   );
   const dispatch = useDispatch();
   // const itemQuantity= useSelector((state) => state.)
-  useEffect(()=>{
-    if(cartTotalItems === 0){
+  useEffect(() => {
+    if (cartTotalItems === 0) {
       dispatch(resetCart());
     }
-  },[cartTotalItems])
+  }, [cartTotalItems]);
 
-  useEffect(()=>{
+  useEffect(() => {
     // console.log(categoryList?.slice(0, 10), "categoryList?.slice(0, 10)")
-    setShowList(categoryList?.slice(0, 10))
-  },[categoryList])
-  
+    setShowList(categoryList?.slice(0, 10));
+  }, [categoryList]);
+
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
-  };
-
-  const getCategoryName = () => {
-    let category = searchParams.get("category");
-    if (category) {
-      return itemCategoryList?.find((item) => item.id == category)?.name_en;
-    }
-    return "All";
   };
 
   const fetchMoreData = () => {
     const currentLength = showList?.length;
     const newItems = categoryList.slice(currentLength, currentLength + 10);
     setShowList([...showList, ...newItems]);
-    console.log(newItems,"fetchMoreData")
-  }
-
+  };
+  let categoriesWiseList = {};
+  categoryList?.length &&
+    categoryList?.forEach(({ category_id }) => {
+      return (categoriesWiseList[category_id] = categoryList?.filter(
+        (val) => val.category_id == category_id
+      ));
+    });
   return (
     <div className="scrollable-container-wrapper">
       <div className="scrollable-container" id="scrollableDiv">
@@ -64,7 +61,7 @@ const MenuCardListContainer = ({itemCategoryList}) => {
                 isSearchOpen ? "expanded_search" : ""
               }`}
             >
-              <div className="card_list_title">{getCategoryName()}</div>
+              <div className="card_list_title"></div>
               <div
                 className={`search ${isSearchOpen ? "expanded_search" : ""}`}
               >
@@ -104,28 +101,34 @@ const MenuCardListContainer = ({itemCategoryList}) => {
                 </Box>
               )}
               <Stack spacing={1.5}>
-                <InfiniteScroll
-                  dataLength={showList?.length}
-                  next={fetchMoreData}
-                  hasMore={true}
-                  loader={<h4>Loading...</h4>}
-                  scrollThreshold={0.9}
-                  scrollableTarget="scrollableDiv"
-                >
-                {showList?.map((item, index) => (
-                  <MenuCard
-                    key={index}
-                    foodItem={item.name_en}
-                    foodIngredients={item.description_en}
-                    foodPrice={item.price}
-                    foodImage={item.image}
-                    id={item.id}
-                    showSubTractButton={
-                      item.has_extras === false && item.has_options === false
-                    }
-                  />
-                ))}
-                </InfiniteScroll>
+                {Object.keys(categoriesWiseList).map((val) => {
+                  return (
+                    <>
+                      <div id={val} class="card_list_title">
+                        {
+                          itemCategoryList?.find((item) => item.id == val)
+                            ?.name_en
+                        }
+                      </div>{" "}
+                      {categoriesWiseList[val].map((item, index) => {
+                        return (
+                          <MenuCard
+                            key={index}
+                            foodItem={item.name_en}
+                            foodIngredients={item.description_en}
+                            foodPrice={item.price}
+                            foodImage={item.image}
+                            id={item.id}
+                            showSubTractButton={
+                              item.has_extras === false &&
+                              item.has_options === false
+                            }
+                          />
+                        );
+                      })}
+                    </>
+                  );
+                })}
               </Stack>
             </>
 

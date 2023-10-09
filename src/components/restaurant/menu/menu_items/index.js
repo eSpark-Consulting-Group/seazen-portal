@@ -3,6 +3,7 @@ import "./style.css";
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useSearchParams } from "react-router-dom";
+import { Tab, Tabs, Box } from "@mui/material";
 import { isEmpty } from "lodash";
 
 const menu_categories = [
@@ -21,12 +22,23 @@ const menu_categories = [
 
 const MenuItems = ({ itemCategoryList }) => {
   let [searchParams, setSearchParams] = useSearchParams();
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const handleMenuItemClick = (category) => {
     // set only the category in the search params on whatever the current location is
     setSearchParams({
       category: category,
     });
+  };
+
+  const scrollToElement = (id) => {
+    console.log(id, "isisisi");
+    const container = document.getElementById(id);
+    container.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -62,8 +74,8 @@ const MenuItems = ({ itemCategoryList }) => {
                 border: "none",
                 maxHeight: "300px",
                 overflowY: "scroll",
-                marginTop:"12px",
-                borderRadius:"0 0 16px 16px"
+                marginTop: "12px",
+                borderRadius: "0 0 16px 16px",
               }}
             >
               {!isEmpty(itemCategoryList)
@@ -71,7 +83,7 @@ const MenuItems = ({ itemCategoryList }) => {
                     <Dropdown.Item
                       key={category.id}
                       onClick={() => {
-                        handleMenuItemClick(category?.id);
+                        scrollToElement(category?.id);
                       }}
                     >
                       {category?.name_en}
@@ -81,7 +93,7 @@ const MenuItems = ({ itemCategoryList }) => {
                     <Dropdown.Item
                       key={`menu_category_drop_${index}`}
                       onClick={() => {
-                        handleMenuItemClick(category);
+                        scrollToElement(category.id);
                       }}
                     >
                       {category}
@@ -91,7 +103,7 @@ const MenuItems = ({ itemCategoryList }) => {
           </Dropdown>
         </div>
         <div className="menu_itmes_text_container">
-          {!isEmpty(itemCategoryList)
+          {/* {!isEmpty(itemCategoryList)
             ? itemCategoryList?.map((category, index) => (
                 <button
                   style={{ color: "black" }}
@@ -113,7 +125,32 @@ const MenuItems = ({ itemCategoryList }) => {
                 >
                   {category}
                 </button>
-              ))}
+              ))} */}
+
+          <Box
+            sx={{
+              maxWidth: { xs: "100%", sm: 480 },
+              bgcolor: "background.paper",
+            }}
+          >
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              variant="scrollable"
+              scrollButtons={false}
+              aria-label="scrollable prevent tabs example"
+            >
+              {itemCategoryList?.map((val) => {
+                return (
+                  <Tab
+                    onClick={() => scrollToElement(val.id)}
+                    key={val.id}
+                    label={val.name_en}
+                  />
+                );
+              })}
+            </Tabs>
+          </Box>
         </div>
       </div>
     </div>
