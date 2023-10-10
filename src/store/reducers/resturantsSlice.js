@@ -6,6 +6,7 @@ const initialState = {
   resturantsBanner: [],
   listItemByCategory: null,
   details: [],
+  nearbyRestaurants: [],
 };
 
 const resturantsSlice = createSlice({
@@ -68,6 +69,9 @@ const resturantsSlice = createSlice({
     changeItemQuantity: (state, action) => {
       state.details.itemQuantity = action.payload;
     },
+    getNearByRest: (state, action) => {
+      state.nearbyRestaurants = action.payload
+    }
   },
 });
 
@@ -81,6 +85,7 @@ export const {
   setSlides,
   setSlidesCount,
   changeItemQuantity,
+  getNearByRest
 } = resturantsSlice.actions;
 
 export default resturantsSlice.reducer;

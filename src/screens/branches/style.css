@@ -1,9 +1,5 @@
 .branches-footer {
-  position: absolute;
-  /* top: 643px; */
-  left: 12px;
-  bottom: 30px;
-  width: 340px;
+ margin-left: 15px;
 }
 
 @media screen and (max-width: 600px) {

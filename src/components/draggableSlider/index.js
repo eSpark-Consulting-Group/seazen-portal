@@ -56,11 +56,9 @@ export default function App() {
 
   return (
     <div className="App">
-      {popularDishes?.length > 0 && (
-        <div className="slider-tile">
-          <h3>Popular Dishes</h3>
-        </div>
-      )}
+      <div className="slider-tile">
+        {popularDishes && <h3>Popular Dishes</h3>}
+      </div>
       <CustomCarousel imageInfo={popularDishes}>
         {popularDishes?.map((info, index) => {
           return (
