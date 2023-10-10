@@ -68,9 +68,7 @@
 }
 
 .terms-footer {
-  position: absolute;
-  top: 645px;
-  left: 15px;
+  margin-left: 15px;
 }
 
 @media (max-width: 600px) {

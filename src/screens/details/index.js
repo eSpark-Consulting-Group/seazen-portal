@@ -72,7 +72,7 @@ export const Details = () => {
       console.log("data", data);
     },
   });
-
+  const restaurantTheme = useSelector((state) => state.theme.themeColor);
   useEffect(() => {
     if (
       location?.state?.branchRestaurants?.data?.length &&
@@ -334,10 +334,10 @@ export const Details = () => {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
       quantity: cartItem.quantity,
-      cart_id: cartItem.cart_id || "5",
-      topping_variant_id: toppingVariant,
-      side_variant_id: sideVariant,
-      size_variant_id: sizeVariant,
+      // cart_id: cartItem.cart_id || "5",
+      topping_variant_id: toppingVariant || 0,
+      side_variant_id: sideVariant || 0,
+      size_variant_id: sizeVariant || 0,
       size_variant: variantsForApi(
         sizeVariant,
         cartItem.variants?.sizeVariant?.id
@@ -754,10 +754,9 @@ export const Details = () => {
                   // disabled: quantity === 10,
                   sx: {
                     color: "common.white",
-                    backgroundColor: (theme) => theme.palette.themeColor.light,
+                    backgroundColor: "#ffffff24",
                     "&:hover": {
-                      backgroundColor: (theme) =>
-                        theme.palette.themeColor.light,
+                      backgroundColor: "#ffffff24",
                     },
                   },
                 }}
@@ -765,10 +764,9 @@ export const Details = () => {
                   // disabled: quantity === 0,
                   sx: {
                     color: "common.white",
-                    backgroundColor: (theme) => theme.palette.themeColor.light,
+                    backgroundColor: "#ffffff24",
                     "&:hover": {
-                      backgroundColor: (theme) =>
-                        theme.palette.themeColor.light,
+                      backgroundColor: "#ffffff24",
                     },
                   },
                 }}
@@ -790,8 +788,7 @@ export const Details = () => {
                   ? "center"
                   : "space-between",
                 alignItems: "center",
-                backgroundColor: (theme) =>
-                  `${theme.palette.themeColor.light} !important`,
+                backgroundColor: `${restaurantTheme.main} !important`,
                 "&:hover": {
                   backgroundColor: (theme) => theme.palette.themeColor.light,
                 },

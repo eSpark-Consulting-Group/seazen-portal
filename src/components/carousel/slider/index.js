@@ -7,6 +7,8 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
 import { getRestaurantsBanner } from "../../../store/reducers/resturantsSlice";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { Skeleton } from "@mui/material";
 
 const slides = [
   { src: "/assets/img/slider1.png", alt: "Slide 1" },
@@ -51,7 +53,17 @@ const Slider = () => {
         {restaurantBanner.map((slide, index) => (
           <Carousel.Item key={index}>
             <div className="carouselBanner">
-              <img width="100%" src={slide.banner} alt="restaurant banner" />
+              <LazyLoadImage
+                src={slide.banner}
+                alt="restaurant banner"
+                placeholder={
+                  <Skeleton
+                    variant="rectangular"
+                    width={"100%"}
+                    height={"100%"}
+                  />
+                }
+              />
               <div className="caption">
                 <span className="caption-style">Order Now</span>
               </div>

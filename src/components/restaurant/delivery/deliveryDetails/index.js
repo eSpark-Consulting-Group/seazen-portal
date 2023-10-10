@@ -24,6 +24,8 @@ const DeliveryDetails = (props) => {
 
   const [latlng, setLatlng] = useState(null);
   const [location, setLocation] = useState("Select location");
+  const restaurantTheme = useSelector((state) => state.theme.themeColor);
+
 
   useEffect(() => {
     if (restaurantBranchHours) {
@@ -50,7 +52,10 @@ const DeliveryDetails = (props) => {
   }, [restaurantBranchHours, latlng]);
 
   return (
-    <StyledOuterContainer className="delivery_outer_container">
+    <StyledOuterContainer
+      className="delivery_outer_container"
+      style={{ background: restaurantTheme.main + 24 }}
+    >
       <div className="delivery_inner_container">
         <div className="left_dropdown_container">
           <div className="left_dropdown_container_heading_container">

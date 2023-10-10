@@ -5,16 +5,22 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
 import ExtraItems from "../extraItems";
+import { v4 as uuidv4 } from "uuid";
 import { paths } from "../../../../routes/paths";
 import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   addToCart,
   removeFromCart,
+  resetCart,
   updateCartMenuItemQuantity,
 } from "../../../../store/reducers/cartSlice";
 import "./style.css";
+import clearCart from "../../../../api/cart/clearCart";
+import addToCartApiCall from "../../../../api/cart/addToCart";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
@@ -36,7 +42,9 @@ const MenuCard = ({
   foodPrice,
   foodImage,
   id,
+  restaurant_id,
   showSubTractButton,
+  allData,
   locationDeliver,
   restaurantBranchHours,
   resturantId,
@@ -56,6 +64,7 @@ const MenuCard = ({
   const onImageError = () => {
     setImageNotFound(true);
   };
+  const hasVariant = !!allData.variants?.length;
 
   const cart = useSelector((state) => state.cart.cart);
 
@@ -93,8 +102,30 @@ const MenuCard = ({
     }
     return true;
   };
+  const token = localStorage.getItem("token");
+  const clearCartItems = () => {
+    dispatch(resetCart());
+    clearCart(token)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   function handleClickAdd() {
+    if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
+      clearCartItems();
+    }
+    if (hasVariant) {
+      navigate(paths.details + "/" + id, {
+        state: {
+          id: id,
+        },
+      });
+      return;
+    }
     setFoodItemQuantity(foodItemQuantity + 1);
     if (checkIfItemIsInCart()) {
       dispatch(
@@ -109,11 +140,31 @@ const MenuCard = ({
         addToCart({
           id: id,
           itemName: foodItem,
+          restaurant_id,
           totalPrice: foodPriceWithoutCurrency(),
           quantity: foodItemQuantity + 1,
           itemImage: foodImage,
         })
       );
+      const cartItemDataForApi = {
+        item_code: uuidv4(),
+        item_id: id,
+        quantity: foodItemQuantity + 1,
+        topping_variant_id: 0,
+        side_variant_id: 0,
+        size_variant_id: 0,
+        size_variant: [],
+        topping_variant: [],
+        side_variant: [],
+      };
+
+      addToCartApiCall(cartItemDataForApi, token)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }
 
@@ -213,11 +264,20 @@ const MenuCard = ({
                 <Typography variant="caption">No Image Found</Typography>
               </Box>
             ) : (
-              <img
+              <LazyLoadImage
                 className="food-image"
                 src={foodImage}
                 alt="menu_card_image"
                 onError={onImageError}
+                effect="blur"
+                placeholder={
+                  <Skeleton
+                    variant="rectangular"
+                    sx={{ bgcolor: "grey.100" }}
+                    width={100}
+                    height={100}
+                  />
+                }
               />
             )}
           </div>

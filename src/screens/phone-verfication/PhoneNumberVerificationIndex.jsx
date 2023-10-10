@@ -17,8 +17,7 @@ import mobileLogin from "../../api/customer/mobileLogin";
 function PhoneNumberVerificationIndex() {
   const navigate = useNavigate();
 
-  const [searchParams] = useSearchParams();
-
+  const [error, setError] = React.useState(false);
   const [mobileCountryCode, setMobileCountryCode] = React.useState("");
   const [mobileNumber, setMobileNumber] = React.useState("");
 
@@ -51,14 +50,23 @@ function PhoneNumberVerificationIndex() {
     mutationFn: mobileLogin,
     onSuccess: (data) => {
       sendOTP();
+      setError(false);
+    },
+    onError: (error) => {
+      setError(true);
     },
   });
 
   const handleCustomerRegistration = () => {
-    registration({
-      mobile: mobileNumber,
-      mobile_country_code: mobileCountryCode,
-    });
+    if(mobileNumber && mobileCountryCode){
+      setError(false);
+      registration({
+        mobile: mobileNumber,
+        mobile_country_code: mobileCountryCode,
+      });
+    }else{
+      setError(true);
+    }
   };
 
   return (
@@ -99,6 +107,10 @@ function PhoneNumberVerificationIndex() {
               }}
               value={mobileCountryCode}
               onChange={handleChange}
+              error={error && !mobileCountryCode} // Show error when error state is true and the field is empty
+              helperText={
+                error && !mobileCountryCode ? "Country code is required" : ""
+              }
             />
 
             <TextField
@@ -111,6 +123,10 @@ function PhoneNumberVerificationIndex() {
               }}
               value={mobileNumber}
               onChange={handleChange}
+              error={error && !mobileNumber} // Show error when error state is true and the field is empty
+              helperText={
+                error && !mobileNumber ? "Mobile number is required" : error && "Please Enter a valid Number"
+              }
             />
           </Stack>
 

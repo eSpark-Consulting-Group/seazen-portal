@@ -136,7 +136,7 @@ const MenuCardListContainer = ({
                   sx={{
                     display: "flex",
                     justifyContent: "center",
-                    marginTop: "0px !important",
+                    marginTop: "70px !important",
                   }}
                 >
                   <CircularProgress />
@@ -165,6 +165,7 @@ const MenuCardListContainer = ({
                       {categoriesWiseList[val].map((item, index) => {
                         return (
                           <MenuCard
+                            allData={item}
                             key={index}
                             locationDeliver={locationDeliver}
                             resturantId={resturantId}
@@ -174,6 +175,7 @@ const MenuCardListContainer = ({
                             foodPrice={item.price}
                             foodImage={item.image}
                             id={item.id}
+                            restaurant_id={item.restaurant_id}
                             showSubTractButton={
                               item.has_extras === false &&
                               item.has_options === false
@@ -223,7 +225,7 @@ const MenuCardListContainer = ({
                 py: 0.5,
                 px: 2,
                 borderRadius: 1,
-                backgroundColor: (theme) => theme.palette.themeColor.light,
+                backgroundColor: "#ffffff24",
               }}
             >
               {cartTotalItems}
@@ -236,7 +238,7 @@ const MenuCardListContainer = ({
               py: 0.5,
               px: 2,
               borderRadius: 1,
-              backgroundColor: (theme) => theme.palette.themeColor.light,
+              backgroundColor: "#ffffff24",
             }}
           >
             KWD {Number(cartTotal).toFixed(3) || Number(0).toFixed(3)}
