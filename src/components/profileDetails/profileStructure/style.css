@@ -176,14 +176,15 @@
 
 }
 .profile-footer .footer-container {
-  bottom: -77px;
+  bottom: 0px;
+  position: fixed;
 }
 
-@media screen and (max-width: 320px) {
+/* @media screen and (max-width: 320px) {
   .profile-footer .footer-container {
     bottom: -150px;
   }
-}
+} */
 
 @media screen and (max-width: 450px) and (min-width: 400px) {
   .profile-section {

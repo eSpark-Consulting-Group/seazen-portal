@@ -39,8 +39,10 @@ export const Branches = () => {
       <BranchContent />
       <RestaurantInfo restaurants={restaurantData} />;
       <div className="branches-footer">
+      <div className="profile-footer">
         <Footer showFooterSection />
+        </div>
+        </div>
       </div>
-    </div>
   );
 };

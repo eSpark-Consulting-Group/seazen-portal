@@ -20,7 +20,9 @@ const Structure = ({ name, register, imageUrl }) => {
       </div>
       </div>
       <DetailsButton/>
+      <div className="profile-footer">
       <Footer showCommentOption={false} />
+      </div>
     </div>
   );
 };
