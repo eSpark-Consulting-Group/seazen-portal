@@ -22,8 +22,10 @@ const Structure = ({ name, register, imageUrl }) => {
           </button>
         </div>
       </div>
-      <DetailsButton />
+      <DetailsButton/>
+      <div className="profile-footer">
       <Footer showCommentOption={false} />
+      </div>
     </div>
   );
 };
