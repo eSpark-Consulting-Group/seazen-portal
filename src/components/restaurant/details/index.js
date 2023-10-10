@@ -21,9 +21,10 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
           {restaurantDetail?.name_en === "Trapani" && (
             <img src="/assets/img/Trapani_logo.svg" alt="restaurant_logo" />
           )}
-          {restaurantDetail?.name_en === "Masgouf" && (
+          {/* {restaurantDetail?.name_en === "Masgouf" && (
             <img src={restaurantDetail?.logo} alt="restaurant_logo" />
-          )}
+          )} */}
+          <img src={restaurantDetail?.logo} alt="restaurant_logo" />
           {/* {restaurantDetail?.name_en === "Grove" && (
             <img src={restaurantDetail?.logo} alt="restaurant_logo" />
           )} */}

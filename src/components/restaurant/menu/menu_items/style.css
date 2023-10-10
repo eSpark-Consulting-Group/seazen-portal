@@ -16,7 +16,7 @@
   display: flex;
   flex-direction: row;
   column-gap: 10px;
-  margin-left: 15px;
+  /* margin-left: 15px; */
 }
 
 .menu_dropdown_container {
