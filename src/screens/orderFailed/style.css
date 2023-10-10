@@ -1,0 +1,8 @@
+.closeButtonTag {
+  margin-top: 35px;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 45px;
+  cursor: pointer;
+  margin-bottom: -10px;
+}
