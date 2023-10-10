@@ -37,6 +37,9 @@ const MenuCard = ({
   foodImage,
   id,
   showSubTractButton,
+  locationDeliver,
+  restaurantBranchHours,
+  resturantId,
 }) => {
   const plusIcon = "/assets/img/Icon - Plus.svg";
   const minusIcon = "/assets/img/Icon-Minus.svg";
@@ -163,7 +166,7 @@ const MenuCard = ({
       alignItems="center"
       sx={{
         width: "100%",
-        marginTop: "10px"
+        marginTop: "10px",
       }}
     >
       <Stack
@@ -224,6 +227,9 @@ const MenuCard = ({
               navigate(paths.details + "/" + id, {
                 state: {
                   id: id,
+                  locationDeliver: locationDeliver,
+                  branchRestaurants: restaurantBranchHours,
+                  resturantId: resturantId,
                 },
               });
             }}

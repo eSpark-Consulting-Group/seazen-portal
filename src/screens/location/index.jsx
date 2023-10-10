@@ -53,6 +53,7 @@ import getRestaurantBranchHours, {
 } from "../../api/restaurant/getRestaurantBranchHours";
 import { useDispatch } from "react-redux";
 import { addAddressDetail } from "../../store/reducers/addressSlice";
+import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
 
 const containerStyle = {
   width: "100%",
@@ -183,32 +184,18 @@ function LocationPage() {
 
   const handleCenterChanged = async () => {
     if (!mapRef.current) return;
-    const lat = await mapRef?.current?.center?.lat();
-    const lng = await mapRef?.current?.center?.lng();
-    getAdd(lat, lng);
+    if (mapRef.current.center) {
+      const lat = await mapRef?.current?.center?.lat();
+      const lng = await mapRef?.current?.center?.lng();
+      getAdd(lat, lng);
+    }
   };
 
-  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-    var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2 - lat1);
-    var dLon = deg2rad(lon2 - lon1);
-    var a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) *
-        Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c; // Distance in km
-    return d;
-  }
-
-  function deg2rad(deg) {
-    return deg * (Math.PI / 180);
-  }
-
   const confirmLocation = () => {
-    if (location?.state?.path === "/cart") {
+    if (
+      location?.state?.path === "/cart" ||
+      location?.state?.path === "/home"
+    ) {
       navigate(paths.address, {
         state: { name: address, latlng: center, path: location?.state?.path },
       });
@@ -217,6 +204,26 @@ function LocationPage() {
         state: { name: address, latlng: center },
       });
     }
+  };
+
+  const getBounds = () => {
+    const bounds = new window.google.maps.LatLngBounds(center);
+
+    console.log(window.google.maps);
+
+    // console.log(bounds.extend);
+
+    // const markers = this.getMarkers()
+
+    // for (const marker of markers) {
+    //   const position = marker.getPosition()
+
+    //   if (position) {
+    //     bounds.extend(position)
+    //   }
+    // }
+
+    // return bounds
   };
 
   return (
@@ -307,6 +314,7 @@ function LocationPage() {
         <GoogleMap
           onLoad={handleLoad}
           onDragEnd={handleCenterChanged}
+          onBoundsChanged={getBounds}
           mapContainerStyle={containerStyle}
           center={center}
           zoom={15}
@@ -323,6 +331,7 @@ function LocationPage() {
               lat: center.lat,
               lng: center.lng,
             }}
+            draggable={true}
             icon={{
               url: LocationRed,
             }}
@@ -360,7 +369,7 @@ function LocationPage() {
           variant="contained"
           className="confirm-button"
           onClick={() => confirmLocation()}
-          disabled={address === ""}
+          disabled={address === "" || distanceIsFar}
         >
           Confirm Your Location
         </Button>

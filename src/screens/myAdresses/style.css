@@ -1,59 +1,68 @@
 .skeleton-container {
-    /* display: flex; */
-    width: 327px;
-    height: 160px;
-    background: #ffffff 0% 0% no-repeat padding-box;
-    box-shadow: 0px 0px 48px #314f7c1f;
-    border: 1px solid #c0cdd7;
-    border-radius: 12px;
-    padding-top: 5px;
-    margin-bottom: 15px;
+  /* display: flex; */
+  width: 327px;
+  height: 160px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 0px 48px #314f7c1f;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  padding-top: 5px;
+  margin-bottom: 15px;
 }
 
 .skeleton-header {
-    display: flex;
+  display: flex;
 }
 
 .skeleton-icon {
-    width: 19px;
-    height: 17px;
-    opacity: 1;
-    margin-left: 14px;
-    margin-top: 13px;
+  width: 19px;
+  height: 17px;
+  opacity: 1;
+  margin-left: 14px;
+  margin-top: 13px;
 }
 
 .skeleton-title {
-    margin-left: 15px;
+  margin-left: 15px;
 }
 
 .skeleton-title2 {
-    margin-left: 15px;
+  margin-left: 15px;
 }
 
 .skeleton-button {
-    display: flex;
-    width: 100%;
-    justify-content: flex-end;
-    margin-right: 18px;
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  margin-right: 18px;
 }
 
 .skeleton-btn {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .skeleton-dots {
-    margin: auto;
+  margin: auto;
 }
 
 .skeleton-detail {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .skeleton-rectangular {
-    margin-right: 18px;
-    height: 100% !important;
-    width: 80px;
-    border-radius: 12px;
-    margin-top: 10px;
+  margin-right: 18px;
+  height: 100% !important;
+  width: 80px;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.delete-button:hover span {
+  color: #1f2933 !important;
+}
+
+.delete-button .loader {
+  width: 20px !important;
+  height: 20px !important;
 }
