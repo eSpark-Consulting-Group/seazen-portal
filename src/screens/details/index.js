@@ -20,7 +20,11 @@ import getMenuItemDetails, {
 import { Divider, alpha } from "@mui/material";
 import IncDec from "../../components/Input/InputWithIncDec";
 import { AddShoppingCartRounded } from "@mui/icons-material";
-import { updateCartItem, addToCart, resetCart } from "../../store/reducers/cartSlice";
+import {
+  updateCartItem,
+  addToCart,
+  resetCart,
+} from "../../store/reducers/cartSlice";
 import addToCartApiCall from "../../api/cart/addToCart";
 import { paths } from "../../routes/paths";
 import updateCartApiCall from "../../api/cart/updateCart";
@@ -43,7 +47,7 @@ export const Details = () => {
   const [totalPrice, setTotalPrice] = React.useState();
   const [specialInstructions, setSpecialInstructions] = React.useState("");
   const { search } = useLocation();
-  const restaurant_id = localStorage.getItem("restaurantID")
+  const restaurant_id = localStorage.getItem("restaurantID");
   const {
     data: menuItemDetails,
     isLoading,
@@ -56,7 +60,7 @@ export const Details = () => {
       console.log("data", data);
     },
   });
-
+  const restaurantTheme = useSelector((state) => state.theme.themeColor);
   const calculateToppingVariantTotal = (toppingVariantData) => {
     const eachToppingTotal = toppingVariantData
       .map((topping, index) => {
@@ -305,10 +309,10 @@ export const Details = () => {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
       quantity: cartItem.quantity,
-      cart_id: cartItem.cart_id || "5",
-      topping_variant_id: toppingVariant,
-      side_variant_id: sideVariant,
-      size_variant_id: sizeVariant,
+      // cart_id: cartItem.cart_id || "5",
+      topping_variant_id: toppingVariant || 0,
+      side_variant_id: sideVariant || 0,
+      size_variant_id: sizeVariant || 0,
       size_variant: variantsForApi(
         sizeVariant,
         cartItem.variants?.sizeVariant?.id
@@ -341,18 +345,20 @@ export const Details = () => {
 
   const clearCartItems = () => {
     dispatch(resetCart());
-    clearCart(token).then((res) => {
-      console.log(res)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
+    clearCart(token)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
 
-    if(cart.length > 0 && data.restaurant_id !== cart[0]?.restaurant_id){
-      clearCartItems()
+    if (cart.length > 0 && data.restaurant_id !== cart[0]?.restaurant_id) {
+      clearCartItems();
     }
 
     var ItemDataObject = {
@@ -427,7 +433,7 @@ export const Details = () => {
               paddingTop: "6px",
             }}
           >
-            <Typography variant="body1" component="div" >
+            <Typography variant="body1" component="div">
               <Typography
                 variant="subtitle2"
                 component="sup"
@@ -601,7 +607,7 @@ export const Details = () => {
                                     variant.name_en === "Extra Topping" &&
                                     isLastItem
                                       ? "160px"
-                                      : "90px", 
+                                      : "90px",
                                 }}
                               >{`(Each +KWD ${option?.unit_price})`}</p>
                             )}
@@ -715,10 +721,9 @@ export const Details = () => {
                   // disabled: quantity === 10,
                   sx: {
                     color: "common.white",
-                    backgroundColor: (theme) => theme.palette.themeColor.light,
+                    backgroundColor: "#ffffff24",
                     "&:hover": {
-                      backgroundColor: (theme) =>
-                        theme.palette.themeColor.light,
+                      backgroundColor: "#ffffff24",
                     },
                   },
                 }}
@@ -726,10 +731,9 @@ export const Details = () => {
                   // disabled: quantity === 0,
                   sx: {
                     color: "common.white",
-                    backgroundColor: (theme) => theme.palette.themeColor.light,
+                    backgroundColor: "#ffffff24",
                     "&:hover": {
-                      backgroundColor: (theme) =>
-                        theme.palette.themeColor.light,
+                      backgroundColor: "#ffffff24",
                     },
                   },
                 }}
@@ -745,8 +749,7 @@ export const Details = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                backgroundColor: (theme) =>
-                  `${theme.palette.themeColor.light} !important`,
+                backgroundColor: `${restaurantTheme.main} !important`,
                 "&:hover": {
                   backgroundColor: (theme) => theme.palette.themeColor.light,
                 },

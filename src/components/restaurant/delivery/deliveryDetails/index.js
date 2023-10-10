@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from "react";
 import { styled } from "@mui/material/styles"; // Import styled from MUI
 import { lighten } from "@mui/material/styles";
+import { useSelector } from "react-redux";
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
@@ -18,9 +19,13 @@ const StyledOuterContainerIcon = styled("div")(({ theme }) => ({
 
 const DeliveryDetails = () => {
   const [location, setLocation] = useState("Ardiya, Al Qasim St ");
+  const restaurantTheme = useSelector((state) => state.theme.themeColor);
 
   return (
-    <StyledOuterContainer className="delivery_outer_container">
+    <StyledOuterContainer
+      className="delivery_outer_container"
+      style={{ background: restaurantTheme.main + 24 }}
+    >
       <div className="delivery_inner_container">
         <div className="left_dropdown_container">
           <div className="left_dropdown_container_heading_container">
@@ -81,12 +86,13 @@ const DeliveryDetails = () => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <span style={{
-          borderLeft: "1.5px solid #C3D8D4",
-          height: "30px",
-          marginTop:"8px",
-          
-        }}></span>
+        <span
+          style={{
+            borderLeft: "1.5px solid #C3D8D4",
+            height: "30px",
+            marginTop: "8px",
+          }}
+        ></span>
         <div className="right_dropdown_container">
           <div className="right_dropdown_container_heading_container">
             Delivery Time
@@ -106,8 +112,8 @@ const DeliveryDetails = () => {
               }}
             >
               {"ASAP "}
-              <StyledOuterContainerIcon className="dropdown_icon_container" >
-                  <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
+              <StyledOuterContainerIcon className="dropdown_icon_container">
+                <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
               </StyledOuterContainerIcon>
             </Dropdown.Toggle>
 
@@ -120,8 +126,7 @@ const DeliveryDetails = () => {
                 fontWeight: "bold",
                 border: "none",
                 transform: "translate(0px, -22px)",
-                top:"12px",
-
+                top: "12px",
               }}
             >
               <Dropdown.Item href="#/action-1">Option 1</Dropdown.Item>

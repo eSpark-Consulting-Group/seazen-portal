@@ -39,7 +39,7 @@ export default function App() {
     isLoading,
     error,
     isError,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: [GET_ALL_POPULAR_ITEMS_QUERY_KEY],
     queryFn: () => getAllPopularItems(country?.id),
@@ -49,16 +49,18 @@ export default function App() {
   });
 
   useEffect(() => {
-    refetch()
-  },[country])
+    refetch();
+  }, [country]);
 
   const { data: popularDishes } = popularDishesResponse || {};
 
   return (
     <div className="App">
-      <div className="slider-tile">
-        <h3>Popular Dishes</h3>
-      </div>
+      {popularDishes?.length > 0 && (
+        <div className="slider-tile">
+          <h3>Popular Dishes</h3>
+        </div>
+      )}
       <CustomCarousel imageInfo={popularDishes}>
         {popularDishes?.map((info, index) => {
           return (

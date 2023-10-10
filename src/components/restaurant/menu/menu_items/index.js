@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useSearchParams } from "react-router-dom";
 import { Tab, Tabs, Box } from "@mui/material";
 import { isEmpty } from "lodash";
+import { useSelector } from "react-redux";
 
 const menu_categories = [
   "Burrito in a Bowl",
@@ -35,7 +36,11 @@ const MenuItems = ({ itemCategoryList }) => {
     });
   };
 
-  const scrollToElement = (id) => {
+  const restaurantTheme = useSelector((state) => state.theme.themeColor);
+  const scrollToElement = (id, index) => {
+    if (index || index == 0) {
+      setValue(index);
+    }
     const container = document.getElementById(id);
     container.scrollIntoView({ behavior: "smooth" });
   };
@@ -82,7 +87,7 @@ const MenuItems = ({ itemCategoryList }) => {
                     <Dropdown.Item
                       key={category.id}
                       onClick={() => {
-                        scrollToElement(category?.id);
+                        scrollToElement(category?.id, index);
                       }}
                     >
                       {category?.name_en}
@@ -92,7 +97,7 @@ const MenuItems = ({ itemCategoryList }) => {
                     <Dropdown.Item
                       key={`menu_category_drop_${index}`}
                       onClick={() => {
-                        scrollToElement(category.id);
+                        scrollToElement(category.id, index);
                       }}
                     >
                       {category}
@@ -138,13 +143,16 @@ const MenuItems = ({ itemCategoryList }) => {
               variant="scrollable"
               scrollButtons={false}
               textColor="black"
-              indicatorColor="black"
+              // indicatorColor="black"
               aria-label="scrollable prevent tabs example"
+              TabIndicatorProps={{
+                style: { backgroundColor: restaurantTheme?.main },
+              }}
               sx={{
-                '& .MuiButtonBase-root':{
-                  textTransform:"none",
-                  minWidth:"60px"
-                }
+                "& .MuiButtonBase-root": {
+                  textTransform: "none",
+                  minWidth: "60px",
+                },
               }}
             >
               {itemCategoryList?.map((val) => {
@@ -152,7 +160,10 @@ const MenuItems = ({ itemCategoryList }) => {
                   <Tab
                     onClick={() => scrollToElement(val.id)}
                     key={val.id}
-                    label={val.name_en.charAt(0).toUpperCase() + val.name_en.slice(1).toLowerCase()}               
+                    label={
+                      val.name_en.charAt(0).toUpperCase() +
+                      val.name_en.slice(1).toLowerCase()
+                    }
                   />
                 );
               })}

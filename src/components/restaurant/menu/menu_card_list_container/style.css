@@ -15,6 +15,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  margin-top: -45px;
 }
 
 .menu-items-wrapper {
@@ -142,7 +143,7 @@
 .searchwrapper {
   position: relative;
   top: 45px;
-  left:93%;
+  left: 93%;
 }
 
 .Modal_Search_Item {
@@ -244,6 +245,7 @@
 .scrollable-container {
   max-height: calc(100vh - 550px);
   overflow-y: scroll;
+  overflow-x: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
   width: 100%;
