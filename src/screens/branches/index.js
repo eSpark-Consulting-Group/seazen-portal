@@ -1,43 +1,65 @@
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import BranchHeader from "../../components/branches-hours/headerBranch";
 import BranchContent from "../../components/branches-hours/content";
 import RestaurantInfo from "../../components/branches-hours/branch";
 import "./style.css";
 import { Footer } from "../../components/footer/footerContent";
+import getBranchesAndHours, {
+  GET_BRANCHES_AND_HOURS_QUERY_KEY,
+} from "../../api/restaurant/branches/getBranchesAndHours";
+import { useParams } from "react-router-dom";
 
 export const Branches = () => {
-  const restaurantData = [
-    {
-      id: 1,
-      name: "Avenues Mall",
-      weekdayHours: "10:00 AM - 8:00 PM",
-      weekendHours: "11:00 AM - 9:00 PM",
+  const { id } = useParams();
+
+  const [branchesAndHours, setBranchesAndHours] = React.useState(null);
+
+  const {
+    data: branchesAndHoursResponse,
+    isLoading,
+    isSuccess,
+  } = useQuery({
+    queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, id],
+    queryFn: () => {
+      return getBranchesAndHours(id);
     },
-    {
-      id: 2,
-      name: "Argan Al-Bidaa",
-      weekdayHours: "9:00 AM - 7:00 PM",
-      weekendHours: "10:00 AM - 8:00 PM",
+    enabled: !!id,
+    onSuccess: (response) => {
+      let branchesAndHours = [];
+      if (response.data && response.data.length > 0) {
+        response.data.forEach((branch) => {
+          if (branch.branch_hours.length > 0) {
+            branchesAndHours.push({
+              name: branch.name_en,
+              weekdayHours:
+                branch.branch_hours[0].from_time +
+                " - " +
+                branch.branch_hours[0].to_time,
+              weekendHours:
+                branch.branch_hours[branch.branch_hours.length - 1].from_time +
+                " - " +
+                branch.branch_hours[branch.branch_hours.length - 1].to_time,
+            });
+          } else {
+            branchesAndHours.push({
+              name: branch.name_en,
+              weekdayHours: "N/A",
+              weekendHours: "N/A",
+            });
+          }
+        });
+
+        setBranchesAndHours(branchesAndHours);
+      }
     },
-    {
-      id: 3,
-      name: "Al-Kout Mall",
-      weekdayHours: "9:00 AM - 22:00 PM",
-      weekendHours: "10:00 AM - 8:00 PM",
-    },
-    {
-      id: 4,
-      name: "Khiran Mall",
-      weekdayHours: "9:00 AM - 22:00 PM",
-      weekendHours: "10:00 AM - 8:00 PM",
-    },
-    // Add more restaurant objects as needed
-  ];
+  });
+
   return (
     <div className="branches-screen-container">
       <BranchHeader />
       <BranchContent />
-      <RestaurantInfo restaurants={restaurantData} />;
+      {branchesAndHours && <RestaurantInfo restaurants={branchesAndHours} />}
       <div className="branches-footer">
       <div className="profile-footer">
         <Footer showFooterSection />

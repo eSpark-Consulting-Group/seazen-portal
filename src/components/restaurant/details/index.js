@@ -12,7 +12,7 @@ const StyledItemPrice = styled("div")(({ theme }) => ({
 const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
   const navigate = useNavigate();
   const handleBranchHoursClick = () => {
-    navigate(paths.branches);
+    navigate(paths.branches + restaurantDetail?.id + "/branches");
   };
   return (
     <div className="details_outer_container px-3 px-sm-4">

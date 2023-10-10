@@ -1,5 +1,5 @@
 .menu_item_outer_container {
-  width: 100%;
+  width: 103%;
   height: 58px;
   display: flex;
   justify-content: center;
@@ -16,7 +16,7 @@
   display: flex;
   flex-direction: row;
   column-gap: 10px;
-  margin-left: 30px;
+  margin-left: 15px;
 }
 
 .menu_dropdown_container {
@@ -28,12 +28,12 @@
 }
 
 .menu_itmes_text_container {
-  width: 305px;
+  width: 290px;
   height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  column-gap: 20px;
+  column-gap: 15px;
   align-items: center;
   color: #1f2933;
   overflow-x: scroll;

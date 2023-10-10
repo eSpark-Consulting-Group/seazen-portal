@@ -25,13 +25,16 @@ const DeliveryConditionalComponent = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const country = useSelector((state) => state.auth.country);
+  const categoryList = useSelector(
+    (state) => state?.resturants?.listItemByCategory
+  );
 
   const {
     data: getAllItemsByCategoryResponse,
     isLoading: itemsByCategoryLoading,
     error: itemsByCategoryError,
     isError: itemsByCategoryIsError,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: [
       GET_CATEGORY_LIST_ITEM,
@@ -39,14 +42,26 @@ const DeliveryConditionalComponent = ({
       searchParams.get("category"),
     ],
     queryFn: () =>
-      getListItemByCategory(resturantId, searchParams.get("category"), country?.id),
+      getListItemByCategory(
+        resturantId,
+        searchParams.get("category"),
+        country?.id
+      ),
     onSuccess: (data) => {},
+    enabled: false,
   });
 
   useEffect(() => {
-    refetch()
-  },[country])
-  
+    const restaurantId = localStorage.getItem("restaurantID");
+    if (
+      !categoryList ||
+      categoryList?.length == 0 ||
+      restaurantId != categoryList[0]?.restaurant_id
+    ) {
+      refetch();
+    }
+  }, [country]);
+
   const {
     data: getItemsCategoryResponse,
     isLoading: ItemsCategoryLoading,
@@ -70,7 +85,10 @@ const DeliveryConditionalComponent = ({
       <DeliveryDetails />
       {locationDeliver && <ErrorInformation errorMessage={errorMessage} />}
       <MenuItems itemDetail={itemDetail} itemCategoryList={itemCategoryList} />
-      <MenuCardListContainer itemDetail={itemDetail} itemCategoryList={itemCategoryList} />
+      <MenuCardListContainer
+        itemDetail={itemDetail}
+        itemCategoryList={itemCategoryList}
+      />
     </>
   );
 };

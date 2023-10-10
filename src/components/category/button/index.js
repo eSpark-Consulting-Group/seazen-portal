@@ -21,7 +21,7 @@ const OrderTypeButtonExpandable = ({
   clicked,
   id,
   handleOrderTypeFilter,
-  customButtonExpandedClass // New prop to pass the custom class
+  customButtonExpandedClass, // New prop to pass the custom class
 }) => {
   const [expanded, setToggleExpanded] = useState(false);
   const [filterClassDelivery, setToggleFilterClassDelivery] = useState(false);
@@ -62,7 +62,7 @@ const OrderTypeButtonExpandable = ({
     if (id !== 1) {
       setToggleExpanded(!expanded);
       setIsButtonExpanded({ expanded: !expanded, id: id });
-  
+
       if (!expanded) {
         // Set the delivery filter as active by default when expanding the button
         setToggleFilterClassDelivery(true);
@@ -72,24 +72,28 @@ const OrderTypeButtonExpandable = ({
     } else {
       setIsButtonExpanded({ expanded: false });
     }
-  
+
     handleButtonClickIndex(id);
   };
   return (
     <div
-      className={`custom-button ${isButtonExpanded.expanded && isButtonExpanded.id === id ? "expanded" : ""} ${
-        clicked ? "clicked" : ""
-      } ${customButtonExpandedClass}`}
+      className={`custom-button ${
+        isButtonExpanded.expanded && isButtonExpanded.id === id
+          ? "expanded"
+          : ""
+      } ${clicked ? "clicked" : ""} ${customButtonExpandedClass}`}
     >
       <img
         src={iconSrc}
         alt="Icon"
         className="orderTypebutton-icon"
-      onClick={handleClick}
+        onClick={handleClick}
       />
       {((isButtonExpanded.expanded && isButtonExpanded.id === id) ||
         !isButtonExpanded.expanded) && (
-        <span onClick={handleClick}  className={`orderTypebutton-text`}>{text}</span>
+        <span onClick={handleClick} className={`orderTypebutton-text`}>
+          {text}
+        </span>
       )}
       <span className="orderTypebutton-content">
         {isButtonExpanded.expanded && isButtonExpanded.id === id && (
@@ -141,21 +145,22 @@ const RestaurantsOrderTypeButton = () => {
     isLoading: resturantsDataLoading,
     error: resturantsDataError,
     isError: resturantsDataIsError,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: [GET_ALL_RESTAURANTS_QUERY_KEY],
     queryFn: () => getAllRestaurants(country.id),
 
     onSuccess: (data) => {},
+    enabled: false,
   });
   const { data: restaurantsData } = getAllResturantsResponse || {};
 
   useEffect(() => {
     dispatch(getResturants(restaurantsData));
   }, [restaurantsData]);
-  
+
   useEffect(() => {
-    refetch()
+    refetch();
   }, [country]);
 
   const handleOrderTypeFilter = (
@@ -217,7 +222,9 @@ const RestaurantsOrderTypeButton = () => {
               isButtonExpanded={isButtonExpanded}
               clicked={index === 1 ? clickedButtonIndex === 1 : false}
               handleOrderTypeFilter={handleOrderTypeFilter}
-              customButtonExpandedClass={isButtonExpanded.expanded ? "custom-button-expanded" : ""}
+              customButtonExpandedClass={
+                isButtonExpanded.expanded ? "custom-button-expanded" : ""
+              }
             />
           );
         })}
