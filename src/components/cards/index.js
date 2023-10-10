@@ -112,11 +112,17 @@ const icons = {
 //   // },
 // };
 
-const BasicCard = ({
-  clickedButtonIndex,
-  orderTypeFilter,
-  restaurantsData,
-}) => {
+const BasicCard = (props) => {
+  const {
+    clickedButtonIndex,
+    orderTypeFilter,
+    restaurantsData,
+    setOpenAddressPopup,
+    goToRestaurantMenuPage,
+    setRestaurantId,
+    setRestaurantName,
+  } = props;
+
   const navigate = useNavigate();
   const captions = [
     icons,
@@ -155,13 +161,18 @@ const BasicCard = ({
     if (orderTypeFilter) {
       const { delivery, near, selectedNow } = orderTypeFilter;
       const { doesDelivery, isNear } = service;
-    if (delivery && !near) {
-    return doesDelivery ? "restaurantCard-border-delivery " + (clickedButtonIndex !== null ? "expanded" : "another-class") : "";
-}
+      if (delivery && !near) {
+        return doesDelivery
+          ? "restaurantCard-border-delivery " +
+              (clickedButtonIndex !== null ? "expanded" : "another-class")
+          : "";
+      }
 
       if (!delivery && near) {
-    return isNear ? "restaurantCard-border-near " + (clickedButtonIndex !== null ? "expanded" : "another-class") : "";
-
+        return isNear
+          ? "restaurantCard-border-near " +
+              (clickedButtonIndex !== null ? "expanded" : "another-class")
+          : "";
       }
 
       if (delivery && near) {
@@ -177,8 +188,6 @@ const BasicCard = ({
           return "restaurantCard-border-delivery";
         }
       }
-
-     
     }
   };
 
@@ -220,27 +229,23 @@ const BasicCard = ({
   const getServicesIcon = (serviceName) => {
     return (
       <div className="icon-row">
-      <img
-        className={getClassNameAccordingToFilter(
-          icons[serviceName].id,
-          images[1].service
-        )}
-        src={ icons[serviceName]?.image}
-        // alt={`Icon ${i + 1}`}
-        style={{ width: iconWidth, height: iconHeight }}
-      />
-    </div>
-    )
-  }
+        <img
+          className={getClassNameAccordingToFilter(
+            icons[serviceName].id,
+            images[1].service
+          )}
+          src={icons[serviceName]?.image}
+          // alt={`Icon ${i + 1}`}
+          style={{ width: iconWidth, height: iconHeight }}
+        />
+      </div>
+    );
+  };
 
   // Define the width and height for the SVG icons
   const iconWidth = "7px";
   const iconHeight = "9px";
 
-  const goToRestaurantMenuPage = (restaurant) => {
-    localStorage.setItem("restaurantID", restaurant)
-    navigate(paths.menu + `/restaurant/${restaurant}`);
-  };
   return (
     <div className="restaurantCard-container container-fluid">
       {restaurantsData.map((restaurant, index) => {
@@ -248,18 +253,20 @@ const BasicCard = ({
           return (
             <div
               key={index}
-              className={`restaurantCards restaurantCard-large ${getCardClassName(images[index].service)}`}
+              className={`restaurantCards restaurantCard-large ${getCardClassName(
+                images[index].service
+              )}`}
             >
               <Card
                 sx={{
                   width: "100%",
                   borderRadius: "10px",
-                  boxShadow:"none",
-                  border:"none",
+                  boxShadow: "none",
+                  border: "none",
                 }}
                 className="restaurantCards"
                 onClick={() => {
-                  goToRestaurantMenuPage(restaurant?.id);
+                  goToRestaurantMenuPage(restaurant.id);
                 }}
               >
                 <img
@@ -273,10 +280,14 @@ const BasicCard = ({
                   }`}
                 >
                   <div className="inner-svg-container">
-                    {restaurant.catering_status && getServicesIcon("catering_status")}
-                    {restaurant.delivery_status && getServicesIcon("delivery_status")}
-                    {restaurant.dinein_status && getServicesIcon("dinein_status")}
-                    {restaurant.pickup_status && getServicesIcon("pickup_status")}
+                    {restaurant.catering_status &&
+                      getServicesIcon("catering_status")}
+                    {restaurant.delivery_status &&
+                      getServicesIcon("delivery_status")}
+                    {restaurant.dinein_status &&
+                      getServicesIcon("dinein_status")}
+                    {restaurant.pickup_status &&
+                      getServicesIcon("pickup_status")}
                   </div>
                 </div>
               </Card>

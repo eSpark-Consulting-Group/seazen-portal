@@ -4,7 +4,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { Skeleton } from "@mui/material";
+import {
+  Skeleton,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  CircularProgress,
+} from "@mui/material";
 
 import Card from "../../components/adressList";
 import MyAddresses from "../../components/header/myAdresses";
@@ -34,13 +43,17 @@ const App = () => {
   const [isSelected, setIsSelected] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState({});
   const [selectedId, setSelectedId] = useState(null);
+  const [addressType, setAddressType] = useState("");
+  const [addressId, setAddressId] = useState(null);
   const [fullAddress, setFullAddress] = useState(null);
+  const [deleteAdd, setDeleteAdd] = useState(false);
   // const [isLoading, setIsloading] = useState(false);
 
   const fetchFunction = async () => {
     getAllAddress(isToken).then((res) => {
       if (res.success === "ok") {
         dispatch(getAddress(res.data));
+        setDeleteAdd(false);
         setOpen(false);
       }
     });
@@ -56,6 +69,7 @@ const App = () => {
   const selectCurrentAddress = (item) => {
     setSelectedId(item.id);
     setSelectedAddress(item);
+
     const selectedAddress = {
       lat: +item.latitude,
       lng: +item.longitude,
@@ -87,11 +101,24 @@ const App = () => {
   };
 
   const deleteAddress = (id) => {
+    setDeleteAdd(true);
     deleteAddressApiCall(id, isToken).then((res) => {
       if (res.statusCode === 200) {
         fetchFunction();
       }
     });
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setAddressType("");
+    setAddressId(null);
+  };
+
+  const handleClickOpen = (item) => {
+    setAddressType(item.address_type);
+    setAddressId(item.id);
+    setOpen(true);
   };
 
   return (
@@ -195,22 +222,118 @@ const App = () => {
                     : "/assets/img/salmiya office.svg"
                 }
                 data={data}
-                open={open}
                 setOpen={setOpen}
+                open={open}
                 deleteAddress={deleteAddress}
                 selectCurrentAddress={selectCurrentAddress}
                 deselectCurrentAddress={deselectCurrentAddress}
                 isSelected={isSelected}
                 setIsSelected={setIsSelected}
                 address={location?.state?.latlng}
+                handleClickOpen={handleClickOpen}
               />
             </div>
           ))}
       <AddressesButton
         restaurantName={location?.state?.restaurantName}
         restaurant_id={location?.state?.restaurant_id}
-        path={location.state.path}
+        path={location?.state?.path}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        sx={{
+          overflow: "hidden",
+          "& .MuiDialog-paper": {
+            height: "204px",
+            width: "327px",
+            textAlign: "center",
+            overflow: "hidden",
+            overflowY: "hidden",
+            "@media (min-width: 600px)": {
+              left: "0",
+              position: "fixed",
+              margin: "20px",
+            },
+          },
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          <img src="/assets/img/exclaim.svg"></img>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <div
+              style={{
+                font: "normal normal bold 16px/18px Titillium Web",
+                color: "#959FA8",
+              }}
+            >
+              Are you sure you want to
+              <br /> delete {addressType}?{" "}
+            </div>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            marginRight: "35px",
+            marginBottom: "20px",
+          }}
+        >
+          <Button
+            onClick={handleClose}
+            sx={{
+              background: "#FFFFFF 0% 0% no-repeat padding-box",
+              border: "1px solid #98694E",
+              borderRadius: "12px",
+              opacity: "1",
+              width: "116px",
+              height: "29px",
+            }}
+          >
+            <span
+              style={{
+                font: "normal normal 600 16px/24px Titillium Web",
+                color: "#98694E",
+              }}
+            >
+              Back
+            </span>
+          </Button>
+          <Button
+            color="primary"
+            autoFocus
+            className="delete-button"
+            sx={{
+              background: "#98694E 0% 0% no-repeat padding-box",
+              border: "1px solid #707070",
+              borderRadius: "12px",
+              opacity: "1",
+              width: "116px",
+              height: "29px",
+            }}
+            onClick={() => deleteAddress(addressId)}
+            disabled={deleteAdd}
+          >
+            {deleteAdd ? (
+              <CircularProgress className="loader" />
+            ) : (
+              <span
+                style={{
+                  font: "normal normal 600 16px/24px Titillium Web",
+                  color: "#ffffff",
+                }}
+              >
+                Delete
+              </span>
+            )}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

@@ -45,6 +45,9 @@ const MenuCard = ({
   restaurant_id,
   showSubTractButton,
   allData,
+  locationDeliver,
+  restaurantBranchHours,
+  resturantId,
 }) => {
   const plusIcon = "/assets/img/Icon - Plus.svg";
   const minusIcon = "/assets/img/Icon-Minus.svg";
@@ -284,6 +287,9 @@ const MenuCard = ({
               navigate(paths.details + "/" + id, {
                 state: {
                   id: id,
+                  locationDeliver: locationDeliver,
+                  branchRestaurants: restaurantBranchHours,
+                  resturantId: resturantId,
                 },
               });
             }}

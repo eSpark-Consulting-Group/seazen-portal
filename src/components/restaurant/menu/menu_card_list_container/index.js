@@ -14,7 +14,13 @@ import { Modal } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "react-bootstrap";
 
-const MenuCardListContainer = ({ itemCategoryList }) => {
+const MenuCardListContainer = ({
+  itemDetail,
+  itemCategoryList,
+  locationDeliver,
+  restaurantBranchHours,
+  resturantId,
+}) => {
   const navigate = useNavigate();
   const originalCartTotal = useSelector((state) => state.cart.total);
   const cartTotal = originalCartTotal < 0 ? 0 : originalCartTotal;
@@ -161,6 +167,9 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
                           <MenuCard
                             allData={item}
                             key={index}
+                            locationDeliver={locationDeliver}
+                            resturantId={resturantId}
+                            restaurantBranchHours={restaurantBranchHours}
                             foodItem={item.name_en}
                             foodIngredients={item.description_en}
                             foodPrice={item.price}
@@ -236,6 +245,7 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
           </Box>
         </Box>
       </div>
+
       <Modal
         open={open}
         onClose={handleClose}
