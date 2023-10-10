@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import "./style.css";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ContactUs from "../../components/contactButton/contact";
 import UpdateSection from "../../components/orderPlace/timeUpdateSection";
 import AddressSection from "../../components/orderPlace/addressSection";
 import OrderIdSection from "../../components/orderPlace/orderIdSection";
 import FooterSection from "../../components/footer/footerTextBox/footerSection";
-import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
+import "./style.css";
 
 const OrderScreen = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [progress, setProgress] = useState([
     { done: true },
     { done: false },
@@ -41,11 +42,25 @@ const OrderScreen = () => {
     }, 3000);
   };
 
+  //dev-backend.orderseazen.com/redirect_url.php?order_no=TK23133CJOD&reference_number=Seaz6A8WJ
+
+  useEffect(() => {
+    if (
+      searchParams.get("order_no") === null ||
+      searchParams.get("reference_number") === null
+    ) {
+      navigate("/order-failed");
+    }
+  }, []);
+
   return (
     <div className="order-screen">
       <div id="close-button">
         <div id="close-btn-tag">
-          <p  onClick={() => navigate(paths.home)} style={{ color: "#1F2933", cursor: "pointer" }}>
+          <p
+            onClick={() => navigate(paths.home)}
+            style={{ color: "#1F2933", cursor: "pointer" }}
+          >
             <strong>᙭</strong>
           </p>
         </div>
@@ -80,11 +95,14 @@ const OrderScreen = () => {
         </div>
       </div>
       <AddressSection />
-      <OrderIdSection />
+      <OrderIdSection
+        orderID={
+          searchParams.get("order_no") !== null
+            ? searchParams.get("order_no")
+            : ""
+        }
+      />
       <ContactUs />
-     {/* <div className="orderconfirm-footer">
-      <FooterSection />
-     </div> */}
     </div>
   );
 };

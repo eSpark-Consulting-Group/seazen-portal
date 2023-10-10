@@ -28,7 +28,7 @@ export const paths = {
   myorder: "order",
   receipt: "receipt",
   location: "/location",
-  orderplace: "orderplace",
+  order_status: "/order-complete",
   customer_registration: "/customer_registration",
   phone_verification_index: "/phone-verification",
   phone_verification_otp: "/phone-verification/otp",
@@ -54,7 +54,7 @@ export const routes = {
   myorder: "profile/order",
   receipt: "profile/order/receipt",
   location: "/location",
-  orderplace: "orderplace",
+  order_status: "/order-complete",
   customer_registration: "/customer_registration",
   phone_verification_index: "/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
@@ -99,9 +99,9 @@ export const publicRoutes = {
     path: routes.menu,
     component: <Menu />,
   },
-  [paths.orderplace]: {
+  [paths.order_status]: {
     name: "Orderplace",
-    path: routes.orderplace,
+    path: routes.order_status,
     component: <OrderScreen />,
   },
   [paths.update_profile]: {
