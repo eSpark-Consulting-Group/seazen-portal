@@ -10,11 +10,13 @@ import { useLocation, useParams } from "react-router";
 import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantBranchHours.js";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { setThemeColor } from "../../store/reducers/themeSlice.js";
 
 const Menu = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const { id } = useParams();
   const country = useSelector((state) => state.auth.country);
   const {
@@ -22,7 +24,7 @@ const Menu = () => {
     isLoading,
     error,
     isError,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: [GET_RESTAURANT_DETAILS_QUERY_KEY],
     queryFn: () => getRestaurantDetails(id, country?.id),
@@ -30,7 +32,12 @@ const Menu = () => {
   });
   const { data: restaurantDetail } = restaurantDetailResponse || {};
 
-  console.log(restaurantDetail,"shahrestaurantDetail");
+  dispatch(
+    setThemeColor({
+      main: restaurantDetail?.primary_color,
+      secondary: restaurantDetail?.secondary_color,
+    })
+  );
 
   const {
     data: restaurantBranchHours,
@@ -44,8 +51,8 @@ const Menu = () => {
   });
 
   useEffect(() => {
-    refetch()
-  },[country])
+    refetch();
+  }, [country]);
 
   return (
     <div>

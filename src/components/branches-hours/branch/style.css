@@ -3,7 +3,6 @@
   display: flex;
   justify-content: space-between;
   position: relative;
-
 }
 
 .branch-status-container {
@@ -85,7 +84,7 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 .branch-weekdaysHours {
@@ -93,7 +92,7 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 .branch-weekends {
@@ -131,7 +130,7 @@
 .branch-timings {
   display: flex; /* Display children side by side */
   align-items: center;
-  margin-left: -215px;
+  margin-left: -265px;
 }
 
 .branch-hours {
