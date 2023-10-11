@@ -1,7 +1,12 @@
 import React from "react";
 import "./style.css";
 
-export const AppartmentAdress = ({ handleChange, address, errorState }) => {
+export const AppartmentAdress = ({
+  handleChange,
+  address,
+  buildingErr,
+  additionalDirErr,
+}) => {
   return (
     <form className="container-style px-3">
       <input
@@ -33,7 +38,7 @@ export const AppartmentAdress = ({ handleChange, address, errorState }) => {
 
       <input
         className={
-          errorState ? ["form-style", "error"].join(" ") : "form-style"
+          buildingErr ? ["form-style", "error"].join(" ") : "form-style"
         }
         type="text"
         name="Building"
@@ -71,7 +76,10 @@ export const AppartmentAdress = ({ handleChange, address, errorState }) => {
       />
 
       <textarea
-        className="form-style form-style-text-area"
+        className={[
+          "form-style form-style-text-area",
+          additionalDirErr ? "error" : "",
+        ].join(" ")}
         name="AdditionalDirection"
         id="AdditionalDirection"
         placeholder="Additional Direction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"

@@ -124,6 +124,8 @@ const BasicCard = (props) => {
   } = props;
 
   const navigate = useNavigate();
+  const isToken = localStorage.getItem("token");
+
   const captions = [
     icons,
     [icons[0], icons[1], icons[3]],
@@ -266,7 +268,15 @@ const BasicCard = (props) => {
                 }}
                 className="restaurantCards"
                 onClick={() => {
-                  goToRestaurantMenuPage(restaurant.id);
+                  if (
+                    localStorage.getItem("selected") === null &&
+                    isToken !== null
+                  ) {
+                    setOpenAddressPopup(true);
+                    setRestaurantId(restaurant.id);
+                  } else {
+                    goToRestaurantMenuPage(restaurant.id);
+                  }
                 }}
               >
                 <img

@@ -71,6 +71,9 @@ const defaultMapOptions = {
   keyboardShortcuts: false,
   clickableIcons: false,
   draggable: true,
+  panControl: true,
+  zoomControl: false,
+  overviewMapControl: true,
 };
 
 const lib = ["places"];
@@ -78,6 +81,8 @@ const lib = ["places"];
 function LocationPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const selectedAdd = JSON.parse(localStorage.getItem("selected"));
+  const token = localStorage.getItem("token");
 
   const { isLoaded } = useLoadScript({
     id: "google-map-script",
@@ -93,16 +98,81 @@ function LocationPage() {
   const mapRef = useRef();
 
   useEffect(() => {
-    if (location?.state?.latlng !== undefined) {
+    if (
+      location?.state?.editLocation === true &&
+      location?.state?.latlng !== undefined
+    ) {
       const lat = location?.state?.latlng.lat;
       const lng = location?.state?.latlng.lng;
       setCenter({ lat, lng });
+
       setAddress(location?.state?.name);
+      getAdd(lat, lng);
     }
   }, [location?.state]);
 
   useEffect(() => {
-    if (location?.state?.latlng === undefined) {
+    if (
+      location?.state?.latlng !== undefined &&
+      location?.state?.editLocation === undefined
+    ) {
+      setCenter({
+        lat: location?.state?.latlng?.lat,
+        lng: location?.state?.latlng?.lng,
+      });
+
+      getAdd(location?.state?.latlng?.lat, location?.state?.latlng?.lng);
+    }
+  }, [location?.state]);
+
+  useEffect(() => {
+    navigator.permissions &&
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then(function (PermissionStatus) {
+          if (PermissionStatus.state == "granted") {
+            if (localStorage.getItem("selected") !== null) {
+              getAdd(selectedAdd.lat, selectedAdd.lng);
+            } else if (localStorage.getItem("location") !== null) {
+              const alreadyAvaliable = JSON.parse(
+                localStorage.getItem("location")
+              );
+              getAdd(alreadyAvaliable.lat, alreadyAvaliable.lng);
+            }
+          } else if (PermissionStatus.state == "prompt") {
+            if (localStorage.getItem("selected") !== null) {
+              getAdd(selectedAdd.lat, selectedAdd.lng);
+            } else if (localStorage.getItem("location") !== null) {
+              const alreadyAvaliable = JSON.parse(
+                localStorage.getItem("location")
+              );
+              getAdd(alreadyAvaliable.lat, alreadyAvaliable.lng);
+            } else {
+              setCenter({ lat: 29.3140728, lng: 47.68022 });
+              getAdd(29.3140728, 47.68022);
+            }
+          } else {
+            if (localStorage.getItem("selected") !== null) {
+              getAdd(selectedAdd.lat, selectedAdd.lng);
+            } else if (localStorage.getItem("location") !== null) {
+              const alreadyAvaliable = JSON.parse(
+                localStorage.getItem("location")
+              );
+              getAdd(alreadyAvaliable.lat, alreadyAvaliable.lng);
+            } else {
+              setCenter({ lat: 29.3140728, lng: 47.68022 });
+              getAdd(29.3140728, 47.68022);
+            }
+          }
+        });
+  }, []);
+
+  useEffect(() => {
+    if (
+      location?.state?.latlng === undefined &&
+      selectedAdd === null &&
+      token !== null
+    ) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           setCenter({
@@ -113,6 +183,26 @@ function LocationPage() {
         },
         () => {}
       );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (location?.state?.latlng === undefined && selectedAdd !== null) {
+      setCenter({ lat: selectedAdd.lat, lng: selectedAdd.lng });
+      getAdd(selectedAdd?.lat, selectedAdd?.lng);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      (center.lat === 0 &&
+        center.lng === 0 &&
+        localStorage.getItem("location") === null &&
+        selectedAdd === null) ||
+      token === null
+    ) {
+      setCenter({ lat: 29.3140728, lng: 47.68022 });
+      getAdd(29.3140728, 47.68022);
     }
   }, []);
 
@@ -146,18 +236,18 @@ function LocationPage() {
     }
   }, [data, center]);
 
-  const getAdd = async (lat, lng) => {
+  const getAdd = async (latitude, longitude) => {
     // eslint-disable-next-line no-undef
     setKey(process.env.REACT_APP_GOOGLE_API_KEY);
-    geocode(RequestType.LATLNG, `${lat},${lng}`, {
+    geocode(RequestType.LATLNG, `${latitude},${longitude}`, {
       enable_address_descriptor: true,
     })
       .then(({ results }) => {
         const address = results[0].formatted_address;
-        const lat = results[0].geometry.location.lat;
-        const lng = results[0].geometry.location.lng;
+        // const lat = results[0].geometry.location.lat;
+        // const lng = results[0].geometry.location.lng;
         setAddress(address);
-        setCenter({ lat, lng });
+        setCenter({ lat: latitude, lng: longitude });
       })
       .catch((err) => {
         console.log(err);
@@ -187,43 +277,49 @@ function LocationPage() {
     if (mapRef.current.center) {
       const lat = await mapRef?.current?.center?.lat();
       const lng = await mapRef?.current?.center?.lng();
-      getAdd(lat, lng);
+
+      if (lat && lng) {
+        getAdd(lat, lng);
+      }
     }
   };
 
+  const makeCenter = () => {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        getAdd(position.coords.latitude, position.coords.longitude);
+      },
+      () => {}
+    );
+  };
+
   const confirmLocation = () => {
-    if (
+    if (token === null) {
+      navigate(paths.phone_verification_index);
+    } else if (
       location?.state?.path === "/cart" ||
-      location?.state?.path === "/home"
+      location?.state?.path === "/home" ||
+      location?.state?.path?.includes("menu-item-details")
     ) {
-      navigate(paths.address, {
-        state: { name: address, latlng: center, path: location?.state?.path },
-      });
+      if (location?.state?.path?.includes("menu-item-details")) {
+        navigate(paths.address, {
+          state: {
+            name: address,
+            latlng: center,
+            path: location?.state?.path,
+            restaurant_id: +location?.state?.restaurant_id,
+          },
+        });
+      } else {
+        navigate(paths.address, {
+          state: { name: address, latlng: center, path: location?.state?.path },
+        });
+      }
     } else {
       navigate(paths.address, {
         state: { name: address, latlng: center },
       });
     }
-  };
-
-  const getBounds = () => {
-    const bounds = new window.google.maps.LatLngBounds(center);
-
-    console.log(window.google.maps);
-
-    // console.log(bounds.extend);
-
-    // const markers = this.getMarkers()
-
-    // for (const marker of markers) {
-    //   const position = marker.getPosition()
-
-    //   if (position) {
-    //     bounds.extend(position)
-    //   }
-    // }
-
-    // return bounds
   };
 
   return (
@@ -314,7 +410,6 @@ function LocationPage() {
         <GoogleMap
           onLoad={handleLoad}
           onDragEnd={handleCenterChanged}
-          onBoundsChanged={getBounds}
           mapContainerStyle={containerStyle}
           center={center}
           zoom={15}
@@ -323,7 +418,11 @@ function LocationPage() {
           mapContainerClassName="GOOGLE"
         >
           <div className="marker">
-            <img src={distanceIsFar ? LocationRed : LocationGreen} />
+            <img
+              src={
+                distanceIsFar && token !== null ? LocationRed : LocationGreen
+              }
+            />
           </div>
 
           {/* <MarkerF
@@ -335,18 +434,23 @@ function LocationPage() {
             icon={{
               url: LocationRed,
             }}
+            animation={"Drop"}
           /> */}
 
-          {distanceIsFar ? (
+          {distanceIsFar && token !== null ? (
             <Box className="info-window-box">
               <Typography variant="h5">
-                {location.state.restaurantName} dosen&apos;t deliver here
+                {location?.state?.restaurantName} dosen&apos;t deliver here
               </Typography>
               <Typography variant="h5">
                 Please choose another location
               </Typography>
             </Box>
           ) : null}
+
+          <div className="recenter-div" onClick={() => makeCenter()}>
+            <img src="/assets/img/recenter.png" alt="" />
+          </div>
         </GoogleMap>
       )}
 
@@ -369,7 +473,7 @@ function LocationPage() {
           variant="contained"
           className="confirm-button"
           onClick={() => confirmLocation()}
-          disabled={address === "" || distanceIsFar}
+          disabled={token === null ? false : address === "" || distanceIsFar}
         >
           Confirm Your Location
         </Button>

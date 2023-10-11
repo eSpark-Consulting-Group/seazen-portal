@@ -20,6 +20,9 @@ const MenuCardListContainer = ({
   locationDeliver,
   restaurantBranchHours,
   resturantId,
+  restaurantDetail,
+  setOpenModal,
+  setSelectedItemToDeliver,
 }) => {
   const navigate = useNavigate();
   const originalCartTotal = useSelector((state) => state.cart.total);
@@ -170,6 +173,7 @@ const MenuCardListContainer = ({
                             locationDeliver={locationDeliver}
                             resturantId={resturantId}
                             restaurantBranchHours={restaurantBranchHours}
+                            restaurantDetail={restaurantDetail}
                             foodItem={item.name_en}
                             foodIngredients={item.description_en}
                             foodPrice={item.price}
@@ -180,6 +184,8 @@ const MenuCardListContainer = ({
                               item.has_extras === false &&
                               item.has_options === false
                             }
+                            setOpenModal={setOpenModal}
+                            setSelectedItemToDeliver={setSelectedItemToDeliver}
                           />
                         );
                       })}

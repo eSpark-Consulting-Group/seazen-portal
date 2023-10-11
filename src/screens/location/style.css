@@ -35,7 +35,7 @@
   border: 1px solid #707070;
   z-index: 100;
   position: absolute;
-  top: 41%;
+  top: 44%;
   left: 50%;
 }
 
@@ -43,6 +43,25 @@
   font: normal 700 14px/21px Titillium Web;
   color: #1f2933;
   font-size: 14px;
+}
+
+.recenter-div {
+  position: absolute;
+  right: 12px;
+  bottom: 15%;
+  width: 40px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.recenter-div img {
+  width: 95%;
+  object-fit: cover;
+  filter: grayscale(100%);
 }
 
 .marker {
