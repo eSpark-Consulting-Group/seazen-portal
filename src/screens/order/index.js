@@ -180,7 +180,10 @@ const OrderScreen = () => {
               Thank you for placing<br></br>your order.
             </p>
           </div>{" "}
-          <UpdateSection />
+          <UpdateSection
+            arrivalDate={data?.data?.data?.arrival_date_time.data}
+            arrivalTime={data?.data?.data?.arrival_date_time.data}
+          />
           <div className="order-progress-bar">
             {progress.map((stage, index) => {
               return (
