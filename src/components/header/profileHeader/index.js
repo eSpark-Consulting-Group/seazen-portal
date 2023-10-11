@@ -11,6 +11,7 @@ import {
   getCategoryItemList,
   getRestaurantsBanner,
 } from "../../../store/reducers/resturantsSlice";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const ProfileHeader = (props) => {
   const { showFlagOption } = props;
@@ -18,8 +19,8 @@ const ProfileHeader = (props) => {
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isCountryPopupOpen, setIsCountryPopupOpen] = useState(false);
-  const [currentFlag, setCurrentFlag] = useState("/assets/img/flag1.svg"); // Default flag
-  const [currentCountryName, setCountryName] = useState("Kuwait"); // Default flag
+  const [currentFlag, setCurrentFlag] = useState(""); // Default flag
+  const [currentCountryName, setCountryName] = useState(""); // Default flag
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
@@ -93,7 +94,7 @@ const ProfileHeader = (props) => {
       {showFlagOption && (
         <div className="profileHeaderflag-profile">
           <div className="profileHeadercircle-container" onClick={togglePopup}>
-            <img src={currentFlag} alt="Flag" />
+            <LazyLoadImage src={currentFlag} alt="Flag" effect="blur" />
           </div>
           {isPopupOpen && (
             <div
