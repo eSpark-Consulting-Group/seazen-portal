@@ -6,6 +6,7 @@ export const OfficeAdress = ({
   address,
   floorReq,
   companyNameReq,
+  additionalDirErr,
 }) => {
   return (
     <form className="container-style px-3">
@@ -77,7 +78,10 @@ export const OfficeAdress = ({
       />
 
       <textarea
-        className="form-style form-style-text-area"
+        className={[
+          "form-style form-style-text-area",
+          additionalDirErr ? "error" : "",
+        ].join(" ")}
         name="AdditionalDirection"
         id="AdditionalDirection"
         placeholder="Additional Direction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"

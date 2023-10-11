@@ -21,6 +21,7 @@ import {
 import "./style.css";
 import clearCart from "../../../../api/cart/clearCart";
 import addToCartApiCall from "../../../../api/cart/addToCart";
+import { getDistanceFromLatLonInKm } from "../../../../utils/getAddress";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
@@ -36,23 +37,30 @@ const AddToCartButton = styled("div")(({ theme }) => ({
   // Add any other button styles you need here
 }));
 
-const MenuCard = ({
-  foodItem,
-  foodIngredients,
-  foodPrice,
-  foodImage,
-  id,
-  restaurant_id,
-  showSubTractButton,
-  allData,
-  locationDeliver,
-  restaurantBranchHours,
-  resturantId,
-}) => {
+const MenuCard = (props) => {
+  const {
+    foodItem,
+    foodIngredients,
+    foodPrice,
+    foodImage,
+    id,
+    restaurant_id,
+    showSubTractButton,
+    allData,
+    locationDeliver,
+    restaurantBranchHours,
+    resturantId,
+    restaurantDetail,
+    setOpenModal,
+    setSelectedItemToDeliver,
+  } = props;
+
   const plusIcon = "/assets/img/Icon - Plus.svg";
   const minusIcon = "/assets/img/Icon-Minus.svg";
   const trashIcon = "/assets/img/Icon-Trash.svg";
   const extraItemName = "rice, plate peppers, onion, red beans, …";
+
+  const token = localStorage.getItem("token");
 
   const [foodItemQuantity, setFoodItemQuantity] = useState(0);
   const [menuCardDropdownOpen, setMenuCardDropdownOpen] = useState(false);
@@ -102,7 +110,6 @@ const MenuCard = ({
     }
     return true;
   };
-  const token = localStorage.getItem("token");
   const clearCartItems = () => {
     dispatch(resetCart());
     clearCart(token)
@@ -114,57 +121,132 @@ const MenuCard = ({
       });
   };
 
-  function handleClickAdd() {
-    if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
-      clearCartItems();
-    }
-    if (hasVariant) {
-      navigate(paths.details + "/" + id, {
-        state: {
-          id: id,
-        },
-      });
-      return;
-    }
-    setFoodItemQuantity(foodItemQuantity + 1);
-    if (checkIfItemIsInCart()) {
-      dispatch(
-        updateCartMenuItemQuantity({
-          id: id,
-          quantity: foodItemQuantity + 1,
-          totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
-        })
-      );
-    } else {
-      dispatch(
-        addToCart({
-          id: id,
-          itemName: foodItem,
-          restaurant_id,
-          totalPrice: foodPriceWithoutCurrency(),
-          quantity: foodItemQuantity + 1,
-          itemImage: foodImage,
-        })
-      );
-      const cartItemDataForApi = {
-        item_code: uuidv4(),
-        item_id: id,
-        quantity: foodItemQuantity + 1,
-        topping_variant_id: 0,
-        side_variant_id: 0,
-        size_variant_id: 0,
-        size_variant: [],
-        topping_variant: [],
-        side_variant: [],
-      };
-
-      addToCartApiCall(cartItemDataForApi, token)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
+  function handleClickAdd(id) {
+    if (token === null) {
+      if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
+        clearCartItems();
+      }
+      if (hasVariant || !hasVariant) {
+        navigate(paths.details + "/" + id, {
+          state: {
+            id: id,
+          },
         });
+        return;
+      }
+      setFoodItemQuantity(foodItemQuantity + 1);
+      if (checkIfItemIsInCart()) {
+        dispatch(
+          updateCartMenuItemQuantity({
+            id: id,
+            quantity: foodItemQuantity + 1,
+            totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
+          })
+        );
+      } else {
+        dispatch(
+          addToCart({
+            id: id,
+            itemName: foodItem,
+            restaurant_id,
+            totalPrice: foodPriceWithoutCurrency(),
+            quantity: foodItemQuantity + 1,
+            itemImage: foodImage,
+          })
+        );
+        const cartItemDataForApi = {
+          item_code: uuidv4(),
+          item_id: id,
+          quantity: foodItemQuantity + 1,
+          topping_variant_id: 0,
+          side_variant_id: 0,
+          size_variant_id: 0,
+          size_variant: [],
+          topping_variant: [],
+          side_variant: [],
+        };
+
+        addToCartApiCall(cartItemDataForApi, token)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    } else {
+      restaurantBranchHours?.data?.forEach((res) => {
+        const resLat = +res.latitude;
+        const resLng = +res.longitude;
+
+        const selected = JSON.parse(localStorage.getItem("selected"));
+
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          selected.lat,
+          selected.lng
+        );
+
+        if (distance > 50) {
+          if (allData.id === id) {
+            setSelectedItemToDeliver(allData);
+          }
+          setOpenModal(true);
+        } else {
+          if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
+            clearCartItems();
+          }
+          if (hasVariant) {
+            navigate(paths.details + "/" + id, {
+              state: {
+                id: id,
+              },
+            });
+            return;
+          }
+          setFoodItemQuantity(foodItemQuantity + 1);
+          if (checkIfItemIsInCart()) {
+            dispatch(
+              updateCartMenuItemQuantity({
+                id: id,
+                quantity: foodItemQuantity + 1,
+                totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
+              })
+            );
+          } else {
+            dispatch(
+              addToCart({
+                id: id,
+                itemName: foodItem,
+                restaurant_id,
+                totalPrice: foodPriceWithoutCurrency(),
+                quantity: foodItemQuantity + 1,
+                itemImage: foodImage,
+              })
+            );
+            const cartItemDataForApi = {
+              item_code: uuidv4(),
+              item_id: id,
+              quantity: foodItemQuantity + 1,
+              topping_variant_id: 0,
+              side_variant_id: 0,
+              size_variant_id: 0,
+              size_variant: [],
+              topping_variant: [],
+              side_variant: [],
+            };
+
+            addToCartApiCall(cartItemDataForApi, token)
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        }
+      });
     }
   }
 
@@ -290,6 +372,7 @@ const MenuCard = ({
                   locationDeliver: locationDeliver,
                   branchRestaurants: restaurantBranchHours,
                   resturantId: resturantId,
+                  restaurantDetail,
                 },
               });
             }}
@@ -333,7 +416,7 @@ const MenuCard = ({
             {showSubTractButton ? (
               <>
                 <AddToCartButton
-                  onClick={handleClickAdd}
+                  onClick={() => handleClickAdd(id)}
                   className="menu_card_add_to_cart_button pointer"
                 >
                   <img

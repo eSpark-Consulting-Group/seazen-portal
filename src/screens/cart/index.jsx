@@ -40,11 +40,18 @@ import { MobileTimePicker } from "@mui/x-date-pickers";
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../api/restaurant/branches/getBranchesAndHours";
+import {
+  getDistanceFromLatLonInKm,
+  truncateString,
+} from "../../utils/getAddress";
+import { DialogComponent } from "../../components/dialog";
+import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 
 function CartPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+
   const [tipValue, setTipValue] = React.useState(0.25);
   const [isLoading, setIsLoading] = React.useState(false);
   const [cartItems, setCartItems] = React.useState();
@@ -64,10 +71,44 @@ function CartPage() {
   const [pickTime, setPickTime] = useState("ASAP");
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
+  const [notDeliver, setNotDeliver] = useState(false);
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
     setDialogOpen(false);
+  };
+
+  useEffect(() => {
+    if (location?.state?.back === "back-to-cart") {
+      getBranchHours();
+    }
+  }, [location]);
+
+  const getBranchHours = () => {
+    const restaurantId = localStorage.getItem("restaurantID");
+    const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+
+    getRestaurantBranchHours(restaurantId).then((res) => {
+      res?.data?.forEach((res) => {
+        const resLat = +res.latitude;
+        const resLng = +res.longitude;
+        const selectedLat = selectedAddress.lat;
+        const selectedLng = selectedAddress.lng;
+
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          selectedLat,
+          selectedLng
+        );
+
+        if (distance > 50) {
+          setNotDeliver(true);
+        } else {
+          setNotDeliver(false);
+        }
+      });
+    });
   };
 
   const token = localStorage.getItem("token");
@@ -169,6 +210,14 @@ function CartPage() {
     setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
     setOpenPopup(false);
   };
+  useEffect(() => {
+    if (localStorage.getItem("selected") === null) {
+      setCartItems((prevState) => {
+        prevState = [];
+        return prevState;
+      });
+    }
+  }, []);
 
   const country = useSelector((state) => state.auth.country);
 
@@ -289,6 +338,10 @@ function CartPage() {
     }
   };
 
+  const trunct = (str) => {
+    return truncateString(str, 100);
+  };
+
   return (
     <Stack
       sx={{
@@ -393,7 +446,7 @@ function CartPage() {
                 }}
               >
                 <LocationOnIcon fontSize="small" sx={{ mr: 0.5 }} />
-                {JSON.parse(localStorage.getItem("location"))?.address}
+                {trunct(JSON.parse(localStorage.getItem("selected"))?.address)}
               </Typography>
             </Stack>
 
@@ -423,7 +476,7 @@ function CartPage() {
                     restaurant_id: cartItems[0].restaurant_id,
                     restaurantName,
                     path: location.pathname,
-                    latlng: JSON.parse(localStorage.getItem("location")),
+                    latlng: JSON.parse(localStorage.getItem("selected")),
                   },
                 })
               }
@@ -968,6 +1021,14 @@ function CartPage() {
           )}
         </>
       )}
+
+      <DialogComponent
+        notDeliver={notDeliver}
+        setNotDeliver={setNotDeliver}
+        location={location}
+        hasItems={true}
+        cartItems={cartItems?.length ? cartItems : []}
+      />
     </Stack>
   );
 }

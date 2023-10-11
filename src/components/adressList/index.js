@@ -23,16 +23,17 @@ const Card = (props) => {
     chooseAddress,
   } = props;
 
-  useEffect(() => {
-    if (address !== undefined) {
-      if (
-        parseFloat(address?.lat) === parseFloat(+data.latitude) &&
-        parseFloat(address?.lng) === parseFloat(+data.longitude)
-      ) {
-        setIsSelected(true);
-      }
-    }
-  }, [address, data]);
+  // useEffect(() => {
+
+  //   if (address !== undefined) {
+  //     if (
+  //       parseFloat(address?.lat) === parseFloat(+data.latitude) &&
+  //       parseFloat(address?.lng) === parseFloat(+data.longitude)
+  //     ) {
+  //       setIsSelected(true);
+  //     }
+  //   }
+  // }, [address, data]);
 
   const navigate = useNavigate();
   const latlng = { lat: data.latitude, lng: data.longitute };
@@ -41,7 +42,7 @@ const Card = (props) => {
     <div
       className={[
         "addresses-container",
-        !home && isSelected ? "dark-bg" : "",
+        !home && isSelected ? "dark-bg" : home ? "no-cursor" : "",
       ].join(" ")}
     >
       <div className="addresses-header">

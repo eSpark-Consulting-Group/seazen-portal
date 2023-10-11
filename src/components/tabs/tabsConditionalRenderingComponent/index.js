@@ -9,6 +9,9 @@ import DeliveryConditionalComponent from "../../restaurant/delivery/deliveryDeta
 const TabsDynamicConditionalComponent = ({
   resturantId,
   restaurantBranchHours,
+  restaurantDetail,
+  setOpenModal,
+  setSelectedItemToDeliver,
 }) => {
   const [tabPosition, setTabPosition] = useState("dinein");
   const [locationDeliver, setLocationDeliver] = useState(false);
@@ -65,6 +68,9 @@ const TabsDynamicConditionalComponent = ({
             errorMessage={"We don’t deliver to your location!"}
             resturantId={resturantId}
             restaurantBranchHours={restaurantBranchHours}
+            restaurantDetail={restaurantDetail}
+            setOpenModal={setOpenModal}
+            setSelectedItemToDeliver={setSelectedItemToDeliver}
           />
         </div>
       );

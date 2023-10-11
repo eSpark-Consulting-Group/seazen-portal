@@ -7,6 +7,8 @@ const RestaurantOptionsServicesContainer = ({
   restaurantDetail,
   restaurantBranchHours,
   resturantId,
+  setOpenModal,
+  setSelectedItemToDeliver,
 }) => {
   return (
     <div>
@@ -19,6 +21,8 @@ const RestaurantOptionsServicesContainer = ({
         resturantId={resturantId}
         restaurantBranchHours={restaurantBranchHours}
         restaurantDetail={restaurantDetail}
+        setOpenModal={setOpenModal}
+        setSelectedItemToDeliver={setSelectedItemToDeliver}
       />
     </div>
   );

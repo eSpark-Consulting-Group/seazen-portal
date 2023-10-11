@@ -41,16 +41,13 @@ const Navbar = (props) => {
         <div
           className="iconaccount-btn"
           onClick={() => {
-            token ? navigate(paths.profile) : navigate(paths.guest_profile)
+            token ? navigate(paths.profile) : navigate(paths.guest_profile);
           }}
         >
           <img src="/assets/img/account.svg" alt="Account Icon" />
         </div>
       )}
-      <div
-        className="d-flex align-items-center"
-      >
-
+      <div className="d-flex align-items-center">
         {variant === NavbarVariants.backWithProfile && (
           <div
             className="icon-btn"
@@ -93,8 +90,13 @@ const Navbar = (props) => {
           </div>
 
           <div className="icon-btn">
-            <img src="/assets/img/Icon - Search.svg" alt="search icon"
-              onClick={() => {navigate(paths.search)}} />
+            <img
+              src="/assets/img/Icon - Search.svg"
+              alt="search icon"
+              onClick={() => {
+                navigate(paths.search);
+              }}
+            />
           </div>
         </div>
       )}

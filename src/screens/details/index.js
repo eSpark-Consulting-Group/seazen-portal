@@ -38,6 +38,7 @@ import addToCartApiCall from "../../api/cart/addToCart";
 import { paths } from "../../routes/paths";
 import updateCartApiCall from "../../api/cart/updateCart";
 import clearCart from "../../api/cart/clearCart";
+import { DialogComponent } from "../../components/dialog";
 
 export const Details = () => {
   const { id } = useParams();
@@ -436,6 +437,10 @@ export const Details = () => {
     setNotDeliver(true);
   };
 
+  const moveToLocation = () => {
+    navigate(paths.location);
+  };
+
   const handleClose = () => {
     setNotDeliver(false);
   };
@@ -777,16 +782,19 @@ export const Details = () => {
               variant="contained"
               fullWidth
               disabled={
-                !location?.state?.locationDeliver &&
-                menuItemDetails?.data.has_variants &&
-                !sizeVariant
+                token === null
+                  ? false
+                  : !location?.state?.locationDeliver &&
+                    menuItemDetails?.data.has_variants &&
+                    !sizeVariant
               }
               sx={{
                 py: 2,
                 display: "flex",
-                justifyContent: location?.state?.locationDeliver
-                  ? "center"
-                  : "space-between",
+                justifyContent:
+                  location?.state?.locationDeliver || token === null
+                    ? "center"
+                    : "space-between",
                 alignItems: "center",
                 backgroundColor: `${restaurantTheme.main} !important`,
                 "&:hover": {
@@ -796,6 +804,8 @@ export const Details = () => {
               onClick={
                 location?.state?.locationDeliver
                   ? openNotDelivered
+                  : token === null
+                  ? moveToLocation
                   : handleAddToCart
               }
             >
@@ -812,6 +822,20 @@ export const Details = () => {
                   }}
                 >
                   Change Location to Start Orderring
+                </Typography>
+              ) : token === null ? (
+                <Typography
+                  variant="h6"
+                  component="span"
+                  fontWeight={600}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "white",
+                  }}
+                >
+                  Start Orderring
                 </Typography>
               ) : (
                 <>
@@ -850,67 +874,12 @@ export const Details = () => {
         </Stack>
       </div>
 
-      <Dialog
-        open={notDeliver}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        className="not-delivered"
-        sx={{
-          overflow: "hidden",
-          "& .MuiDialog-paper": {
-            width: "327px",
-            textAlign: "center",
-            overflow: "hidden",
-            overflowY: "hidden",
-
-            "@media (min-width: 600px)": {
-              left: "0",
-              position: "fixed",
-              margin: "20px",
-            },
-          },
-        }}
-      >
-        <DialogTitle id="alert-dialog-title" className="dialog-title">
-          <img src="/assets/img/exclaim.svg"></img>
-        </DialogTitle>
-        <DialogContent className="content">
-          <DialogContentText id="alert-dialog-description">
-            <div className="text-detail">
-              {currentRest?.name_en} does not
-              <br /> deliver to your location.
-            </div>
-
-            <div className="disp-flex">
-              <Button
-                onClick={() => navigate(paths.home)}
-                className="btn change-button"
-              >
-                <span>Change Restaurant</span>
-              </Button>
-
-              <Button
-                onClick={() =>
-                  navigate(paths.location, { state: { path: "/b-restaurant" } })
-                }
-                className="btn change-button"
-              >
-                <span>Change Location</span>
-              </Button>
-            </div>
-
-            <Button
-              color="primary"
-              autoFocus
-              className="btn back-button"
-              // onClick={() => navigate(paths.home)}
-            >
-              <span>Back to Menu</span>
-            </Button>
-          </DialogContentText>
-        </DialogContent>
-      </Dialog>
+      <DialogComponent
+        notDeliver={notDeliver}
+        setNotDeliver={setNotDeliver}
+        location={location}
+        fromDetail={true}
+      />
     </div>
   );
 };

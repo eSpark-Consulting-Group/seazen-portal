@@ -13,12 +13,18 @@ import getRestaurantBranchHours, {
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setThemeColor } from "../../store/reducers/themeSlice.js";
+import { useState } from "react";
+import { DialogComponent } from "../../components/dialog/index.js";
 
 const Menu = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { id } = useParams();
   const country = useSelector((state) => state.auth.country);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedItemToDeliver, setSelectedItemToDeliver] = useState({});
+
   const {
     data: restaurantDetailResponse,
     isLoading,
@@ -61,6 +67,16 @@ const Menu = () => {
         restaurantDetail={restaurantDetail}
         restaurantBranchHours={restaurantBranchHours}
         resturantId={id}
+        setOpenModal={setOpenModal}
+        setSelectedItemToDeliver={setSelectedItemToDeliver}
+      />
+
+      <DialogComponent
+        notDeliver={openModal}
+        setNotDeliver={setOpenModal}
+        selectedItemToDeliver={selectedItemToDeliver}
+        // location={location}
+        fromDetail={false}
       />
     </div>
   );

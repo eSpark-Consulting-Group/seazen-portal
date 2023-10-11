@@ -8,7 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
 import { useSelector } from "react-redux";
 
-export default function App() {
+export default function App(props) {
+  const {
+    selectedLocation,
+    setOpenAddressPopup,
+    setFromPopular,
+    setPopularId,
+  } = props;
   const imageInfo = [
     {
       imageUrl: "/assets/img/7.png",
@@ -72,6 +78,10 @@ export default function App() {
               additionalText={info.currency_code}
               inlineText={info.price.toFixed(3)}
               isFirstCard={index === 0}
+              setOpenAddressPopup={setOpenAddressPopup}
+              selectedLocation={selectedLocation}
+              setFromPopular={setFromPopular}
+              setPopularId={setPopularId}
             />
           );
         })}
@@ -149,6 +159,10 @@ function Box({
   additionalText,
   inlineText,
   isFirstCard,
+  setOpenAddressPopup,
+  selectedLocation,
+  setFromPopular,
+  setPopularId,
 }) {
   const captionLines = caption.split("\n");
   const captionImageClass = isFirstCard
@@ -158,16 +172,23 @@ function Box({
     : "";
   const additionalTextClass = isFirstCard ? "first-card-additional-text" : "";
   const navigate = useNavigate();
+  const isToken = localStorage.getItem("token");
 
   return (
     <div
       className="box"
       onClick={() => {
-        navigate(paths.details + "/" + id, {
-          state: {
-            id: id,
-          },
-        });
+        if (selectedLocation && isToken !== null) {
+          setPopularId(id);
+          setOpenAddressPopup(true);
+          setFromPopular(true);
+        } else {
+          navigate(paths.details + "/" + id, {
+            state: {
+              id: id,
+            },
+          });
+        }
       }}
     >
       <img className="box-image" src={imageUrl} alt="Image" />

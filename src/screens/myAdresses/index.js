@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -30,7 +30,7 @@ import { paths } from "../../routes/paths";
 import { getFullAddress } from "../../utils/getAddress";
 
 const App = () => {
-  const isToken = useSelector((state) => state.auth.token);
+  const isToken = localStorage.getItem("token");
   const addressData = useSelector((state) => state.address.addressData);
   // const isLoading = useSelector((state) => state.address.isLoading);
 
@@ -38,7 +38,7 @@ const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // const [cardData, setCardData] = useState([]);
+  const [cardData, setCardData] = useState([]);
   const [open, setOpen] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState({});
@@ -49,15 +49,35 @@ const App = () => {
   const [deleteAdd, setDeleteAdd] = useState(false);
   // const [isLoading, setIsloading] = useState(false);
 
+  // useLayoutEffect(() => {
+  //   if (addressData.length === 2) {
+  //     const filterAddress = addressData.filter(
+  //       (item) =>
+  //         parseFloat(location?.state?.latlng?.lat) !==
+  //           parseFloat(+item.latitude) &&
+  //         parseFloat(location?.state?.latlng?.lng) !==
+  //           parseFloat(+item.longitude)
+  //     );
+
+  //     setCardData(filterAddress);
+  //   }
+  // }, [addressData]);
+
   const fetchFunction = async () => {
+    // setIsloading(true);
     getAllAddress(isToken).then((res) => {
       if (res.success === "ok") {
         dispatch(getAddress(res.data));
+        // setIsloading(false);
         setDeleteAdd(false);
         setOpen(false);
       }
     });
   };
+
+  // useEffect(() => {
+  //   fetchFunction();
+  // }, []);
 
   const { isLoading, refetch } = useQuery({
     queryFn: () => getAllAddress(isToken),
@@ -80,10 +100,11 @@ const App = () => {
 
   useEffect(() => {
     if (fullAddress !== null) {
-      localStorage.setItem("location", JSON.stringify(fullAddress));
+      localStorage.setItem("selected", JSON.stringify(fullAddress));
+      // localStorage.setItem("location", JSON.stringify(fullAddress));
 
       if (location?.state?.path === "/cart") {
-        navigate(paths.cart);
+        navigate(paths.cart, { state: { back: "back-to-cart" } });
       }
 
       if (

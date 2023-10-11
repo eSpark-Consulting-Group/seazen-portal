@@ -43,7 +43,7 @@ const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // const isToken = localStorage.getItem("token");
+  const isToken = localStorage.getItem("token");
   const addressData = useSelector((state) => state.address.addressData);
   const dispatch = useDispatch();
 
@@ -92,85 +92,46 @@ const Home = () => {
   }, [userCurrentAddress]);
 
   useEffect(() => {
-    navigator.permissions &&
-      navigator.permissions
-        .query({ name: "geolocation" })
-        .then(function (PermissionStatus) {
-          if (PermissionStatus.state == "granted") {
-            //allowed
-            console.log(PermissionStatus);
-          } else if (PermissionStatus.state == "prompt") {
-            // prompt - not yet grated or denied
-            console.log(PermissionStatus);
-          } else {
-            //denied
-            console.log(PermissionStatus);
-          }
-        });
-  }, []);
-
-  useEffect(() => {
     if (JSON.parse(localStorage.getItem("location")) === null) {
       // eslint-disable-next-line no-undef
       setKey(process.env.REACT_APP_GOOGLE_API_KEY);
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-          let addToRedux = {
-            lat: "",
-            lng: "",
-            address: "",
-          };
-          geocode(
-            RequestType.LATLNG,
-            `${position.coords.latitude},${position.coords.longitude}`,
-            {
-              enable_address_descriptor: true,
-            }
-          )
-            .then(({ results }) => {
-              const address = results[0].formatted_address;
-              const lat = results[0].geometry.location.lat;
-              const lng = results[0].geometry.location.lng;
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            let addToRedux = {
+              lat: "",
+              lng: "",
+              address: "",
+            };
+            geocode(
+              RequestType.LATLNG,
+              `${position.coords.latitude},${position.coords.longitude}`,
+              {
+                enable_address_descriptor: true,
+              }
+            )
+              .then(({ results }) => {
+                const address = results[0].formatted_address;
+                const lat = results[0].geometry.location.lat;
+                const lng = results[0].geometry.location.lng;
 
-              addToRedux = {
-                lat: lat,
-                lng: lng,
-                address: address,
-              };
-              localStorage.setItem("location", JSON.stringify(addToRedux));
-              // dispatch(addAddressDetail({ currentAdd: addToRedux }));
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }, showError);
-      } else {
-        console.log("Location is off");
+                addToRedux = {
+                  lat: lat,
+                  lng: lng,
+                  address: address,
+                };
+                localStorage.setItem("location", JSON.stringify(addToRedux));
+                // dispatch(addAddressDetail({ currentAdd: addToRedux }));
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          },
+          () => {}
+        );
       }
     }
   }, []);
-
-  function showError(error) {
-    console.log(error);
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
-        // x.innerHTML = "User denied the request for Geolocation."
-        console.log(error);
-        break;
-      case error.POSITION_UNAVAILABLE:
-        // x.innerHTML = "Location information is unavailable."
-        console.log(error);
-        break;
-      case error.TIMEOUT:
-        // x.innerHTML = "The request to get user location timed out."
-        console.log(error);
-        break;
-      case error.UNKNOWN_ERROR:
-        // x.innerHTML = "An unknown error occurred."
-        console.log(error);
-        break;
-    }
-  }
 
   // const fetchFunction = async () => {
   //   getAllAddress(isToken).then((res) => {
@@ -199,6 +160,8 @@ const Home = () => {
   const [restaurantId, setRestaurantId] = useState(null);
   const [restaurantName, setRestaurantName] = useState("");
   const [distanceIsFar, setDistanceIsFar] = useState(false);
+  const [fromPopular, setFromPopular] = useState(false);
+  const [popularId, setPopularId] = useState(null);
   const [restBranch, setRestBranch] = useState([]);
 
   const isCountry = localStorage.getItem("country");
@@ -220,11 +183,11 @@ const Home = () => {
       });
   };
 
-  useEffect(() => {
-    if (restaurantId !== null) {
-      fetchBranchHours();
-    }
-  }, [restaurantId]);
+  // useEffect(() => {
+  //   if (restaurantId !== null) {
+  //     fetchBranchHours();
+  //   }
+  // }, [restaurantId]);
 
   const fetchBranchHours = () => {
     getRestaurantBranchHours(restaurantId).then((res) => {
@@ -246,38 +209,22 @@ const Home = () => {
       localStorage.setItem("selected", JSON.stringify(fullAddress));
 
       if (restaurantId === null) {
-        handleClose();
+        setOpenAddressPopup(false);
+      }
+
+      if (restaurantId !== null && !fromPopular) {
+        goToRestaurantMenuPage(restaurantId);
+      }
+
+      if (fromPopular && popularId !== null) {
+        navigate(paths.details + "/" + popularId, {
+          state: {
+            id: popularId,
+          },
+        });
       }
     }
   }, [fullAddress]);
-
-  useEffect(() => {
-    let selected = JSON.parse(localStorage.getItem("selected"));
-
-    if (restBranch.length && selected) {
-      restBranch?.forEach((res) => {
-        const resLat = +res.latitude;
-        const resLng = +res.longitude;
-
-        if (selected) {
-          const distance = getDistanceFromLatLonInKm(
-            resLat,
-            resLng,
-            +selected.lat,
-            +selected.lng
-          );
-
-          if (distance > 50) {
-            setDistanceIsFar(true);
-            setOpenAddressPopup(false);
-            localStorage.removeItem("selected");
-          } else {
-            setDistanceIsFar(false);
-          }
-        }
-      });
-    }
-  }, [localStorage, restBranch, fullAddress]);
 
   const navigateUser = () => {
     navigate(paths.location, { state: { path: "/home" } });
@@ -302,7 +249,9 @@ const Home = () => {
       </div>
       <RestaurantsOrderTypeButton
         setOpenAddressPopup={
-          localStorage.getItem("selected") === null ? setOpenAddressPopup : null
+          localStorage.getItem("selected") === null && isToken !== null
+            ? setOpenAddressPopup
+            : null
         }
         setToggleFilterClassNear={setToggleFilterClassNear}
         filterClassNear={filterClassNear}
@@ -313,7 +262,12 @@ const Home = () => {
         setRestaurantName={setRestaurantName}
       />
       {/* <BasicCard /> */}
-      <DraggableSlider />
+      <DraggableSlider
+        selectedLocation={localStorage.getItem("selected") === null}
+        setOpenAddressPopup={setOpenAddressPopup}
+        setFromPopular={setFromPopular}
+        setPopularId={setPopularId}
+      />
       <Footer showFooterSection={true} />
 
       <Dialog
