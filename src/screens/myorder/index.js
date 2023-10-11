@@ -112,10 +112,8 @@ const MyOrderScreen = () => {
   const handleReceipt = () => {
     navigate(paths.receipt);
   };
+
   const handleRate = () => {};
-  const handleReorder = () => {
-    alert("Reorder");
-  };
 
   const {
     data: ordersResponse,
@@ -189,7 +187,6 @@ const MyOrderScreen = () => {
                   item={item}
                   key={index}
                   handleReceipt={handleReceipt}
-                  handleReorder={handleReorder}
                   handleRate={handleRate}
                 />
               ))}

@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { Button, Card, Rating } from "@mui/material";
 import styles from "../../screens/myorder/style.module.css";
 import RateCard from "../rate-card";
+import { useNavigate } from "react-router-dom";
+import { paths } from "../../routes/paths";
 
-const OrderCard = ({ item, handleReorder, handleReceipt }) => {
+const OrderCard = ({ item, handleReceipt }) => {
   const [openRate, setOpenRate] = useState(false);
   const [average, setAverage] = useState(0);
+  const navigate = useNavigate();
 
   const handleRate = (val) => {
     setOpenRate(val);
@@ -35,10 +38,18 @@ const OrderCard = ({ item, handleReorder, handleReceipt }) => {
     }
   };
 
+  const handleReorder = () => {
+    navigate(paths.menu + paths.branches + item.restaurant_id);
+  };
+
+  const restaurantImagePath =
+    `/assets/img/` +
+    (item.restaurant_id === 1 ? "masgoof.svg" : "Groove_Logo.svg");
+
   return (
     <Card style={{ border: "1px solid #C0CDD7", marginTop: "10px" }}>
       <div className={`${styles.card_nav}`}>
-        <img src="/assets/img/Group 15.svg" alt="" />
+        <img src={restaurantImagePath} alt="" />
         <div className={`${styles.card_nav_tags}`}>
           <div
             className={`${styles.status_tag}`}
@@ -58,8 +69,12 @@ const OrderCard = ({ item, handleReorder, handleReceipt }) => {
           </Button>
         </div>
       </div>
-      <hr className={`${styles.break_line}`} />
-      <div className={`${styles.card_content}`}>
+      <div
+        className={`${styles.card_content} mx-3`}
+        style={{
+          borderTop: "1px dashed #707070",
+        }}
+      >
         <div className={`${styles.card_content_left}`}>
           <div className={`${styles.card_content_left_lt}`}>
             <img src={iconPath} alt="" />
