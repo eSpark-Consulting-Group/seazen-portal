@@ -37,15 +37,17 @@
   display: flex;
   align-items: center;
 }
-.promo-message-wrapper p{
+.promo-message-wrapper p {
   font-size: 12px;
   margin: 0px !important;
   color: green;
 }
-.promo-message-wrapper .promo-cancel-icon{
+.promo-message-wrapper .promo-cancel-icon {
   color: gray;
   cursor: pointer;
   margin-top: 4px;
-
 }
-
+.MuiDialog-paperWidthSm {
+  position: absolute !important;
+  left: -5px;
+}
