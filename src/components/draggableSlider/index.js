@@ -57,7 +57,7 @@ export default function App() {
   return (
     <div className="App">
       <div className="slider-tile">
-        {popularDishes && <h3>Popular Dishes</h3>}
+        {popularDishes?.length > 0 && <h3>Popular Dishes</h3>}
       </div>
       <CustomCarousel imageInfo={popularDishes}>
         {popularDishes?.map((info, index) => {

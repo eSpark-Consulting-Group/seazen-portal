@@ -1,10 +1,8 @@
 import React from "react";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 import { useMutation } from "@tanstack/react-query";
-import {
-  createSearchParams,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Navbar, { NavbarVariants } from "../../components/header";
@@ -14,22 +12,34 @@ import { Footer } from "../../components/footer/footerContent";
 import { paths } from "../../routes/paths";
 import mobileLogin from "../../api/customer/mobileLogin";
 
+const mobileLoginSchema = Yup.object().shape({
+  mobile_no: Yup.string()
+    .matches(/^\d{8}$/, "Mobile number must be exactly 8 digits")
+    .required(),
+  mobile_country_code: Yup.string()
+    .matches(
+      /^\+?(971|966|965|974|968|962|961|973|967|963|961|964|20|249|212|213|216|218|220|221|222|223|224|225|226|227|228|229|230|231|232|233|234|235|236|237|238|239|240|241|242|243|244|245|246|247|248|249|250|251|252|253|254|255|256|257|258|260|261|262|263|264|265|266|267|268|269|291|297|298|299|350|351|352|353|354|355|356|357|358|359|36|370|371|372|373|374|375|376|377|378|379|380|381|382|383|385|386|387|388|389|420|421|422|423|43|44|45|46|47|48|49)\d{0,3}$/
+    )
+    .test("is-valid-country-code", "Invalid country code", function (value) {
+      if (!value) return true;
+      if (value.startsWith("+")) {
+        return /^\+\d{3}$/.test(value);
+      } else {
+        return /^\d{3}$/.test(value);
+      }
+    })
+    .required(),
+});
+
+const initialState = {
+  mobile_no: "",
+  mobile_country_code: "",
+};
+
 function PhoneNumberVerificationIndex() {
   const navigate = useNavigate();
-
-  const [error, setError] = React.useState(false);
   const [mobileCountryCode, setMobileCountryCode] = React.useState("");
   const [mobileNumber, setMobileNumber] = React.useState("");
-
-  const handleChange = (event) => {
-    const { id, value } = event.target;
-
-    if (id === "country-code") {
-      setMobileCountryCode(value);
-    } else if (id === "phone-number") {
-      setMobileNumber(value);
-    }
-  };
 
   const sendOTP = () => {
     // remove + from mobileCountryCode
@@ -50,24 +60,27 @@ function PhoneNumberVerificationIndex() {
     mutationFn: mobileLogin,
     onSuccess: (data) => {
       sendOTP();
-      setError(false);
-    },
-    onError: (error) => {
-      setError(true);
     },
   });
 
-  const handleCustomerRegistration = () => {
-    if (mobileNumber && mobileCountryCode) {
-      setError(false);
+  const formikUserMobileLogin = useFormik({
+    initialValues: initialState,
+    validationSchema: mobileLoginSchema,
+    onSubmit: (values) => {
+      setMobileCountryCode(values.mobile_country_code);
+      setMobileNumber(values.mobile_no);
+
       registration({
-        mobile: mobileNumber,
-        mobile_country_code: mobileCountryCode,
+        mobile: values.mobile_no,
+        mobile_country_code: values.mobile_country_code,
       });
-    } else {
-      setError(true);
-    }
-  };
+    },
+  });
+
+  const isFormError = Boolean(
+    formikUserMobileLogin?.errors.mobile_country_code ||
+      formikUserMobileLogin?.errors.mobile_no
+  );
 
   return (
     <>
@@ -99,35 +112,49 @@ function PhoneNumberVerificationIndex() {
           <Stack direction="row" spacing={2}>
             <TextField
               fullWidth
-              id="country-code"
+              id="mobile_country_code"
               variant="outlined"
               placeholder="+365"
               sx={{
                 flex: 1,
               }}
-              value={mobileCountryCode}
-              onChange={handleChange}
-              error={error && !mobileCountryCode} // Show error when error state is true and the field is empty
+              inputProps={{
+                autoComplete: "country-code",
+              }}
+              name={"mobile_country_code"}
+              value={formikUserMobileLogin?.values.mobile_country_code}
+              onChange={formikUserMobileLogin?.handleChange}
+              error={
+                formikUserMobileLogin?.touched.mobile_country_code &&
+                Boolean(formikUserMobileLogin?.errors.mobile_country_code)
+              }
               helperText={
-                error && !mobileCountryCode ? "Country code is required" : ""
+                formikUserMobileLogin?.touched.mobile_country_code &&
+                formikUserMobileLogin?.errors.mobile_country_code
               }
             />
 
             <TextField
               fullWidth
-              id="phone-number"
+              id="mobile_no"
               variant="outlined"
               placeholder="Mobile Number"
               sx={{
                 flex: 3,
               }}
-              value={mobileNumber}
-              onChange={handleChange}
-              error={error && !mobileNumber} // Show error when error state is true and the field is empty
+              inputProps={{
+                autoComplete: "phone",
+              }}
+              name={"mobile_no"}
+              value={formikUserMobileLogin?.values.mobile_no}
+              onChange={formikUserMobileLogin?.handleChange}
+              error={
+                formikUserMobileLogin?.touched.mobile_no &&
+                Boolean(formikUserMobileLogin?.errors.mobile_no)
+              }
               helperText={
-                error && !mobileNumber
-                  ? "Mobile number is required"
-                  : error && "Please Enter a valid Number"
+                formikUserMobileLogin?.touched.mobile_no &&
+                formikUserMobileLogin?.errors.mobile_no
               }
             />
           </Stack>
@@ -135,8 +162,8 @@ function PhoneNumberVerificationIndex() {
           <Button
             size="large"
             variant="contained"
-            onClick={handleCustomerRegistration}
-            disabled={isLoading}
+            onClick={formikUserMobileLogin?.handleSubmit}
+            disabled={isLoading || !!isFormError}
           >
             Continue
           </Button>
