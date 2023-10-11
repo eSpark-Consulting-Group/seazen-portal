@@ -5,7 +5,8 @@ const authSlice = createSlice({
   initialState: {
     user: {
       id: null,
-      name: "",
+      first_name: "",
+      last_name: "",
       email: "",
       mobile_country_code: "",
       mobile: "",
@@ -30,7 +31,8 @@ const authSlice = createSlice({
     addUserInfo: (state, action) => {
       const { customer_id, first_name, last_name, email, mobile_country_code, mobile_no } = action.payload
       state.user.id = customer_id;
-      state.user.name = first_name + " " + last_name;
+      state.user.first_name = first_name;
+      state.user.last_name =  last_name;
       state.user.email = email;
       state.user.mobile_country_code = mobile_country_code;
       state.user.mobile = mobile_no

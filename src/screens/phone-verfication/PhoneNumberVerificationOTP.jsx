@@ -16,7 +16,6 @@ import { useMutation } from "@tanstack/react-query";
 import verifyOTP from "../../api/customer/verifyOTP";
 import resendOTP from "../../api/customer/resendOTP";
 import getUserInfo from "../../api/customer/getUserInfo";
-import { addUserInfo } from "../../store/reducers/authSlice";
 import { useDispatch } from "react-redux";
 
 const MODAL_INFO_TYPE = {

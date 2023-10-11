@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
@@ -11,7 +12,7 @@ import Navbar, { NavbarVariants } from "../../components/header";
 import updateProfile from "../../api/customer/updateProfile";
 import { paths } from "../../routes/paths";
 import "./style.css";
-import { useSelector } from "react-redux";
+import { addUserInfo } from "../../store/reducers/authSlice";
 
 const updateProfileFormSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -22,30 +23,36 @@ const updateProfileFormSchema = Yup.object().shape({
     .matches(/^[a-z ,.'-]+$/i)
     .max(40)
     .required(),
-  email: Yup.string().email(),
-  mobile_number: Yup.string().required(),
-  mobile_country_code: Yup.string().required(),
+  email: Yup.string().email().required(),
+  mobile_no: Yup.string()
+  .matches(/^\d{8}$/, 'Mobile number must be exactly 8 digits')
+  .required(),
+  mobile_country_code: Yup.string()
+    .matches(
+      /^\+?(971|966|965|974|968|962|961|973|967|963|961|964|20|249|212|213|216|218|220|221|222|223|224|225|226|227|228|229|230|231|232|233|234|235|236|237|238|239|240|241|242|243|244|245|246|247|248|249|250|251|252|253|254|255|256|257|258|260|261|262|263|264|265|266|267|268|269|291|297|298|299|350|351|352|353|354|355|356|357|358|359|36|370|371|372|373|374|375|376|377|378|379|380|381|382|383|385|386|387|388|389|420|421|422|423|43|44|45|46|47|48|49)\d{0,3}$/
+    )
+    .test("is-valid-country-code", "Invalid country code", function (value) {
+      if (!value) return true; 
+      if (value.startsWith("+")) {
+        return /^\+\d{3}$/.test(value); 
+      } else {
+        return /^\d{3}$/.test(value); 
+      }
+    })
+    .required(),
 });
 
 export const UpdateCustomerProfile = () => {
+  const userInfo = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-
-  // Initialize state variables for form fields
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [countryCode, setCountryCode] = useState("");
-  const userInfo = useSelector((state) => {
-    state.auth.user;
-  });
+  const dispatch = useDispatch();
 
   const initialState = {
-    first_name: userInfo?.name,
-    last_name: userInfo?.name,
+    first_name: userInfo?.first_name,
+    last_name: userInfo?.last_name,
     email: userInfo?.email,
-    mobile_number: userInfo?.mobile,
+    mobile_no: userInfo?.mobile,
     mobile_country_code: userInfo?.mobile_country_code,
   };
 
@@ -60,6 +67,7 @@ export const UpdateCustomerProfile = () => {
     initialValues: initialState,
     validationSchema: updateProfileFormSchema,
     onSubmit: (values) => {
+      dispatch(addUserInfo(values));
       updateCustomerProfileInfo({
         token,
         data: {
@@ -67,18 +75,18 @@ export const UpdateCustomerProfile = () => {
           last_name: values.last_name,
           email: values.email,
           mobile_country_code: values.mobile_country_code,
-          mobile_number: values.mobile_number,
+          mobile_number: values.mobile_no,
         },
       });
     },
   });
 
   const isFormError = Boolean(
-    formikUpdateCustomerProfile.errors.first_name ||
-      formikUpdateCustomerProfile.errors.last_name ||
-      formikUpdateCustomerProfile.errors.email ||
-      formikUpdateCustomerProfile.errors.mobile_country_code ||
-      formikUpdateCustomerProfile.errors.mobile_number
+    formikUpdateCustomerProfile?.errors.first_name ||
+      formikUpdateCustomerProfile?.errors.last_name ||
+      formikUpdateCustomerProfile?.errors.email ||
+      formikUpdateCustomerProfile?.errors.mobile_country_code ||
+      formikUpdateCustomerProfile?.errors.mobile_no
   );
 
   return (
@@ -115,18 +123,18 @@ export const UpdateCustomerProfile = () => {
                 flex: 1,
                 "& .MuiInputBase-root.MuiOutlinedInput-root ::placeholder": {
                   ...(Boolean(
-                    formikUpdateCustomerProfile.errors.first_name
+                    formikUpdateCustomerProfile?.errors.first_name
                   ) && {
                     color: "error.main",
                   }),
                 },
               }}
               name={"first_name"}
-              value={formikUpdateCustomerProfile.values.first_name}
-              onChange={formikUpdateCustomerProfile.handleChange}
+              value={formikUpdateCustomerProfile?.values.first_name}
+              onChange={formikUpdateCustomerProfile?.handleChange}
               error={
-                formikUpdateCustomerProfile.touched.first_name &&
-                Boolean(formikUpdateCustomerProfile.errors.first_name)
+                formikUpdateCustomerProfile?.touched.first_name &&
+                Boolean(formikUpdateCustomerProfile?.errors.first_name)
               }
             />
 
@@ -138,17 +146,19 @@ export const UpdateCustomerProfile = () => {
               sx={{
                 flex: 1,
                 "& .MuiInputBase-root.MuiOutlinedInput-root ::placeholder": {
-                  ...(Boolean(formikUpdateCustomerProfile.errors.last_name) && {
+                  ...(Boolean(
+                    formikUpdateCustomerProfile?.errors.last_name
+                  ) && {
                     color: "error.main",
                   }),
                 },
               }}
               name={"last_name"}
-              value={formikUpdateCustomerProfile.values.last_name}
-              onChange={formikUpdateCustomerProfile.handleChange}
+              value={formikUpdateCustomerProfile?.values.last_name}
+              onChange={formikUpdateCustomerProfile?.handleChange}
               error={
-                formikUpdateCustomerProfile.touched.last_name &&
-                Boolean(formikUpdateCustomerProfile.errors.last_name)
+                formikUpdateCustomerProfile?.touched.last_name &&
+                Boolean(formikUpdateCustomerProfile?.errors.last_name)
               }
             />
           </Stack>
@@ -165,15 +175,15 @@ export const UpdateCustomerProfile = () => {
             InputProps={{
               autoComplete: "email",
             }}
-            value={formikUpdateCustomerProfile.values.email}
-            onChange={formikUpdateCustomerProfile.handleChange}
+            value={formikUpdateCustomerProfile?.values.email}
+            onChange={formikUpdateCustomerProfile?.handleChange}
             error={
-              formikUpdateCustomerProfile.touched.email &&
-              Boolean(formikUpdateCustomerProfile.errors.email)
+              formikUpdateCustomerProfile?.touched.email &&
+              Boolean(formikUpdateCustomerProfile?.errors.email)
             }
             helperText={
-              formikUpdateCustomerProfile.touched.email &&
-              formikUpdateCustomerProfile.errors.email
+              formikUpdateCustomerProfile?.touched.email &&
+              formikUpdateCustomerProfile?.errors.email
             }
           />
 
@@ -190,21 +200,21 @@ export const UpdateCustomerProfile = () => {
                 autoComplete: "country-code",
               }}
               name={"mobile_country_code"}
-              value={formikUpdateCustomerProfile.values.mobile_country_code}
-              onChange={formikUpdateCustomerProfile.handleChange}
+              value={formikUpdateCustomerProfile?.values.mobile_country_code}
+              onChange={formikUpdateCustomerProfile?.handleChange}
               error={
-                formikUpdateCustomerProfile.touched.mobile_country_code &&
-                Boolean(formikUpdateCustomerProfile.errors.mobile_country_code)
+                formikUpdateCustomerProfile?.touched.mobile_country_code &&
+                Boolean(formikUpdateCustomerProfile?.errors.mobile_country_code)
               }
               helperText={
-                formikUpdateCustomerProfile.touched.mobile_country_code &&
-                formikUpdateCustomerProfile.errors.mobile_country_code
+                formikUpdateCustomerProfile?.touched.mobile_country_code &&
+                formikUpdateCustomerProfile?.errors.mobile_country_code
               }
             />
 
             <TextField
               fullWidth
-              id="mobile_number"
+              id="mobile_no"
               variant="outlined"
               placeholder="Mobile Number"
               sx={{
@@ -213,16 +223,16 @@ export const UpdateCustomerProfile = () => {
               inputProps={{
                 autoComplete: "phone",
               }}
-              name={"mobile_number"}
-              value={formikUpdateCustomerProfile.values.mobile_number}
-              onChange={formikUpdateCustomerProfile.handleChange}
+              name={"mobile_no"}
+              value={formikUpdateCustomerProfile?.values.mobile_no}
+              onChange={formikUpdateCustomerProfile?.handleChange}
               error={
-                formikUpdateCustomerProfile.touched.mobile_number &&
-                Boolean(formikUpdateCustomerProfile.errors.mobile_number)
+                formikUpdateCustomerProfile?.touched.mobile_no &&
+                Boolean(formikUpdateCustomerProfile?.errors.mobile_no)
               }
               helperText={
-                formikUpdateCustomerProfile.touched.mobile_number &&
-                formikUpdateCustomerProfile.errors.mobile_number
+                formikUpdateCustomerProfile?.touched.mobile_no &&
+                formikUpdateCustomerProfile?.errors.mobile_no
               }
             />
           </Stack>
@@ -231,7 +241,7 @@ export const UpdateCustomerProfile = () => {
             variant="contained"
             disabled={!!isFormError}
             fullWidth
-            onClick={formikUpdateCustomerProfile.handleSubmit}
+            onClick={formikUpdateCustomerProfile?.handleSubmit}
           >
             Continue
           </Button>
