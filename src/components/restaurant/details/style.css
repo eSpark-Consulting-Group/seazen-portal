@@ -6,7 +6,7 @@
   height: 55px;
   margin-bottom: 12px;
   background-color: white;
-  margin-top: -12px;
+  margin-top: 3px;
 
 }
 
@@ -24,6 +24,9 @@
   font-weight: 400;
   font-size: 12pt;
   color: #026754;
+  margin-top: -10px;
+  z-index: 999;
+  position: relative;
 }
 
 .tag_line {
@@ -31,7 +34,7 @@
   font-family: Titillium Web;
   font-weight: 400;
   font-size: 12px;
-  color: #7f8fa6;
+  color: #7F8FA6 !important;
   margin-top: 8px;
 }
 
