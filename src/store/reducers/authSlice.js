@@ -21,7 +21,7 @@ const authSlice = createSlice({
     isAuthenticated: false,
     isLoading: false,
     error: null,
-    country: {}
+    country: {},
   },
   reducers: {
     addToken: (state, action) => {
@@ -29,17 +29,24 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
     },
     addUserInfo: (state, action) => {
-      const { customer_id, first_name, last_name, email, mobile_country_code, mobile_no } = action.payload
+      const {
+        customer_id,
+        first_name,
+        last_name,
+        email,
+        mobile_country_code,
+        mobile_no,
+      } = action.payload;
       state.user.id = customer_id;
       state.user.first_name = first_name;
       state.user.last_name =  last_name;
       state.user.email = email;
       state.user.mobile_country_code = mobile_country_code;
-      state.user.mobile = mobile_no
+      state.user.mobile = mobile_no;
     },
     addCountry: (state, action) => {
-      state.country = action.payload
-    }, 
+      state.country = action.payload;
+    },
   },
 });
 

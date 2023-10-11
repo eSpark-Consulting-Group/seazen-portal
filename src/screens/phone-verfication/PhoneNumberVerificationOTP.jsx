@@ -112,7 +112,7 @@ function PhoneNumberVerificationOTP() {
     <>
       <Stack
         sx={{
-          minHeight: "100vh",
+          minHeight: "70vh",
           color: "text.primary",
         }}
         justifyContent="space-between"

@@ -1,11 +1,8 @@
 import React from "react";
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
+import * as Yup from "yup";
+import { useFormik } from "formik";
 import { useMutation } from "@tanstack/react-query";
-import {
-  createSearchParams,
-  useNavigate,
-} from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Navbar, { NavbarVariants } from "../../components/header";
@@ -17,23 +14,22 @@ import mobileLogin from "../../api/customer/mobileLogin";
 
 const mobileLoginSchema = Yup.object().shape({
   mobile_no: Yup.string()
-  .matches(/^\d{8}$/, 'Mobile number must be exactly 8 digits')
-  .required(),
+    .matches(/^\d{8}$/, "Mobile number must be exactly 8 digits")
+    .required(),
   mobile_country_code: Yup.string()
     .matches(
       /^\+?(971|966|965|974|968|962|961|973|967|963|961|964|20|249|212|213|216|218|220|221|222|223|224|225|226|227|228|229|230|231|232|233|234|235|236|237|238|239|240|241|242|243|244|245|246|247|248|249|250|251|252|253|254|255|256|257|258|260|261|262|263|264|265|266|267|268|269|291|297|298|299|350|351|352|353|354|355|356|357|358|359|36|370|371|372|373|374|375|376|377|378|379|380|381|382|383|385|386|387|388|389|420|421|422|423|43|44|45|46|47|48|49)\d{0,3}$/
     )
     .test("is-valid-country-code", "Invalid country code", function (value) {
-      if (!value) return true; 
+      if (!value) return true;
       if (value.startsWith("+")) {
-        return /^\+\d{3}$/.test(value); 
+        return /^\+\d{3}$/.test(value);
       } else {
-        return /^\d{3}$/.test(value); 
+        return /^\d{3}$/.test(value);
       }
     })
     .required(),
 });
-
 
 const initialState = {
   mobile_no: "",
@@ -64,7 +60,7 @@ function PhoneNumberVerificationIndex() {
     mutationFn: mobileLogin,
     onSuccess: (data) => {
       sendOTP();
-    }
+    },
   });
 
   const formikUserMobileLogin = useFormik({
@@ -77,21 +73,20 @@ function PhoneNumberVerificationIndex() {
       registration({
         mobile: values.mobile_no,
         mobile_country_code: values.mobile_country_code,
-      })
+      });
     },
   });
 
   const isFormError = Boolean(
     formikUserMobileLogin?.errors.mobile_country_code ||
-    formikUserMobileLogin?.errors.mobile_no
+      formikUserMobileLogin?.errors.mobile_no
   );
-
 
   return (
     <>
       <Stack
         sx={{
-          minHeight: "100vh",
+          minHeight: "70vh",
           color: "text.primary",
         }}
         justifyContent="space-between"

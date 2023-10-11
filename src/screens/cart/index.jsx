@@ -32,6 +32,14 @@ import getRestaurantDetails from "../../api/restaurant/getRestaurantDetails";
 import { addToCart } from "../../store/reducers/cartSlice";
 import applyPromoCode from "../../api/cart/promocode";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { MobileTimePicker } from "@mui/x-date-pickers";
+import getBranchesAndHours, {
+  GET_BRANCHES_AND_HOURS_QUERY_KEY,
+} from "../../api/restaurant/branches/getBranchesAndHours";
 
 function CartPage() {
   const navigate = useNavigate();
@@ -49,6 +57,13 @@ function CartPage() {
   const DISCOUNT_AMOUNT = Number(1).toFixed(3);
   const DELIVERY_CHARGE = Number(1).toFixed(3);
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isAsap, setIsAsap] = useState(true);
+  const [pickDate, setPickDate] = useState(
+    dayjs(new Date()).format("MMM DD, YYYY")
+  );
+  const [pickTime, setPickTime] = useState("ASAP");
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
@@ -99,8 +114,24 @@ function CartPage() {
     delivery_charges: "0",
     promo_code: "Test1",
     comments: specialIns,
+    schedule: {
+      date: pickDate.split("-")[0],
+      time: pickTime,
+    },
   };
 
+  const { data: branchesAndHoursResponse, isSuccess } = useQuery({
+    queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, cart[0]?.restaurant_id],
+    queryFn: () => {
+      return getBranchesAndHours(cart[0]?.restaurant_id);
+    },
+  });
+
+  const timeByDate = branchesAndHoursResponse?.data[0].branch_hours.find(
+    (val) => {
+      return val.week_day == pickDate.split("-")[1];
+    }
+  );
   useEffect(() => {
     setCartItems(cart);
   }, [cart]);
@@ -130,6 +161,14 @@ function CartPage() {
       });
     }
   }, []);
+
+  const asapHandler = () => {
+    const currentTime = new Date();
+    currentTime.setMinutes(currentTime.getMinutes() + 30);
+    setPickTime(dayjs(currentTime).format("hh:mm a"));
+    setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
+    setOpenPopup(false);
+  };
 
   const country = useSelector((state) => state.auth.country);
 
@@ -243,19 +282,11 @@ function CartPage() {
     "14 August 2023, ASAP"
   );
 
-  const scheduleOptions = [
-    "14 August 2023, ASAP",
-    "12 August 2023, 11:00 pm - 11:30 pm",
-    "12 August 2023, 11:30 pm - 12:00 am",
-    "12 August 2023, 12:00 am - 12:30 am",
-    "12 August 2023, 12:30 am - 01:00 am",
-    "12 August 2023, 01:00 am - 01:30 am",
-    "12 August 2023, 01:30 am - 02:00 am",
-  ];
-
-  const handleScheduleOptionClick = (option) => {
-    setSelectedSchedule(option);
-    setOpenSchedulePopup(false); // Close the dialog after selecting an option
+  const onDateSelected = () => {
+    if (pickDate) {
+      setOpenSchedulePopup(false);
+      setShowTimePicker(true);
+    }
   };
 
   return (
@@ -464,7 +495,7 @@ function CartPage() {
                     lineHeight: "24px", // Set the line height
                   }}
                 >
-                  {selectedSchedule}
+                  {pickDate.split("-")[0]} {isAsap ? "ASAP" : pickTime}
                 </Typography>
               </Stack>
             </Stack>
@@ -489,14 +520,15 @@ function CartPage() {
                   fontSize: "16px",
                 },
               }}
-              onClick={() => setOpenSchedulePopup(true)}
+              onClick={() => setOpenPopup(true)}
             >
               Schedule
             </Button>
           </Stack>
+
           <Dialog
-            open={openSchedulePopup}
-            onClose={() => setOpenSchedulePopup(false)}
+            open={openPopup}
+            onClose={() => setOpenPopup(false)}
             sx={{
               margin: "0",
               textAlign: "center",
@@ -505,13 +537,10 @@ function CartPage() {
               sx: {
                 overflow: "visible",
                 margin: "0",
-                height: "275px",
-                bottom: "0",
+                height: "175px",
                 position: "fixed",
                 width: "375px",
-                left: "0",
-                borderBottomLeftRadius: "0px",
-                borderBottomRightRadius: "0px",
+                left: "0px !important",
                 paddingTop: "20px",
                 "@media (max-width: 600px)": {
                   width: "100%",
@@ -519,40 +548,75 @@ function CartPage() {
               },
             }}
           >
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={() => setOpenSchedulePopup(false)}
-              sx={{
-                position: "absolute",
-                top: "-16px",
-                right: "18px",
-              }}
+            <Box
+              justifyContent={"center"}
+              sx={{ marginTop: "50px", display: "flex" }}
             >
-              <CloseIcon />
-            </IconButton>
-            <DialogTitle>Select time</DialogTitle>
-            <DialogContent
-              sx={{
-                fontFamily: "Titillium Web, sans-serif", // Set the font family
-                fontWeight: 600, // Set the font weight
-              }}
-            >
-              {scheduleOptions.map((option, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleScheduleOptionClick(option)}
-                  style={{
-                    cursor: "pointer",
-
-                    color: selectedSchedule === option ? "#026754" : "inherit",
-                  }}
-                >
-                  {option}
-                </div>
-              ))}
-            </DialogContent>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setOpenSchedulePopup(true);
+                  setOpenPopup(false);
+                }}
+                sx={{ marginRight: "15px" }}
+              >
+                Schedule for later
+              </Button>
+              <Button variant="contained" onClick={asapHandler}>
+                ASAP
+              </Button>
+            </Box>
           </Dialog>
+
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={() => setOpenSchedulePopup(false)}
+            sx={{
+              position: "absolute",
+              top: "-16px",
+              right: "18px",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <MobileDatePicker
+              onChange={(date) => setPickDate(date.format("MMM DD, YYYY-dddd"))}
+              minDate={dayjs(new Date())}
+              open={openSchedulePopup}
+              defaultValue={dayjs(new Date().toString())}
+              onClose={() => onDateSelected(false)}
+              sx={{
+                display: "none",
+              }}
+            />
+            {timeByDate && (
+              <MobileTimePicker
+                minTime={dayjs(
+                  new Date().setHours(
+                    parseInt(timeByDate.from_time.split(":")[0])
+                  )
+                )}
+                maxTime={dayjs(
+                  new Date().setHours(
+                    parseInt(timeByDate.to_time.split(":")[0]) + 12
+                  )
+                )}
+                defaultValue={dayjs(new Date())}
+                open={showTimePicker}
+                onChange={(time) => {
+                  setPickTime(time.format("hh:mm a"));
+                  setIsAsap(false);
+                }}
+                onClose={() => setShowTimePicker(false)}
+                sx={{
+                  display: "none",
+                }}
+              />
+            )}
+          </LocalizationProvider>
           <Stack spacing={2}>
             <Typography variant="h5">
               Your Items

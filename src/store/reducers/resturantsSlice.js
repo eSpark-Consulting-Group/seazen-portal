@@ -70,8 +70,8 @@ const resturantsSlice = createSlice({
       state.details.itemQuantity = action.payload;
     },
     getNearByRest: (state, action) => {
-      state.nearbyRestaurants = action.payload
-    }
+      state.nearbyRestaurants = action.payload;
+    },
   },
 });
 
@@ -85,7 +85,7 @@ export const {
   setSlides,
   setSlidesCount,
   changeItemQuantity,
-  getNearByRest
+  getNearByRest,
 } = resturantsSlice.actions;
 
 export default resturantsSlice.reducer;

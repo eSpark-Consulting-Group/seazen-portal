@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "./style.css";
+import { useNavigate } from "react-router-dom";
 
-const RestaurantInfo = ({ restaurants }) => {
+const RestaurantInfo = ({ restaurants, branchesData }) => {
   return (
     <div>
-      {restaurants.map((restaurant) => (
-        <RestaurantCard key={restaurant.id} {...restaurant} />
+      {restaurants.map((restaurant, index) => (
+        <RestaurantCard
+          key={restaurant.id}
+          branchesData={branchesData[index]}
+          {...restaurant}
+        />
       ))}
     </div>
   );
 };
 
-const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
+const RestaurantCard = ({ name, weekdayHours, weekendHours, branchesData }) => {
   const [status, setStatus] = useState("");
   const [currentTime, setCurrentTime] = useState(new Date());
+  const navigate = useNavigate();
 
   useEffect(() => {
     const updateStatus = () => {
@@ -45,6 +51,11 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
 
     return () => clearInterval(interval);
   }, [weekdayHours, currentTime]);
+
+  const redirectLocation = () => {
+    const latlng = { lat: branchesData.latitude, lng: branchesData.longitude };
+    navigate("/location", { state: { latlng } });
+  };
 
   return (
     <div className="branches-container">
@@ -81,7 +92,7 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours }) => {
             </div>
           </div>
         </div>
-        <div className="branch-icon">
+        <div onClick={redirectLocation} className="branch-icon">
           <img src="/assets/img/location-arrow.svg" alt={`${name} Location`} />
         </div>
       </div>

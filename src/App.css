@@ -16,6 +16,7 @@
 
 .design-section {
   flex: 1;
+  position: relative;
   color: #fff;
   overflow: auto;
   overflow-y: scroll;
@@ -100,7 +101,6 @@ iframe#webpack-dev-server-client-overlay {
   bottom: 62px !important;
 }
 
-.specific-page-body-style #fc_frame{
+.specific-page-body-style #fc_frame {
   bottom: 52px !important;
 }
-
