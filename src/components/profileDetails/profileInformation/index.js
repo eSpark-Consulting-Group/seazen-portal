@@ -14,7 +14,7 @@ function ProfileInformation() {
   const localUserInfo = useSelector((state)=> state.auth.user);
 
   const [user, setUser] = useState({
-    name: localUserInfo.name,
+    name: localUserInfo.first_name + " " + localUserInfo.last_name,
     phoneNumber:
     localUserInfo.mobile_country_code + " " + localUserInfo.mobile,
     email: localUserInfo.email,

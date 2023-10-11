@@ -166,7 +166,7 @@ const DeliveryDetails = (props) => {
               </StyledOuterContainerIcon>
             </Dropdown.Toggle>
 
-            <Dropdown.Menu
+            {/* <Dropdown.Menu
               style={{
                 backgroundColor: "#F0F6F5",
                 color: "#323F4B",
@@ -181,7 +181,7 @@ const DeliveryDetails = (props) => {
               <Dropdown.Item href="#/action-1">Option 1</Dropdown.Item>
               <Dropdown.Item href="#/action-2">Option 2</Dropdown.Item>
               <Dropdown.Item href="#/action-3">Option 3</Dropdown.Item>
-            </Dropdown.Menu>
+            </Dropdown.Menu> */}
           </Dropdown>
         </div>
       </div>

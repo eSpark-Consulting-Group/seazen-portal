@@ -41,6 +41,10 @@ const API_ENDPOINTS = {
   COMMON: {
     GET_ALL_COUNTRIES: "/common/countries",
   },
+  ORDER: {
+    GET_ORDERS: "/order",
+    GET_ORDER_STATUS: "/order/status",
+  },
 };
 
 export default API_ENDPOINTS;

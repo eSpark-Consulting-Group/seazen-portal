@@ -87,7 +87,7 @@
 }
 
 .profileHeaderflag-profile {
-  position: relative;
+  /* position: relative; */
   height: 100%;
 }
 
@@ -99,7 +99,7 @@
   cursor: pointer;
   position: absolute;
   left: 263px;
-  top: -27px;
+  top: 20px;
   border: 1px solid #c0cdd7;
 }
 
@@ -117,7 +117,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   padding: 20px;
   border-radius: 17px;
-  z-index: 2; /* Place above the overlay */
+  z-index: 99999999999; /* Place above the overlay */
   bottom: 0px;
   border-bottom-right-radius: 0px;
   border-bottom-left-radius: 0px;

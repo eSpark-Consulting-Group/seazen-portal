@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import OrderCard from "../../components/order-cards";
 import RateCard from "../../components/rate-card";
@@ -8,6 +8,8 @@ import { paths } from "../../routes/paths";
 import { useNavigate } from "react-router";
 import styles from "./style.module.css";
 import FooterSection from "../../components/footer/footerTextBox/footerSection";
+import { useQuery } from "@tanstack/react-query";
+import getOrders, { GET_ORDERS_QUERY_KEY } from "../../api/order/getOrders";
 
 const MyOrderScreen = () => {
   const navigate = useNavigate();
@@ -85,9 +87,6 @@ const MyOrderScreen = () => {
     },
   ];
 
-  //// cart empty
-  //const itemsList = null;
-
   function formatDateToCustomFormat(date) {
     const options = {
       year: "numeric",
@@ -113,10 +112,21 @@ const MyOrderScreen = () => {
   const handleReceipt = () => {
     navigate(paths.receipt);
   };
+
   const handleRate = () => {};
-  const handleReorder = () => {
-    alert("Reorder");
-  };
+
+  const {
+    data: ordersResponse,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryFn: getOrders,
+    queryKey: GET_ORDERS_QUERY_KEY,
+    refetchInterval: 1000 * 60,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+  });
 
   return (
     <div className={`${styles.my_orderscreen}`}>
@@ -142,7 +152,11 @@ const MyOrderScreen = () => {
         })}
       </div>
       <div className={`${styles.my_order_cards}`}>
-        {itemsList === "" || itemsList === null ? (
+        {!isLoading &&
+        ordersResponse &&
+        ordersResponse.data &&
+        ordersResponse.data.length === 0 &&
+        !isError ? (
           <div className={`${styles.empty_orders}`}>
             <img src="/assets/img/cart_image.svg" alt="" />
             <div className={`${styles.empty_orders_desc}`}>{emptyCartText}</div>
@@ -164,31 +178,22 @@ const MyOrderScreen = () => {
           </div>
         ) : (
           <div>
-            {itemsList.map((item, index) =>
-              item.type === state ? (
+            {!isLoading &&
+              !isError &&
+              ordersResponse &&
+              ordersResponse.data &&
+              ordersResponse.data.map((item, index) => (
                 <OrderCard
                   item={item}
                   key={index}
                   handleReceipt={handleReceipt}
-                  handleReorder={handleReorder}
                   handleRate={handleRate}
                 />
-              ) : state === "All" ? (
-                <OrderCard
-                  item={item}
-                  key={index}
-                  handleReceipt={handleReceipt}
-                  handleReorder={handleReorder}
-                  handleRate={handleRate}
-                />
-              ) : null
-            )}
-            {/* <div className={`${styles.comment_section}`}>
-            <FooterSection />
-            </div> */}
-            
+              ))}
           </div>
         )}
+
+        {isLoading && <CircularProgress size="large" />}
       </div>
 
       <RateCard />
