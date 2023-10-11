@@ -12,7 +12,7 @@ export const DetailsHeader = (props) => {
   const navigate = useNavigate();
   const currentURL = useLocation();
 
-  const [imageNotFound, setImageNotFound] = useState(true);
+  const [imageNotFound, setImageNotFound] = useState(false);
 
   const onImageError = () => {
     setImageNotFound(true);

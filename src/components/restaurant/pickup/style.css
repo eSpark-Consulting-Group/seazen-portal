@@ -52,6 +52,6 @@
   display: none !important;
 }
 
-.dropdown-menu.show {
+/* .dropdown-menu.show {
   transform: translate(0px, 37px) !important;
-}
+} */

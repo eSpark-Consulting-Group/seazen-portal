@@ -42,13 +42,15 @@
   height: 12px;
   border-radius: 50%;
   position: relative;
-  top: 3px;
+  top: 5px;
 }
 
 .dropdown_icon_container img {
   width: 12px;
   padding: 0;
   transform: matrix(0, 1, -1, 0, 0, 0);
+  top: -2.5px;
+  position: relative;
 }
 
 .dropdown-toggle::after {
@@ -56,7 +58,7 @@
 }
 
 .dropdown-menu.show {
-  transform: translate(0px, 37px) !important;
+  transform: translate3d(33px, 49px, 0px) !important;
 }
 
 .dropdown-menu.show::-webkit-scrollbar{
