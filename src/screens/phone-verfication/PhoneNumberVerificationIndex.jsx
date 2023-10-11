@@ -58,13 +58,13 @@ function PhoneNumberVerificationIndex() {
   });
 
   const handleCustomerRegistration = () => {
-    if(mobileNumber && mobileCountryCode){
+    if (mobileNumber && mobileCountryCode) {
       setError(false);
       registration({
         mobile: mobileNumber,
         mobile_country_code: mobileCountryCode,
       });
-    }else{
+    } else {
       setError(true);
     }
   };
@@ -73,7 +73,7 @@ function PhoneNumberVerificationIndex() {
     <>
       <Stack
         sx={{
-          minHeight: "100vh",
+          minHeight: "70vh",
           color: "text.primary",
         }}
         justifyContent="space-between"
@@ -125,7 +125,9 @@ function PhoneNumberVerificationIndex() {
               onChange={handleChange}
               error={error && !mobileNumber} // Show error when error state is true and the field is empty
               helperText={
-                error && !mobileNumber ? "Mobile number is required" : error && "Please Enter a valid Number"
+                error && !mobileNumber
+                  ? "Mobile number is required"
+                  : error && "Please Enter a valid Number"
               }
             />
           </Stack>
