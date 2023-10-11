@@ -55,7 +55,6 @@
 .profile-name {
   top: 18px;
   left: 105px;
-  width: 79px;
   height: 31px;
   text-align: left;
   font: normal normal 600 16px Titillium Web;
@@ -176,14 +175,15 @@
 
 }
 .profile-footer .footer-container {
-  bottom: -77px;
+  bottom: 0px;
+  position: fixed;
 }
 
-@media screen and (max-width: 320px) {
+/* @media screen and (max-width: 320px) {
   .profile-footer .footer-container {
     bottom: -150px;
   }
-}
+} */
 
 @media screen and (max-width: 450px) and (min-width: 400px) {
   .profile-section {

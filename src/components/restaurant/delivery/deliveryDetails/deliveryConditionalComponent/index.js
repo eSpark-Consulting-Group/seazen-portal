@@ -22,6 +22,7 @@ const DeliveryConditionalComponent = ({
   setDeliveryAvailable,
   resturantId,
   errorMessage,
+  restaurantBranchHours,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const country = useSelector((state) => state.auth.country);
@@ -82,12 +83,18 @@ const DeliveryConditionalComponent = ({
   }, [getAllItemsByCategoryResponse]);
   return (
     <>
-      <DeliveryDetails />
+      <DeliveryDetails
+        setLocationDeliver={setLocationDeliver}
+        restaurantBranchHours={restaurantBranchHours}
+      />
       {locationDeliver && <ErrorInformation errorMessage={errorMessage} />}
       <MenuItems itemDetail={itemDetail} itemCategoryList={itemCategoryList} />
       <MenuCardListContainer
         itemDetail={itemDetail}
         itemCategoryList={itemCategoryList}
+        locationDeliver={locationDeliver}
+        resturantId={resturantId}
+        restaurantBranchHours={restaurantBranchHours}
       />
     </>
   );

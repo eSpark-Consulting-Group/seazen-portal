@@ -6,7 +6,10 @@ import DineInCoditionalComponent from "../../restaurant/dineIn/dineInConditional
 import PickupConditionalComponent from "../../restaurant/pickup/pickupConditionalComponent/index.js";
 import DeliveryConditionalComponent from "../../restaurant/delivery/deliveryDetails/deliveryConditionalComponent/index.js";
 
-const TabsDynamicConditionalComponent = ({ resturantId }) => {
+const TabsDynamicConditionalComponent = ({
+  resturantId,
+  restaurantBranchHours,
+}) => {
   const [tabPosition, setTabPosition] = useState("dinein");
   const [locationDeliver, setLocationDeliver] = useState(false);
   const [deliveryAvailable, setDeliveryAvailable] = useState(false);
@@ -61,6 +64,7 @@ const TabsDynamicConditionalComponent = ({ resturantId }) => {
             setDeliveryAvailable={setDeliveryAvailable}
             errorMessage={"We don’t deliver to your location!"}
             resturantId={resturantId}
+            restaurantBranchHours={restaurantBranchHours}
           />
         </div>
       );

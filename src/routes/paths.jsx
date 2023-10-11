@@ -19,6 +19,7 @@ import Addresses from "../screens/myAdresses";
 import MyOrderScreen from "../screens/myorder";
 import Receipt from "../screens/receipt";
 import SearchScreen from "../screens/searchPage";
+import { OrderFailed } from "../screens/orderFailed";
 
 export const paths = {
   home: "/",
@@ -42,6 +43,7 @@ export const paths = {
   branches: "/restaurant/",
   addresses: "/my-addresses",
   search: "search",
+  order_failed: "/order-failed",
 };
 
 export const routes = {
@@ -66,6 +68,7 @@ export const routes = {
   branches: "/restaurant/:id/branches",
   addresses: "/my-addresses",
   search: "/search",
+  order_failed: "/order-failed",
 };
 
 export const publicRoutes = {
@@ -168,6 +171,11 @@ export const publicRoutes = {
     name: "Search",
     path: routes.search,
     component: <SearchScreen />,
+  },
+  [paths.order_failed]: {
+    name: "Order Failed",
+    path: routes.order_failed,
+    component: <OrderFailed />,
   },
 };
 

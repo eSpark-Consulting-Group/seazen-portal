@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -11,14 +11,7 @@ import Navbar, { NavbarVariants } from "../../components/header";
 import updateProfile from "../../api/customer/updateProfile";
 import { paths } from "../../routes/paths";
 import "./style.css";
-
-const initialState = {
-  first_name: "",
-  last_name: "",
-  email: "",
-  mobile_number: "",
-  mobile_country_code: "",
-};
+import { useSelector } from "react-redux";
 
 const updateProfileFormSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -36,17 +29,30 @@ const updateProfileFormSchema = Yup.object().shape({
 
 export const UpdateCustomerProfile = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
   // Initialize state variables for form fields
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useState("");
+  const userInfo = useSelector((state) => {
+    state.auth.user;
+  });
 
-  const { mutate: updateCustomerProfile, isLoading } = useMutation({
+  const initialState = {
+    first_name: userInfo?.name,
+    last_name: userInfo?.name,
+    email: userInfo?.email,
+    mobile_number: userInfo?.mobile,
+    mobile_country_code: userInfo?.mobile_country_code,
+  };
+
+  const { mutate: updateCustomerProfileInfo, isLoading } = useMutation({
     mutationFn: updateProfile,
     onSuccess: () => {
-      navigate(paths.guest_profile);
+      navigate(paths.profile);
     },
   });
 
@@ -54,12 +60,15 @@ export const UpdateCustomerProfile = () => {
     initialValues: initialState,
     validationSchema: updateProfileFormSchema,
     onSubmit: (values) => {
-      updateCustomerProfile({
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        mobile_country_code: countryCode,
-        mobile_number: phone,
+      updateCustomerProfileInfo({
+        token,
+        data: {
+          first_name: values.first_name,
+          last_name: values.last_name,
+          email: values.email,
+          mobile_country_code: values.mobile_country_code,
+          mobile_number: values.mobile_number,
+        },
       });
     },
   });

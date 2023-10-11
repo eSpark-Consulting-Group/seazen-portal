@@ -22,11 +22,14 @@ const OrderTypeButtonExpandable = ({
   id,
   handleOrderTypeFilter,
   customButtonExpandedClass, // New prop to pass the custom class
+  setOpenAddressPopup,
+  setToggleFilterClassNear,
+  filterClassNear,
+  setFilterSelectedNow,
+  filterSelectedNow,
 }) => {
   const [expanded, setToggleExpanded] = useState(false);
   const [filterClassDelivery, setToggleFilterClassDelivery] = useState(false);
-  const [filterClassNear, setToggleFilterClassNear] = useState(false);
-  const [filterSelectedNow, setFilterSelectedNow] = useState();
 
   // useEffect(() => {
   //   if (expanded === false) {
@@ -49,7 +52,12 @@ const OrderTypeButtonExpandable = ({
       orderType === "delivery" && setFilterSelectedNow(orderType);
     }
     if (!filterClassNear) {
-      orderType === "near" && setFilterSelectedNow(orderType);
+      if (orderType === "near") {
+        setFilterSelectedNow(orderType);
+        if (setOpenAddressPopup) {
+          setOpenAddressPopup(true);
+        }
+      }
     }
     if (orderType === "delivery") {
       setToggleFilterClassDelivery(!filterClassDelivery);
@@ -121,7 +129,18 @@ const OrderTypeButtonExpandable = ({
   );
 };
 
-const RestaurantsOrderTypeButton = () => {
+const RestaurantsOrderTypeButton = (props) => {
+  const {
+    setOpenAddressPopup,
+    setToggleFilterClassNear,
+    filterClassNear,
+    filterSelectedNow,
+    setFilterSelectedNow,
+    goToRestaurantMenuPage,
+    setRestaurantId,
+    setRestaurantName,
+  } = props;
+
   const [clickedButtonIndex, setClickedButtonIndex] = useState(null);
   const [isButtonExpanded, setIsButtonExpanded] = useState({
     expanded: false,
@@ -225,6 +244,11 @@ const RestaurantsOrderTypeButton = () => {
               customButtonExpandedClass={
                 isButtonExpanded.expanded ? "custom-button-expanded" : ""
               }
+              setOpenAddressPopup={setOpenAddressPopup}
+              setToggleFilterClassNear={setToggleFilterClassNear}
+              filterClassNear={filterClassNear}
+              filterSelectedNow={filterSelectedNow}
+              setFilterSelectedNow={setFilterSelectedNow}
             />
           );
         })}
@@ -235,6 +259,10 @@ const RestaurantsOrderTypeButton = () => {
           clickedButtonIndex={clickedButtonIndex}
           orderTypeFilter={orderTypeFilter}
           restaurantsData={restaurantsData}
+          setOpenAddressPopup={setOpenAddressPopup}
+          goToRestaurantMenuPage={goToRestaurantMenuPage}
+          setRestaurantId={setRestaurantId}
+          setRestaurantName={setRestaurantName}
         />
       )}
     </>

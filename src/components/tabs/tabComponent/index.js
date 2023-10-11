@@ -9,6 +9,7 @@ import PickupIcon from "../../svgIcons/pickupIcon";
 import { useParams } from "react-router-dom/dist";
 import { lighten } from "@mui/material/styles";
 import { styled } from "@mui/material/styles"; // Import styled from MUI
+import { useSelector } from "react-redux";
 
 export default function IconPositionTabs({
   setTabPosition,
@@ -50,17 +51,18 @@ export default function IconPositionTabs({
       setTabPosition("pickup");
     }
   }, [option]);
-
+  const restaurantTheme = useSelector((state) => state.theme.themeColor);
   return (
     <Tabs
       centered
       value={value}
       onChange={handleChange}
       aria-label="options tabs"
-      TabIndicatorProps={{ sx: { backgroundColor: "#323F4B",  overflow:"visible", } }}
+      TabIndicatorProps={{
+        sx: { backgroundColor: "#323F4B", overflow: "visible" },
+      }}
       sx={{
-        backgroundColor: (theme) =>
-          lighten(theme.palette.themeColor.light, 0.95),
+        backgroundColor: restaurantTheme.main + 12,
         width: "100%",
         padding: "0 20px",
         color: "#323F4B",
@@ -73,7 +75,7 @@ export default function IconPositionTabs({
           fontWeight: "700",
         },
         "& button.Mui-selected": { color: "#323F4B" },
-        "& .MuiTabs-scroller":{overflow:"visible !important"}
+        "& .MuiTabs-scroller": { overflow: "visible !important" },
       }}
     >
       <Tab
@@ -82,7 +84,7 @@ export default function IconPositionTabs({
         }}
         iconPosition="start"
         label={
-          <div style={{ display: "flex", alignItems: "center"  }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
             <DineInIcon />
             <span style={{ marginLeft: "8px", fontWeight: 600 }}>Dine In</span>
           </div>

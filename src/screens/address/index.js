@@ -38,8 +38,8 @@ const AddressForm = () => {
     country_code: "",
     mobile_number: "",
     address_type: addressType,
-    latitude: location.state.latlng.lat,
-    longitude: location.state.latlng.lng,
+    latitude: location?.state?.latlng.lat,
+    longitude: location?.state?.latlng.lng,
   });
   const [errorState, setErrorState] = useState({
     blockErr: false,
@@ -50,8 +50,8 @@ const AddressForm = () => {
   const [clickEv, setClickEv] = useState(false);
 
   useLayoutEffect(() => {
-    if (location.state.edit) {
-      const state = location.state.data;
+    if (location?.state?.edit) {
+      const state = location?.state?.data;
       setAddress({
         block: state.block ? state.block : "",
         street: state.street ? state.street : "",
@@ -70,12 +70,12 @@ const AddressForm = () => {
         address_type: state.address_type.toLowerCase()
           ? state.address_type.toLowerCase()
           : "",
-        latitude: location.state.latlng.lat,
-        longitude: location.state.latlng.lng,
+        latitude: location?.state?.latlng.lat,
+        longitude: location?.state?.latlng.lng,
       });
       setAddressType(state.address_type.toLowerCase());
     }
-  }, [location.state.edit]);
+  }, [location?.state?.edit]);
 
   const handleAddressTypeChange = (type) => {
     setClickEv(false);
@@ -88,18 +88,6 @@ const AddressForm = () => {
     });
     setAddress((prevState) => ({
       ...prevState,
-      block: "",
-      street: "",
-      avenue: "",
-      house_no: "",
-      address_label: "",
-      additional_direction: "",
-      building: "",
-      floor: "",
-      apartment_no: "",
-      company_name: "",
-      country_code: "",
-      mobile_number: "",
       address_type: type,
     }));
   };
@@ -131,7 +119,10 @@ const AddressForm = () => {
   const apiCall = () => {
     addAddressApiCall(address, token).then((res) => {
       if (res.success === "ok") {
-        if (location?.state?.path === "/cart") {
+        if (
+          location?.state?.path === "/cart" ||
+          location?.state?.path === "/home"
+        ) {
           const addToStorage = {
             lat: location?.state?.latlng?.lat,
             lng: location?.state?.latlng?.lng,
@@ -139,9 +130,14 @@ const AddressForm = () => {
           };
 
           localStorage.setItem("location", JSON.stringify(addToStorage));
-          navigate(paths.cart);
+
+          if (location?.state?.path === "/home") {
+            navigate(paths.home);
+          } else {
+            navigate(paths.cart);
+          }
         } else if (location?.state?.path === "/profile") {
-          navigate(paths.addresses, { state: { path: location.state.path } });
+          navigate(paths.addresses, { state: { path: location?.state?.path } });
         } else {
           navigate(paths.addresses, { state: { path: location.pathname } });
         }
@@ -150,18 +146,36 @@ const AddressForm = () => {
   };
 
   const updateApiCall = () => {
-    updateAddressApiCall(address, location.state.data.id, token).then((res) => {
-      if (res.success === "ok") {
-        if (
-          location?.state?.path === "/cart" ||
-          location?.state?.path === "/profile"
-        ) {
-          navigate(paths.addresses, { state: { path: location.state.path } });
-        } else {
-          navigate(paths.addresses, { state: { path: location.pathname } });
+    updateAddressApiCall(address, location?.state?.data.id, token).then(
+      (res) => {
+        if (res.success === "ok") {
+          if (
+            location?.state?.path === "/cart" ||
+            location?.state?.path === "/home"
+          ) {
+            const addToStorage = {
+              lat: location?.state?.latlng?.lat,
+              lng: location?.state?.latlng?.lng,
+              address: location?.state?.name,
+            };
+
+            localStorage.setItem("location", JSON.stringify(addToStorage));
+
+            if (location?.state?.path === "/home") {
+              navigate(paths.home);
+            } else {
+              navigate(paths.cart);
+            }
+          } else if (location?.state?.path === "/profile") {
+            navigate(paths.addresses, {
+              state: { path: location?.state?.path },
+            });
+          } else {
+            navigate(paths.addresses, { state: { path: location.pathname } });
+          }
         }
       }
-    });
+    );
   };
 
   const handleSubmit = (event) => {
@@ -172,7 +186,7 @@ const AddressForm = () => {
     if (addressType === "house") {
       if (address.block !== "") {
         setClickEv(false);
-        if (location.state.edit) {
+        if (location?.state?.edit) {
           updateApiCall();
         } else {
           apiCall();
@@ -182,7 +196,7 @@ const AddressForm = () => {
     if (addressType === "apartment") {
       if (address.building !== "") {
         setClickEv(false);
-        if (location.state.edit) {
+        if (location?.state?.edit) {
           updateApiCall();
         } else {
           apiCall();
@@ -192,7 +206,7 @@ const AddressForm = () => {
     if (addressType === "office") {
       if (address.floor !== "" || address.company_name !== "") {
         setClickEv(false);
-        if (location.state.edit) {
+        if (location?.state?.edit) {
           updateApiCall();
         } else {
           apiCall();
@@ -234,36 +248,40 @@ const AddressForm = () => {
   }, [addressType, address, clickEv]);
 
   const truncateString = (str) => {
-    if (str.length <= 12) {
-      return str;
-    } else {
-      return str.slice(0, 12) + "...";
+    if (str) {
+      if (str.length <= 12) {
+        return str;
+      } else {
+        return str.slice(0, 12) + "...";
+      }
     }
   };
 
   return (
     <div className="button-style">
       <MyAddresses
-        title={`${location.state.edit ? "Edit" : "Save New"} Address`}
+        title={`${location?.state?.edit ? "Edit" : "Save New"} Address`}
       />
       <AddressTypeSelector
         addressType={addressType}
         handleAddressTypeChange={
-          !location.state.edit && handleAddressTypeChange
+          !location?.state?.edit && handleAddressTypeChange
         }
-        edit={location.state.edit}
+        edit={location?.state?.edit}
       />
 
-      {location.state.edit ? null : (
+      {location?.state?.edit ? null : (
         <div className="edit-container px-3">
-          <p className="address-name">{truncateString(location.state.name)}</p>
+          <p className="address-name">
+            {truncateString(location?.state?.name)}
+          </p>
           <button
             className="edit-button"
             onClick={() =>
               navigate(paths.location, {
                 state: {
-                  name: location.state.name,
-                  latlng: location.state.latlng,
+                  name: location?.state?.name,
+                  latlng: location?.state?.latlng,
                 },
               })
             }
@@ -324,7 +342,7 @@ const AddressForm = () => {
         <button type="submit" className="address-button">
           {/* Use type='submit' to make it a submit button */}
           <span className="address-text">
-            {location.state.edit ? "Save Changes" : "Save"}
+            {location?.state?.edit ? "Save Changes" : "Save"}
           </span>
         </button>
       </form>

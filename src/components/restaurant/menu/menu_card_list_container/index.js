@@ -14,7 +14,13 @@ import { Modal } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "react-bootstrap";
 
-const MenuCardListContainer = ({ itemCategoryList }) => {
+const MenuCardListContainer = ({
+  itemDetail,
+  itemCategoryList,
+  locationDeliver,
+  restaurantBranchHours,
+  resturantId,
+}) => {
   const navigate = useNavigate();
   const originalCartTotal = useSelector((state) => state.cart.total);
   const cartTotal = originalCartTotal < 0 ? 0 : originalCartTotal;
@@ -130,21 +136,23 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
                   sx={{
                     display: "flex",
                     justifyContent: "center",
-                    marginTop: "0px !important",
+                    marginTop: "70px !important",
                   }}
                 >
                   <CircularProgress />
                 </Box>
               )}
               <Stack spacing={1.5}>
-              {categoryList && <div className="searchwrapper">
-                          <img
-                            src="/assets/img/Icon - Search.svg"
-                            alt="search_icon"
-                            className="searchicon"
-                            onClick={toggleSearch}
-                          />
-                        </div>}
+                {categoryList && (
+                  <div className="searchwrapper">
+                    <img
+                      src="/assets/img/Icon - Search.svg"
+                      alt="search_icon"
+                      className="searchicon"
+                      onClick={toggleSearch}
+                    />
+                  </div>
+                )}
                 {Object.keys(categoriesWiseList).map((val) => {
                   return (
                     <>
@@ -157,12 +165,17 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
                       {categoriesWiseList[val].map((item, index) => {
                         return (
                           <MenuCard
+                            allData={item}
                             key={index}
+                            locationDeliver={locationDeliver}
+                            resturantId={resturantId}
+                            restaurantBranchHours={restaurantBranchHours}
                             foodItem={item.name_en}
                             foodIngredients={item.description_en}
                             foodPrice={item.price}
                             foodImage={item.image}
                             id={item.id}
+                            restaurant_id={item.restaurant_id}
                             showSubTractButton={
                               item.has_extras === false &&
                               item.has_options === false
@@ -212,7 +225,7 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
                 py: 0.5,
                 px: 2,
                 borderRadius: 1,
-                backgroundColor: (theme) => theme.palette.themeColor.light,
+                backgroundColor: "#ffffff24",
               }}
             >
               {cartTotalItems}
@@ -225,13 +238,14 @@ const MenuCardListContainer = ({ itemCategoryList }) => {
               py: 0.5,
               px: 2,
               borderRadius: 1,
-              backgroundColor: (theme) => theme.palette.themeColor.light,
+              backgroundColor: "#ffffff24",
             }}
           >
             KWD {Number(cartTotal).toFixed(3) || Number(0).toFixed(3)}
           </Box>
         </Box>
       </div>
+
       <Modal
         open={open}
         onClose={handleClose}

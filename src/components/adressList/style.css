@@ -1,22 +1,19 @@
-/* .addresses-container { */
-/* display: flex; */
-/* height: 158px; */
-/* margin-top: 10px; */
-/* padding-top: 8px; */
-/* padding-bottom: 6px; */
-/* margin-left: 22px; */
-/* } */
-
 .addresses-container {
   width: 327px;
   background: #ffffff 0% 0% no-repeat border-box;
   border: 1px solid #c0cdd7;
   border-radius: 12px;
   box-shadow: 0px 0px 48px #314f7c1f;
-  margin-bottom: 12px;
+  margin: 0px auto 12px;
   padding: 10px 15px;
   opacity: 1;
   cursor: pointer;
+  /* display: flex; */
+  /* height: 158px; */
+  /* margin-top: 10px; */
+  /* padding-top: 8px; */
+  /* padding-bottom: 6px; */
+  /* margin-left: 22px; */
 }
 
 .addresses-header {
@@ -154,6 +151,10 @@
   /* margin-top: 5px; */
 }
 
+.zIndex {
+  z-index: -1;
+}
+
 .addresses-map-section {
   width: 83px;
   height: 83px;
@@ -194,10 +195,6 @@
 /* left: 12px; */
 /* position: absolute; */
 /* } */
-
-.delete-button:hover span {
-  color: #1f2933 !important;
-}
 
 /* @media screen and (max-width:500px) and (min-width:380px) {
   .addresses-container{

@@ -4,14 +4,23 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Skeleton from "@mui/material/Skeleton";
-import Typography from "@mui/material/Typography";
+
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Box,
+  Stack,
+  Checkbox,
+  TextField,
+  FormControlLabel,
+  Skeleton,
+  Typography,
+} from "@mui/material";
+
 import { DetailsHeader } from "../../components/header/detailsHeader";
 import "./style.css";
 import getMenuItemDetails, {
@@ -20,7 +29,11 @@ import getMenuItemDetails, {
 import { Divider, alpha } from "@mui/material";
 import IncDec from "../../components/Input/InputWithIncDec";
 import { AddShoppingCartRounded } from "@mui/icons-material";
-import { updateCartItem, addToCart, resetCart } from "../../store/reducers/cartSlice";
+import {
+  updateCartItem,
+  addToCart,
+  resetCart,
+} from "../../store/reducers/cartSlice";
 import addToCartApiCall from "../../api/cart/addToCart";
 import { paths } from "../../routes/paths";
 import updateCartApiCall from "../../api/cart/updateCart";
@@ -31,6 +44,7 @@ export const Details = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const cart = useSelector((state) => state.cart.cart);
   const token = localStorage.getItem("token");
@@ -41,9 +55,11 @@ export const Details = () => {
   const [toppingVariant, setToppingVariant] = React.useState([]);
   const [sideVariant, setSideVariant] = React.useState([]);
   const [totalPrice, setTotalPrice] = React.useState();
+  const [notDeliver, setNotDeliver] = React.useState(false);
+  const [currentRest, setCurrentRest] = React.useState({});
   const [specialInstructions, setSpecialInstructions] = React.useState("");
   const { search } = useLocation();
-  const restaurant_id = localStorage.getItem("restaurantID")
+  const restaurant_id = localStorage.getItem("restaurantID");
   const {
     data: menuItemDetails,
     isLoading,
@@ -56,6 +72,19 @@ export const Details = () => {
       console.log("data", data);
     },
   });
+  const restaurantTheme = useSelector((state) => state.theme.themeColor);
+  useEffect(() => {
+    if (
+      location?.state?.branchRestaurants?.data?.length &&
+      location?.state?.resturantId
+    ) {
+      const restBranch = location?.state?.branchRestaurants?.data?.find(
+        (res) => res?.restaurant_id === +location?.state?.resturantId
+      );
+
+      setCurrentRest(restBranch);
+    }
+  }, [location?.state]);
 
   const calculateToppingVariantTotal = (toppingVariantData) => {
     const eachToppingTotal = toppingVariantData
@@ -305,10 +334,10 @@ export const Details = () => {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
       quantity: cartItem.quantity,
-      cart_id: cartItem.cart_id || "5",
-      topping_variant_id: toppingVariant,
-      side_variant_id: sideVariant,
-      size_variant_id: sizeVariant,
+      // cart_id: cartItem.cart_id || "5",
+      topping_variant_id: toppingVariant || 0,
+      side_variant_id: sideVariant || 0,
+      size_variant_id: sizeVariant || 0,
       size_variant: variantsForApi(
         sizeVariant,
         cartItem.variants?.sizeVariant?.id
@@ -341,18 +370,20 @@ export const Details = () => {
 
   const clearCartItems = () => {
     dispatch(resetCart());
-    clearCart(token).then((res) => {
-      console.log(res)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
+    clearCart(token)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
 
-    if(cart.length > 0 && data.restaurant_id !== cart[0]?.restaurant_id){
-      clearCartItems()
+    if (cart.length > 0 && data.restaurant_id !== cart[0]?.restaurant_id) {
+      clearCartItems();
     }
 
     var ItemDataObject = {
@@ -401,6 +432,14 @@ export const Details = () => {
     // dispatch(addExtraSides({ id: id, extraSides: sideVariant }));
   };
 
+  const openNotDelivered = () => {
+    setNotDeliver(true);
+  };
+
+  const handleClose = () => {
+    setNotDeliver(false);
+  };
+
   return (
     <div>
       <DetailsHeader image={menuItemDetails?.data?.image} />
@@ -427,7 +466,7 @@ export const Details = () => {
               paddingTop: "6px",
             }}
           >
-            <Typography variant="body1" component="div" >
+            <Typography variant="body1" component="div">
               <Typography
                 variant="subtitle2"
                 component="sup"
@@ -601,7 +640,7 @@ export const Details = () => {
                                     variant.name_en === "Extra Topping" &&
                                     isLastItem
                                       ? "160px"
-                                      : "90px", 
+                                      : "90px",
                                 }}
                               >{`(Each +KWD ${option?.unit_price})`}</p>
                             )}
@@ -715,10 +754,9 @@ export const Details = () => {
                   // disabled: quantity === 10,
                   sx: {
                     color: "common.white",
-                    backgroundColor: (theme) => theme.palette.themeColor.light,
+                    backgroundColor: "#ffffff24",
                     "&:hover": {
-                      backgroundColor: (theme) =>
-                        theme.palette.themeColor.light,
+                      backgroundColor: "#ffffff24",
                     },
                   },
                 }}
@@ -726,10 +764,9 @@ export const Details = () => {
                   // disabled: quantity === 0,
                   sx: {
                     color: "common.white",
-                    backgroundColor: (theme) => theme.palette.themeColor.light,
+                    backgroundColor: "#ffffff24",
                     "&:hover": {
-                      backgroundColor: (theme) =>
-                        theme.palette.themeColor.light,
+                      backgroundColor: "#ffffff24",
                     },
                   },
                 }}
@@ -739,52 +776,141 @@ export const Details = () => {
               size="large"
               variant="contained"
               fullWidth
-              disabled={menuItemDetails?.data.has_variants && !sizeVariant}
+              disabled={
+                !location?.state?.locationDeliver &&
+                menuItemDetails?.data.has_variants &&
+                !sizeVariant
+              }
               sx={{
                 py: 2,
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: location?.state?.locationDeliver
+                  ? "center"
+                  : "space-between",
                 alignItems: "center",
-                backgroundColor: (theme) =>
-                  `${theme.palette.themeColor.light} !important`,
+                backgroundColor: `${restaurantTheme.main} !important`,
                 "&:hover": {
                   backgroundColor: (theme) => theme.palette.themeColor.light,
                 },
               }}
-              onClick={handleAddToCart}
+              onClick={
+                location?.state?.locationDeliver
+                  ? openNotDelivered
+                  : handleAddToCart
+              }
             >
-              <Typography
-                variant="h6"
-                component="span"
-                fontWeight={600}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  color: "white",
-                }}
-              >
-                <AddShoppingCartRounded
+              {location?.state?.locationDeliver ? (
+                <Typography
+                  variant="h6"
+                  component="span"
+                  fontWeight={600}
                   sx={{
-                    mr: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "white",
                   }}
-                />
-                {checkIfItemIsInCart() && search
-                  ? "Update Cart"
-                  : "Add to Cart"}
-              </Typography>
-              <Typography
-                variant="body1"
-                component="span"
-                sx={{
-                  color: "white",
-                }}
-              >
-                +KWD {Number(totalPrice).toFixed(3)}
-              </Typography>
+                >
+                  Change Location to Start Orderring
+                </Typography>
+              ) : (
+                <>
+                  <Typography
+                    variant="h6"
+                    component="span"
+                    fontWeight={600}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      color: "white",
+                    }}
+                  >
+                    <AddShoppingCartRounded
+                      sx={{
+                        mr: 1,
+                      }}
+                    />
+                    {checkIfItemIsInCart() && search
+                      ? "Update Cart"
+                      : "Add to Cart"}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    component="span"
+                    sx={{
+                      color: "white",
+                    }}
+                  >
+                    +KWD {Number(totalPrice).toFixed(3)}
+                  </Typography>
+                </>
+              )}
             </Button>
           </Stack>
         </Stack>
       </div>
+
+      <Dialog
+        open={notDeliver}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        className="not-delivered"
+        sx={{
+          overflow: "hidden",
+          "& .MuiDialog-paper": {
+            width: "327px",
+            textAlign: "center",
+            overflow: "hidden",
+            overflowY: "hidden",
+
+            "@media (min-width: 600px)": {
+              left: "0",
+              position: "fixed",
+              margin: "20px",
+            },
+          },
+        }}
+      >
+        <DialogTitle id="alert-dialog-title" className="dialog-title">
+          <img src="/assets/img/exclaim.svg"></img>
+        </DialogTitle>
+        <DialogContent className="content">
+          <DialogContentText id="alert-dialog-description">
+            <div className="text-detail">
+              {currentRest?.name_en} does not
+              <br /> deliver to your location.
+            </div>
+
+            <div className="disp-flex">
+              <Button
+                onClick={() => navigate(paths.home)}
+                className="btn change-button"
+              >
+                <span>Change Restaurant</span>
+              </Button>
+
+              <Button
+                onClick={() =>
+                  navigate(paths.location, { state: { path: "/b-restaurant" } })
+                }
+                className="btn change-button"
+              >
+                <span>Change Location</span>
+              </Button>
+            </div>
+
+            <Button
+              color="primary"
+              autoFocus
+              className="btn back-button"
+              // onClick={() => navigate(paths.home)}
+            >
+              <span>Back to Menu</span>
+            </Button>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
