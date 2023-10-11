@@ -1,12 +1,9 @@
 .my_orderscreen {
   padding: 0 30px;
   position: relative;
+  overflow-y: scroll;
+  max-height: 100vh;
 }
-
-/* hr{
-        border-top: 1px dashed #707070;
-        margin: 0 15px;
-    } */
 
 .my_orderscreen_nav {
   display: flex;
@@ -100,7 +97,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 15px;
   height: 60px;
 }
 
