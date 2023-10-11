@@ -148,30 +148,6 @@ const ListItemsNotDelivered = (props) => {
               </Typography>
             </div>
           </Box>
-
-          <Box key={item.id} className="items-not-delvered">
-            <div className="items-image">
-              <img src={item?.itemImage} alt={item.itemName} />
-            </div>
-
-            <div>
-              <Typography className="item-heading" variant="h5">
-                {item.itemName}
-              </Typography>
-            </div>
-          </Box>
-
-          <Box key={item.id} className="items-not-delvered">
-            <div className="items-image">
-              <img src={item?.itemImage} alt={item.itemName} />
-            </div>
-
-            <div>
-              <Typography className="item-heading" variant="h5">
-                {item.itemName}
-              </Typography>
-            </div>
-          </Box>
         </Box>
       ))}
 

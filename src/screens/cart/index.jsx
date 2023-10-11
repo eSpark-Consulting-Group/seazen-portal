@@ -168,7 +168,7 @@ function CartPage() {
     },
   });
 
-  const timeByDate = branchesAndHoursResponse?.data[0].branch_hours.find(
+  const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
     (val) => {
       return val.week_day == pickDate.split("-")[1];
     }

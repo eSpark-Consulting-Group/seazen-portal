@@ -821,7 +821,7 @@ export const Details = () => {
                     color: "white",
                   }}
                 >
-                  Change Location to Start Orderring
+                  Change Location to Start Ordering
                 </Typography>
               ) : token === null ? (
                 <Typography
@@ -835,7 +835,7 @@ export const Details = () => {
                     color: "white",
                   }}
                 >
-                  Start Orderring
+                  Start Ordering
                 </Typography>
               ) : (
                 <>
