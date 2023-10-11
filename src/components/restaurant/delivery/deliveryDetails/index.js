@@ -10,6 +10,7 @@ import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../../../utils/getAddress";
+import { Stack, Typography } from "@mui/material";
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
@@ -211,6 +212,7 @@ const DeliveryDetails = (props) => {
           <div className="right_dropdown_container_heading_container">
             Delivery Time
           </div>
+
           <Dropdown style={{ width: "163px" }}>
             <Dropdown.Toggle
               variant="success"
@@ -240,7 +242,7 @@ const DeliveryDetails = (props) => {
                 fontWeight: "bold",
                 border: "none",
                 transform: "translate(0px, -22px)",
-                top: "12px",
+                // top: "12px",
               }}
             >
               <Dropdown.Item href="#/action-1">Option 1</Dropdown.Item>
@@ -250,6 +252,43 @@ const DeliveryDetails = (props) => {
           </Dropdown>
         </div>
       </div>
+      <Stack
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          bgcolor: (theme) => theme.palette.themeColor.main,
+          color: "common.white",
+          p: 1,
+          borderRadius: "8px",
+          position: "relative",
+          width: "33px",
+          height: "32px",
+          left: "-7px",
+          top: "8px",
+        }}
+        spacing={0}
+      >
+        <Typography
+          variant="h4"
+          fontWeight={600}
+          sx={{
+            lineHeight: 1,
+            fontSize: "19px",
+          }}
+        >
+          30
+        </Typography>
+        <Typography
+          variant="caption"
+          fontWeight={300}
+          sx={{
+            lineHeight: 1,
+            fontSize: "6px",
+          }}
+        >
+          minutes
+        </Typography>
+      </Stack>
     </StyledOuterContainer>
   );
 };

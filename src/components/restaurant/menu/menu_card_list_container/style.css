@@ -179,9 +179,9 @@
 }
 
 .closebtn {
-  width: 42px;
+  width: 42px !important;
   height: 42px;
-  border-radius: 50%;
+  border-radius: 50% !important;
   background-color: #fff;
   display: flex;
   align-items: center;
