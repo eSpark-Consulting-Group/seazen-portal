@@ -5,7 +5,7 @@ import RateCard from "../rate-card";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
 
-const OrderCard = ({ item, handleReceipt }) => {
+const OrderCard = ({ item }) => {
   const [openRate, setOpenRate] = useState(false);
   const [average, setAverage] = useState(0);
   const navigate = useNavigate();
@@ -17,6 +17,14 @@ const OrderCard = ({ item, handleReceipt }) => {
   const handleClose = (value) => {
     handleRate(false);
     setAverage(value);
+  };
+
+  const handleReceipt = () => {
+    navigate(paths.receipt + item.order_id);
+  };
+
+  const handleReorder = () => {
+    navigate(paths.menu + paths.branches + item.restaurant_id);
   };
 
   const iconPath = `/assets/img/DeliveryOrder.svg`;
@@ -36,10 +44,6 @@ const OrderCard = ({ item, handleReceipt }) => {
       default:
         return "#F7B500";
     }
-  };
-
-  const handleReorder = () => {
-    navigate(paths.menu + paths.branches + item.restaurant_id);
   };
 
   const restaurantImagePath =

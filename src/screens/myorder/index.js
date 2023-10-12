@@ -109,10 +109,6 @@ const MyOrderScreen = () => {
     setCategory(updateCategory);
   };
 
-  const handleReceipt = () => {
-    navigate(paths.receipt);
-  };
-
   const handleRate = () => {};
 
   const {
@@ -183,12 +179,7 @@ const MyOrderScreen = () => {
               ordersResponse &&
               ordersResponse.data &&
               ordersResponse.data.map((item, index) => (
-                <OrderCard
-                  item={item}
-                  key={index}
-                  handleReceipt={handleReceipt}
-                  handleRate={handleRate}
-                />
+                <OrderCard item={item} key={index} handleRate={handleRate} />
               ))}
           </div>
         )}

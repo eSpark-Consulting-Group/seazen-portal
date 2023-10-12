@@ -4,7 +4,6 @@ import { handleApiError } from "../utils/errorHandling";
 
 const getOrderStatus = async (order_no, referenece_number) => {
   try {
-    // Make the GET request to fetch menu item details.
     const { data } = await axiosInstance.post(
       API_ENDPOINTS.ORDER.GET_ORDER_STATUS,
       { order_no, referenece_number }

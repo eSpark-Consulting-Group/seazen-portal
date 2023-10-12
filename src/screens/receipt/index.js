@@ -1,15 +1,20 @@
-import React from 'react'
-import {Box, Button, IconButton, Stack, Typography} from '@mui/material';
-import ReceiptItem from '../../components/receipt-items';
-import { useState } from 'react';
+import React from "react";
+import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
+import ReceiptItem from "../../components/receipt-items";
+import { useState } from "react";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import { useNavigate } from 'react-router';
-import './style.css';
+import { useNavigate, useParams } from "react-router";
+import "./style.css";
+import { useQuery } from "@tanstack/react-query";
+import getOrderDetails, {
+  GET_ORDER_DETAILS_QUERY_KEY,
+} from "../../api/order/getOrderDetails";
 
 const Receipt = () => {
   const navigate = useNavigate();
-  const [item, setTtem] = useState([1,2,3])
+  const { id } = useParams();
+  const [item, setTtem] = useState([1, 2, 3]);
   const CART_ITEMS = [
     {
       id: 1,
@@ -64,7 +69,7 @@ const Receipt = () => {
   const getDeliveryCharge = () => {
     return DELIVERY_CHARGE;
   };
- const getGrandTotal = () => {
+  const getGrandTotal = () => {
     return (
       Number(getItemTotal()) +
       Number(getTipAmount()) -
@@ -74,54 +79,72 @@ const Receipt = () => {
   };
 
   const currentDate = new Date();
-  const formattedDate = currentDate.toLocaleString('en-US', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
+  const formattedDate = currentDate.toLocaleString("en-US", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
     hour12: true,
   });
 
-  const handleOrderHelp = () =>{
-    alert ("Help") ;
-  }
-  
+  const handleOrderHelp = () => {
+    alert("Help");
+  };
+
+  const { data } = useQuery({
+    queryFn: () => {
+      return getOrderDetails(id);
+    },
+    queryKey: [GET_ORDER_DETAILS_QUERY_KEY, id],
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
+
   return (
     <div>
-        <div className='receipt-nav'>
-            <IconButton onClick={()=>navigate(-1)}>
-                <img src="/assets/img/Arrow.png" alt="" />
-            </IconButton>
-              <img src="/assets/img/Logo.png" alt="" />
-            <IconButton className='brand-logo'>
-                <img src="/assets/img/Group 259.png" alt="" />
-            </IconButton>
-        </div>
-        <div className='receipt-head'>
-          <p>Your Receipt</p>
-          <Button variant='contained' sx={{widows:"93px",height:"26px"}} onClick={handleOrderHelp}>Order Help</Button>
-        </div>
-        <div className='receipt-info'>
-          <div id='heading'>Delivered to</div>
-          <div>
-            <div id="location-img">
-              <img  src="/assets/img/location.svg" alt="" />
-            </div>
-            <div id='heading-cont'>Ardia, Block 6</div>
+      <div className="receipt-nav">
+        <IconButton onClick={() => navigate(-1)}>
+          <img src="/assets/img/Arrow.png" alt="" />
+        </IconButton>
+        <img src="/assets/img/Logo.png" alt="" />
+        <IconButton className="brand-logo">
+          <img src="/assets/img/Group 259.png" alt="" />
+        </IconButton>
+      </div>
+      <div className="receipt-head">
+        <p>Your Receipt</p>
+        <Button
+          variant="contained"
+          sx={{ widows: "93px", height: "26px" }}
+          onClick={handleOrderHelp}
+        >
+          Order Help
+        </Button>
+      </div>
+      <div className="receipt-info">
+        <div id="heading">Delivered to</div>
+        <div>
+          <div id="location-img">
+            <img src="/assets/img/location.svg" alt="" />
           </div>
-          <div>
-            <div id="clock-img">
-              <img  src="/assets/img/clock.svg" alt="" />
-            </div>
-            <div id='heading-cont'>{formattedDate}</div>
-          </div>
+          <div id="heading-cont">Ardia, Block 6</div>
         </div>
         <div>
-          {item.map((el, index)=><ReceiptItem key={index}/>)}
+          <div id="clock-img">
+            <img src="/assets/img/clock.svg" alt="" />
+          </div>
+          <div id="heading-cont">{formattedDate}</div>
         </div>
-        
-        <Stack spacing={2} sx={{color:"#1F2933", padding: "20px 30px"}}>
+      </div>
+      <div>
+        {item.map((el, index) => (
+          <ReceiptItem key={index} />
+        ))}
+      </div>
+
+      <Stack spacing={2} sx={{ color: "#1F2933", padding: "20px 30px" }}>
         <Typography variant="h5" fontWeight={500}>
           Order summary
         </Typography>
@@ -154,11 +177,11 @@ const Receipt = () => {
           <Typography variant="body1">{`KWD ${getGrandTotal()}`}</Typography>
         </Stack>
       </Stack>
-      <div className='receipt-comment-section'>
-          <img src="/assets/img/Comment_Icon.png" alt="" />
+      <div className="receipt-comment-section">
+        <img src="/assets/img/Comment_Icon.png" alt="" />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Receipt;
