@@ -603,43 +603,81 @@ export const Details = () => {
                                   : "", // Apply grey background to last item in Extra Topping section
                             }}
                           >
-                            <FormControlLabel
-                              checked={
-                                variant.name_en === "Choose the Size"
-                                  ? checkIfSizeIsAdded(option?.name_en)
-                                  : variant.name_en === "Extra Topping"
-                                  ? checkIfToppingIsAdded(option?.name_en)
-                                  : variant.name_en === "Extra Sides"
-                                  ? checkIfSideIsAdded(option?.name_en)
-                                  : false
-                              }
-                              onChange={() => {
-                                variant.name_en === "Choose the Size"
-                                  ? handleSizeVariant(option, variant.id)
-                                  : variant.name_en === "Extra Topping"
-                                  ? handleToppingVariant(option, variant.id)
-                                  : variant.name_en === "Extra Sides"
-                                  ? handleSideVariant(option, variant.id)
-                                  : () => {};
-                              }}
-                              control={<Checkbox color="themeColor" />}
-                              label={option?.name_en}
-                              disabled={
-                                variant.name_en === "Extra Topping" &&
-                                !checkIfToppingIsAdded(option?.name_en)
-                              }
-                            />
+                            {variant.name_en == "Extra Topping" && (
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    color="themeColor"
+                                    style={{ display: "none" }}
+                                  />
+                                }
+                                label={option?.name_en}
+                                disabled={
+                                  variant.name_en === "Extra Topping" &&
+                                  !checkIfToppingIsAdded(option?.name_en)
+                                }
+                                style={{marginLeft:"33px", marginTop:"11px", marginBottom:"7px"}}
+                              />
+                            )}
+                            {variant.name_en == "Choose the Size" && (
+                              <FormControlLabel
+                                checked={
+                                  variant.name_en === "Choose the Size"
+                                    ? checkIfSizeIsAdded(option?.name_en)
+                                    : variant.name_en === "Extra Topping"
+                                    ? checkIfToppingIsAdded(option?.name_en)
+                                    : variant.name_en === "Extra Sides"
+                                    ? checkIfSideIsAdded(option?.name_en)
+                                    : false
+                                }
+                                onChange={() => {
+                                  variant.name_en === "Choose the Size"
+                                    ? handleSizeVariant(option, variant.id)
+                                    : variant.name_en === "Extra Topping"
+                                    ? handleToppingVariant(option, variant.id)
+                                    : variant.name_en === "Extra Sides"
+                                    ? handleSideVariant(option, variant.id)
+                                    : () => {};
+                                }}
+                                control={<Checkbox color="themeColor" />}
+                                label={option?.name_en}
+                              />
+                            )}
+                            {variant.name_en == "Extra Sides" && (
+                              <FormControlLabel
+                                checked={
+                                  variant.name_en === "Choose the Size"
+                                    ? checkIfSizeIsAdded(option?.name_en)
+                                    : variant.name_en === "Extra Topping"
+                                    ? checkIfToppingIsAdded(option?.name_en)
+                                    : variant.name_en === "Extra Sides"
+                                    ? checkIfSideIsAdded(option?.name_en)
+                                    : false
+                                }
+                                onChange={() => {
+                                  variant.name_en === "Choose the Size"
+                                    ? handleSizeVariant(option, variant.id)
+                                    : variant.name_en === "Extra Topping"
+                                    ? handleToppingVariant(option, variant.id)
+                                    : variant.name_en === "Extra Sides"
+                                    ? handleSideVariant(option, variant.id)
+                                    : () => {};
+                                }}
+                                control={<Checkbox color="themeColor" />}
+                                label={option?.name_en}
+                              />
+                            )}
 
                             {variant.name_en === "Extra Topping" && (
                               <p
                                 style={{
                                   fontSize: "10px",
                                   paddingTop: "5px",
-
+                                  marginLeft: "1px",
                                   marginRight:
                                     variant.name_en === "Extra Topping" &&
                                     isLastItem
-                                      ? "160px"
+                                      ? "152px"
                                       : "90px",
                                 }}
                               >{`(Each +KWD ${option?.unit_price})`}</p>
