@@ -79,7 +79,7 @@ const MenuItems = ({ itemCategoryList }) => {
                 maxHeight: "150px",
                 overflowY: "scroll",
                 borderRadius: "0 0 16px 16px",
-                position:"static",
+                position: "static",
               }}
             >
               {!isEmpty(itemCategoryList)
@@ -151,7 +151,8 @@ const MenuItems = ({ itemCategoryList }) => {
               sx={{
                 "& .MuiButtonBase-root": {
                   textTransform: "none",
-                  minWidth: "60px",
+                  minWidth: "0px",
+                  marginRight: "12px",
                 },
               }}
             >
