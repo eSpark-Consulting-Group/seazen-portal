@@ -144,7 +144,11 @@ const App = () => {
 
   return (
     <div className="app ">
-      <MyAddresses title="Your Addresses" />
+      <MyAddresses
+        title="Your Addresses"
+        path={location?.state?.path}
+        fromAllAddresses={true}
+      />
       {isLoading
         ? Array.from({ length: 3 }).map((_) => (
             <>

@@ -362,7 +362,7 @@ function LocationPage() {
       }
     } else {
       navigate(paths.address, {
-        state: { name: address, latlng: center },
+        state: { name: address, latlng: center, path: location?.state?.path },
       });
     }
   };

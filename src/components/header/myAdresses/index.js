@@ -3,7 +3,8 @@ import "./style.css";
 import { useNavigate } from "react-router";
 import { paths } from "../../../routes/paths";
 
-const MyAddresses = ({ title }) => {
+const MyAddresses = (props) => {
+  const { title, path, fromAllAddresses } = props;
   const navigate = useNavigate();
 
   return (
@@ -11,7 +12,19 @@ const MyAddresses = ({ title }) => {
       <div
         className="left-icons"
         onClick={() => {
-          navigate(paths.home);
+          navigate(
+            fromAllAddresses && path === "/profile"
+              ? paths.profile
+              : !fromAllAddresses && path === "/profile"
+              ? paths.addresses
+              : !fromAllAddresses && path !== "/profile" && paths.home,
+            {
+              state: {
+                path:
+                  !fromAllAddresses && path === "/profile" ? "/profile" : "",
+              },
+            }
+          );
         }}
       >
         <img src="/assets/img/Icon - Arrow.svg" alt="Back"></img>

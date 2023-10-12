@@ -47,6 +47,7 @@ const AddressForm = () => {
     floorErr: false,
     companyNameErr: false,
     additionalDirErr: false,
+    countryCodeErr: false,
   });
   const [clickEv, setClickEv] = useState(false);
 
@@ -86,6 +87,8 @@ const AddressForm = () => {
       buildingErr: false,
       floorErr: false,
       companyNameErr: false,
+      additionalDirErr: false,
+      countryCodeErr: false,
     });
     setAddress((prevState) => ({
       ...prevState,
@@ -99,7 +102,7 @@ const AddressForm = () => {
       const numericValue = value.replace(/\D/g, "");
       setAddress((prevAddress) => ({
         ...prevAddress,
-        country_code: `+${numericValue}`,
+        country_code: numericValue,
       }));
       //
     } else if (key === "mobile_number") {
@@ -118,7 +121,12 @@ const AddressForm = () => {
   };
 
   const apiCall = () => {
-    addAddressApiCall(address, token).then((res) => {
+    const updateAddress = {
+      ...address,
+      country_code: `+${address.country_code}`,
+    };
+
+    addAddressApiCall(updateAddress, token).then((res) => {
       if (res.success === "ok") {
         if (
           location?.state?.path === "/cart" ||
@@ -131,7 +139,6 @@ const AddressForm = () => {
             address: location?.state?.name,
           };
 
-          // localStorage.setItem("location", JSON.stringify(addToStorage));
           localStorage.setItem("selected", JSON.stringify(addToStorage));
 
           if (location?.state?.path?.includes("menu-item-details")) {
@@ -153,7 +160,12 @@ const AddressForm = () => {
   };
 
   const updateApiCall = () => {
-    updateAddressApiCall(address, location?.state?.data.id, token).then(
+    const updateAddress = {
+      ...address,
+      country_code: `+${address.country_code}`,
+    };
+
+    updateAddressApiCall(updateAddress, location?.state?.data.id, token).then(
       (res) => {
         if (res.success === "ok") {
           if (
@@ -167,7 +179,6 @@ const AddressForm = () => {
               address: location?.state?.name,
             };
 
-            // localStorage.setItem("location", JSON.stringify(addToStorage));
             localStorage.setItem("selected", JSON.stringify(addToStorage));
 
             if (location?.state?.path?.includes("menu-item-details")) {
@@ -197,7 +208,11 @@ const AddressForm = () => {
     setClickEv(true);
 
     if (addressType === "house") {
-      if (address.block !== "" || address.additional_direction !== "") {
+      if (
+        address.block !== "" ||
+        address.additional_direction !== "" ||
+        address.country_code !== ""
+      ) {
         setClickEv(false);
         if (location?.state?.edit) {
           updateApiCall();
@@ -207,7 +222,11 @@ const AddressForm = () => {
       }
     }
     if (addressType === "apartment") {
-      if (address.building !== "" || address.additional_direction !== "") {
+      if (
+        address.building !== "" ||
+        address.additional_direction !== "" ||
+        address.country_code !== ""
+      ) {
         setClickEv(false);
         if (location?.state?.edit) {
           updateApiCall();
@@ -220,7 +239,8 @@ const AddressForm = () => {
       if (
         address.floor !== "" ||
         address.company_name !== "" ||
-        address.additional_direction !== ""
+        address.additional_direction !== "" ||
+        address.country_code !== ""
       ) {
         setClickEv(false);
         if (location?.state?.edit) {
@@ -235,44 +255,58 @@ const AddressForm = () => {
   useEffect(() => {
     if (clickEv) {
       if (addressType === "house") {
-        if (address.block === "" || address.additional_direction === "") {
+        if (
+          address.block === "" ||
+          address.additional_direction === "" ||
+          address.country_code === ""
+        ) {
           setErrorState((prev) => ({
             ...prev,
             blockErr: true,
             additionalDirErr: true,
+            countryCodeErr: true,
           }));
         } else {
           setErrorState((prev) => ({
             ...prev,
             blockErr: false,
             additionalDirErr: false,
+            countryCodeErr: false,
           }));
         }
       } else if (addressType === "apartment") {
-        if (address.building === "" || address.additional_direction === "") {
+        if (
+          address.building === "" ||
+          address.additional_direction === "" ||
+          address.country_code === ""
+        ) {
           setErrorState((prev) => ({
             ...prev,
             buildingErr: true,
             additionalDirErr: true,
+            countryCodeErr: true,
           }));
         } else {
           setErrorState((prev) => ({
             ...prev,
             buildingErr: false,
             additionalDirErr: false,
+            countryCodeErr: false,
           }));
         }
       } else if (addressType === "office") {
         if (
           address.floor === "" ||
           address.company_name === "" ||
-          address.additional_direction === ""
+          address.additional_direction === "" ||
+          address.country_code === ""
         ) {
           setErrorState((prev) => ({
             ...prev,
             floorErr: true,
             companyNameErr: true,
             additionalDirErr: true,
+            countryCodeErr: true,
           }));
         } else {
           setErrorState((prev) => ({
@@ -280,6 +314,7 @@ const AddressForm = () => {
             floorErr: false,
             companyNameErr: false,
             additionalDirErr: false,
+            countryCodeErr: false,
           }));
         }
       }
@@ -295,10 +330,13 @@ const AddressForm = () => {
       }
     }
   };
+
   return (
     <div className="button-style">
       <MyAddresses
         title={`${location?.state?.edit ? "Edit" : "Save New"} Address`}
+        path={location?.state?.path}
+        fromAllAddresses={false}
       />
       <AddressTypeSelector
         addressType={addressType}
@@ -330,7 +368,6 @@ const AddressForm = () => {
         </div>
       )}
       <form onSubmit={handleSubmit}>
-        {" "}
         {/* Add the form element and onSubmit handler */}
         {addressType === "house" && (
           <HomeAdress
@@ -363,7 +400,11 @@ const AddressForm = () => {
           </div>
           <div className="contact-field">
             <input
-              className="country-code-input"
+              className={
+                errorState.countryCodeErr
+                  ? ["country-code-input", "error"].join(" ")
+                  : "country-code-input"
+              }
               type="text"
               name="CountryCode"
               placeholder="+956"
