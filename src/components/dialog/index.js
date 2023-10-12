@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -10,6 +10,7 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
+import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
 
 import { paths } from "../../routes/paths";
 
@@ -24,6 +25,11 @@ export const DialogComponent = (props) => {
     selectedItemToDeliver,
     hasItems,
     cartItems,
+    restaurantName,
+    resturantId,
+    newText,
+    home,
+    updateText,
   } = props;
 
   const navigate = useNavigate();
@@ -63,13 +69,16 @@ export const DialogComponent = (props) => {
         <DialogContentText id="alert-dialog-description">
           {fromDetail ? (
             <div className="text-detail">
-              {location?.state?.restaurantDetail?.page_title_en} does not
-              <br /> deliver to your location.
+              {location?.state?.restaurantDetail !== undefined
+                ? location?.state?.restaurantDetail?.page_title_en
+                : `${restaurantName} Restaurant `}
+              does not
+              <br /> deliver to your {newText ? "new " : "current"}location.
             </div>
           ) : (
             <div className="text-detail">
               Below items cannot be delivered
-              <br /> to your location.
+              <br /> to your {updateText ? updateText : "current"} location.
             </div>
           )}
 
@@ -77,7 +86,9 @@ export const DialogComponent = (props) => {
             <>
               <div className="disp-flex">
                 <Button
-                  onClick={() => navigate(paths.home)}
+                  onClick={() => {
+                    !home ? navigate(paths.home) : handleClose();
+                  }}
                   className="btn change-button"
                 >
                   <span>Change Restaurant</span>
@@ -87,31 +98,40 @@ export const DialogComponent = (props) => {
                   onClick={() =>
                     navigate(paths.location, {
                       state: {
-                        path: location.pathname,
-                        restaurantName:
-                          location?.state?.restaurantDetail?.page_title_en,
-                        restaurant_id: +location.state.resturantId,
+                        path: home ? "/home" : location.pathname,
+                        restaurantName: home
+                          ? restaurantName
+                          : localStorage.getItem("restaurantName") !== null
+                          ? localStorage.getItem("restaurantName")
+                          : location?.state?.restaurantDetail?.page_title_en,
+                        restaurant_id: home
+                          ? resturantId
+                          : location?.state?.restaurant_id !== undefined
+                          ? location?.state?.restaurant_id
+                          : +location?.state?.resturantId,
                       },
                     })
                   }
-                  className="btn change-button"
+                  className={[!home ? "btn change-button" : "btn back-button"]}
                 >
                   <span>Change Location</span>
                 </Button>
               </div>
 
-              <Button
-                color="primary"
-                autoFocus
-                className="btn back-button"
-                onClick={() =>
-                  navigate(
-                    `${paths.menu}/restaurant/${+location.state.resturantId}`
-                  )
-                }
-              >
-                <span>Back to Menu</span>
-              </Button>
+              {!home ? (
+                <Button
+                  color="primary"
+                  autoFocus
+                  className="btn back-button"
+                  onClick={() =>
+                    navigate(
+                      `${paths.menu}/restaurant/${+location.state.resturantId}`
+                    )
+                  }
+                >
+                  <span>Back to Menu</span>
+                </Button>
+              ) : null}
             </>
           ) : !hasItems ? (
             <SingleItemNotDelivered
@@ -133,29 +153,70 @@ export const DialogComponent = (props) => {
 
 const ListItemsNotDelivered = (props) => {
   const { cartItems, handleClose, navigate } = props;
+
   return (
     <Box>
-      {cartItems?.map((item) => (
-        <Box key={item.id} className="to-scroll">
-          <Box className="items-not-delvered">
-            <div className="items-image">
-              <img src={item?.itemImage} alt={item.itemName} />
-            </div>
+      {cartItems?.map((item) => {
+        const checkIfImageExists = () => {
+          const img = new Image();
+          img.src = item?.itemImage;
 
-            <div>
-              <Typography className="item-heading" variant="h5">
-                {item.itemName}
-              </Typography>
-            </div>
+          if (img.complete) {
+            return true;
+          } else {
+            img.onload = () => {
+              return true;
+            };
+
+            img.onerror = () => {
+              return false;
+            };
+          }
+        };
+
+        return (
+          <Box key={item.id} className="to-scroll">
+            <Box className="items-not-delvered">
+              {checkIfImageExists() === true ? (
+                <div className="items-image">
+                  <img src={item?.itemImage} alt={item.itemName} />
+                </div>
+              ) : (
+                <Box
+                  sx={{
+                    width: 100,
+                    height: 100,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "common.white",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <ImageNotSupportedIcon fontSize="large"></ImageNotSupportedIcon>
+
+                  <Typography variant="caption">No Image Found</Typography>
+                </Box>
+              )}
+
+              <div>
+                <Typography className="item-heading" variant="h5">
+                  {item.itemName}
+                </Typography>
+              </div>
+            </Box>
           </Box>
-        </Box>
-      ))}
+        );
+      })}
 
       <div className="btn-navigate">
         <Button
           className="common-st add-btn"
           onClick={() =>
-            navigate(`${paths.menu}/${localStorage.getItem("restaurantID")}`)
+            navigate(
+              `${paths.menu}/restaurant/${localStorage.getItem("restaurantID")}`
+            )
           }
         >
           Add More
@@ -170,15 +231,63 @@ const ListItemsNotDelivered = (props) => {
 };
 
 const SingleItemNotDelivered = ({ selectedItemToDeliver, handleClose }) => {
+  const [imageExist, setImageExist] = useState(false);
+
+  const checkIfImageExists = (url, callback) => {
+    const img = new Image();
+    img.src = url;
+
+    if (img.complete) {
+      callback(true);
+    } else {
+      img.onload = () => {
+        callback(true);
+      };
+
+      img.onerror = () => {
+        callback(false);
+      };
+    }
+  };
+
+  useEffect(() => {
+    checkIfImageExists(selectedItemToDeliver?.image, (exists) => {
+      if (exists) {
+        setImageExist(false);
+      } else {
+        setImageExist(true);
+      }
+    });
+  }, [selectedItemToDeliver]);
+
   return (
     <Box>
       <Box className="items-not-delvered">
-        <div className="items-image">
-          <img
-            src={selectedItemToDeliver?.image}
-            alt={selectedItemToDeliver.name_en}
-          />
-        </div>
+        {!imageExist ? (
+          <div className="items-image">
+            <img
+              src={selectedItemToDeliver?.image}
+              alt={selectedItemToDeliver.name_en}
+            />
+          </div>
+        ) : (
+          <Box
+            sx={{
+              width: 100,
+              height: 100,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "common.white",
+              borderRadius: "8px",
+            }}
+          >
+            <ImageNotSupportedIcon fontSize="large"></ImageNotSupportedIcon>
+
+            <Typography variant="caption">No Image Found</Typography>
+          </Box>
+        )}
 
         <div>
           <Typography className="item-heading" variant="h5">

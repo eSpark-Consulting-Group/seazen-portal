@@ -92,7 +92,7 @@ const Card = (props) => {
         onClick={() => {
           !home && !isSelected
             ? selectCurrentAddress(data)
-            : deselectCurrentAddress();
+            : !home && deselectCurrentAddress();
         }}
       >
         <div className="addresses-details-and-map">

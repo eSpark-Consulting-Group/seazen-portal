@@ -172,7 +172,7 @@ const AddressForm = () => {
 
             if (location?.state?.path?.includes("menu-item-details")) {
               navigate(
-                `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
+                `${paths.menu}/restaurant/${location?.state?.restaurant_id}`
               );
             } else if (location?.state?.path === "/home") {
               navigate(paths.home);

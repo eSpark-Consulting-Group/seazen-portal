@@ -75,6 +75,9 @@ const MenuCard = (props) => {
   const hasVariant = !!allData.variants?.length;
 
   const cart = useSelector((state) => state.cart.cart);
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
 
   useEffect(() => {
     const quantity = getItemQuantity();
@@ -123,58 +126,43 @@ const MenuCard = (props) => {
 
   function handleClickAdd(id) {
     if (token === null) {
-      if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
-        clearCartItems();
-      }
-      if (hasVariant || !hasVariant) {
-        navigate(paths.details + "/" + id, {
-          state: {
-            id: id,
-          },
-        });
-        return;
-      }
-      setFoodItemQuantity(foodItemQuantity + 1);
-      if (checkIfItemIsInCart()) {
-        dispatch(
-          updateCartMenuItemQuantity({
-            id: id,
-            quantity: foodItemQuantity + 1,
-            totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
-          })
-        );
-      } else {
-        dispatch(
-          addToCart({
-            id: id,
-            itemName: foodItem,
-            restaurant_id,
-            totalPrice: foodPriceWithoutCurrency(),
-            quantity: foodItemQuantity + 1,
-            itemImage: foodImage,
-          })
-        );
-        const cartItemDataForApi = {
-          item_code: uuidv4(),
-          item_id: id,
-          quantity: foodItemQuantity + 1,
-          topping_variant_id: 0,
-          side_variant_id: 0,
-          size_variant_id: 0,
-          size_variant: [],
-          topping_variant: [],
-          side_variant: [],
-        };
-
-        addToCartApiCall(cartItemDataForApi, token)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+      cartFunction(id);
     } else {
+      if (restaurantBranchHours?.data.length) {
+        restaurantBranchHours?.data?.forEach((res) => {
+          const resLat = +res.latitude;
+          const resLng = +res.longitude;
+
+          const selected = JSON.parse(localStorage.getItem("selected"));
+
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            selected.lat,
+            selected.lng
+          );
+
+          if (distance > 50) {
+            if (allData.id === id) {
+              setSelectedItemToDeliver(allData);
+            }
+            setOpenModal(true);
+          } else {
+            cartFunction(id);
+          }
+        });
+      }
+    }
+  }
+
+  function autoRedirect(id) {
+    if (token === null) {
+      navigate(paths.details + "/" + id, {
+        state: {
+          id: id,
+        },
+      });
+    } else if (restaurantBranchHours?.data?.length) {
       restaurantBranchHours?.data?.forEach((res) => {
         const resLat = +res.latitude;
         const resLng = +res.longitude;
@@ -194,61 +182,96 @@ const MenuCard = (props) => {
           }
           setOpenModal(true);
         } else {
-          if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
-            clearCartItems();
-          }
-          if (hasVariant) {
-            navigate(paths.details + "/" + id, {
-              state: {
-                id: id,
-              },
-            });
-            return;
-          }
-          setFoodItemQuantity(foodItemQuantity + 1);
-          if (checkIfItemIsInCart()) {
-            dispatch(
-              updateCartMenuItemQuantity({
-                id: id,
-                quantity: foodItemQuantity + 1,
-                totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
-              })
-            );
-          } else {
-            dispatch(
-              addToCart({
-                id: id,
-                itemName: foodItem,
-                restaurant_id,
-                totalPrice: foodPriceWithoutCurrency(),
-                quantity: foodItemQuantity + 1,
-                itemImage: foodImage,
-              })
-            );
-            const cartItemDataForApi = {
-              item_code: uuidv4(),
-              item_id: id,
-              quantity: foodItemQuantity + 1,
-              topping_variant_id: 0,
-              side_variant_id: 0,
-              size_variant_id: 0,
-              size_variant: [],
-              topping_variant: [],
-              side_variant: [],
-            };
-
-            addToCartApiCall(cartItemDataForApi, token)
-              .then((res) => {
-                console.log(res);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          }
+          navigate(paths.details + "/" + id, {
+            state: {
+              id: id,
+            },
+          });
         }
       });
+      // resturantsData?.forEach((res) => {
+      //   const resLat = +res.latitude;
+      //   const resLng = +res.longitude;
+
+      //   const selected = JSON.parse(localStorage.getItem("selected"));
+
+      //   const distance = getDistanceFromLatLonInKm(
+      //     resLat,
+      //     resLng,
+      //     selected.lat,
+      //     selected.lng
+      //   );
+
+      //   if (distance > 50) {
+      //     if (allData.id === id) {
+      //       setSelectedItemToDeliver(allData);
+      //     }
+      //     setOpenModal(true);
+      //   } else {
+      //     console.log("why oo whty");
+      //     // navigate(paths.details + "/" + id, {
+      //     //   state: {
+      //     //     id: id,
+      //     //   },
+      //     // });
+      //   }
+      // });
     }
   }
+
+  const cartFunction = (id) => {
+    if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
+      clearCartItems();
+    }
+    if (hasVariant || !hasVariant) {
+      navigate(paths.details + "/" + id, {
+        state: {
+          id: id,
+        },
+      });
+      return;
+    }
+    setFoodItemQuantity(foodItemQuantity + 1);
+    if (checkIfItemIsInCart()) {
+      dispatch(
+        updateCartMenuItemQuantity({
+          id: id,
+          quantity: foodItemQuantity + 1,
+          totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
+        })
+      );
+    } else {
+      dispatch(
+        addToCart({
+          id: id,
+          itemName: foodItem,
+          restaurant_id,
+          totalPrice: foodPriceWithoutCurrency(),
+          quantity: foodItemQuantity + 1,
+          itemImage: foodImage,
+        })
+      );
+      const cartItemDataForApi = {
+        item_code: uuidv4(),
+        item_id: id,
+        quantity: foodItemQuantity + 1,
+        topping_variant_id: 0,
+        side_variant_id: 0,
+        size_variant_id: 0,
+        size_variant: [],
+        topping_variant: [],
+        side_variant: [],
+      };
+
+      addToCartApiCall(cartItemDataForApi, token)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
   function handleClickSubtract() {
     setFoodItemQuantity(foodItemQuantity - 1);
@@ -436,13 +459,7 @@ const MenuCard = (props) => {
               </>
             ) : (
               <AddToCartButton
-                onClick={() => {
-                  navigate(paths.details + "/" + id, {
-                    state: {
-                      id: id,
-                    },
-                  });
-                }}
+                onClick={() => autoRedirect(id)}
                 className="menu_card_add_to_cart_button pointer"
               >
                 <img

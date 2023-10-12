@@ -49,6 +49,7 @@ const DeliveryDetails = (props) => {
 
   useEffect(() => {
     if (restaurantBranchHours) {
+      console.log("HITS");
       restaurantBranchHours?.data?.forEach((res) => {
         const resLat = +res.latitude;
         const resLng = +res.longitude;
@@ -67,9 +68,24 @@ const DeliveryDetails = (props) => {
             setLocationDeliver(false);
           }
         }
+
+        if (selected !== null && latlng !== null) {
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            selected.lat,
+            selected.lng
+          );
+
+          if (distance > 50) {
+            setLocationDeliver(true);
+          } else {
+            setLocationDeliver(false);
+          }
+        }
       });
     }
-  }, [restaurantBranchHours, selected, latlng]);
+  }, [restaurantBranchHours, selected, latlng, fullAddress]);
 
   const getUserAddress = (lat, lng) => {
     getFullAddress(lat, lng, setFullAddress);
@@ -79,7 +95,7 @@ const DeliveryDetails = (props) => {
     if (fullAddress !== null) {
       localStorage.setItem("selected", JSON.stringify(fullAddress));
 
-      setLocation(truncateString(fullAddress?.address));
+      setLocation(truncateString(fullAddress?.address, 15));
       setLatlng({
         lat: fullAddress.lat,
         lng: fullAddress.lng,

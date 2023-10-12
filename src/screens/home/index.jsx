@@ -38,6 +38,7 @@ import {
 } from "../../utils/getAddress";
 import { paths } from "../../routes/paths";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
+import { DialogComponent } from "../../components/dialog";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -45,6 +46,9 @@ const Home = () => {
 
   const isToken = localStorage.getItem("token");
   const addressData = useSelector((state) => state.address.addressData);
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
   const dispatch = useDispatch();
 
   // const defaultUser = {
@@ -133,20 +137,6 @@ const Home = () => {
     }
   }, []);
 
-  // const fetchFunction = async () => {
-  //   getAllAddress(isToken).then((res) => {
-  //     if (res.success === "ok") {
-  //       dispatch(getAddress(res.data));
-  //     }
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   if(addressData.length === 0){
-  //     fetchFunction()
-  //   }
-  // }, [addressData]);
-
   // useEffect(() => {
   //   if (!isToken) {
   //     refetch()
@@ -163,6 +153,7 @@ const Home = () => {
   const [fromPopular, setFromPopular] = useState(false);
   const [popularId, setPopularId] = useState(null);
   const [restBranch, setRestBranch] = useState([]);
+  const [newText, setNewText] = useState("");
 
   const isCountry = localStorage.getItem("country");
   useEffect(() => {
@@ -183,19 +174,11 @@ const Home = () => {
       });
   };
 
-  // useEffect(() => {
-  //   if (restaurantId !== null) {
-  //     fetchBranchHours();
-  //   }
-  // }, [restaurantId]);
-
-  const fetchBranchHours = () => {
-    getRestaurantBranchHours(restaurantId).then((res) => {
-      if (res.status === "ok") {
-        setRestBranch(res.data);
-      }
-    });
-  };
+  useEffect(() => {
+    if (restaurantId !== null) {
+      fetchBranchHours();
+    }
+  }, [restaurantId]);
 
   const chooseAddress = (item) => {
     const lat = +item.latitude;
@@ -208,19 +191,52 @@ const Home = () => {
     if (fullAddress !== null) {
       localStorage.setItem("selected", JSON.stringify(fullAddress));
 
-      if (restaurantId === null) {
-        setOpenAddressPopup(false);
-      }
+      if (restBranch.length) {
+        restBranch?.forEach((res) => {
+          const resLat = +res.latitude;
+          const resLng = +res.longitude;
 
-      if (restaurantId !== null && !fromPopular) {
-        goToRestaurantMenuPage(restaurantId);
-      }
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            fullAddress.lat,
+            fullAddress.lng
+          );
 
-      if (fromPopular && popularId !== null) {
-        navigate(paths.details + "/" + popularId, {
-          state: {
-            id: popularId,
-          },
+          if (distance > 50) {
+            const restaurant = resturantsData.find(
+              (res) => res.id === restaurantId
+            );
+
+            setNewText("New Location");
+            setRestaurantName(restaurant.name_en);
+            setDistanceIsFar(true);
+            setOpenAddressPopup(false);
+            // localStorage.removeItem("restaurantIdForRedirect");
+            // localStorage.removeItem("menuDetailId");
+          } else {
+            setNewText("");
+            setDistanceIsFar(false);
+            setOpenAddressPopup(false);
+
+            if (restaurantId === null) {
+              setOpenAddressPopup(false);
+            }
+
+            if (restaurantId !== null && !fromPopular) {
+              goToRestaurantMenuPage(restaurantId);
+            }
+
+            if (fromPopular && popularId !== null) {
+              navigate(paths.details + "/" + popularId, {
+                state: {
+                  id: popularId,
+                  loc: "popular",
+                  restaurant_id: restaurantId,
+                },
+              });
+            }
+          }
         });
       }
     }
@@ -234,11 +250,24 @@ const Home = () => {
     setOpenAddressPopup(false);
     setToggleFilterClassNear(false);
     setDistanceIsFar(false);
+    setFromPopular(false);
+    setNewText("");
+
+    // localStorage.removeItem("restaurantIdForRedirect");
+    // localStorage.removeItem("menuDetailId");
   };
 
   const goToRestaurantMenuPage = (id) => {
     localStorage.setItem("restaurantID", id);
     navigate(paths.menu + `/restaurant/${id}`);
+  };
+
+  const fetchBranchHours = () => {
+    getRestaurantBranchHours(restaurantId).then((res) => {
+      if (res.status === "ok") {
+        setRestBranch(res.data);
+      }
+    });
   };
 
   return (
@@ -267,6 +296,8 @@ const Home = () => {
         setOpenAddressPopup={setOpenAddressPopup}
         setFromPopular={setFromPopular}
         setPopularId={setPopularId}
+        setRestaurantId={setRestaurantId}
+        distanceIsFar={distanceIsFar}
       />
       <Footer showFooterSection={true} />
 
@@ -326,6 +357,17 @@ const Home = () => {
           </Button>
         </div>
       </Dialog>
+
+      <DialogComponent
+        notDeliver={distanceIsFar}
+        setNotDeliver={setDistanceIsFar}
+        restaurantName={restaurantName}
+        fromDetail={true}
+        resturantId={restaurantId}
+        location={location}
+        newText={newText}
+        home={true}
+      />
     </div>
   );
 };
