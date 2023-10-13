@@ -270,46 +270,55 @@ const MenuCard = (props) => {
       });
       return;
     }
-
-    setFoodItemQuantity(foodItemQuantity + 1);
-    if (checkIfItemIsInCart()) {
-      dispatch(
-        updateCartMenuItemQuantity({
-          id: id,
-          quantity: foodItemQuantity + 1,
-          totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
-        })
-      );
+    if (!hasVariant && !farAway) {
+      navigate(paths.location, {
+        state: {
+          restaurant_id: restaurantDetail.id,
+          restaurantName: restaurantDetail.page_title_en,
+          path: "menu/restaurant",
+        },
+      });
     } else {
-      dispatch(
-        addToCart({
-          id: id,
-          itemName: foodItem,
-          restaurant_id,
-          totalPrice: foodPriceWithoutCurrency(),
+      setFoodItemQuantity(foodItemQuantity + 1);
+      if (checkIfItemIsInCart()) {
+        dispatch(
+          updateCartMenuItemQuantity({
+            id: id,
+            quantity: foodItemQuantity + 1,
+            totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
+          })
+        );
+      } else {
+        dispatch(
+          addToCart({
+            id: id,
+            itemName: foodItem,
+            restaurant_id,
+            totalPrice: foodPriceWithoutCurrency(),
+            quantity: foodItemQuantity + 1,
+            itemImage: foodImage,
+          })
+        );
+        const cartItemDataForApi = {
+          item_code: uuidv4(),
+          item_id: id,
           quantity: foodItemQuantity + 1,
-          itemImage: foodImage,
-        })
-      );
-      const cartItemDataForApi = {
-        item_code: uuidv4(),
-        item_id: id,
-        quantity: foodItemQuantity + 1,
-        topping_variant_id: 0,
-        side_variant_id: 0,
-        size_variant_id: 0,
-        size_variant: [],
-        topping_variant: [],
-        side_variant: [],
-      };
+          topping_variant_id: 0,
+          side_variant_id: 0,
+          size_variant_id: 0,
+          size_variant: [],
+          topping_variant: [],
+          side_variant: [],
+        };
 
-      addToCartApiCall(cartItemDataForApi, token)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+        addToCartApiCall(cartItemDataForApi, token)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     }
   };
 
