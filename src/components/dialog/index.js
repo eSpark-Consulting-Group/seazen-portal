@@ -125,7 +125,11 @@ export const DialogComponent = (props) => {
                   className="btn back-button"
                   onClick={() =>
                     navigate(
-                      `${paths.menu}/restaurant/${+location.state.resturantId}`
+                      `${paths.menu}/restaurant/${
+                        location?.state?.resturantId === undefined
+                          ? localStorage.getItem("restaurantID")
+                          : +location.state.resturantId
+                      }`
                     )
                   }
                 >
