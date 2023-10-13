@@ -6,7 +6,6 @@ export const GET_ORDERS_QUERY_KEY = "get_orders_query_key";
 
 const getOrders = async () => {
   try {
-    // Make the GET request to fetch menu item details.
     const { data } = await axiosInstance.get(API_ENDPOINTS.ORDER.GET_ORDERS);
     return data;
   } catch (error) {

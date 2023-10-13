@@ -66,6 +66,7 @@ const MenuCard = (props) => {
   const [menuCardDropdownOpen, setMenuCardDropdownOpen] = useState(false);
   const [extraItemCount_1, setExtraItemCount_1] = useState(0);
   const [extraItemCount_2, setExtraItemCount_2] = useState(0);
+  const [menuItemsVariances, setMenuItemsVariances] = useState([]);
 
   const [imageNotFound, setImageNotFound] = useState(false);
   const [farAway, setFarAway] = useState(false);
@@ -114,6 +115,7 @@ const MenuCard = (props) => {
     }
     return true;
   };
+
   const clearCartItems = () => {
     dispatch(resetCart());
     clearCart(token)
@@ -156,6 +158,50 @@ const MenuCard = (props) => {
       }
     });
   };
+
+  const getMenuItemsVariances = () => {
+    // find all items with the specified id
+    const items = cart.filter((cartItem) => cartItem.id === id);
+
+    let menuItemsVariances = [];
+
+    // for each item, get the sideVariant, sizeVariant and toppingVariant
+    items.forEach((element) => {
+      const { sideVariant, sizeVariant, toppingVariant } = element.variants;
+
+      let menuItemVariant = {
+        id: element.id,
+        item_code: element.item_code,
+        quantity: element.quantity,
+        sideVariants: sideVariant.map((variant) => {
+          return {
+            name_en: variant.name_en,
+            quantity: variant.quantity,
+          };
+        }),
+        sizeVariant: {
+          name_en: sizeVariant.name_en,
+          quantity: sizeVariant.quantity,
+        },
+        toppingVariants: toppingVariant.map((variant) => {
+          return {
+            name_en: variant.name_en,
+            quantity: variant.quantity,
+          };
+        }),
+      };
+
+      menuItemsVariances.push(menuItemVariant);
+    });
+
+    setMenuItemsVariances(menuItemsVariances);
+
+    return menuItemsVariances;
+  };
+
+  useEffect(() => {
+    getMenuItemsVariances();
+  }, [cart]);
 
   function handleClickAdd(id) {
     if (token === null) {
@@ -207,6 +253,32 @@ const MenuCard = (props) => {
           }
         }
       });
+      //   const resLat = +res.latitude;
+      //   const resLng = +res.longitude;
+
+      //   const selected = JSON.parse(localStorage.getItem("selected"));
+
+      //   const distance = getDistanceFromLatLonInKm(
+      //     resLat,
+      //     resLng,
+      //     selected.lat,
+      //     selected.lng
+      //   );
+
+      //   if (distance > 50) {
+      //     if (allData.id === id) {
+      //       setSelectedItemToDeliver(allData);
+      //     }
+      //     setOpenModal(true);
+      //   } else {
+      //     console.log("why oo whty");
+      //     // navigate(paths.details + "/" + id, {
+      //     //   state: {
+      //     //     id: id,
+      //     //   },
+      //     // });
+      //   }
+      // });
     }
   }
 
@@ -315,6 +387,16 @@ const MenuCard = (props) => {
     // return cart[itemIndex].sideVariant;
 
     return [{ name_en: "rice" }, { name_en: "plate peppers" }];
+  };
+
+  const getExtraItemNames = (menuItemsVariant) => {
+    return `${
+      menuItemsVariant.sizeVariant.name_en
+    }, ${menuItemsVariant.sideVariants.map(
+      (sideVariant) => sideVariant.name_en
+    )}, ${menuItemsVariant.toppingVariants.map(
+      (toppingVariant) => toppingVariant.name_en
+    )}`;
   };
 
   return (
@@ -487,14 +569,13 @@ const MenuCard = (props) => {
           }}
         >
           <Stack>
-            {getExtraItemName().map((item, index) => {
-              const { handler, state } = handlersAndStates[index];
+            {menuItemsVariances?.map((variance, index) => {
               return (
                 <ExtraItems
                   key={index}
-                  extraItemName={item?.name_en}
-                  extraItemCount={state}
-                  setExtraItemCount={handler}
+                  item={variance}
+                  extraItemName={getExtraItemNames(variance)}
+                  extraItemCount={variance.quantity}
                 />
               );
             })}

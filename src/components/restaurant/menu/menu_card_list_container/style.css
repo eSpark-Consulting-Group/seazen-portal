@@ -60,6 +60,7 @@
   font-size: 18px;
   font-weight: 700;
   color: #1f2933;
+  /* margin-bottom: 14px !important; */
 }
 
 .card_list_search_container {
@@ -142,7 +143,7 @@
 } */
 .searchwrapper {
   position: relative;
-  top: 45px;
+  top: 35px;
   left: 93%;
 }
 

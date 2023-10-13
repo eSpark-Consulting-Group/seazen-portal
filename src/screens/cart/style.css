@@ -21,6 +21,7 @@
   height: 20px;
   opacity: 1;
   position: absolute;
+  display: none;
 }
 /* 
 @media screen and (max-width: 600px) {
