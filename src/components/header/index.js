@@ -78,6 +78,8 @@ const Navbar = (props) => {
           className="d-flex align-items-center"
           style={{
             columnGap: "10px",
+            marginRight: "-4px",
+
           }}
         >
           <div

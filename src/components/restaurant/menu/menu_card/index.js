@@ -73,7 +73,7 @@ const MenuCard = (props) => {
   const onImageError = () => {
     setImageNotFound(true);
   };
-  const hasVariant = !!allData.variants?.length;
+  const hasVariant = !!allData?.variants?.length;
 
   const cart = useSelector((state) => state.cart.cart);
   const resturantsData = useSelector(

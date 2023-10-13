@@ -63,7 +63,7 @@ export const HomeAdress = ({
         ].join(" ")}
         name="AdditionalDirection"
         id="AdditionalDirection"
-        placeholder="Additional Direction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
+        placeholder="Additional Direction"
         rows="4"
         onChange={(e) => handleChange("additional_direction", e.target.value)}
         value={address.additional_direction}

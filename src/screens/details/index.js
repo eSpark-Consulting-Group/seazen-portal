@@ -28,7 +28,7 @@ import getMenuItemDetails, {
 } from "../../api/menu/getMenuItemDetails";
 import { Divider, alpha } from "@mui/material";
 import IncDec from "../../components/Input/InputWithIncDec";
-import { AddShoppingCartRounded } from "@mui/icons-material";
+import { AddShoppingCartRounded, Label } from "@mui/icons-material";
 import {
   updateCartItem,
   addToCart,
@@ -69,6 +69,7 @@ export const Details = () => {
   const [fromPopBranch, setFromPopBranch] = useState([]);
   const [restaurantDetail, setRestaurantDetail] = useState({});
   const [specialInstructions, setSpecialInstructions] = React.useState("");
+  const [extraToppingCount, setExtraToppingCount] = React.useState(0);
   const { search } = useLocation();
   const restaurant_id = localStorage.getItem("restaurantID");
 
@@ -297,6 +298,9 @@ export const Details = () => {
     } else {
       // Add the variantId to the selected size option
       const sizeWithVariantId = { ...option, option_id: option.id, variantId };
+      if (sizeWithVariantId.name_en.toLowerCase() == "small") {
+        sizeWithVariantId.unit_price = 0;
+      }
       setSizeVariant(sizeWithVariantId);
     }
   };
@@ -319,6 +323,8 @@ export const Details = () => {
       const index = prevToppingVariant.findIndex(
         (item) => item.name_en === option.name_en
       );
+      console.log(prevToppingVariant, "prevToppingVariant");
+      setExtraToppingCount((prev) => prev + 1);
 
       // If the topping with the same name_en exists, update its quantity
       if (index !== -1) {
@@ -344,7 +350,7 @@ export const Details = () => {
       const index = prevToppingVariant.findIndex(
         (item) => item.name_en === option.name_en
       );
-
+      setExtraToppingCount((prev) => prev - 1);
       if (index !== -1) {
         const updatedToppingVariant = [...prevToppingVariant];
         const updatedQuantity =
@@ -539,12 +545,20 @@ export const Details = () => {
                 component="sup"
                 sx={{
                   mr: 0.5,
-                  fontWeight: "400",
+                  fontWeight: "600",
                 }}
               >
                 KWD
               </Typography>
-              {menuItemPriceWithoutCurrency()}
+              <div
+                style={{
+                  fontWeight: "700",
+                  marginTop: "-24px",
+                  marginLeft: "29px",
+                }}
+              >
+                {menuItemPriceWithoutCurrency()}
+              </div>
             </Typography>
           </Box>
           <Stack spacing={1}>
@@ -654,6 +668,7 @@ export const Details = () => {
 
                     {variant?.options?.map((option, index) => {
                       const isLastItem = variant?.options?.length - 1 === index;
+                      console.log(variant.name_en, "variant.name_en");
                       return (
                         <Fragment key={option?.id}>
                           <Stack
@@ -663,20 +678,20 @@ export const Details = () => {
                             alignItems="center"
                             sx={{
                               marginLeft: "-7px !important",
-                              color:
-                                variant.name_en === "Extra Topping" &&
-                                isLastItem
-                                  ? "#e0e0e0"
-                                  : "", // Apply grey background to last item in Extra Topping section
+                              // color:
+                              //   variant.name_en === "Extra Topping" &&
+                              //   isLastItem
+                              //     ? "#e0e0e0"
+                              //     : "", // Apply grey background to last item in Extra Topping section
                             }}
                           >
                             <FormControlLabel
                               checked={
                                 variant.name_en === "Choose the Size"
                                   ? checkIfSizeIsAdded(option?.name_en)
-                                  : variant.name_en === "Extra Topping"
-                                  ? checkIfToppingIsAdded(option?.name_en)
-                                  : variant.name_en === "Extra Sides"
+                                  : // : variant.name_en === "Extra Topping"
+                                  // ? checkIfToppingIsAdded(option?.name_en)
+                                  variant.name_en === "Extra Sides"
                                   ? checkIfSideIsAdded(option?.name_en)
                                   : false
                               }
@@ -689,11 +704,22 @@ export const Details = () => {
                                   ? handleSideVariant(option, variant.id)
                                   : () => {};
                               }}
-                              control={<Checkbox color="themeColor" />}
+                              control={
+                                variant.name_en !== "Extra Topping" ? (
+                                  <Checkbox color="themeColor" />
+                                ) : (
+                                  <span
+                                    style={{ marginLeft: "12px" }}
+                                    color="themeColor"
+                                  />
+                                )
+                              }
                               label={option?.name_en}
                               disabled={
                                 variant.name_en === "Extra Topping" &&
                                 !checkIfToppingIsAdded(option?.name_en)
+                                  ? extraToppingCount == 7
+                                  : false
                               }
                             />
 
@@ -702,11 +728,11 @@ export const Details = () => {
                                 style={{
                                   fontSize: "10px",
                                   paddingTop: "5px",
-
+                                  marginLeft: "1px",
                                   marginRight:
                                     variant.name_en === "Extra Topping" &&
                                     isLastItem
-                                      ? "160px"
+                                      ? "152px"
                                       : "90px",
                                 }}
                               >{`(Each +KWD ${option?.unit_price})`}</p>
@@ -716,8 +742,7 @@ export const Details = () => {
                             !isLastItem ? (
                               <IncDec
                                 IncButtonProps={{
-                                  disabled:
-                                    getExtraToppingQuantity(option) >= 7,
+                                  disabled: extraToppingCount == 7,
                                 }}
                                 DecButtonProps={{
                                   disabled: !checkIfToppingIsAdded(
