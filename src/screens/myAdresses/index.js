@@ -46,7 +46,7 @@ const App = () => {
   const [addressType, setAddressType] = useState("");
   const [addressId, setAddressId] = useState(null);
   const [fullAddress, setFullAddress] = useState(null);
-  const [deleteAdd, setDeleteAdd] = useState(true);
+  const [deleteAdd, setDeleteAdd] = useState(false);
   // const [isLoading, setIsloading] = useState(false);
 
   // useLayoutEffect(() => {
