@@ -55,6 +55,7 @@ const DeliveryDetails = (props) => {
   );
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
   const [openDropdown, setOpendropdown] = useState(false);
+  const [isDeliveryDropDown, setIsDeliveryDropDown] = useState(false);
   const [fullAddress, setFullAddress] = useState(null);
   const [isAsap, setIsAsap] = useState(true);
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
@@ -95,6 +96,7 @@ const DeliveryDetails = (props) => {
   };
   const asapHandler = () => {
     setIsAsap(true);
+    setIsDeliveryDropDown(false);
     const currentTime = new Date();
     currentTime.setMinutes(currentTime.getMinutes() + 30);
     setPickTime(dayjs(currentTime).format("hh:mm a"));
@@ -260,7 +262,11 @@ const DeliveryDetails = (props) => {
             Delivery Time
           </div>
 
-          <Dropdown style={{ width: "163px" }}>
+          <Dropdown
+            onToggle={() => setIsDeliveryDropDown(!isDeliveryDropDown)}
+            show={isDeliveryDropDown}
+            style={{ width: "163px" }}
+          >
             <Dropdown.Toggle
               variant="success"
               id="dropdown-basic"

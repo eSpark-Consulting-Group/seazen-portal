@@ -61,6 +61,7 @@ function CartPage() {
   const [promoCode, setPromoCode] = React.useState("");
   const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
+  const [discountedPrice, setDiscountedPrice] = React.useState(0);
   const DISCOUNT_AMOUNT = Number(1).toFixed(3);
   const DELIVERY_CHARGE = Number(1).toFixed(3);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -178,7 +179,8 @@ function CartPage() {
   }, [cart]);
 
   const checkoutHandler = () => {
-    checkout(checkoutData, token)
+    const data = { ...checkoutData, discount_price: getDiscountAmount() };
+    checkout(data, token)
       .then((res) => {
         const checkoutRedirectUrl = res.data.payment_methods[0].redirect_url;
         window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
