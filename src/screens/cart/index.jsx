@@ -635,7 +635,7 @@ function CartPage() {
             </Box>
           </Dialog>
 
-          <IconButton
+          {/* <IconButton
             edge="end"
             color="inherit"
             onClick={() => setOpenSchedulePopup(false)}
@@ -646,7 +646,7 @@ function CartPage() {
             }}
           >
             <CloseIcon />
-          </IconButton>
+          </IconButton> */}
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <MobileDatePicker

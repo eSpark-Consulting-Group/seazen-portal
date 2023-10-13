@@ -483,12 +483,20 @@ export const Details = () => {
                 component="sup"
                 sx={{
                   mr: 0.5,
-                  fontWeight: "400",
+                  fontWeight: "600",
                 }}
               >
                 KWD
               </Typography>
-              {menuItemPriceWithoutCurrency()}
+              <div
+                style={{
+                  fontWeight: "700",
+                  marginTop: "-24px",
+                  marginLeft: "29px",
+                }}
+              >
+                {menuItemPriceWithoutCurrency()}
+              </div>
             </Typography>
           </Box>
           <Stack spacing={1}>
@@ -658,11 +666,11 @@ export const Details = () => {
                                 style={{
                                   fontSize: "10px",
                                   paddingTop: "5px",
-
+                                  marginLeft: "1px",
                                   marginRight:
                                     variant.name_en === "Extra Topping" &&
                                     isLastItem
-                                      ? "160px"
+                                      ? "152px"
                                       : "90px",
                                 }}
                               >{`(Each +KWD ${option?.unit_price})`}</p>
