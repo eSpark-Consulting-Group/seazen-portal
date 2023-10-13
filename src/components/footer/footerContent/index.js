@@ -9,6 +9,7 @@ export const Footer = (props) => {
   const navigate = useNavigate();
 
   return (
+    <div style={{marginTop:"45px"}}>
     <div className="footer-container">
       <div className="footer-text">
         <p>5% VAT is included in all prices</p>
@@ -31,6 +32,7 @@ export const Footer = (props) => {
           Privacy Policy
         </span>
       </p>
+    </div>
     </div>
   );
 };
