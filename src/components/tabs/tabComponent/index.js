@@ -10,8 +10,10 @@ import { useParams } from "react-router-dom/dist";
 import { lighten } from "@mui/material/styles";
 import { styled } from "@mui/material/styles"; // Import styled from MUI
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export default function IconPositionTabs({
+  tabPosition,
   setTabPosition,
   locationDeliver,
   deliveryAvailable,
@@ -35,6 +37,12 @@ export default function IconPositionTabs({
       })
     );
   };
+
+  useEffect(()=>{
+    if(tabPosition !== null){
+      setTabPositionAndNavigate(tabPosition);
+    }
+  },[])
 
   React.useEffect(() => {
     if (option === "dinein") {

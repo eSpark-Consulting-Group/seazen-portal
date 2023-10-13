@@ -7,7 +7,7 @@ import getAllRestaurants, {
   GET_ALL_RESTAURANTS_QUERY_KEY,
 } from "../../../api/home/getAllRestaurants";
 import { useDispatch, useSelector } from "react-redux";
-import { getResturants } from "../../../store/reducers/resturantsSlice";
+import { getResturants, setSelectedService } from "../../../store/reducers/resturantsSlice";
 import { useEffect } from "react";
 
 const OrderTypeButtonExpandable = ({
@@ -30,14 +30,7 @@ const OrderTypeButtonExpandable = ({
 }) => {
   const [expanded, setToggleExpanded] = useState(false);
   const [filterClassDelivery, setToggleFilterClassDelivery] = useState(false);
-
-  // useEffect(() => {
-  //   if (expanded === false) {
-  //     handleOrderTypeFilter(false, false, filterSelectedNow);
-  //     setToggleFilterClassDelivery(false);
-  //     setToggleFilterClassNear(false);
-  //   }
-  // }, [expanded]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     handleOrderTypeFilter(
@@ -66,7 +59,9 @@ const OrderTypeButtonExpandable = ({
     }
   };
 
-  const handleClick = () => {
+  const handleClick = (selectedService) => {
+    dispatch(setSelectedService(selectedService.toLowerCase()));
+
     if (id !== 1) {
       setToggleExpanded(!expanded);
       setIsButtonExpanded({ expanded: !expanded, id: id });
@@ -95,11 +90,11 @@ const OrderTypeButtonExpandable = ({
         src={iconSrc}
         alt="Icon"
         className="orderTypebutton-icon"
-        onClick={handleClick}
+        onClick={()=>handleClick(text)}
       />
       {((isButtonExpanded.expanded && isButtonExpanded.id === id) ||
         !isButtonExpanded.expanded) && (
-        <span onClick={handleClick} className={`orderTypebutton-text`}>
+        <span onClick={()=>handleClick(text)} className={`orderTypebutton-text`}>
           {text}
         </span>
       )}
