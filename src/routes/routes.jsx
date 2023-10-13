@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 
 // * UTILS
@@ -18,7 +18,6 @@ import getAllAddress from "../api/address/getAddress";
 
 const RouteProvider = () => {
   const dispatch = useDispatch();
-  const addressData = useSelector((state) => state.address.addressData);
   const isToken = localStorage.getItem("token");
 
   const _publicRoutes = Object.values(publicRoutes);
@@ -26,19 +25,21 @@ const RouteProvider = () => {
   const _privateRoutes = Object.values(privateRoutes);
 
   const fetchFunction = async () => {
-    dispatch(isLoaded());
-    getAllAddress(isToken).then((res) => {
-      if (res.success === "ok") {
-        dispatch(getAddress(res.data));
-      }
-    });
+    if (isToken !== null) {
+      dispatch(isLoaded());
+      getAllAddress(isToken).then((res) => {
+        if (res.success === "ok") {
+          dispatch(getAddress(res.data));
+        }
+      });
+    }
   };
 
   useEffect(() => {
     if (location.pathname !== "/my-addresses" || location.pathname === "/") {
       fetchFunction();
     }
-  }, [location]);
+  }, [location, isToken]);
 
   // useEffect(() => {
   //   navigator.permissions &&

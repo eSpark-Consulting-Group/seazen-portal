@@ -4,7 +4,7 @@ import { handleApiError } from "../utils/errorHandling";
 
 const getAllAddress = async (token) => {
   try {
-    if (!token) {
+    if (token === null) {
       const err = "Token is missing or invalid";
       handleApiError(err);
       // throw new Error("Token is missing or invalid.");
@@ -18,6 +18,8 @@ const getAllAddress = async (token) => {
     });
     return data;
   } catch (error) {
+    console.log(error.response);
+    console.log(error);
     // Use the handleApiError function for error handling
     handleApiError(error);
   }

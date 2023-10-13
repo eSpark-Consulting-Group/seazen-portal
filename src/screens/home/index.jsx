@@ -63,8 +63,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchFunction();
-  }, [location]);
+    if (isToken !== null) {
+      fetchFunction();
+    }
+  }, [location, isToken]);
 
   // const defaultUser = {
   //   email: "ikram2001@gmail.com",
