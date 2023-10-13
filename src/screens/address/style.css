@@ -198,6 +198,20 @@
   color: #959fa8;
 }
 
+.error {
+  color: #e02020 !important;
+  border: 1px solid #e02020 !important;
+}
+
+.error:focus {
+  border: 1px solid #e02020 !important;
+  color: #e02020 !important;
+}
+
+.error::placeholder {
+  color: #e02020 !important;
+}
+
 .phone-number-input::placeholder {
   text-align: left;
   font: normal normal bold 14px/28px Montserrat;

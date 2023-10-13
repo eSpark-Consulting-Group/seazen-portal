@@ -66,6 +66,7 @@ const MenuCard = (props) => {
   const [menuCardDropdownOpen, setMenuCardDropdownOpen] = useState(false);
   const [extraItemCount_1, setExtraItemCount_1] = useState(0);
   const [extraItemCount_2, setExtraItemCount_2] = useState(0);
+  const [menuItemsVariances, setMenuItemsVariances] = useState([]);
 
   const [imageNotFound, setImageNotFound] = useState(false);
 
@@ -75,6 +76,9 @@ const MenuCard = (props) => {
   const hasVariant = !!allData?.variants?.length;
 
   const cart = useSelector((state) => state.cart.cart);
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
 
   useEffect(() => {
     const quantity = getItemQuantity();
@@ -110,6 +114,7 @@ const MenuCard = (props) => {
     }
     return true;
   };
+
   const clearCartItems = () => {
     dispatch(resetCart());
     clearCart(token)
@@ -121,60 +126,89 @@ const MenuCard = (props) => {
       });
   };
 
+  const getMenuItemsVariances = () => {
+    // find all items with the specified id
+    const items = cart.filter((cartItem) => cartItem.id === id);
+
+    let menuItemsVariances = [];
+
+    // for each item, get the sideVariant, sizeVariant and toppingVariant
+    items.forEach((element) => {
+      const { sideVariant, sizeVariant, toppingVariant } = element.variants;
+
+      let menuItemVariant = {
+        id: element.id,
+        item_code: element.item_code,
+        quantity: element.quantity,
+        sideVariants: sideVariant.map((variant) => {
+          return {
+            name_en: variant.name_en,
+            quantity: variant.quantity,
+          };
+        }),
+        sizeVariant: {
+          name_en: sizeVariant.name_en,
+          quantity: sizeVariant.quantity,
+        },
+        toppingVariants: toppingVariant.map((variant) => {
+          return {
+            name_en: variant.name_en,
+            quantity: variant.quantity,
+          };
+        }),
+      };
+
+      menuItemsVariances.push(menuItemVariant);
+    });
+
+    setMenuItemsVariances(menuItemsVariances);
+
+    return menuItemsVariances;
+  };
+
+  useEffect(() => {
+    getMenuItemsVariances();
+  }, [cart]);
+
   function handleClickAdd(id) {
     if (token === null) {
-      if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
-        clearCartItems();
-      }
-      if (hasVariant || !hasVariant) {
-        navigate(paths.details + "/" + id, {
-          state: {
-            id: id,
-          },
-        });
-        return;
-      }
-      setFoodItemQuantity(foodItemQuantity + 1);
-      if (checkIfItemIsInCart()) {
-        dispatch(
-          updateCartMenuItemQuantity({
-            id: id,
-            quantity: foodItemQuantity + 1,
-            totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
-          })
-        );
-      } else {
-        dispatch(
-          addToCart({
-            id: id,
-            itemName: foodItem,
-            restaurant_id,
-            totalPrice: foodPriceWithoutCurrency(),
-            quantity: foodItemQuantity + 1,
-            itemImage: foodImage,
-          })
-        );
-        const cartItemDataForApi = {
-          item_code: uuidv4(),
-          item_id: id,
-          quantity: foodItemQuantity + 1,
-          topping_variant_id: 0,
-          side_variant_id: 0,
-          size_variant_id: 0,
-          size_variant: [],
-          topping_variant: [],
-          side_variant: [],
-        };
-
-        addToCartApiCall(cartItemDataForApi, token)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+      cartFunction(id);
     } else {
+      if (restaurantBranchHours?.data.length) {
+        restaurantBranchHours?.data?.forEach((res) => {
+          const resLat = +res.latitude;
+          const resLng = +res.longitude;
+
+          const selected = JSON.parse(localStorage.getItem("selected"));
+
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            selected.lat,
+            selected.lng
+          );
+
+          if (distance > 50) {
+            if (allData.id === id) {
+              setSelectedItemToDeliver(allData);
+            }
+            setOpenModal(true);
+          } else {
+            cartFunction(id);
+          }
+        });
+      }
+    }
+  }
+
+  function autoRedirect(id) {
+    if (token === null) {
+      navigate(paths.details + "/" + id, {
+        state: {
+          id: id,
+        },
+      });
+    } else if (restaurantBranchHours?.data?.length) {
       restaurantBranchHours?.data?.forEach((res) => {
         const resLat = +res.latitude;
         const resLng = +res.longitude;
@@ -194,61 +228,95 @@ const MenuCard = (props) => {
           }
           setOpenModal(true);
         } else {
-          if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
-            clearCartItems();
-          }
-          if (hasVariant) {
-            navigate(paths.details + "/" + id, {
-              state: {
-                id: id,
-              },
-            });
-            return;
-          }
-          setFoodItemQuantity(foodItemQuantity + 1);
-          if (checkIfItemIsInCart()) {
-            dispatch(
-              updateCartMenuItemQuantity({
-                id: id,
-                quantity: foodItemQuantity + 1,
-                totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
-              })
-            );
-          } else {
-            dispatch(
-              addToCart({
-                id: id,
-                itemName: foodItem,
-                restaurant_id,
-                totalPrice: foodPriceWithoutCurrency(),
-                quantity: foodItemQuantity + 1,
-                itemImage: foodImage,
-              })
-            );
-            const cartItemDataForApi = {
-              item_code: uuidv4(),
-              item_id: id,
-              quantity: foodItemQuantity + 1,
-              topping_variant_id: 0,
-              side_variant_id: 0,
-              size_variant_id: 0,
-              size_variant: [],
-              topping_variant: [],
-              side_variant: [],
-            };
-
-            addToCartApiCall(cartItemDataForApi, token)
-              .then((res) => {
-                console.log(res);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          }
+          navigate(paths.details + "/" + id, {
+            state: {
+              id: id,
+            },
+          });
         }
       });
+      //   const resLat = +res.latitude;
+      //   const resLng = +res.longitude;
+
+      //   const selected = JSON.parse(localStorage.getItem("selected"));
+
+      //   const distance = getDistanceFromLatLonInKm(
+      //     resLat,
+      //     resLng,
+      //     selected.lat,
+      //     selected.lng
+      //   );
+
+      //   if (distance > 50) {
+      //     if (allData.id === id) {
+      //       setSelectedItemToDeliver(allData);
+      //     }
+      //     setOpenModal(true);
+      //   } else {
+      //     console.log("why oo whty");
+      //     // navigate(paths.details + "/" + id, {
+      //     //   state: {
+      //     //     id: id,
+      //     //   },
+      //     // });
+      //   }
+      // });
     }
   }
+
+  const cartFunction = (id) => {
+    if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
+      clearCartItems();
+    }
+    if (hasVariant || !hasVariant) {
+      navigate(paths.details + "/" + id, {
+        state: {
+          id: id,
+        },
+      });
+      return;
+    }
+    setFoodItemQuantity(foodItemQuantity + 1);
+    if (checkIfItemIsInCart()) {
+      dispatch(
+        updateCartMenuItemQuantity({
+          id: id,
+          quantity: foodItemQuantity + 1,
+          totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
+        })
+      );
+    } else {
+      dispatch(
+        addToCart({
+          id: id,
+          itemName: foodItem,
+          restaurant_id,
+          totalPrice: foodPriceWithoutCurrency(),
+          quantity: foodItemQuantity + 1,
+          itemImage: foodImage,
+        })
+      );
+      const cartItemDataForApi = {
+        item_code: uuidv4(),
+        item_id: id,
+        quantity: foodItemQuantity + 1,
+        topping_variant_id: 0,
+        side_variant_id: 0,
+        size_variant_id: 0,
+        size_variant: [],
+        topping_variant: [],
+        side_variant: [],
+      };
+
+      addToCartApiCall(cartItemDataForApi, token)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
   function handleClickSubtract() {
     setFoodItemQuantity(foodItemQuantity - 1);
@@ -291,6 +359,16 @@ const MenuCard = (props) => {
     // return cart[itemIndex].sideVariant;
 
     return [{ name_en: "rice" }, { name_en: "plate peppers" }];
+  };
+
+  const getExtraItemNames = (menuItemsVariant) => {
+    return `${
+      menuItemsVariant.sizeVariant.name_en
+    }, ${menuItemsVariant.sideVariants.map(
+      (sideVariant) => sideVariant.name_en
+    )}, ${menuItemsVariant.toppingVariants.map(
+      (toppingVariant) => toppingVariant.name_en
+    )}`;
   };
 
   return (
@@ -436,13 +514,7 @@ const MenuCard = (props) => {
               </>
             ) : (
               <AddToCartButton
-                onClick={() => {
-                  navigate(paths.details + "/" + id, {
-                    state: {
-                      id: id,
-                    },
-                  });
-                }}
+                onClick={() => autoRedirect(id)}
                 className="menu_card_add_to_cart_button pointer"
               >
                 <img
@@ -467,14 +539,13 @@ const MenuCard = (props) => {
           }}
         >
           <Stack>
-            {getExtraItemName().map((item, index) => {
-              const { handler, state } = handlersAndStates[index];
+            {menuItemsVariances?.map((variance, index) => {
               return (
                 <ExtraItems
                   key={index}
-                  extraItemName={item?.name_en}
-                  extraItemCount={state}
-                  setExtraItemCount={handler}
+                  item={variance}
+                  extraItemName={getExtraItemNames(variance)}
+                  extraItemCount={variance.quantity}
                 />
               );
             })}

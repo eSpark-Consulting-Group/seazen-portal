@@ -95,7 +95,125 @@ function LocationPage() {
   const [address, setAddress] = useState("");
   const [autocomplete, setAutocomplete] = useState(null);
   const [distanceIsFar, setDistanceIsFar] = useState(false);
+  const [noRegion, setNoRegion] = useState(false);
   const mapRef = useRef();
+
+  useEffect(() => {
+    navigator.permissions &&
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then(function (PermissionStatus) {
+          // If user has granted permission
+          if (PermissionStatus.state == "granted") {
+            if (
+              location?.state?.editLocation === undefined &&
+              location?.state?.latlng === undefined
+            ) {
+              if (localStorage.getItem("selected") !== null) {
+                // If User selected any location
+                const selected = JSON.parse(localStorage.getItem("selected"));
+
+                getAdd(selected.lat, selected.lng);
+                // If User didn't selected any location
+              } else if (localStorage.getItem("location") !== null) {
+                const currentLocation = JSON.parse(
+                  localStorage.getItem("location")
+                );
+
+                getAdd(currentLocation.lat, currentLocation.lng);
+              }
+            }
+            //
+            // If user permission is off
+          } else if (PermissionStatus.state == "prompt") {
+            if (
+              token === null &&
+              localStorage.getItem("selected") === null &&
+              localStorage.getItem("location") === null
+            ) {
+              getAdd(29.3140728, 47.68022);
+              // If User selected any location
+            } else if (localStorage.getItem("selected") !== null) {
+              const selected = JSON.parse(localStorage.getItem("selected"));
+
+              getAdd(selected.lat, selected.lng);
+              // If User didn't selected any location
+            } else if (localStorage.getItem("location") !== null) {
+              const currentLocation = JSON.parse(
+                localStorage.getItem("location")
+              );
+
+              getAdd(currentLocation.lat, currentLocation.lng);
+            } else if (
+              token !== null &&
+              localStorage.getItem("selected") === null &&
+              localStorage.getItem("location") === null
+            ) {
+              getAdd(29.3140728, 47.68022);
+            }
+            //
+            // If user has denied permission
+          } else {
+            if (
+              token === null &&
+              localStorage.getItem("selected") === null &&
+              localStorage.getItem("location") === null
+            ) {
+              getAdd(29.3140728, 47.68022);
+              // If User selected any location
+            } else if (localStorage.getItem("selected") !== null) {
+              const selected = JSON.parse(localStorage.getItem("selected"));
+
+              getAdd(selected.lat, selected.lng);
+              // If User didn't selected any location
+            } else if (localStorage.getItem("location") !== null) {
+              const currentLocation = JSON.parse(
+                localStorage.getItem("location")
+              );
+
+              getAdd(currentLocation.lat, currentLocation.lng);
+            } else if (
+              token !== null &&
+              localStorage.getItem("selected") === null &&
+              localStorage.getItem("location") === null
+            ) {
+              getAdd(29.3140728, 47.68022);
+            }
+          }
+        });
+  }, []);
+
+  const { data } = useQuery({
+    queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY],
+    queryFn: () => getRestaurantBranchHours(location?.state?.restaurant_id),
+    onSuccess: (data) => {},
+  });
+
+  useLayoutEffect(() => {
+    if (location?.state?.restaurant_id !== undefined && selectedAdd !== null) {
+      if (data) {
+        if (data?.status === "ok") {
+          data.data?.forEach((res) => {
+            const resLat = +res.latitude;
+            const resLng = +res.longitude;
+
+            const distance = getDistanceFromLatLonInKm(
+              resLat,
+              resLng,
+              center.lat,
+              center.lng
+            );
+
+            if (distance > 50) {
+              setDistanceIsFar(true);
+            } else {
+              setDistanceIsFar(false);
+            }
+          });
+        }
+      }
+    }
+  }, [data, center, location]);
 
   useEffect(() => {
     if (
@@ -104,9 +222,7 @@ function LocationPage() {
     ) {
       const lat = location?.state?.latlng.lat;
       const lng = location?.state?.latlng.lng;
-      setCenter({ lat, lng });
 
-      setAddress(location?.state?.name);
       getAdd(lat, lng);
     }
   }, [location?.state]);
@@ -116,136 +232,46 @@ function LocationPage() {
       location?.state?.latlng !== undefined &&
       location?.state?.editLocation === undefined
     ) {
-      setCenter({
-        lat: location?.state?.latlng?.lat,
-        lng: location?.state?.latlng?.lng,
-      });
-
-      getAdd(location?.state?.latlng?.lat, location?.state?.latlng?.lng);
+      getAdd(+location?.state?.latlng?.lat, +location?.state?.latlng?.lng);
     }
   }, [location?.state]);
 
-  useEffect(() => {
-    navigator.permissions &&
-      navigator.permissions
-        .query({ name: "geolocation" })
-        .then(function (PermissionStatus) {
-          if (PermissionStatus.state == "granted") {
-            if (localStorage.getItem("selected") !== null) {
-              getAdd(selectedAdd.lat, selectedAdd.lng);
-            } else if (localStorage.getItem("location") !== null) {
-              const alreadyAvaliable = JSON.parse(
-                localStorage.getItem("location")
-              );
-              getAdd(alreadyAvaliable.lat, alreadyAvaliable.lng);
-            }
-          } else if (PermissionStatus.state == "prompt") {
-            if (localStorage.getItem("selected") !== null) {
-              getAdd(selectedAdd.lat, selectedAdd.lng);
-            } else if (localStorage.getItem("location") !== null) {
-              const alreadyAvaliable = JSON.parse(
-                localStorage.getItem("location")
-              );
-              getAdd(alreadyAvaliable.lat, alreadyAvaliable.lng);
-            } else {
-              setCenter({ lat: 29.3140728, lng: 47.68022 });
-              getAdd(29.3140728, 47.68022);
-            }
-          } else {
-            if (localStorage.getItem("selected") !== null) {
-              getAdd(selectedAdd.lat, selectedAdd.lng);
-            } else if (localStorage.getItem("location") !== null) {
-              const alreadyAvaliable = JSON.parse(
-                localStorage.getItem("location")
-              );
-              getAdd(alreadyAvaliable.lat, alreadyAvaliable.lng);
-            } else {
-              setCenter({ lat: 29.3140728, lng: 47.68022 });
-              getAdd(29.3140728, 47.68022);
-            }
-          }
-        });
-  }, []);
+  // useEffect(() => {
+  // if (
+  //   location?.state?.latlng === undefined &&
+  //   selectedAdd === null &&
+  //   token !== null
+  // ) {
+  //   navigator.geolocation.getCurrentPosition(
+  //     async (position) => {
+  //       setCenter({
+  //         lat: position.coords.latitude,
+  //         lng: position.coords.longitude,
+  //       });
+  //       getAdd(position.coords.latitude, position.coords.longitude);
+  //     },
+  //     () => {}
+  //   );
+  // }
+  // }, []);
 
-  useEffect(() => {
-    if (
-      location?.state?.latlng === undefined &&
-      selectedAdd === null &&
-      token !== null
-    ) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          setCenter({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-          getAdd(position.coords.latitude, position.coords.longitude);
-        },
-        () => {}
-      );
-    }
-  }, []);
-
-  useEffect(() => {
-    if (location?.state?.latlng === undefined && selectedAdd !== null) {
-      setCenter({ lat: selectedAdd.lat, lng: selectedAdd.lng });
-      getAdd(selectedAdd?.lat, selectedAdd?.lng);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (
-      (center.lat === 0 &&
-        center.lng === 0 &&
-        localStorage.getItem("location") === null &&
-        selectedAdd === null) ||
-      token === null
-    ) {
-      setCenter({ lat: 29.3140728, lng: 47.68022 });
-      getAdd(29.3140728, 47.68022);
-    }
-  }, []);
-
-  const { data } = useQuery({
-    queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY],
-    queryFn: () => getRestaurantBranchHours(location.state.restaurant_id),
-    onSuccess: (data) => {},
-  });
-
-  useLayoutEffect(() => {
-    if (data) {
-      if (data?.status === "ok") {
-        data.data?.forEach((res) => {
-          const resLat = +res.latitude;
-          const resLng = +res.longitude;
-
-          const distance = getDistanceFromLatLonInKm(
-            resLat,
-            resLng,
-            center.lat,
-            center.lng
-          );
-
-          if (distance > 50) {
-            setDistanceIsFar(true);
-          } else {
-            setDistanceIsFar(false);
-          }
-        });
-      }
-    }
-  }, [data, center]);
+  // useEffect(() => {
+  // if (location?.state?.latlng === undefined && selectedAdd !== null) {
+  //   setCenter({ lat: selectedAdd.lat, lng: selectedAdd.lng });
+  //   getAdd(selectedAdd?.lat, selectedAdd?.lng);
+  // }
+  // }, []);
 
   const getAdd = async (latitude, longitude) => {
     // eslint-disable-next-line no-undef
     setKey(process.env.REACT_APP_GOOGLE_API_KEY);
     geocode(RequestType.LATLNG, `${latitude},${longitude}`, {
       enable_address_descriptor: true,
+      // location_type: "ROOFTOP",
     })
       .then(({ results }) => {
         const address = results[0].formatted_address;
-        // const lat = results[0].geometry.location.lat;
-        // const lng = results[0].geometry.location.lng;
+
         setAddress(address);
         setCenter({ lat: latitude, lng: longitude });
       })
@@ -263,6 +289,26 @@ function LocationPage() {
       const lat = autocomplete.getPlace().geometry.location.lat();
       const lng = autocomplete.getPlace().geometry.location.lng();
 
+      const restrictToRegion = autocomplete
+        .getPlace()
+        .formatted_address.split(",");
+      const lastElem = restrictToRegion[restrictToRegion.length - 1];
+      const findCountry = lastElem?.split(" ");
+      const forCondition = findCountry[findCountry.length - 1];
+
+      if (
+        forCondition === "Kuwait" ||
+        forCondition === "Bahrain" ||
+        forCondition === "Emirates" ||
+        forCondition === "Oman" ||
+        forCondition === "Qatar" ||
+        forCondition === "Arabia"
+      ) {
+        setNoRegion(false);
+      } else {
+        setNoRegion(true);
+      }
+
       setCenter({ lat, lng });
       setAddress(autocomplete.getPlace().formatted_address);
     }
@@ -277,7 +323,6 @@ function LocationPage() {
     if (mapRef.current.center) {
       const lat = await mapRef?.current?.center?.lat();
       const lng = await mapRef?.current?.center?.lng();
-
       if (lat && lng) {
         getAdd(lat, lng);
       }
@@ -317,7 +362,7 @@ function LocationPage() {
       }
     } else {
       navigate(paths.address, {
-        state: { name: address, latlng: center },
+        state: { name: address, latlng: center, path: location?.state?.path },
       });
     }
   };
@@ -420,7 +465,9 @@ function LocationPage() {
           <div className="marker">
             <img
               src={
-                distanceIsFar && token !== null ? LocationRed : LocationGreen
+                (distanceIsFar && token !== null) || (distanceIsFar && noRegion)
+                  ? LocationRed
+                  : LocationGreen
               }
             />
           </div>
@@ -437,13 +484,21 @@ function LocationPage() {
             animation={"Drop"}
           /> */}
 
-          {distanceIsFar && token !== null ? (
+          {distanceIsFar && !noRegion && token !== null ? (
             <Box className="info-window-box">
               <Typography variant="h5">
                 {location?.state?.restaurantName} dosen&apos;t deliver here
               </Typography>
               <Typography variant="h5">
                 Please choose another location
+              </Typography>
+            </Box>
+          ) : null}
+
+          {distanceIsFar && noRegion ? (
+            <Box className="info-window-box">
+              <Typography variant="h5">
+                No services in your country right now
               </Typography>
             </Box>
           ) : null}
@@ -473,7 +528,9 @@ function LocationPage() {
           variant="contained"
           className="confirm-button"
           onClick={() => confirmLocation()}
-          disabled={token === null ? false : address === "" || distanceIsFar}
+          disabled={
+            token === null ? false : address === "" || distanceIsFar || noRegion
+          }
         >
           Confirm Your Location
         </Button>

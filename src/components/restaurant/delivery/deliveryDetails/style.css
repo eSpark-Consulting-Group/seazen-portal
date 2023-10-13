@@ -20,6 +20,10 @@
   flex-direction: column;
 }
 
+.left_dropdown_container .dropdown-menu.show {
+  transform: translate3d(33px, 29px, 0px) !important;
+}
+
 .left_dropdown_container_heading_container,
 .right_dropdown_container_heading_container {
   font-size: 10px;
@@ -61,6 +65,6 @@
   transform: translate3d(33px, 49px, 0px) !important;
 }
 
-.dropdown-menu.show::-webkit-scrollbar{
+.dropdown-menu.show::-webkit-scrollbar {
   display: none;
 }

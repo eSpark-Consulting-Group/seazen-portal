@@ -26,7 +26,6 @@
 .error {
   color: #e02020 !important;
   border: 1px solid #e02020 !important;
-
 }
 
 .error:focus {
@@ -37,8 +36,6 @@
 .error::placeholder {
   color: #e02020 !important;
 }
-
-
 
 .form-style-text-area {
   height: auto !important;

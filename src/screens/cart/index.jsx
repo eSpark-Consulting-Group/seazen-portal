@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -73,17 +73,33 @@ function CartPage() {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [notDeliver, setNotDeliver] = useState(false);
+  const [updateText, setUpdateText] = useState("");
+  const [farLocation, setFarLocation] = useState(true);
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (location?.state?.back === "back-to-cart") {
-      getBranchHours();
+      setUpdateText("new");
+    } else {
+      setUpdateText("");
     }
   }, [location]);
+
+  useLayoutEffect(() => {
+    if (location?.state?.back === "back-to-cart") {
+      setTimeout(() => {
+        navigate(location.pathname, { replace: true });
+      }, 5000);
+    }
+  }, [location]);
+
+  useLayoutEffect(() => {
+    getBranchHours();
+  }, []);
 
   const getBranchHours = () => {
     const restaurantId = localStorage.getItem("restaurantID");
@@ -107,6 +123,7 @@ function CartPage() {
           setNotDeliver(true);
         } else {
           setNotDeliver(false);
+          setFarLocation(false);
         }
       });
     });
@@ -168,6 +185,30 @@ function CartPage() {
       return getBranchesAndHours(cart[0]?.restaurant_id);
     },
   });
+
+  // useEffect(() => {
+  //   if (branchesAndHoursResponse?.data?.length) {
+  //     branchesAndHoursResponse?.data?.forEach((res) => {
+  //       const selected = JSON.parse(localStorage?.getItem("selected"));
+
+  //       const resLat = +res.latitude;
+  //       const resLng = +res.longitude;
+
+  //       const distance = getDistanceFromLatLonInKm(
+  //         resLat,
+  //         resLng,
+  //         selected.lat,
+  //         selected.lng
+  //       );
+
+  //       // if (distance > 50) {
+  //       //   setFarRestaurant(true);
+  //       // } else {
+  //       //   setFarRestaurant(false);
+  //       // }
+  //     });
+  //   }
+  // }, []);
 
   const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
     (val) => {
@@ -479,7 +520,7 @@ function CartPage() {
                     restaurant_id: cartItems[0].restaurant_id,
                     restaurantName,
                     path: location.pathname,
-                    latlng: JSON.parse(localStorage.getItem("selected")),
+                    // latlng: JSON.parse(localStorage.getItem("selected")),
                   },
                 })
               }
@@ -974,6 +1015,7 @@ function CartPage() {
           </Stack>
 
           <Button
+            disabled={farLocation}
             onClick={() => checkoutHandler()}
             variant="contained"
             size="large"
@@ -1042,6 +1084,7 @@ function CartPage() {
         location={location}
         hasItems={true}
         cartItems={cartItems?.length ? cartItems : []}
+        updateText={updateText}
       />
     </Stack>
   );

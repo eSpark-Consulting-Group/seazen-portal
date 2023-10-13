@@ -16,7 +16,7 @@ export const AddressesButton = ({ restaurantName, restaurant_id, path }) => {
         },
       });
     } else {
-      navigate(paths.location, { state: path });
+      navigate(paths.location, { state: { path: path } });
     }
   };
 

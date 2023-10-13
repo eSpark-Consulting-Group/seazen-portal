@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -39,6 +39,8 @@ import { paths } from "../../routes/paths";
 import updateCartApiCall from "../../api/cart/updateCart";
 import clearCart from "../../api/cart/clearCart";
 import { DialogComponent } from "../../components/dialog";
+import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
+import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 
 export const Details = () => {
   const { id } = useParams();
@@ -48,6 +50,10 @@ export const Details = () => {
   const location = useLocation();
 
   const cart = useSelector((state) => state.cart.cart);
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
+
   const token = localStorage.getItem("token");
 
   const [cartItem, setCartItem] = React.useState();
@@ -57,11 +63,79 @@ export const Details = () => {
   const [sideVariant, setSideVariant] = React.useState([]);
   const [totalPrice, setTotalPrice] = React.useState();
   const [notDeliver, setNotDeliver] = React.useState(false);
+  const [farRestaurant, setFarRestaurant] = React.useState(false);
+  const [restaurantName, setRestaurantName] = useState("");
   const [currentRest, setCurrentRest] = React.useState({});
+  const [fromPopBranch, setFromPopBranch] = useState([]);
+  const [restaurantDetail, setRestaurantDetail] = useState({});
   const [specialInstructions, setSpecialInstructions] = React.useState("");
   const [extraToppingCount, setExtraToppingCount] = React.useState(0);
   const { search } = useLocation();
   const restaurant_id = localStorage.getItem("restaurantID");
+
+  useLayoutEffect(() => {
+    if (
+      location?.state?.branchRestaurants?.data?.length &&
+      location?.state?.resturantId
+    ) {
+      const restBranch = location?.state?.branchRestaurants?.data?.find(
+        (res) => res?.restaurant_id === +location?.state?.resturantId
+      );
+
+      setCurrentRest(restBranch);
+    }
+  }, [location?.state]);
+
+  useEffect(() => {
+    if (resturantsData.length) {
+      const restDetail = resturantsData.find(
+        (res) => res.id === +location?.state?.restaurant_id
+      );
+
+      setRestaurantDetail(restDetail);
+    }
+  }, [resturantsData]);
+
+  useLayoutEffect(() => {
+    fetchBranchHours();
+  }, []);
+
+  const fetchBranchHours = () => {
+    const restaurantId =
+      location?.state?.restaurant_id === null
+        ? localStorage.getItem("restaurantID")
+        : location?.state?.restaurant_id;
+
+    getRestaurantBranchHours(restaurantId).then((res) => {
+      if (res.status === "ok") {
+        calculateDistance(res?.data);
+        setFromPopBranch(res.data);
+      }
+    });
+  };
+
+  const calculateDistance = (array) => {
+    const selected = JSON.parse(localStorage?.getItem("selected"));
+
+    array?.forEach((res) => {
+      const resLat = +res.latitude;
+      const resLng = +res.longitude;
+
+      const distance = getDistanceFromLatLonInKm(
+        resLat,
+        resLng,
+        selected.lat,
+        selected.lng
+      );
+
+      if (distance > 50) {
+        setFarRestaurant(true);
+      } else {
+        setFarRestaurant(false);
+      }
+    });
+  };
+
   const {
     data: menuItemDetails,
     isLoading,
@@ -75,18 +149,6 @@ export const Details = () => {
     },
   });
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
-  useEffect(() => {
-    if (
-      location?.state?.branchRestaurants?.data?.length &&
-      location?.state?.resturantId
-    ) {
-      const restBranch = location?.state?.branchRestaurants?.data?.find(
-        (res) => res?.restaurant_id === +location?.state?.resturantId
-      );
-
-      setCurrentRest(restBranch);
-    }
-  }, [location?.state]);
 
   const calculateToppingVariantTotal = (toppingVariantData) => {
     const eachToppingTotal = toppingVariantData
@@ -807,17 +869,19 @@ export const Details = () => {
               variant="contained"
               fullWidth
               disabled={
-                token === null
+                token === null ||
+                location?.state?.locationDeliver ||
+                farRestaurant
                   ? false
-                  : !location?.state?.locationDeliver &&
-                    menuItemDetails?.data.has_variants &&
-                    !sizeVariant
+                  : menuItemDetails?.data.has_variants && !sizeVariant
               }
               sx={{
                 py: 2,
                 display: "flex",
                 justifyContent:
-                  location?.state?.locationDeliver || token === null
+                  location?.state?.locationDeliver ||
+                  token === null ||
+                  farRestaurant
                     ? "center"
                     : "space-between",
                 alignItems: "center",
@@ -827,14 +891,14 @@ export const Details = () => {
                 },
               }}
               onClick={
-                location?.state?.locationDeliver
+                location?.state?.locationDeliver || farRestaurant
                   ? openNotDelivered
                   : token === null
                   ? moveToLocation
                   : handleAddToCart
               }
             >
-              {location?.state?.locationDeliver ? (
+              {location?.state?.locationDeliver || farRestaurant ? (
                 <Typography
                   variant="h6"
                   component="span"

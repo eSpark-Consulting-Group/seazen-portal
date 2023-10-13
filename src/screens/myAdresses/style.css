@@ -62,7 +62,11 @@
   color: #1f2933 !important;
 }
 
-.delete-button .loader {
+.loader-button .loader {
   width: 20px !important;
   height: 20px !important;
+}
+
+.loader-button {
+  background-color: transparent !important;
 }

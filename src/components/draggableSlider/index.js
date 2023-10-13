@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import getAllPopularItems, {
   GET_ALL_POPULAR_ITEMS_QUERY_KEY,
@@ -14,7 +14,9 @@ export default function App(props) {
     setOpenAddressPopup,
     setFromPopular,
     setPopularId,
+    setRestaurantId,
   } = props;
+
   const imageInfo = [
     {
       imageUrl: "/assets/img/7.png",
@@ -82,6 +84,8 @@ export default function App(props) {
               selectedLocation={selectedLocation}
               setFromPopular={setFromPopular}
               setPopularId={setPopularId}
+              restaurant_id={info.restaurant_id}
+              setRestaurantId={setRestaurantId}
             />
           );
         })}
@@ -163,6 +167,8 @@ function Box({
   selectedLocation,
   setFromPopular,
   setPopularId,
+  restaurant_id,
+  setRestaurantId,
 }) {
   const captionLines = caption.split("\n");
   const captionImageClass = isFirstCard
@@ -174,18 +180,35 @@ function Box({
   const navigate = useNavigate();
   const isToken = localStorage.getItem("token");
 
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
+
+  useEffect(() => {
+    if (resturantsData?.length) {
+      const restName = resturantsData?.find((res) => res.id === restaurant_id);
+      localStorage.setItem("restaurantName", restName.name_en);
+    }
+  }, [resturantsData]);
+
   return (
     <div
       className="box"
       onClick={() => {
+        localStorage.setItem("restaurantIdForRedirect", restaurant_id);
+        localStorage.setItem("menuDetailId", id);
+
         if (selectedLocation && isToken !== null) {
           setPopularId(id);
           setOpenAddressPopup(true);
           setFromPopular(true);
+          setRestaurantId(restaurant_id);
         } else {
           navigate(paths.details + "/" + id, {
             state: {
               id: id,
+              loc: "popular",
+              restaurant_id: restaurant_id,
             },
           });
         }
