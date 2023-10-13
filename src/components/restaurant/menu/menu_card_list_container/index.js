@@ -13,6 +13,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Modal } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "react-bootstrap";
+import { setCategoryElementID } from "../../../../store/reducers/resturantsSlice.js";
 
 const MenuCardListContainer = ({
   itemDetail,
@@ -62,6 +63,33 @@ const MenuCardListContainer = ({
     setOpen(false);
     setIsSearchOpen(!isSearchOpen);
   };
+
+  useEffect(() => {
+    const options = {
+      root: null, // Use the viewport as the root
+      rootMargin: "0px",
+      threshold: 0.5, // Trigger when 50% of the element is visible
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const elementId = entry.target.id;
+          dispatch(setCategoryElementID(elementId));
+          // You can perform any action here with the element ID
+        }
+      });
+    }, options);
+
+    // You can select the elements you want to observe by their class or other attributes.
+    const elements = document.querySelectorAll(".card_list_title");
+    elements.forEach((element) => {
+      observer.observe(element);
+    });
+
+    // Cleanup the observer when the component unmounts
+    return () => observer.disconnect();
+  }, [categoryList]);
 
   const fetchMoreData = () => {
     const currentLength = showList?.length;
