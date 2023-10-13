@@ -69,7 +69,7 @@ const MenuCard = (props) => {
   const [menuItemsVariances, setMenuItemsVariances] = useState([]);
 
   const [imageNotFound, setImageNotFound] = useState(false);
-  const [farAway, setFarAway] = useState(false);
+  const [farAway, setFarAway] = useState(true);
 
   const onImageError = () => {
     setImageNotFound(true);
@@ -167,31 +167,33 @@ const MenuCard = (props) => {
 
     // for each item, get the sideVariant, sizeVariant and toppingVariant
     items.forEach((element) => {
-      const { sideVariant, sizeVariant, toppingVariant } = element.variants;
+      if (element?.variants) {
+        const { sideVariant, sizeVariant, toppingVariant } = element.variants;
 
-      let menuItemVariant = {
-        id: element.id,
-        item_code: element.item_code,
-        quantity: element.quantity,
-        sideVariants: sideVariant.map((variant) => {
-          return {
-            name_en: variant.name_en,
-            quantity: variant.quantity,
-          };
-        }),
-        sizeVariant: {
-          name_en: sizeVariant.name_en,
-          quantity: sizeVariant.quantity,
-        },
-        toppingVariants: toppingVariant.map((variant) => {
-          return {
-            name_en: variant.name_en,
-            quantity: variant.quantity,
-          };
-        }),
-      };
+        let menuItemVariant = {
+          id: element.id,
+          item_code: element.item_code,
+          quantity: element.quantity,
+          sideVariants: sideVariant.map((variant) => {
+            return {
+              name_en: variant.name_en,
+              quantity: variant.quantity,
+            };
+          }),
+          sizeVariant: {
+            name_en: sizeVariant.name_en,
+            quantity: sizeVariant.quantity,
+          },
+          toppingVariants: toppingVariant.map((variant) => {
+            return {
+              name_en: variant.name_en,
+              quantity: variant.quantity,
+            };
+          }),
+        };
 
-      menuItemsVariances.push(menuItemVariant);
+        menuItemsVariances.push(menuItemVariant);
+      }
     });
 
     setMenuItemsVariances(menuItemsVariances);
@@ -253,32 +255,6 @@ const MenuCard = (props) => {
           }
         }
       });
-      //   const resLat = +res.latitude;
-      //   const resLng = +res.longitude;
-
-      //   const selected = JSON.parse(localStorage.getItem("selected"));
-
-      //   const distance = getDistanceFromLatLonInKm(
-      //     resLat,
-      //     resLng,
-      //     selected.lat,
-      //     selected.lng
-      //   );
-
-      //   if (distance > 50) {
-      //     if (allData.id === id) {
-      //       setSelectedItemToDeliver(allData);
-      //     }
-      //     setOpenModal(true);
-      //   } else {
-      //     console.log("why oo whty");
-      //     // navigate(paths.details + "/" + id, {
-      //     //   state: {
-      //     //     id: id,
-      //     //   },
-      //     // });
-      //   }
-      // });
     }
   }
 
@@ -294,55 +270,46 @@ const MenuCard = (props) => {
       });
       return;
     }
-    if (!hasVariant && !farAway) {
-      navigate(paths.location, {
-        state: {
-          restaurant_id: restaurantDetail.id,
-          restaurantName: restaurantDetail.page_title_en,
-          path: "menu/restaurant",
-        },
-      });
-    } else {
-      setFoodItemQuantity(foodItemQuantity + 1);
-      if (checkIfItemIsInCart()) {
-        dispatch(
-          updateCartMenuItemQuantity({
-            id: id,
-            quantity: foodItemQuantity + 1,
-            totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
-          })
-        );
-      } else {
-        dispatch(
-          addToCart({
-            id: id,
-            itemName: foodItem,
-            restaurant_id,
-            totalPrice: foodPriceWithoutCurrency(),
-            quantity: foodItemQuantity + 1,
-            itemImage: foodImage,
-          })
-        );
-        const cartItemDataForApi = {
-          item_code: uuidv4(),
-          item_id: id,
-          quantity: foodItemQuantity + 1,
-          topping_variant_id: 0,
-          side_variant_id: 0,
-          size_variant_id: 0,
-          size_variant: [],
-          topping_variant: [],
-          side_variant: [],
-        };
 
-        addToCartApiCall(cartItemDataForApi, token)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+    setFoodItemQuantity(foodItemQuantity + 1);
+    if (checkIfItemIsInCart()) {
+      dispatch(
+        updateCartMenuItemQuantity({
+          id: id,
+          quantity: foodItemQuantity + 1,
+          totalPrice: foodPriceWithoutCurrency() * (foodItemQuantity + 1),
+        })
+      );
+    } else {
+      dispatch(
+        addToCart({
+          id: id,
+          itemName: foodItem,
+          restaurant_id,
+          totalPrice: foodPriceWithoutCurrency(),
+          quantity: foodItemQuantity + 1,
+          itemImage: foodImage,
+        })
+      );
+      const cartItemDataForApi = {
+        item_code: uuidv4(),
+        item_id: id,
+        quantity: foodItemQuantity + 1,
+        topping_variant_id: 0,
+        side_variant_id: 0,
+        size_variant_id: 0,
+        size_variant: [],
+        topping_variant: [],
+        side_variant: [],
+      };
+
+      addToCartApiCall(cartItemDataForApi, token)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 

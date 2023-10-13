@@ -504,7 +504,7 @@ export const Details = () => {
 
       dispatch(addToCart(ItemDataObject));
       addToCartApiHandler(ItemDataObject);
-      navigate(-1);
+      navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`);
     }
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
     // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));
