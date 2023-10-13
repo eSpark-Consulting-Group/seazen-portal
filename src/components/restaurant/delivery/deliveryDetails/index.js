@@ -101,7 +101,6 @@ const DeliveryDetails = (props) => {
     currentTime.setMinutes(currentTime.getMinutes() + 30);
     setPickTime(dayjs(currentTime).format("hh:mm a"));
     setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
-    setOpenPopup(false);
   };
 
   const { data: branchesAndHoursResponse, isSuccess } = useQuery({
