@@ -46,7 +46,7 @@ const App = () => {
   const [addressType, setAddressType] = useState("");
   const [addressId, setAddressId] = useState(null);
   const [fullAddress, setFullAddress] = useState(null);
-  const [deleteAdd, setDeleteAdd] = useState(false);
+  const [deleteAdd, setDeleteAdd] = useState(true);
   // const [isLoading, setIsloading] = useState(false);
 
   // useLayoutEffect(() => {
@@ -332,7 +332,7 @@ const App = () => {
           <Button
             color="primary"
             autoFocus
-            className="delete-button"
+            className={deleteAdd ? "loader-button" : "delete-button"}
             sx={{
               background: "#98694E 0% 0% no-repeat padding-box",
               border: "1px solid #707070",
