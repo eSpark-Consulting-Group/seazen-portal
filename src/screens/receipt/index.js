@@ -1,106 +1,53 @@
 import React from "react";
-import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
-import ReceiptItem from "../../components/receipt-items";
-import { useState } from "react";
-import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import { useNavigate, useParams } from "react-router";
-import "./style.css";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
+import ReceiptItem from "../../components/receipt-items";
 import getOrderDetails, {
   GET_ORDER_DETAILS_QUERY_KEY,
 } from "../../api/order/getOrderDetails";
+import "./style.css";
 
 const Receipt = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [item, setTtem] = useState([1, 2, 3]);
-  const CART_ITEMS = [
-    {
-      id: 1,
-      item: {
-        name: "Burrito Vegetarian in a Bowl",
-        price: 15.58,
-        image: "/assets/img/7.png",
-        variant: "450g",
-      },
-      quantity: 1,
-    },
-    {
-      id: 2,
-      item: {
-        name: "Burrito Vegetarian in a Bowl",
-        price: 15.58,
-        image: "/assets/img/7.png",
-        variant: "450g",
-      },
-      quantity: 1,
-    },
-    {
-      id: 3,
-      item: {
-        name: "Burrito Vegetarian in a Bowl",
-        price: 15.58,
-        image: "/assets/img/7.png",
-        variant: "450g",
-      },
-      quantity: 1,
-    },
-  ];
-  const [tipValue, setTipValue] = React.useState(0.25);
-  const [paymentMethod, setPaymentMethod] = React.useState("CASH");
-  const DISCOUNT_AMOUNT = Number(1).toFixed(3);
-  const DELIVERY_CHARGE = Number(1).toFixed(3);
-
-  const getItemTotal = () => {
-    return CART_ITEMS.reduce((acc, cartItem) => {
-      return acc + cartItem.item.price * cartItem.quantity;
-    }, 0).toFixed(3);
-  };
-
-  const getTipAmount = () => {
-    return tipValue.toFixed(3);
-  };
-
-  const getDiscountAmount = () => {
-    return DISCOUNT_AMOUNT;
-  };
-
-  const getDeliveryCharge = () => {
-    return DELIVERY_CHARGE;
-  };
-  const getGrandTotal = () => {
-    return (
-      Number(getItemTotal()) +
-      Number(getTipAmount()) -
-      Number(getDiscountAmount()) +
-      Number(getDeliveryCharge())
-    ).toFixed(3);
-  };
-
-  const currentDate = new Date();
-  const formattedDate = currentDate.toLocaleString("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  });
 
   const handleOrderHelp = () => {
     alert("Help");
   };
 
-  const { data } = useQuery({
+  const {
+    data: orderDetailsResponse,
+    isLoading,
+    isError,
+    isFetching,
+  } = useQuery({
     queryFn: () => {
       return getOrderDetails(id);
     },
     queryKey: [GET_ORDER_DETAILS_QUERY_KEY, id],
-    onSuccess: (data) => {
-      console.log(data);
-    },
   });
+
+  const getItemsTotal = () => {
+    if (
+      orderDetailsResponse &&
+      orderDetailsResponse.data &&
+      orderDetailsResponse.data.order_item
+    ) {
+      return orderDetailsResponse.data.order_item.reduce((acc, item) => {
+        return acc + Number(item.unit_price) * Number(item.quantity);
+      }, 0);
+    }
+
+    return Number(0);
+  };
 
   return (
     <div>
@@ -113,73 +60,105 @@ const Receipt = () => {
           <img src="/assets/img/Group 259.png" alt="" />
         </IconButton>
       </div>
-      <div className="receipt-head">
-        <p>Your Receipt</p>
-        <Button
-          variant="contained"
-          sx={{ widows: "93px", height: "26px" }}
-          onClick={handleOrderHelp}
+      {isLoading || isFetching ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
         >
-          Order Help
-        </Button>
-      </div>
-      <div className="receipt-info">
-        <div id="heading">Delivered to</div>
-        <div>
-          <div id="location-img">
-            <img src="/assets/img/location.svg" alt="" />
+          <CircularProgress size={80} color="primary" />
+        </Box>
+      ) : (
+        <>
+          <div className="receipt-head">
+            <p>Your Receipt</p>
+            <Button
+              variant="contained"
+              sx={{ widows: "93px", height: "26px" }}
+              onClick={handleOrderHelp}
+            >
+              Order Help
+            </Button>
           </div>
-          <div id="heading-cont">Ardia, Block 6</div>
-        </div>
-        <div>
-          <div id="clock-img">
-            <img src="/assets/img/clock.svg" alt="" />
+          <div className="receipt-info">
+            <div id="heading">Delivered to</div>
+            <div>
+              <div id="location-img">
+                <img src="/assets/img/location.svg" alt="" />
+              </div>
+              <div id="heading-cont">
+                {orderDetailsResponse?.data?.address?.street}
+              </div>
+            </div>
+            <div>
+              <div id="clock-img">
+                <img src="/assets/img/clock.svg" alt="" />
+              </div>
+              <div id="heading-cont">
+                {orderDetailsResponse?.data?.order_date}
+              </div>
+            </div>
           </div>
-          <div id="heading-cont">{formattedDate}</div>
-        </div>
-      </div>
-      <div>
-        {item.map((el, index) => (
-          <ReceiptItem key={index} />
-        ))}
-      </div>
+          <div>
+            {!isLoading &&
+              !isError &&
+              orderDetailsResponse &&
+              orderDetailsResponse.data &&
+              orderDetailsResponse.data.order_item &&
+              orderDetailsResponse.data.order_item.map((item, index) => (
+                <ReceiptItem
+                  key={index}
+                  item={item}
+                  currency_code={orderDetailsResponse.data.currency_code}
+                />
+              ))}
+          </div>
 
-      <Stack spacing={2} sx={{ color: "#1F2933", padding: "20px 30px" }}>
-        <Typography variant="h5" fontWeight={500}>
-          Order summary
-        </Typography>
+          <Stack spacing={2} sx={{ color: "#1F2933", padding: "20px 30px" }}>
+            <Typography variant="h5" fontWeight={500}>
+              Order summary
+            </Typography>
 
-        <Stack direction="row" justifyContent="space-between">
-          <Typography variant="body1">
-            Item
-            {CART_ITEMS.length > 1 ? `(s)` : ""} Total
-          </Typography>
-          <Typography variant="body1">{`KWD ${getItemTotal()}`}</Typography>
-        </Stack>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body1">
+                Item
+                {orderDetailsResponse?.data?.order_item?.length > 1
+                  ? `(s)`
+                  : ""}{" "}
+                Total
+              </Typography>
+              <Typography variant="body1">{`KWD ${getItemsTotal().toFixed(
+                3
+              )}`}</Typography>
+            </Stack>
 
-        <Stack direction="row" justifyContent="space-between">
-          <Typography variant="body1">Tip</Typography>
-          <Typography variant="body1">{`KWD ${getTipAmount()}`}</Typography>
-        </Stack>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body1">Discount</Typography>
+              <Typography variant="body1">{`KWD -0.000`}</Typography>
+            </Stack>
 
-        <Stack direction="row" justifyContent="space-between">
-          <Typography variant="body1">Discount</Typography>
-          <Typography variant="body1">{`KWD -${getDiscountAmount()}`}</Typography>
-        </Stack>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body1">Delivery Cost</Typography>
+              <Typography variant="body1">
+                {`KWD 
+                  ${Number(
+                    orderDetailsResponse?.data?.delivery_charges
+                  ).toFixed(3)}`}
+              </Typography>
+            </Stack>
 
-        <Stack direction="row" justifyContent="space-between">
-          <Typography variant="body1">Delivery Cost</Typography>
-          <Typography variant="body1">{`KWD ${getDeliveryCharge()}`}</Typography>
-        </Stack>
-
-        <Stack direction="row" justifyContent="space-between">
-          <Typography variant="body1">Total Payment</Typography>
-          <Typography variant="body1">{`KWD ${getGrandTotal()}`}</Typography>
-        </Stack>
-      </Stack>
-      <div className="receipt-comment-section">
-        <img src="/assets/img/Comment_Icon.png" alt="" />
-      </div>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body1">Total Payment</Typography>
+              <Typography variant="body1">{`KWD ${Number(
+                orderDetailsResponse?.data?.order_total_price
+              ).toFixed(3)}`}</Typography>
+            </Stack>
+          </Stack>
+        </>
+      )}
     </div>
   );
 };
