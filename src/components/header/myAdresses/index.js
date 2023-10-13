@@ -17,7 +17,7 @@ const MyAddresses = (props) => {
               ? paths.profile
               : !fromAllAddresses && path === "/profile"
               ? paths.addresses
-              : !fromAllAddresses && path !== "/profile" && paths.home,
+              : paths.home,
             {
               state: {
                 path:
