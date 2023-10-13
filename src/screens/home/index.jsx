@@ -63,9 +63,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (addressData.length === 0) {
-      fetchFunction();
-    }
+    fetchFunction();
   }, [location]);
 
   // const defaultUser = {

@@ -35,7 +35,7 @@ const RouteProvider = () => {
   };
 
   useEffect(() => {
-    if (location.pathname !== "/my-addresses" || addressData.length === 0) {
+    if (location.pathname !== "/my-addresses" || location.pathname === "/") {
       fetchFunction();
     }
   }, [location]);

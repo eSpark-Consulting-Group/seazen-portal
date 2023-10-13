@@ -85,7 +85,7 @@ export const AppartmentAdress = (props) => {
         className="form-style form-style-text-area"
         name="AdditionalDirection"
         id="AdditionalDirection"
-        placeholder="Additional Direction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
+        placeholder="Additional Direction"
         onChange={(e) => handleChange("additional_direction", e.target.value)}
         value={address.additional_direction}
         rows="4"

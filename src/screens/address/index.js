@@ -21,6 +21,9 @@ const AddressForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const contactInfo = useSelector((state) => state.auth.country);
+  const { whatsapp_country_code, whatsapp_no } = contactInfo;
+
   const token = localStorage.getItem("token");
 
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
@@ -125,7 +128,8 @@ const AddressForm = () => {
   const apiCall = () => {
     const updateAddress = {
       ...address,
-      country_code: `+${address.country_code}`,
+      country_code: whatsapp_country_code,
+      mobile_number: whatsapp_no,
     };
 
     addAddressApiCall(updateAddress, token).then((res) => {
@@ -168,7 +172,8 @@ const AddressForm = () => {
   const updateApiCall = () => {
     const updateAddress = {
       ...address,
-      country_code: `+${address.country_code}`,
+      country_code: whatsapp_country_code,
+      mobile_number: whatsapp_no,
     };
 
     updateAddressApiCall(updateAddress, location?.state?.data.id, token).then(
@@ -219,8 +224,8 @@ const AddressForm = () => {
 
     if (addressType === "house") {
       if (
-        address.block !== "" ||
-        address.street !== "" ||
+        address.block !== "" &&
+        address.street !== "" &&
         address.house_no !== ""
       ) {
         setClickEv(false);
@@ -233,10 +238,10 @@ const AddressForm = () => {
     }
     if (addressType === "apartment") {
       if (
-        address.block !== "" ||
-        address.street !== "" ||
-        address.building !== "" ||
-        address.floor !== "" ||
+        address.block !== "" &&
+        address.street !== "" &&
+        address.building !== "" &&
+        address.floor !== "" &&
         address.apartment_no !== ""
       ) {
         setClickEv(false);
@@ -249,10 +254,10 @@ const AddressForm = () => {
     }
     if (addressType === "office") {
       if (
-        address.block !== "" ||
-        address.street !== "" ||
-        address.building !== "" ||
-        address.floor !== "" ||
+        address.block !== "" &&
+        address.street !== "" &&
+        address.building !== "" &&
+        address.floor !== "" &&
         address.company_name !== ""
       ) {
         setClickEv(false);
@@ -268,76 +273,162 @@ const AddressForm = () => {
   useEffect(() => {
     if (clickEv) {
       if (addressType === "house") {
-        if (
-          address.block === "" ||
-          address.street === "" ||
-          address.house_no === ""
-        ) {
+        if (address.block === "") {
           setErrorState((prev) => ({
             ...prev,
             blockErr: true,
-            streetErr: true,
-            houseNoErr: true,
-            additionalDirErr: true,
           }));
-        } else {
+        }
+        if (address.street === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            streetErr: true,
+          }));
+        }
+        if (address.house_no === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            houseNoErr: true,
+          }));
+        }
+
+        if (address.block !== "") {
           setErrorState((prev) => ({
             ...prev,
             blockErr: false,
+          }));
+        }
+        if (address.street !== "") {
+          setErrorState((prev) => ({
+            ...prev,
             streetErr: false,
+          }));
+        }
+        if (address.house_no !== "") {
+          setErrorState((prev) => ({
+            ...prev,
             houseNoErr: false,
-            additionalDirErr: false,
           }));
         }
       } else if (addressType === "apartment") {
-        if (
-          address.block === "" ||
-          address.street === "" ||
-          address.building === "" ||
-          address.floor === "" ||
-          address.apartment_no === ""
-        ) {
+        if (address.block === "") {
           setErrorState((prev) => ({
             ...prev,
             blockErr: true,
+          }));
+        }
+        if (address.street === "") {
+          setErrorState((prev) => ({
+            ...prev,
             streetErr: true,
+          }));
+        }
+        if (address.building === "") {
+          setErrorState((prev) => ({
+            ...prev,
             buildingErr: true,
+          }));
+        }
+        if (address.floor === "") {
+          setErrorState((prev) => ({
+            ...prev,
             floorErr: true,
+          }));
+        }
+        if (address.apartment_no === "") {
+          setErrorState((prev) => ({
+            ...prev,
             apartmentNoerr: true,
           }));
-        } else {
+        }
+        if (address.block !== "") {
           setErrorState((prev) => ({
             ...prev,
             blockErr: false,
+          }));
+        }
+        if (address.street !== "") {
+          setErrorState((prev) => ({
+            ...prev,
             streetErr: false,
+          }));
+        }
+        if (address.building !== "") {
+          setErrorState((prev) => ({
+            ...prev,
             buildingErr: false,
+          }));
+        }
+        if (address.floor !== "") {
+          setErrorState((prev) => ({
+            ...prev,
             floorErr: false,
+          }));
+        }
+        if (address.apartment_no !== "") {
+          setErrorState((prev) => ({
+            ...prev,
             apartmentNoerr: false,
           }));
         }
       } else if (addressType === "office") {
-        if (
-          address.block === "" ||
-          address.street === "" ||
-          address.building === "" ||
-          address.floor === "" ||
-          address.company_name === ""
-        ) {
+        if (address.block === "") {
           setErrorState((prev) => ({
             ...prev,
             blockErr: true,
+          }));
+        }
+        if (address.street === "") {
+          setErrorState((prev) => ({
+            ...prev,
             streetErr: true,
+          }));
+        }
+        if (address.building === "") {
+          setErrorState((prev) => ({
+            ...prev,
             buildingErr: true,
+          }));
+        }
+        if (address.floor === "") {
+          setErrorState((prev) => ({
+            ...prev,
             floorErr: true,
+          }));
+        }
+        if (address.company_name === "") {
+          setErrorState((prev) => ({
+            ...prev,
             companyNameErr: true,
           }));
-        } else {
+        }
+        if (address.block !== "") {
           setErrorState((prev) => ({
             ...prev,
             blockErr: false,
+          }));
+        }
+        if (address.street !== "") {
+          setErrorState((prev) => ({
+            ...prev,
             streetErr: false,
+          }));
+        }
+        if (address.building !== "") {
+          setErrorState((prev) => ({
+            ...prev,
             buildingErr: false,
+          }));
+        }
+        if (address.floor !== "") {
+          setErrorState((prev) => ({
+            ...prev,
             floorErr: false,
+          }));
+        }
+        if (address.company_name !== "") {
+          setErrorState((prev) => ({
+            ...prev,
             companyNameErr: false,
           }));
         }
