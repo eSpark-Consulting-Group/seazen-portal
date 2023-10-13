@@ -1,12 +1,10 @@
-import React from "react";
-import "./style.css";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useSearchParams } from "react-router-dom";
 import { Tab, Tabs, Box } from "@mui/material";
 import { isEmpty } from "lodash";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import "./style.css";
 
 const menu_categories = [
   "Burrito in a Bowl",
@@ -23,18 +21,10 @@ const menu_categories = [
 ];
 
 const MenuItems = ({ itemCategoryList }) => {
-  let [searchParams, setSearchParams] = useSearchParams();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const handleMenuItemClick = (category) => {
-    // set only the category in the search params on whatever the current location is
-    setSearchParams({
-      category: category,
-    });
   };
 
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
@@ -42,11 +32,14 @@ const MenuItems = ({ itemCategoryList }) => {
     (state) => state.resturants.visibleCategoryElementID
   );
   const scrollToElement = (id, index) => {
-    if (index || index == 0) {
+    if (index || index === 0) {
       setValue(index);
     }
+  
     const container = document.getElementById(id);
-    container.scrollIntoView({ behavior: "smooth" });
+    if (container) {
+      container.scrollIntoView({ behavior: "auto" });
+    }
   };
 
   useEffect(() => {
@@ -115,30 +108,6 @@ const MenuItems = ({ itemCategoryList }) => {
           </Dropdown>
         </div>
         <div className="menu_itmes_text_container">
-          {/* {!isEmpty(itemCategoryList)
-            ? itemCategoryList?.map((category, index) => (
-                <button
-                  style={{ color: "black" }}
-                  key={category?.id}
-                  onClick={() => {
-                    handleMenuItemClick(category?.id);
-                  }}
-                >
-                  {category?.name_en}
-                </button>
-              ))
-            : menu_categories.map((category, index) => (
-                <button
-                  style={{ color: "black" }}
-                  key={index}
-                  onClick={() => {
-                    handleMenuItemClick(category);
-                  }}
-                >
-                  {category}
-                </button>
-              ))} */}
-
           <Box
             sx={{
               maxWidth: { xs: "100%" },
@@ -151,7 +120,6 @@ const MenuItems = ({ itemCategoryList }) => {
               variant="scrollable"
               scrollButtons={false}
               textColor="black"
-              // indicatorColor="black"
               aria-label="scrollable prevent tabs example"
               TabIndicatorProps={{
                 style: { backgroundColor: restaurantTheme?.main },
