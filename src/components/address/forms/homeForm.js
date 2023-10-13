@@ -2,13 +2,16 @@ import React from "react";
 
 import "./style.css";
 
-export const HomeAdress = ({ handleChange, address, errorState }) => {
+export const HomeAdress = ({
+  handleChange,
+  address,
+  blockErr,
+  additionalDirErr,
+}) => {
   return (
     <form className="container-style px-3">
       <input
-        className={
-          errorState ? ["form-style", "error"].join(" ") : "form-style"
-        }
+        className={blockErr ? ["form-style", "error"].join(" ") : "form-style"}
         // id="required"
         type="text"
         name="Block"
@@ -54,7 +57,10 @@ export const HomeAdress = ({ handleChange, address, errorState }) => {
       />
 
       <textarea
-        className="form-style form-style-text-area"
+        className={[
+          "form-style form-style-text-area",
+          additionalDirErr ? "error" : "",
+        ].join(" ")}
         name="AdditionalDirection"
         id="AdditionalDirection"
         placeholder="Additional Direction"

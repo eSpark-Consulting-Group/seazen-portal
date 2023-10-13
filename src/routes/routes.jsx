@@ -19,7 +19,7 @@ import getAllAddress from "../api/address/getAddress";
 const RouteProvider = () => {
   const dispatch = useDispatch();
   const addressData = useSelector((state) => state.address.addressData);
-  const isToken = useSelector((state) => state.auth.token);
+  const isToken = localStorage.getItem("token");
 
   const _publicRoutes = Object.values(publicRoutes);
   const _onlyPublicRoutes = Object.values(onlyPublicRoutes);
@@ -35,10 +35,29 @@ const RouteProvider = () => {
   };
 
   useEffect(() => {
-    if (addressData.length === 0) {
+    if (location.pathname !== "/my-addresses") {
       fetchFunction();
     }
-  }, [addressData]);
+  }, []);
+
+  // useEffect(() => {
+  //   navigator.permissions &&
+  //     navigator.permissions
+  //       .query({ name: "geolocation" })
+  //       .then(function (PermissionStatus) {
+  //           if (PermissionStatus.state == "prompt") {
+  //           localStorage.removeItem("location");
+  //         } else {
+  //           localStorage.removeItem("location");
+  //         }
+  //       });
+  // }, []);
+
+  // useEffect(() => {
+  //   if (addressData.length === 0) {
+  //     localStorage.removeItem("selected");
+  //   }
+  // }, []);
 
   return (
     <Routes>

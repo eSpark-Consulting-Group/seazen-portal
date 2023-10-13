@@ -16,6 +16,10 @@
   /* margin-left: 22px; */
 }
 
+.no-cursor {
+  cursor: default !important;
+}
+
 .addresses-header {
   display: flex;
   justify-content: space-between;

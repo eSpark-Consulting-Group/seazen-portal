@@ -21,7 +21,7 @@ const AddressForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const token = useSelector((state) => state.auth.token);
+  const token = localStorage.getItem("token");
 
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
   const [address, setAddress] = useState({
@@ -46,6 +46,7 @@ const AddressForm = () => {
     buildingErr: false,
     floorErr: false,
     companyNameErr: false,
+    additionalDirErr: false,
   });
   const [clickEv, setClickEv] = useState(false);
 
@@ -121,7 +122,8 @@ const AddressForm = () => {
       if (res.success === "ok") {
         if (
           location?.state?.path === "/cart" ||
-          location?.state?.path === "/home"
+          location?.state?.path === "/home" ||
+          location?.state?.path?.includes("menu-item-details")
         ) {
           const addToStorage = {
             lat: location?.state?.latlng?.lat,
@@ -129,9 +131,14 @@ const AddressForm = () => {
             address: location?.state?.name,
           };
 
-          localStorage.setItem("location", JSON.stringify(addToStorage));
+          // localStorage.setItem("location", JSON.stringify(addToStorage));
+          localStorage.setItem("selected", JSON.stringify(addToStorage));
 
-          if (location?.state?.path === "/home") {
+          if (location?.state?.path?.includes("menu-item-details")) {
+            navigate(
+              `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
+            );
+          } else if (location?.state?.path === "/home") {
             navigate(paths.home);
           } else {
             navigate(paths.cart);
@@ -151,7 +158,8 @@ const AddressForm = () => {
         if (res.success === "ok") {
           if (
             location?.state?.path === "/cart" ||
-            location?.state?.path === "/home"
+            location?.state?.path === "/home" ||
+            location?.state?.path?.includes("menu-item-details")
           ) {
             const addToStorage = {
               lat: location?.state?.latlng?.lat,
@@ -159,9 +167,14 @@ const AddressForm = () => {
               address: location?.state?.name,
             };
 
-            localStorage.setItem("location", JSON.stringify(addToStorage));
+            // localStorage.setItem("location", JSON.stringify(addToStorage));
+            localStorage.setItem("selected", JSON.stringify(addToStorage));
 
-            if (location?.state?.path === "/home") {
+            if (location?.state?.path?.includes("menu-item-details")) {
+              navigate(
+                `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
+              );
+            } else if (location?.state?.path === "/home") {
               navigate(paths.home);
             } else {
               navigate(paths.cart);
@@ -184,7 +197,7 @@ const AddressForm = () => {
     setClickEv(true);
 
     if (addressType === "house") {
-      if (address.block !== "") {
+      if (address.block !== "" || address.additional_direction !== "") {
         setClickEv(false);
         if (location?.state?.edit) {
           updateApiCall();
@@ -194,7 +207,7 @@ const AddressForm = () => {
       }
     }
     if (addressType === "apartment") {
-      if (address.building !== "") {
+      if (address.building !== "" || address.additional_direction !== "") {
         setClickEv(false);
         if (location?.state?.edit) {
           updateApiCall();
@@ -204,7 +217,11 @@ const AddressForm = () => {
       }
     }
     if (addressType === "office") {
-      if (address.floor !== "" || address.company_name !== "") {
+      if (
+        address.floor !== "" ||
+        address.company_name !== "" ||
+        address.additional_direction !== ""
+      ) {
         setClickEv(false);
         if (location?.state?.edit) {
           updateApiCall();
@@ -218,29 +235,51 @@ const AddressForm = () => {
   useEffect(() => {
     if (clickEv) {
       if (addressType === "house") {
-        if (address.block === "") {
-          setErrorState((prev) => ({ ...prev, blockErr: true }));
+        if (address.block === "" || address.additional_direction === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            blockErr: true,
+            additionalDirErr: true,
+          }));
         } else {
-          setErrorState((prev) => ({ ...prev, blockErr: false }));
+          setErrorState((prev) => ({
+            ...prev,
+            blockErr: false,
+            additionalDirErr: false,
+          }));
         }
       } else if (addressType === "apartment") {
-        if (address.building === "") {
-          setErrorState((prev) => ({ ...prev, buildingErr: true }));
+        if (address.building === "" || address.additional_direction === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            buildingErr: true,
+            additionalDirErr: true,
+          }));
         } else {
-          setErrorState((prev) => ({ ...prev, buildingErr: false }));
+          setErrorState((prev) => ({
+            ...prev,
+            buildingErr: false,
+            additionalDirErr: false,
+          }));
         }
       } else if (addressType === "office") {
-        if (address.floor === "" || address.company_name === "") {
+        if (
+          address.floor === "" ||
+          address.company_name === "" ||
+          address.additional_direction === ""
+        ) {
           setErrorState((prev) => ({
             ...prev,
             floorErr: true,
             companyNameErr: true,
+            additionalDirErr: true,
           }));
         } else {
           setErrorState((prev) => ({
             ...prev,
             floorErr: false,
             companyNameErr: false,
+            additionalDirErr: false,
           }));
         }
       }
@@ -256,7 +295,6 @@ const AddressForm = () => {
       }
     }
   };
-
   return (
     <div className="button-style">
       <MyAddresses
@@ -282,6 +320,7 @@ const AddressForm = () => {
                 state: {
                   name: location?.state?.name,
                   latlng: location?.state?.latlng,
+                  editLocation: true,
                 },
               })
             }
@@ -297,14 +336,16 @@ const AddressForm = () => {
           <HomeAdress
             handleChange={handleChange}
             address={address}
-            errorState={errorState.blockErr}
+            blockErr={errorState.blockErr}
+            additionalDirErr={errorState.additionalDirErr}
           />
         )}
         {addressType === "apartment" && (
           <AppartmentAdress
             handleChange={handleChange}
             address={address}
-            errorState={errorState.buildingErr}
+            buildingErr={errorState.buildingErr}
+            additionalDirErr={errorState.additionalDirErr}
           />
         )}
         {addressType === "office" && (
@@ -313,6 +354,7 @@ const AddressForm = () => {
             address={address}
             floorReq={errorState.floorErr}
             companyNameReq={errorState.companyNameErr}
+            additionalDirErr={errorState.additionalDirErr}
           />
         )}
         <div className="contact-style">
