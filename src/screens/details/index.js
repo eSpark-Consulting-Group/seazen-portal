@@ -477,12 +477,20 @@ export const Details = () => {
                 component="sup"
                 sx={{
                   mr: 0.5,
-                  fontWeight: "400",
+                  fontWeight: "600",
                 }}
               >
                 KWD
               </Typography>
-              {menuItemPriceWithoutCurrency()}
+              <div
+                style={{
+                  fontWeight: "700",
+                  marginTop: "-24px",
+                  marginLeft: "29px",
+                }}
+              >
+                {menuItemPriceWithoutCurrency()}
+              </div>
             </Typography>
           </Box>
           <Stack spacing={1}>
@@ -621,7 +629,11 @@ export const Details = () => {
                                   variant.name_en === "Extra Topping" &&
                                   !checkIfToppingIsAdded(option?.name_en)
                                 }
-                                style={{marginLeft:"33px", marginTop:"11px", marginBottom:"7px"}}
+                                style={{
+                                  marginLeft: "33px",
+                                  marginTop: "11px",
+                                  marginBottom: "7px",
+                                }}
                               />
                             )}
                             {variant.name_en == "Choose the Size" && (

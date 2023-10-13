@@ -65,7 +65,7 @@ function App() {
     }
 
     // Additional logic for page-specific CSS
-    if (currentURL.pathname === "/menu/restaurant/1/delivery") {
+    if (currentURL.pathname === "/menu/restaurant/1/delivery","/menu-item-details") {
       // Apply additional styles for the specific page
       // For example, you can add a class to the body or any specific element
       document.body.classList.add("specific-page-body-style");
@@ -73,7 +73,9 @@ function App() {
       // Remove the class for other pages
       document.body.classList.remove("chat-icon");
     }
+    
   }, [currentURL]);
+  
 
   return (
     <div className="container_main">
