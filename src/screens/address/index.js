@@ -84,11 +84,13 @@ const AddressForm = () => {
     setAddressType(type);
     setErrorState({
       blockErr: false,
+      streetErr: false,
+      houseNoErr: false,
       buildingErr: false,
       floorErr: false,
+      apartmentNoerr: false,
       companyNameErr: false,
       additionalDirErr: false,
-      countryCodeErr: false,
     });
     setAddress((prevState) => ({
       ...prevState,
@@ -131,7 +133,8 @@ const AddressForm = () => {
         if (
           location?.state?.path === "/cart" ||
           location?.state?.path === "/home" ||
-          location?.state?.path?.includes("menu-item-details")
+          location?.state?.path?.includes("menu-item-details") ||
+          location?.state?.path === "menu/restaurant"
         ) {
           const addToStorage = {
             lat: location?.state?.latlng?.lat,
@@ -141,7 +144,10 @@ const AddressForm = () => {
 
           localStorage.setItem("selected", JSON.stringify(addToStorage));
 
-          if (location?.state?.path?.includes("menu-item-details")) {
+          if (
+            location?.state?.path?.includes("menu-item-details") ||
+            location?.state?.path === "menu/restaurant"
+          ) {
             navigate(
               `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
             );
@@ -171,7 +177,8 @@ const AddressForm = () => {
           if (
             location?.state?.path === "/cart" ||
             location?.state?.path === "/home" ||
-            location?.state?.path?.includes("menu-item-details")
+            location?.state?.path?.includes("menu-item-details") ||
+            location?.state?.path === "menu/restaurant"
           ) {
             const addToStorage = {
               lat: location?.state?.latlng?.lat,
@@ -181,7 +188,10 @@ const AddressForm = () => {
 
             localStorage.setItem("selected", JSON.stringify(addToStorage));
 
-            if (location?.state?.path?.includes("menu-item-details")) {
+            if (
+              location?.state?.path?.includes("menu-item-details") ||
+              location?.state?.path === "menu/restaurant"
+            ) {
               navigate(
                 `${paths.menu}/restaurant/${location?.state?.restaurant_id}`
               );
@@ -210,8 +220,8 @@ const AddressForm = () => {
     if (addressType === "house") {
       if (
         address.block !== "" ||
-        address.additional_direction !== "" ||
-        address.country_code !== ""
+        address.street !== "" ||
+        address.house_no !== ""
       ) {
         setClickEv(false);
         if (location?.state?.edit) {
@@ -223,9 +233,11 @@ const AddressForm = () => {
     }
     if (addressType === "apartment") {
       if (
+        address.block !== "" ||
+        address.street !== "" ||
         address.building !== "" ||
-        address.additional_direction !== "" ||
-        address.country_code !== ""
+        address.floor !== "" ||
+        address.apartment_no !== ""
       ) {
         setClickEv(false);
         if (location?.state?.edit) {
@@ -237,10 +249,11 @@ const AddressForm = () => {
     }
     if (addressType === "office") {
       if (
+        address.block !== "" ||
+        address.street !== "" ||
+        address.building !== "" ||
         address.floor !== "" ||
-        address.company_name !== "" ||
-        address.additional_direction !== "" ||
-        address.country_code !== ""
+        address.company_name !== ""
       ) {
         setClickEv(false);
         if (location?.state?.edit) {
@@ -257,64 +270,75 @@ const AddressForm = () => {
       if (addressType === "house") {
         if (
           address.block === "" ||
-          address.additional_direction === "" ||
-          address.country_code === ""
+          address.street === "" ||
+          address.house_no === ""
         ) {
           setErrorState((prev) => ({
             ...prev,
             blockErr: true,
+            streetErr: true,
+            houseNoErr: true,
             additionalDirErr: true,
-            countryCodeErr: true,
           }));
         } else {
           setErrorState((prev) => ({
             ...prev,
             blockErr: false,
+            streetErr: false,
+            houseNoErr: false,
             additionalDirErr: false,
-            countryCodeErr: false,
           }));
         }
       } else if (addressType === "apartment") {
         if (
+          address.block === "" ||
+          address.street === "" ||
           address.building === "" ||
-          address.additional_direction === "" ||
-          address.country_code === ""
+          address.floor === "" ||
+          address.apartment_no === ""
         ) {
           setErrorState((prev) => ({
             ...prev,
+            blockErr: true,
+            streetErr: true,
             buildingErr: true,
-            additionalDirErr: true,
-            countryCodeErr: true,
+            floorErr: true,
+            apartmentNoerr: true,
           }));
         } else {
           setErrorState((prev) => ({
             ...prev,
+            blockErr: false,
+            streetErr: false,
             buildingErr: false,
-            additionalDirErr: false,
-            countryCodeErr: false,
+            floorErr: false,
+            apartmentNoerr: false,
           }));
         }
       } else if (addressType === "office") {
         if (
+          address.block === "" ||
+          address.street === "" ||
+          address.building === "" ||
           address.floor === "" ||
-          address.company_name === "" ||
-          address.additional_direction === "" ||
-          address.country_code === ""
+          address.company_name === ""
         ) {
           setErrorState((prev) => ({
             ...prev,
+            blockErr: true,
+            streetErr: true,
+            buildingErr: true,
             floorErr: true,
             companyNameErr: true,
-            additionalDirErr: true,
-            countryCodeErr: true,
           }));
         } else {
           setErrorState((prev) => ({
             ...prev,
+            blockErr: false,
+            streetErr: false,
+            buildingErr: false,
             floorErr: false,
             companyNameErr: false,
-            additionalDirErr: false,
-            countryCodeErr: false,
           }));
         }
       }
@@ -374,24 +398,30 @@ const AddressForm = () => {
             handleChange={handleChange}
             address={address}
             blockErr={errorState.blockErr}
-            additionalDirErr={errorState.additionalDirErr}
+            streetErr={errorState.streetErr}
+            houseNoErr={errorState.houseNoErr}
           />
         )}
         {addressType === "apartment" && (
           <AppartmentAdress
             handleChange={handleChange}
             address={address}
+            blockErr={errorState.blockErr}
+            streetErr={errorState.streetErr}
             buildingErr={errorState.buildingErr}
-            additionalDirErr={errorState.additionalDirErr}
+            floorErr={errorState.floorErr}
+            apartmentNoerr={errorState.apartmentNoerr}
           />
         )}
         {addressType === "office" && (
           <OfficeAdress
             handleChange={handleChange}
             address={address}
-            floorReq={errorState.floorErr}
-            companyNameReq={errorState.companyNameErr}
-            additionalDirErr={errorState.additionalDirErr}
+            blockErr={errorState.blockErr}
+            streetErr={errorState.streetErr}
+            buildingErr={errorState.buildingErr}
+            floorErr={errorState.floorErr}
+            companyNameErr={errorState.companyNameErr}
           />
         )}
         <div className="contact-style">
@@ -400,11 +430,7 @@ const AddressForm = () => {
           </div>
           <div className="contact-field">
             <input
-              className={
-                errorState.countryCodeErr
-                  ? ["country-code-input", "error"].join(" ")
-                  : "country-code-input"
-              }
+              className="country-code-input"
               type="text"
               name="CountryCode"
               placeholder="+956"

@@ -35,10 +35,10 @@ const RouteProvider = () => {
   };
 
   useEffect(() => {
-    if (location.pathname !== "/my-addresses") {
+    if (location.pathname !== "/my-addresses" || addressData.length === 0) {
       fetchFunction();
     }
-  }, []);
+  }, [location]);
 
   // useEffect(() => {
   //   navigator.permissions &&

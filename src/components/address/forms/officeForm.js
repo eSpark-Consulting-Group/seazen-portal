@@ -1,29 +1,32 @@
 import React from "react";
 import "./style.css";
 
-export const OfficeAdress = ({
-  handleChange,
-  address,
-  floorReq,
-  companyNameReq,
-  additionalDirErr,
-}) => {
+export const OfficeAdress = (props) => {
+  const {
+    handleChange,
+    address,
+    blockErr,
+    streetErr,
+    buildingErr,
+    floorErr,
+    companyNameErr,
+  } = props;
   return (
     <form className="container-style px-3">
       <input
-        className="form-style"
+        className={blockErr ? ["form-style", "error"].join(" ") : "form-style"}
         type="text"
         name="Block"
-        placeholder="Block"
+        placeholder="Block&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
         onChange={(e) => handleChange("block", e.target.value)}
         value={address.block}
       />
 
       <input
-        className="form-style"
+        className={streetErr ? ["form-style", "error"].join(" ") : "form-style"}
         type="text"
         name="Street"
-        placeholder="Street"
+        placeholder="Street&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
         onChange={(e) => handleChange("street", e.target.value)}
         value={address.street}
       />
@@ -38,19 +41,20 @@ export const OfficeAdress = ({
       />
 
       <input
-        className="form-style"
+        className={
+          buildingErr ? ["form-style", "error"].join(" ") : "form-style"
+        }
         type="text"
         name="Building"
-        placeholder="Building"
+        placeholder="Building&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
         onChange={(e) => handleChange("building", e.target.value)}
         value={address.building}
       />
 
       <input
-        className={floorReq ? ["form-style", "error"].join(" ") : "form-style"}
+        className={floorErr ? ["form-style", "error"].join(" ") : "form-style"}
         type="text"
         name="Floor"
-        // id="required"
         placeholder="Floor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
         onChange={(e) => handleChange("floor", e.target.value)}
         value={address.floor}
@@ -58,11 +62,10 @@ export const OfficeAdress = ({
 
       <input
         className={
-          companyNameReq ? ["form-style", "error"].join(" ") : "form-style"
+          companyNameErr ? ["form-style", "error"].join(" ") : "form-style"
         }
         type="text"
         name="Company Name"
-        // id="required"
         placeholder="Company Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
         onChange={(e) => handleChange("company_name", e.target.value)}
         value={address.company_name}
@@ -78,10 +81,7 @@ export const OfficeAdress = ({
       />
 
       <textarea
-        className={[
-          "form-style form-style-text-area",
-          additionalDirErr ? "error" : "",
-        ].join(" ")}
+        className="form-style form-style-text-area"
         name="AdditionalDirection"
         id="AdditionalDirection"
         placeholder="Additional Direction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"

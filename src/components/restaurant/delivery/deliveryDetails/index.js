@@ -49,7 +49,7 @@ const DeliveryDetails = (props) => {
 
   useEffect(() => {
     if (restaurantBranchHours) {
-      restaurantBranchHours?.data?.forEach((res) => {
+      restaurantBranchHours?.data?.forEach((res, _, array) => {
         const resLat = +res.latitude;
         const resLng = +res.longitude;
 

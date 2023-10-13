@@ -2,12 +2,8 @@ import React from "react";
 
 import "./style.css";
 
-export const HomeAdress = ({
-  handleChange,
-  address,
-  blockErr,
-  additionalDirErr,
-}) => {
+export const HomeAdress = (props) => {
+  const { handleChange, address, blockErr, streetErr, houseNoErr } = props;
   return (
     <form className="container-style px-3">
       <input
@@ -21,10 +17,10 @@ export const HomeAdress = ({
       />
 
       <input
-        className="form-style"
+        className={streetErr ? ["form-style", "error"].join(" ") : "form-style"}
         type="text"
         name="Street"
-        placeholder="Street"
+        placeholder="Street&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
         onChange={(e) => handleChange("street", e.target.value)}
         value={address.street}
       />
@@ -39,10 +35,12 @@ export const HomeAdress = ({
       />
 
       <input
-        className="form-style"
+        className={
+          houseNoErr ? ["form-style", "error"].join(" ") : "form-style"
+        }
         type="text"
         name="House Number"
-        placeholder="House Number"
+        placeholder="House Number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
         onChange={(e) => handleChange("house_no", e.target.value)}
         value={address.house_no}
       />
@@ -57,13 +55,10 @@ export const HomeAdress = ({
       />
 
       <textarea
-        className={[
-          "form-style form-style-text-area",
-          additionalDirErr ? "error" : "",
-        ].join(" ")}
+        className="form-style form-style-text-area"
         name="AdditionalDirection"
         id="AdditionalDirection"
-        placeholder="Additional Direction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
+        placeholder="Additional Direction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
         rows="4"
         onChange={(e) => handleChange("additional_direction", e.target.value)}
         value={address.additional_direction}

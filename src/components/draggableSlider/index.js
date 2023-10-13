@@ -6,7 +6,9 @@ import getAllPopularItems, {
 import "./style.css";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getBranchHours } from "../../store/reducers/resturantsSlice";
+import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 
 export default function App(props) {
   const {
@@ -179,24 +181,34 @@ function Box({
   const additionalTextClass = isFirstCard ? "first-card-additional-text" : "";
   const navigate = useNavigate();
   const isToken = localStorage.getItem("token");
+  const dispatch = useDispatch();
 
   const resturantsData = useSelector(
     (state) => state.resturants.resturantsData
   );
 
-  useEffect(() => {
-    if (resturantsData?.length) {
-      const restName = resturantsData?.find((res) => res.id === restaurant_id);
-      localStorage.setItem("restaurantName", restName.name_en);
-    }
-  }, [resturantsData]);
+  const fetchBranchHours = (restaurantId) => {
+    getRestaurantBranchHours(restaurantId).then((res) => {
+      if (res.status === "ok") {
+        dispatch(getBranchHours(res?.data));
+      }
+    });
+  };
 
   return (
     <div
       className="box"
       onClick={() => {
         localStorage.setItem("restaurantIdForRedirect", restaurant_id);
+        localStorage.setItem("restaurantID", restaurant_id);
         localStorage.setItem("menuDetailId", id);
+
+        const restName = resturantsData?.find(
+          (res) => res.id === restaurant_id
+        );
+        fetchBranchHours(restaurant_id);
+
+        localStorage.setItem("restaurantName", restName.name_en);
 
         if (selectedLocation && isToken !== null) {
           setPopularId(id);

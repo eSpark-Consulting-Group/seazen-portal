@@ -196,6 +196,20 @@
   flex-direction: column;
 }
 
+.back-location {
+  width: 42px !important;
+  height: 42px !important;
+}
+
+.right-icon {
+  width: 42px !important;
+  height: 42px !important;
+}
+
+.right-icon svg {
+  width: 24px;
+}
+
 @media only screen and (max-width: 1536px) {
   .marker {
     top: 47.5%;

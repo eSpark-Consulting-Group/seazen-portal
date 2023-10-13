@@ -39,6 +39,8 @@ import {
 import { paths } from "../../routes/paths";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import { DialogComponent } from "../../components/dialog";
+import { getAddress, isLoaded } from "../../store/reducers/addressSlice";
+import getAllAddress from "../../api/address/getAddress";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -50,6 +52,21 @@ const Home = () => {
     (state) => state.resturants.resturantsData
   );
   const dispatch = useDispatch();
+
+  const fetchFunction = async () => {
+    dispatch(isLoaded());
+    getAllAddress(isToken).then((res) => {
+      if (res.success === "ok") {
+        dispatch(getAddress(res.data));
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (addressData.length === 0) {
+      fetchFunction();
+    }
+  }, [location]);
 
   // const defaultUser = {
   //   email: "ikram2001@gmail.com",
@@ -189,8 +206,6 @@ const Home = () => {
 
   useEffect(() => {
     if (fullAddress !== null) {
-      localStorage.setItem("selected", JSON.stringify(fullAddress));
-
       if (restBranch.length) {
         restBranch?.forEach((res) => {
           const resLat = +res.latitude;
@@ -218,6 +233,7 @@ const Home = () => {
             setNewText("");
             setDistanceIsFar(false);
             setOpenAddressPopup(false);
+            localStorage.setItem("selected", JSON.stringify(fullAddress));
 
             if (restaurantId === null) {
               setOpenAddressPopup(false);
@@ -243,7 +259,15 @@ const Home = () => {
   }, [fullAddress]);
 
   const navigateUser = () => {
-    navigate(paths.location, { state: { path: "/home" } });
+    const restaurant = resturantsData.find((res) => res.id === restaurantId);
+
+    navigate(paths.location, {
+      state: {
+        path: "/home",
+        restaurant_id: restaurantId,
+        restaurantName: restaurant.name_en,
+      },
+    });
   };
 
   const handleClose = () => {

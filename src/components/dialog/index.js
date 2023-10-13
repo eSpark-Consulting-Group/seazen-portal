@@ -71,7 +71,7 @@ export const DialogComponent = (props) => {
             <div className="text-detail">
               {location?.state?.restaurantDetail !== undefined
                 ? location?.state?.restaurantDetail?.page_title_en
-                : `${restaurantName} Restaurant `}
+                : `${restaurantName} Restaurant`}{" "}
               does not
               <br /> deliver to your {newText ? "new " : "current"}location.
             </div>
@@ -160,27 +160,27 @@ const ListItemsNotDelivered = (props) => {
 
   return (
     <Box>
-      {cartItems?.map((item) => {
-        const checkIfImageExists = () => {
-          const img = new Image();
-          img.src = item?.itemImage;
+      <Box className="to-scroll">
+        {cartItems?.map((item) => {
+          const checkIfImageExists = () => {
+            const img = new Image();
+            img.src = item?.itemImage;
 
-          if (img.complete) {
-            return true;
-          } else {
-            img.onload = () => {
+            if (img.complete) {
               return true;
-            };
+            } else {
+              img.onload = () => {
+                return true;
+              };
 
-            img.onerror = () => {
-              return false;
-            };
-          }
-        };
+              img.onerror = () => {
+                return false;
+              };
+            }
+          };
 
-        return (
-          <Box key={item.id} className="to-scroll">
-            <Box className="items-not-delvered">
+          return (
+            <Box key={item.id} className="items-not-delvered">
               {checkIfImageExists() === true ? (
                 <div className="items-image">
                   <img src={item?.itemImage} alt={item.itemName} />
@@ -210,9 +210,9 @@ const ListItemsNotDelivered = (props) => {
                 </Typography>
               </div>
             </Box>
-          </Box>
-        );
-      })}
+          );
+        })}
+      </Box>
 
       <div className="btn-navigate">
         <Button
