@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { Tab, Tabs, Box } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const menu_categories = [
   "Burrito in a Bowl",
@@ -37,6 +38,9 @@ const MenuItems = ({ itemCategoryList }) => {
   };
 
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
+  const visibleCategoryElementID = useSelector(
+    (state) => state.resturants.visibleCategoryElementID
+  );
   const scrollToElement = (id, index) => {
     if (index || index == 0) {
       setValue(index);
@@ -44,6 +48,10 @@ const MenuItems = ({ itemCategoryList }) => {
     const container = document.getElementById(id);
     container.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    setValue(parseInt(visibleCategoryElementID - 1));
+  }, [visibleCategoryElementID]);
 
   return (
     <div className="menu_item_outer_container px-3 px-sm-4">
@@ -79,7 +87,7 @@ const MenuItems = ({ itemCategoryList }) => {
                 maxHeight: "150px",
                 overflowY: "scroll",
                 borderRadius: "0 0 16px 16px",
-                position:"static",
+                position: "static",
               }}
             >
               {!isEmpty(itemCategoryList)
@@ -133,7 +141,7 @@ const MenuItems = ({ itemCategoryList }) => {
 
           <Box
             sx={{
-              maxWidth: { xs: "100%", sm: 480 },
+              maxWidth: { xs: "100%" },
               bgcolor: "background.paper",
             }}
           >
@@ -151,7 +159,8 @@ const MenuItems = ({ itemCategoryList }) => {
               sx={{
                 "& .MuiButtonBase-root": {
                   textTransform: "none",
-                  minWidth: "60px",
+                  minWidth: "0px",
+                  marginRight: "12px",
                 },
               }}
             >

@@ -51,7 +51,7 @@ function CartPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-
+  const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [tipValue, setTipValue] = React.useState(0.25);
   const [isLoading, setIsLoading] = React.useState(false);
   const [cartItems, setCartItems] = React.useState();
@@ -61,6 +61,7 @@ function CartPage() {
   const [promoCode, setPromoCode] = React.useState("");
   const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
+  const [discountedPrice, setDiscountedPrice] = React.useState(0);
   const DISCOUNT_AMOUNT = Number(1).toFixed(3);
   const DELIVERY_CHARGE = Number(1).toFixed(3);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -68,7 +69,7 @@ function CartPage() {
   const [pickDate, setPickDate] = useState(
     dayjs(new Date()).format("MMM DD, YYYY")
   );
-  const [pickTime, setPickTime] = useState("ASAP");
+  const [pickTime, setPickTime] = useState(dayjs(asapTime).format("hh:mm a"));
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [notDeliver, setNotDeliver] = useState(false);
@@ -178,7 +179,8 @@ function CartPage() {
   }, [cart]);
 
   const checkoutHandler = () => {
-    checkout(checkoutData, token)
+    const data = { ...checkoutData, discount_price: getDiscountAmount() };
+    checkout(data, token)
       .then((res) => {
         const checkoutRedirectUrl = res.data.payment_methods[0].redirect_url;
         window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
@@ -209,6 +211,7 @@ function CartPage() {
     setPickTime(dayjs(currentTime).format("hh:mm a"));
     setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
     setOpenPopup(false);
+    setIsAsap(true);
   };
   useEffect(() => {
     if (localStorage.getItem("selected") === null) {
@@ -601,9 +604,20 @@ function CartPage() {
               },
             }}
           >
+            <Typography
+              variant="h5"
+              sx={{
+                fontFamily: "Titillium Web, sans-serif", // Set the font family
+                fontWeight: 600, // Set the font weight
+                fontSize: "24px", // Set the font size
+                lineHeight: "24px", // Set the line height
+              }}
+            >
+              Order Time
+            </Typography>
             <Box
               justifyContent={"center"}
-              sx={{ marginTop: "50px", display: "flex" }}
+              sx={{ marginTop: "30px", display: "flex" }}
             >
               <Button
                 variant="contained"

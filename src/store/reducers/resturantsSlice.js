@@ -7,6 +7,7 @@ const initialState = {
   listItemByCategory: null,
   details: [],
   nearbyRestaurants: [],
+  visibleCategoryElementID: 0,
 };
 
 const resturantsSlice = createSlice({
@@ -52,6 +53,9 @@ const resturantsSlice = createSlice({
     setSlides: (state, action) => {
       state.details.slides = action.payload;
     },
+    setCategoryElementID: (state, action) => {
+      state.visibleCategoryElementID = action.payload;
+    },
     setSlidesCount: (state, action) => {
       state.details.slides = state.details.slides.map((item, index) =>
         index !== action.payload.index
@@ -85,6 +89,7 @@ export const {
   setSlides,
   setSlidesCount,
   changeItemQuantity,
+  setCategoryElementID,
   getNearByRest,
 } = resturantsSlice.actions;
 
