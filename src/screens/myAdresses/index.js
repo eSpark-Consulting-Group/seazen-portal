@@ -144,7 +144,11 @@ const App = () => {
 
   return (
     <div className="app ">
-      <MyAddresses title="Your Addresses" />
+      <MyAddresses
+        title="Your Addresses"
+        path={location?.state?.path}
+        fromAllAddresses={true}
+      />
       {isLoading
         ? Array.from({ length: 3 }).map((_) => (
             <>
@@ -328,7 +332,7 @@ const App = () => {
           <Button
             color="primary"
             autoFocus
-            className="delete-button"
+            className={deleteAdd ? "loader-button" : "delete-button"}
             sx={{
               background: "#98694E 0% 0% no-repeat padding-box",
               border: "1px solid #707070",
