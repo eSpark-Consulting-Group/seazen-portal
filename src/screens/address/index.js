@@ -21,6 +21,9 @@ const AddressForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const contactInfo = useSelector((state) => state.auth.country);
+  const { whatsapp_country_code, whatsapp_no } = contactInfo;
+
   const token = localStorage.getItem("token");
 
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
@@ -84,11 +87,13 @@ const AddressForm = () => {
     setAddressType(type);
     setErrorState({
       blockErr: false,
+      streetErr: false,
+      houseNoErr: false,
       buildingErr: false,
       floorErr: false,
+      apartmentNoerr: false,
       companyNameErr: false,
       additionalDirErr: false,
-      countryCodeErr: false,
     });
     setAddress((prevState) => ({
       ...prevState,
@@ -123,7 +128,8 @@ const AddressForm = () => {
   const apiCall = () => {
     const updateAddress = {
       ...address,
-      country_code: `+${address.country_code}`,
+      country_code: whatsapp_country_code,
+      mobile_number: whatsapp_no,
     };
 
     addAddressApiCall(updateAddress, token).then((res) => {
@@ -131,7 +137,8 @@ const AddressForm = () => {
         if (
           location?.state?.path === "/cart" ||
           location?.state?.path === "/home" ||
-          location?.state?.path?.includes("menu-item-details")
+          location?.state?.path?.includes("menu-item-details") ||
+          location?.state?.path === "menu/restaurant"
         ) {
           const addToStorage = {
             lat: location?.state?.latlng?.lat,
@@ -141,7 +148,10 @@ const AddressForm = () => {
 
           localStorage.setItem("selected", JSON.stringify(addToStorage));
 
-          if (location?.state?.path?.includes("menu-item-details")) {
+          if (
+            location?.state?.path?.includes("menu-item-details") ||
+            location?.state?.path === "menu/restaurant"
+          ) {
             navigate(
               `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
             );
@@ -162,7 +172,8 @@ const AddressForm = () => {
   const updateApiCall = () => {
     const updateAddress = {
       ...address,
-      country_code: `+${address.country_code}`,
+      country_code: whatsapp_country_code,
+      mobile_number: whatsapp_no,
     };
 
     updateAddressApiCall(updateAddress, location?.state?.data.id, token).then(
@@ -171,7 +182,8 @@ const AddressForm = () => {
           if (
             location?.state?.path === "/cart" ||
             location?.state?.path === "/home" ||
-            location?.state?.path?.includes("menu-item-details")
+            location?.state?.path?.includes("menu-item-details") ||
+            location?.state?.path === "menu/restaurant"
           ) {
             const addToStorage = {
               lat: location?.state?.latlng?.lat,
@@ -181,7 +193,10 @@ const AddressForm = () => {
 
             localStorage.setItem("selected", JSON.stringify(addToStorage));
 
-            if (location?.state?.path?.includes("menu-item-details")) {
+            if (
+              location?.state?.path?.includes("menu-item-details") ||
+              location?.state?.path === "menu/restaurant"
+            ) {
               navigate(
                 `${paths.menu}/restaurant/${location?.state?.restaurant_id}`
               );
@@ -209,9 +224,9 @@ const AddressForm = () => {
 
     if (addressType === "house") {
       if (
-        address.block !== "" ||
-        address.additional_direction !== "" ||
-        address.country_code !== ""
+        address.block !== "" &&
+        address.street !== "" &&
+        address.house_no !== ""
       ) {
         setClickEv(false);
         if (location?.state?.edit) {
@@ -223,9 +238,11 @@ const AddressForm = () => {
     }
     if (addressType === "apartment") {
       if (
-        address.building !== "" ||
-        address.additional_direction !== "" ||
-        address.country_code !== ""
+        address.block !== "" &&
+        address.street !== "" &&
+        address.building !== "" &&
+        address.floor !== "" &&
+        address.apartment_no !== ""
       ) {
         setClickEv(false);
         if (location?.state?.edit) {
@@ -237,10 +254,11 @@ const AddressForm = () => {
     }
     if (addressType === "office") {
       if (
-        address.floor !== "" ||
-        address.company_name !== "" ||
-        address.additional_direction !== "" ||
-        address.country_code !== ""
+        address.block !== "" &&
+        address.street !== "" &&
+        address.building !== "" &&
+        address.floor !== "" &&
+        address.company_name !== ""
       ) {
         setClickEv(false);
         if (location?.state?.edit) {
@@ -255,66 +273,163 @@ const AddressForm = () => {
   useEffect(() => {
     if (clickEv) {
       if (addressType === "house") {
-        if (
-          address.block === "" ||
-          address.additional_direction === "" ||
-          address.country_code === ""
-        ) {
+        if (address.block === "") {
           setErrorState((prev) => ({
             ...prev,
             blockErr: true,
-            additionalDirErr: true,
-            countryCodeErr: true,
           }));
-        } else {
+        }
+        if (address.street === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            streetErr: true,
+          }));
+        }
+        if (address.house_no === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            houseNoErr: true,
+          }));
+        }
+
+        if (address.block !== "") {
           setErrorState((prev) => ({
             ...prev,
             blockErr: false,
-            additionalDirErr: false,
-            countryCodeErr: false,
+          }));
+        }
+        if (address.street !== "") {
+          setErrorState((prev) => ({
+            ...prev,
+            streetErr: false,
+          }));
+        }
+        if (address.house_no !== "") {
+          setErrorState((prev) => ({
+            ...prev,
+            houseNoErr: false,
           }));
         }
       } else if (addressType === "apartment") {
-        if (
-          address.building === "" ||
-          address.additional_direction === "" ||
-          address.country_code === ""
-        ) {
+        if (address.block === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            blockErr: true,
+          }));
+        }
+        if (address.street === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            streetErr: true,
+          }));
+        }
+        if (address.building === "") {
           setErrorState((prev) => ({
             ...prev,
             buildingErr: true,
-            additionalDirErr: true,
-            countryCodeErr: true,
-          }));
-        } else {
-          setErrorState((prev) => ({
-            ...prev,
-            buildingErr: false,
-            additionalDirErr: false,
-            countryCodeErr: false,
           }));
         }
-      } else if (addressType === "office") {
-        if (
-          address.floor === "" ||
-          address.company_name === "" ||
-          address.additional_direction === "" ||
-          address.country_code === ""
-        ) {
+        if (address.floor === "") {
           setErrorState((prev) => ({
             ...prev,
             floorErr: true,
-            companyNameErr: true,
-            additionalDirErr: true,
-            countryCodeErr: true,
           }));
-        } else {
+        }
+        if (address.apartment_no === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            apartmentNoerr: true,
+          }));
+        }
+        if (address.block !== "") {
+          setErrorState((prev) => ({
+            ...prev,
+            blockErr: false,
+          }));
+        }
+        if (address.street !== "") {
+          setErrorState((prev) => ({
+            ...prev,
+            streetErr: false,
+          }));
+        }
+        if (address.building !== "") {
+          setErrorState((prev) => ({
+            ...prev,
+            buildingErr: false,
+          }));
+        }
+        if (address.floor !== "") {
           setErrorState((prev) => ({
             ...prev,
             floorErr: false,
+          }));
+        }
+        if (address.apartment_no !== "") {
+          setErrorState((prev) => ({
+            ...prev,
+            apartmentNoerr: false,
+          }));
+        }
+      } else if (addressType === "office") {
+        if (address.block === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            blockErr: true,
+          }));
+        }
+        if (address.street === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            streetErr: true,
+          }));
+        }
+        if (address.building === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            buildingErr: true,
+          }));
+        }
+        if (address.floor === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            floorErr: true,
+          }));
+        }
+        if (address.company_name === "") {
+          setErrorState((prev) => ({
+            ...prev,
+            companyNameErr: true,
+          }));
+        }
+        if (address.block !== "") {
+          setErrorState((prev) => ({
+            ...prev,
+            blockErr: false,
+          }));
+        }
+        if (address.street !== "") {
+          setErrorState((prev) => ({
+            ...prev,
+            streetErr: false,
+          }));
+        }
+        if (address.building !== "") {
+          setErrorState((prev) => ({
+            ...prev,
+            buildingErr: false,
+          }));
+        }
+        if (address.floor !== "") {
+          setErrorState((prev) => ({
+            ...prev,
+            floorErr: false,
+          }));
+        }
+        if (address.company_name !== "") {
+          setErrorState((prev) => ({
+            ...prev,
             companyNameErr: false,
-            additionalDirErr: false,
-            countryCodeErr: false,
           }));
         }
       }
@@ -374,24 +489,30 @@ const AddressForm = () => {
             handleChange={handleChange}
             address={address}
             blockErr={errorState.blockErr}
-            additionalDirErr={errorState.additionalDirErr}
+            streetErr={errorState.streetErr}
+            houseNoErr={errorState.houseNoErr}
           />
         )}
         {addressType === "apartment" && (
           <AppartmentAdress
             handleChange={handleChange}
             address={address}
+            blockErr={errorState.blockErr}
+            streetErr={errorState.streetErr}
             buildingErr={errorState.buildingErr}
-            additionalDirErr={errorState.additionalDirErr}
+            floorErr={errorState.floorErr}
+            apartmentNoerr={errorState.apartmentNoerr}
           />
         )}
         {addressType === "office" && (
           <OfficeAdress
             handleChange={handleChange}
             address={address}
-            floorReq={errorState.floorErr}
-            companyNameReq={errorState.companyNameErr}
-            additionalDirErr={errorState.additionalDirErr}
+            blockErr={errorState.blockErr}
+            streetErr={errorState.streetErr}
+            buildingErr={errorState.buildingErr}
+            floorErr={errorState.floorErr}
+            companyNameErr={errorState.companyNameErr}
           />
         )}
         <div className="contact-style">
@@ -400,11 +521,7 @@ const AddressForm = () => {
           </div>
           <div className="contact-field">
             <input
-              className={
-                errorState.countryCodeErr
-                  ? ["country-code-input", "error"].join(" ")
-                  : "country-code-input"
-              }
+              className="country-code-input"
               type="text"
               name="CountryCode"
               placeholder="+956"

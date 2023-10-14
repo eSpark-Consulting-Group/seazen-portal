@@ -51,6 +51,8 @@ function CartPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const branchHours = useSelector((state) => state.resturants.branchHours);
+
   const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [tipValue, setTipValue] = React.useState(0.25);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -76,6 +78,9 @@ function CartPage() {
   const [updateText, setUpdateText] = useState("");
   const [farLocation, setFarLocation] = useState(true);
 
+  const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+  const restaurantId = localStorage.getItem("restaurantID");
+
   // Function to handle closing the dialog
   const handleDialogClose = () => {
     setDialogOpen(false);
@@ -98,15 +103,22 @@ function CartPage() {
   }, [location]);
 
   useLayoutEffect(() => {
-    getBranchHours();
-  }, []);
+    if (branchHours?.length === 0) {
+      getBranchHours();
+    } else {
+      checkBranchHours(branchHours);
+    }
+  }, [branchHours]);
 
   const getBranchHours = () => {
-    const restaurantId = localStorage.getItem("restaurantID");
-    const selectedAddress = JSON.parse(localStorage.getItem("selected"));
-
     getRestaurantBranchHours(restaurantId).then((res) => {
-      res?.data?.forEach((res) => {
+      checkBranchHours(res.data);
+    });
+  };
+
+  const checkBranchHours = (array) => {
+    if (array?.length) {
+      array?.forEach((res) => {
         const resLat = +res.latitude;
         const resLng = +res.longitude;
         const selectedLat = selectedAddress.lat;
@@ -123,17 +135,15 @@ function CartPage() {
           setNotDeliver(true);
         } else {
           setNotDeliver(false);
-          setFarLocation(false);
         }
       });
-    });
+    }
   };
 
   const token = localStorage.getItem("token");
   const cart = useSelector((state) => state.cart.cart);
   const totalPrice = useSelector((state) => state.cart.total);
   const dispatch = useDispatch();
-  const restaurantId = localStorage.getItem("restaurantID");
 
   // Function to handle opening the dialog
   const handleDialogOpen = () => {
@@ -186,30 +196,6 @@ function CartPage() {
     },
   });
 
-  // useEffect(() => {
-  //   if (branchesAndHoursResponse?.data?.length) {
-  //     branchesAndHoursResponse?.data?.forEach((res) => {
-  //       const selected = JSON.parse(localStorage?.getItem("selected"));
-
-  //       const resLat = +res.latitude;
-  //       const resLng = +res.longitude;
-
-  //       const distance = getDistanceFromLatLonInKm(
-  //         resLat,
-  //         resLng,
-  //         selected.lat,
-  //         selected.lng
-  //       );
-
-  //       // if (distance > 50) {
-  //       //   setFarRestaurant(true);
-  //       // } else {
-  //       //   setFarRestaurant(false);
-  //       // }
-  //     });
-  //   }
-  // }, []);
-
   const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
     (val) => {
       return val.week_day == pickDate.split("-")[1];
@@ -219,16 +205,46 @@ function CartPage() {
     setCartItems(cart);
   }, [cart]);
 
+  let itemsProcessed = 0;
+
   const checkoutHandler = () => {
-    const data = { ...checkoutData, discount_price: getDiscountAmount() };
-    checkout(data, token)
-      .then((res) => {
-        const checkoutRedirectUrl = res.data.payment_methods[0].redirect_url;
-        window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
-      })
-      .catch((err) => {
-        console.log(err);
+    getRestaurantBranchHours(restaurantId).then((res, _, array) => {
+      res?.data?.forEach((res) => {
+        itemsProcessed++;
+
+        const resLat = +res.latitude;
+        const resLng = +res.longitude;
+        const selectedLat = selectedAddress.lat;
+        const selectedLng = selectedAddress.lng;
+
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          selectedLat,
+          selectedLng
+        );
+
+        if (distance > 50) {
+          setNotDeliver(true);
+        } else {
+          if (itemsProcessed === array.length) {
+            const data = {
+              ...checkoutData,
+              discount_price: getDiscountAmount(),
+            };
+            checkout(data, token)
+              .then((res) => {
+                const checkoutRedirectUrl =
+                  res.data.payment_methods[0].redirect_url;
+                window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        }
       });
+    });
   };
 
   useEffect(() => {
@@ -254,6 +270,7 @@ function CartPage() {
     setOpenPopup(false);
     setIsAsap(true);
   };
+
   useEffect(() => {
     if (localStorage.getItem("selected") === null) {
       setCartItems((prevState) => {
@@ -1015,7 +1032,6 @@ function CartPage() {
           </Stack>
 
           <Button
-            disabled={farLocation}
             onClick={() => checkoutHandler()}
             variant="contained"
             size="large"

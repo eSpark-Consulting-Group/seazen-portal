@@ -53,7 +53,7 @@ export const Details = () => {
   const resturantsData = useSelector(
     (state) => state.resturants.resturantsData
   );
-
+  const branchHours = useSelector((state) => state.resturants.branchHours);
   const token = localStorage.getItem("token");
 
   const [cartItem, setCartItem] = React.useState();
@@ -93,47 +93,57 @@ export const Details = () => {
       );
 
       setRestaurantDetail(restDetail);
+      setRestaurantName(restDetail?.page_title_en);
     }
   }, [resturantsData]);
 
   useLayoutEffect(() => {
-    fetchBranchHours();
+    if (token !== null) {
+      fetchBranchHours();
+    }
   }, []);
 
   const fetchBranchHours = () => {
     const restaurantId =
-      location?.state?.restaurant_id === null
+      location?.state?.restaurant_id === undefined
         ? localStorage.getItem("restaurantID")
         : location?.state?.restaurant_id;
 
-    getRestaurantBranchHours(restaurantId).then((res) => {
-      if (res.status === "ok") {
-        calculateDistance(res?.data);
-        setFromPopBranch(res.data);
-      }
-    });
+    if (branchHours?.length === 0) {
+      getRestaurantBranchHours(restaurantId).then((res) => {
+        if (res.status === "ok") {
+          calculateDistance(res?.data);
+          setFromPopBranch(res.data);
+        }
+      });
+    } else {
+      calculateDistance(branchHours);
+      setFromPopBranch(branchHours);
+    }
   };
 
   const calculateDistance = (array) => {
     const selected = JSON.parse(localStorage?.getItem("selected"));
 
-    array?.forEach((res) => {
-      const resLat = +res.latitude;
-      const resLng = +res.longitude;
+    if (array?.length) {
+      array?.forEach((res) => {
+        const resLat = +res.latitude;
+        const resLng = +res.longitude;
 
-      const distance = getDistanceFromLatLonInKm(
-        resLat,
-        resLng,
-        selected.lat,
-        selected.lng
-      );
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          selected.lat,
+          selected.lng
+        );
 
-      if (distance > 50) {
-        setFarRestaurant(true);
-      } else {
-        setFarRestaurant(false);
-      }
-    });
+        if (distance > 50) {
+          setFarRestaurant(true);
+        } else {
+          setFarRestaurant(false);
+        }
+      });
+    }
   };
 
   const {
@@ -494,7 +504,7 @@ export const Details = () => {
 
       dispatch(addToCart(ItemDataObject));
       addToCartApiHandler(ItemDataObject);
-      navigate(-1);
+      navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`);
     }
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
     // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));
@@ -506,7 +516,13 @@ export const Details = () => {
   };
 
   const moveToLocation = () => {
-    navigate(paths.location);
+    navigate(paths.location, {
+      state: {
+        restaurant_id: +restaurant_id,
+        path: location.pathname,
+        restaurantName: location?.state?.restaurantDetail?.page_title_en,
+      },
+    });
   };
 
   const handleClose = () => {

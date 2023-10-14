@@ -52,9 +52,7 @@ const DeliveryConditionalComponent = ({
         searchParams.get("category"),
         country?.id
       ),
-    onSuccess: (data) => {
-      dispatch(getCategoryItemList(getAllItemsByCategoryResponse?.data));
-    },
+    onSuccess: (data) => {},
     enabled: false,
   });
 
@@ -83,6 +81,10 @@ const DeliveryConditionalComponent = ({
 
   const { data: itemDetail } = getAllItemsByCategoryResponse || {};
   const { data: itemCategoryList } = getItemsCategoryResponse || {};
+
+  useEffect(() => {
+    dispatch(getCategoryItemList(getAllItemsByCategoryResponse?.data));
+  }, [getAllItemsByCategoryResponse]);
 
   return (
     <>
