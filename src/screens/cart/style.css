@@ -52,3 +52,17 @@
   position: absolute !important;
   left: -5px;
 }
+
+.scrollableContainerWrapper {
+  max-height: calc(100vh - 230px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  width: 100%;
+}
+.scrollableContainer{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}

@@ -205,11 +205,9 @@ function CartPage() {
     setCartItems(cart);
   }, [cart]);
 
-
-
   const checkoutHandler = () => {
     let itemsProcessed = 0;
-    
+
     getRestaurantBranchHours(restaurantId).then((res) => {
       const selectedLat = selectedAddress.lat;
       const selectedLng = selectedAddress.lng;
@@ -244,7 +242,7 @@ function CartPage() {
                 console.log(err);
               });
 
-              return;
+            return;
           }
         }
       });
@@ -746,27 +744,30 @@ function CartPage() {
               />
             )}
           </LocalizationProvider>
-          <Stack spacing={2}>
-            <Typography variant="h5">
-              Your Items
-              {cartItems.length > 0 ? ` (s)` : ""}
-            </Typography>
+          <div className="scrollableContainerWrapper">
+            <div className="scrollableContainer" id="scrollableContainer">
+              <Stack spacing={2}>
+                <Typography variant="h5">
+                  Your Items
+                  {cartItems.length > 0 ? ` (s)` : ""}
+                </Typography>
 
-            {cartItems.length > 0 ? (
-              cartItems.map((cartItem) => {
-                return (
-                  <CartItem
-                    key={cartItem?.item_code}
-                    {...cartItem}
-                    cartRefetch={cartRefetch}
-                  />
-                );
-              })
-            ) : (
-              <Typography variant="body1">No items in your cart</Typography>
-            )}
-          </Stack>
-
+                {cartItems.length > 0 ? (
+                  cartItems.map((cartItem) => {
+                    return (
+                      <CartItem
+                        key={cartItem?.item_code}
+                        {...cartItem}
+                        cartRefetch={cartRefetch}
+                      />
+                    );
+                  })
+                ) : (
+                  <Typography variant="body1">No items in your cart</Typography>
+                )}
+              </Stack>
+            </div>
+          </div>
           <TextField
             id="special-instructions"
             placeholder="Special Instructions (Optional)"
