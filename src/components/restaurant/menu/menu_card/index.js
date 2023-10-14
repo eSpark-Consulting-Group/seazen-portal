@@ -369,14 +369,32 @@ const MenuCard = (props) => {
   };
 
   const getExtraItemNames = (menuItemsVariant) => {
-    return `${
-      menuItemsVariant.sizeVariant.name_en
-    }, ${menuItemsVariant.sideVariants.map(
-      (sideVariant) => sideVariant.name_en
-    )}, ${menuItemsVariant.toppingVariants.map(
-      (toppingVariant) => toppingVariant.name_en
-    )}`;
+    const { sizeVariant, sideVariants, toppingVariants } = menuItemsVariant;
+  
+    let extraItemNames = [];
+  
+    if (sizeVariant) {
+      extraItemNames.push(sizeVariant.name_en);
+    }
+  
+    if (sideVariants && sideVariants.length > 0) {
+      extraItemNames.push(...sideVariants.map((variant) => variant.name_en));
+    }
+  
+    if (toppingVariants && toppingVariants.length > 0) {
+      extraItemNames.push(...toppingVariants.map((variant) => variant.name_en));
+    }
+  
+    return extraItemNames.join(', ');
   };
+  
+
+  useEffect(() => {
+    getMenuItemsVariances();
+    if (cart.length > 0 && menuItemsVariances.length > 0) {
+      setMenuCardDropdownOpen(true);
+    }
+  }, [cart, menuItemsVariances]);
 
   return (
     <Stack
@@ -411,7 +429,7 @@ const MenuCard = (props) => {
         >
           <div
             className="menu_card_image_container pointer"
-            onClick={() => setMenuCardDropdownOpen(!menuCardDropdownOpen)}
+            // onClick={() => setMenuCardDropdownOpen(!menuCardDropdownOpen)}
           >
             {imageNotFound ? (
               <Box
@@ -542,7 +560,14 @@ const MenuCard = (props) => {
           sx={{
             width: "85%",
             backgroundColor: "common.white",
-            p: 1,
+            maxHeight: "220px",
+            overflowY: "scroll",
+            overflowX: "hidden",
+            scrollbarWidth: "none",
+            // p: 1,
+            paddingTop: "1px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
             borderBottomLeftRadius: (theme) => theme.shape.borderRadius,
             borderBottomRightRadius: (theme) => theme.shape.borderRadius,
           }}
