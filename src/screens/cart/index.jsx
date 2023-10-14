@@ -64,8 +64,8 @@ function CartPage() {
   const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
   const [discountedPrice, setDiscountedPrice] = React.useState(0);
-  const DISCOUNT_AMOUNT = Number(1).toFixed(3);
-  const DELIVERY_CHARGE = Number(1).toFixed(3);
+  const DISCOUNT_AMOUNT = Number(0).toFixed(3);
+  const DELIVERY_CHARGE = Number(0).toFixed(3);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isAsap, setIsAsap] = useState(true);
   const [pickDate, setPickDate] = useState(
@@ -208,15 +208,15 @@ function CartPage() {
   let itemsProcessed = 0;
 
   const checkoutHandler = () => {
-    getRestaurantBranchHours(restaurantId).then((res, _, array) => {
-      res?.data?.forEach((res) => {
+    getRestaurantBranchHours(restaurantId).then((res) => {
+      const selectedLat = selectedAddress.lat;
+      const selectedLng = selectedAddress.lng;
+
+      res?.data?.forEach((res, _, array) => {
         itemsProcessed++;
 
         const resLat = +res.latitude;
         const resLng = +res.longitude;
-        const selectedLat = selectedAddress.lat;
-        const selectedLng = selectedAddress.lng;
-
         const distance = getDistanceFromLatLonInKm(
           resLat,
           resLng,
@@ -227,7 +227,7 @@ function CartPage() {
         if (distance > 50) {
           setNotDeliver(true);
         } else {
-          if (itemsProcessed === array.length) {
+          if (itemsProcessed === array?.length && paymentMethod === "KNET") {
             const data = {
               ...checkoutData,
               discount_price: getDiscountAmount(),
@@ -235,12 +235,14 @@ function CartPage() {
             checkout(data, token)
               .then((res) => {
                 const checkoutRedirectUrl =
-                  res.data.payment_methods[0].redirect_url;
+                  res.data?.payment_methods[0].redirect_url;
                 window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
               })
               .catch((err) => {
                 console.log(err);
               });
+
+              return;
           }
         }
       });
@@ -752,7 +754,7 @@ function CartPage() {
               cartItems.map((cartItem) => {
                 return (
                   <CartItem
-                    key={cartItem.id}
+                    key={cartItem?.item_code}
                     {...cartItem}
                     cartRefetch={cartRefetch}
                   />

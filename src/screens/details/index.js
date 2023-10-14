@@ -87,8 +87,8 @@ export const Details = () => {
   }, [location?.state]);
 
   useEffect(() => {
-    if (resturantsData.length) {
-      const restDetail = resturantsData.find(
+    if (resturantsData?.length) {
+      const restDetail = resturantsData?.find(
         (res) => res.id === +location?.state?.restaurant_id
       );
 
@@ -153,10 +153,7 @@ export const Details = () => {
     isError,
   } = useQuery({
     queryKey: [GET_MENU_ITEM_DETAILS_QUERY_KEY],
-    queryFn: () => getMenuItemDetails(id, restaurant_id, restaurant_id),
-    onSuccess: (data) => {
-      console.log("data", data);
-    },
+    queryFn: () => getMenuItemDetails(id, restaurant_id, restaurant_id)
   });
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
 
