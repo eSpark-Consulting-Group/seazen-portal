@@ -190,30 +190,41 @@ function LocationPage() {
   });
 
   useLayoutEffect(() => {
-    if (location?.state?.restaurant_id !== undefined && selectedAdd !== null) {
-      if (data) {
+    if (
+      (location?.state?.restaurant_id !== undefined && selectedAdd !== null) ||
+      (location?.state?.restaurant_id !== undefined && location !== null)
+    ) {
+      if (data?.data?.length > 0) {
         if (data?.status === "ok") {
-          data.data?.forEach((res) => {
-            const resLat = +res.latitude;
-            const resLng = +res.longitude;
-
-            const distance = getDistanceFromLatLonInKm(
-              resLat,
-              resLng,
-              center.lat,
-              center.lng
-            );
-
-            if (distance > 50) {
-              setDistanceIsFar(true);
-            } else {
-              setDistanceIsFar(false);
-            }
-          });
+          watchBranchHours(data.data);
         }
       }
     }
   }, [data, center, location]);
+
+  const watchBranchHours = (array) => {
+    if (array.length) {
+      array?.forEach((res) => {
+        if (center.lat !== 0 && center.lng !== 0) {
+          const resLat = +res.latitude;
+          const resLng = +res.longitude;
+
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            center.lat,
+            center.lng
+          );
+
+          if (distance > 50) {
+            setDistanceIsFar(true);
+          } else {
+            setDistanceIsFar(false);
+          }
+        }
+      });
+    }
+  };
 
   useEffect(() => {
     if (
@@ -344,9 +355,13 @@ function LocationPage() {
     } else if (
       location?.state?.path === "/cart" ||
       location?.state?.path === "/home" ||
-      location?.state?.path?.includes("menu-item-details")
+      location?.state?.path?.includes("menu-item-details") ||
+      location?.state?.path === "menu/restaurant"
     ) {
-      if (location?.state?.path?.includes("menu-item-details")) {
+      if (
+        location?.state?.path?.includes("menu-item-details") ||
+        location?.state?.path === "menu/restaurant"
+      ) {
         navigate(paths.address, {
           state: {
             name: address,
@@ -402,6 +417,7 @@ function LocationPage() {
             }}
             edge="start"
             onClick={() => navigate(-1)}
+            className="back-location"
           >
             <ArrowBackRoundedIcon fontSize="large" />
           </IconButton>
@@ -415,6 +431,7 @@ function LocationPage() {
             }}
             edge="end"
             onClick={() => navigate(-1)}
+            className="right-icon"
           >
             <SvgIcon component={ProfileIcon} fontSize="large" />
           </IconButton>
@@ -465,7 +482,9 @@ function LocationPage() {
           <div className="marker">
             <img
               src={
-                (distanceIsFar && token !== null) || (distanceIsFar && noRegion)
+                (distanceIsFar && noRegion) ||
+                (distanceIsFar && !noRegion) ||
+                (!distanceIsFar && noRegion)
                   ? LocationRed
                   : LocationGreen
               }
@@ -484,10 +503,13 @@ function LocationPage() {
             animation={"Drop"}
           /> */}
 
-          {distanceIsFar && !noRegion && token !== null ? (
+          {distanceIsFar && !noRegion ? (
             <Box className="info-window-box">
               <Typography variant="h5">
-                {location?.state?.restaurantName} dosen&apos;t deliver here
+                {location?.state?.restaurantName !== undefined
+                  ? location?.state?.restaurantName
+                  : localStorage.getItem("restaurantName")}{" "}
+                dosen&apos;t deliver here
               </Typography>
               <Typography variant="h5">
                 Please choose another location
@@ -495,7 +517,7 @@ function LocationPage() {
             </Box>
           ) : null}
 
-          {distanceIsFar && noRegion ? (
+          {(distanceIsFar && noRegion) || (!distanceIsFar && noRegion) ? (
             <Box className="info-window-box">
               <Typography variant="h5">
                 No services in your country right now
@@ -528,9 +550,7 @@ function LocationPage() {
           variant="contained"
           className="confirm-button"
           onClick={() => confirmLocation()}
-          disabled={
-            token === null ? false : address === "" || distanceIsFar || noRegion
-          }
+          disabled={address === "" || distanceIsFar || noRegion}
         >
           Confirm Your Location
         </Button>
