@@ -270,7 +270,7 @@ const MenuCard = (props) => {
       });
       return;
     }
-    if (!hasVariant && !farAway) {
+    if ((!hasVariant && !farAway) || token === null) {
       navigate(paths.location, {
         state: {
           restaurant_id: restaurantDetail.id,
