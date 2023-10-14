@@ -270,7 +270,7 @@ const MenuCard = (props) => {
       });
       return;
     }
-    if (!hasVariant && !farAway) {
+    if ((!hasVariant && !farAway) || token === null) {
       navigate(paths.location, {
         state: {
           restaurant_id: restaurantDetail.id,
@@ -299,7 +299,7 @@ const MenuCard = (props) => {
             totalPrice: foodPriceWithoutCurrency(),
             quantity: foodItemQuantity + 1,
             itemImage: foodImage,
-            item_code:itemCode
+            item_code: itemCode,
           })
         );
         const cartItemDataForApi = {
