@@ -181,13 +181,13 @@ const MenuCard = (props) => {
             };
           }),
           sizeVariant: {
-            name_en: sizeVariant.name_en,
-            quantity: sizeVariant.quantity,
+            name_en: sizeVariant?.name_en,
+            quantity: sizeVariant?.quantity,
           },
-          toppingVariants: toppingVariant.map((variant) => {
+          toppingVariants: toppingVariant?.map((variant) => {
             return {
-              name_en: variant.name_en,
-              quantity: variant.quantity,
+              name_en: variant?.name_en,
+              quantity: variant?.quantity,
             };
           }),
         };
@@ -289,6 +289,8 @@ const MenuCard = (props) => {
           })
         );
       } else {
+        const itemCode = uuidv4();
+
         dispatch(
           addToCart({
             id: id,
@@ -297,10 +299,11 @@ const MenuCard = (props) => {
             totalPrice: foodPriceWithoutCurrency(),
             quantity: foodItemQuantity + 1,
             itemImage: foodImage,
+            item_code:itemCode
           })
         );
         const cartItemDataForApi = {
-          item_code: uuidv4(),
+          item_code: itemCode,
           item_id: id,
           quantity: foodItemQuantity + 1,
           topping_variant_id: 0,

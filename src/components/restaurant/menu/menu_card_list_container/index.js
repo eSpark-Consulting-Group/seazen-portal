@@ -209,7 +209,7 @@ const MenuCardListContainer = ({
                             id={item.id}
                             restaurant_id={item.restaurant_id}
                             showSubTractButton={
-                              item.has_extras === false &&
+                              item.has_extras === false && item.has_variants === false &&
                               item.has_options === false
                             }
                             setOpenModal={setOpenModal}

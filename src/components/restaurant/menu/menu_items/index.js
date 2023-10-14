@@ -115,7 +115,7 @@ const MenuItems = ({ itemCategoryList }) => {
             }}
           >
             <Tabs
-              value={value}
+              value={value === -1 ? value + 1 : value}
               onChange={handleChange}
               variant="scrollable"
               scrollButtons={false}
