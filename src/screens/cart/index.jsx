@@ -46,6 +46,7 @@ import {
 } from "../../utils/getAddress";
 import { DialogComponent } from "../../components/dialog";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
+import { isEmpty } from "lodash";
 
 function CartPage() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ function CartPage() {
   const [promoCode, setPromoCode] = React.useState("");
   const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
-  const [discountedPrice, setDiscountedPrice] = React.useState(0);
+  const [discount, setDiscount] = React.useState(0);
   const DISCOUNT_AMOUNT = Number(0).toFixed(3);
   const DELIVERY_CHARGE = Number(0).toFixed(3);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -77,6 +78,10 @@ function CartPage() {
   const [notDeliver, setNotDeliver] = useState(false);
   const [updateText, setUpdateText] = useState("");
   const [farLocation, setFarLocation] = useState(true);
+  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
+  const [selectedSchedule, setSelectedSchedule] = useState(
+    "14 August 2023, ASAP"
+  );
 
   const selectedAddress = JSON.parse(localStorage.getItem("selected"));
   const restaurantId = localStorage.getItem("restaurantID");
@@ -165,28 +170,6 @@ function CartPage() {
         console.log(err);
         setDialogOpen(true);
       });
-  };
-
-  const checkoutData = {
-    payment_method_id: "1",
-    order_total_price: totalPrice + tipValue,
-    currency_id: "3",
-    country_id: "3",
-    restaurant_id: "2",
-    branch_id: "1",
-    driver_id: "1",
-    address_id: "1",
-    service_type: "pickup",
-    tip_id: "1",
-    pick_from_store: "",
-    pickup_from_car: "",
-    delivery_charges: "0",
-    promo_code: "Test1",
-    comments: specialIns,
-    schedule: {
-      date: pickDate.split("-")[0],
-      time: pickTime,
-    },
   };
 
   const { data: branchesAndHoursResponse, isSuccess } = useQuery({
@@ -385,14 +368,30 @@ function CartPage() {
       Number(getItemTotal()) +
       Number(getTipAmount()) -
       Number(getDiscountAmount()) +
-      Number(getDeliveryCharge()) -
-      Number(getPromoDiscount())
+      Number(getDeliveryCharge()) 
     ).toFixed(3);
   };
-  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
-  const [selectedSchedule, setSelectedSchedule] = useState(
-    "14 August 2023, ASAP"
-  );
+  const checkoutData = {
+    payment_method_id: "1",
+    order_total_price: totalPrice + tipValue - (!isEmpty(promoDiscount) && getDiscountAmount()),
+    currency_id: "3",
+    country_id: "3",
+    restaurant_id: "2",
+    branch_id: "1",
+    driver_id: "1",
+    address_id: "1",
+    service_type: "pickup",
+    tip_id: "1",
+    pick_from_store: "",
+    pickup_from_car: "",
+    delivery_charges: "0",
+    promo_code: "Test1",
+    comments: specialIns,
+    schedule: {
+      date: pickDate.split("-")[0],
+      time: pickTime,
+    },
+  };
 
   const onDateSelected = () => {
     if (pickDate) {
