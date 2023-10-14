@@ -11,8 +11,8 @@ import Typography from "@mui/material/Typography";
 import Navbar, { NavbarVariants } from "../../components/header";
 import updateProfile from "../../api/customer/updateProfile";
 import { paths } from "../../routes/paths";
-import "./style.css";
 import { addUserInfo } from "../../store/reducers/authSlice";
+import "./style.css";
 
 const updateProfileFormSchema = Yup.object().shape({
   first_name: Yup.string()

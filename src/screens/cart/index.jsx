@@ -205,9 +205,11 @@ function CartPage() {
     setCartItems(cart);
   }, [cart]);
 
-  let itemsProcessed = 0;
+
 
   const checkoutHandler = () => {
+    let itemsProcessed = 0;
+    
     getRestaurantBranchHours(restaurantId).then((res) => {
       const selectedLat = selectedAddress.lat;
       const selectedLng = selectedAddress.lng;
@@ -360,7 +362,7 @@ function CartPage() {
   };
 
   const getTipAmount = () => {
-    return tipValue.toFixed(2);
+    return tipValue.toFixed(3);
   };
 
   const getDeliveryCharge = () => {
@@ -377,7 +379,7 @@ function CartPage() {
   };
 
   const getDiscountAmount = () => {
-    return Number(getPromoDiscount()).toFixed(2);
+    return Number(getPromoDiscount()).toFixed(3);
   };
 
   const getGrandTotal = () => {
