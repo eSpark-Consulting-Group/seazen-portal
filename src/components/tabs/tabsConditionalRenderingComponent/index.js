@@ -5,6 +5,7 @@ import CateringDetails from "../../restaurant/catering/index.js";
 import DineInCoditionalComponent from "../../restaurant/dineIn/dineInConditionalComponent/index.js";
 import PickupConditionalComponent from "../../restaurant/pickup/pickupConditionalComponent/index.js";
 import DeliveryConditionalComponent from "../../restaurant/delivery/deliveryDetails/deliveryConditionalComponent/index.js";
+import { useSelector } from "react-redux";
 
 const TabsDynamicConditionalComponent = ({
   resturantId,
@@ -13,10 +14,11 @@ const TabsDynamicConditionalComponent = ({
   setOpenModal,
   setSelectedItemToDeliver,
 }) => {
-  const [tabPosition, setTabPosition] = useState("dinein");
+  const selectedService = useSelector((state)=> state.resturants.selectedService);
+  const [tabPosition, setTabPosition] = useState(selectedService);
   const [locationDeliver, setLocationDeliver] = useState(false);
   const [deliveryAvailable, setDeliveryAvailable] = useState(false);
-
+  
   switch (tabPosition) {
     case "dinein":
       return (

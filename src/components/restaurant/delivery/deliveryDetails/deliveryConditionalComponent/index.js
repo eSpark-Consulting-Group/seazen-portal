@@ -32,6 +32,7 @@ const DeliveryConditionalComponent = ({
   const categoryList = useSelector(
     (state) => state?.resturants?.listItemByCategory
   );
+  const dispatch = useDispatch();
 
   const {
     data: getAllItemsByCategoryResponse,
@@ -51,7 +52,9 @@ const DeliveryConditionalComponent = ({
         searchParams.get("category"),
         country?.id
       ),
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      dispatch(getCategoryItemList(getAllItemsByCategoryResponse?.data));
+    },
     enabled: false,
   });
 
@@ -77,13 +80,10 @@ const DeliveryConditionalComponent = ({
 
     onSuccess: (data) => {},
   });
-  const dispatch = useDispatch();
+
   const { data: itemDetail } = getAllItemsByCategoryResponse || {};
   const { data: itemCategoryList } = getItemsCategoryResponse || {};
 
-  useEffect(() => {
-    dispatch(getCategoryItemList(getAllItemsByCategoryResponse?.data));
-  }, [getAllItemsByCategoryResponse]);
   return (
     <>
       <DeliveryDetails

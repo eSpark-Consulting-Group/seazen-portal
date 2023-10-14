@@ -65,7 +65,7 @@ function App() {
     }
 
     // Additional logic for page-specific CSS
-    if (currentURL.pathname === "/menu/restaurant/1/delivery","/menu-item-details") {
+    if (currentURL.pathname === "/menu/restaurant/1/delivery" || currentURL.pathname === "/menu-item-details") {
       // Apply additional styles for the specific page
       // For example, you can add a class to the body or any specific element
       document.body.classList.add("specific-page-body-style");
