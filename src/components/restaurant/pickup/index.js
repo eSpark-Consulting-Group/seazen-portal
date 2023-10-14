@@ -12,6 +12,11 @@ const StyledOuterContainer = styled("div")(({ theme }) => ({
   // Add any other styles you need for the outer container here
 }));
 
+const StyledOuterContainerIcon = styled("div")(({ theme }) => ({
+  backgroundColor: theme.palette.themeColor.main, // Apply the background color
+  // Add any other styles you need for the outer container here
+}));
+
 const PickupDetails = () => {
 
     const[branch,setBranch]=useState("Choose a Branch ");
@@ -37,12 +42,9 @@ const PickupDetails = () => {
             }}
           >
             {branch}
-            <span className="dropdown_icon_container">
-              <img
-                src="/assets/img/Add To Cart.svg"
-                alt="chevron_down_icon"
-              />
-            </span>
+            <StyledOuterContainerIcon className="dropdown_icon_container">
+                <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
+              </StyledOuterContainerIcon>
           </Dropdown.Toggle>
 
           <Dropdown.Menu
@@ -80,12 +82,9 @@ const PickupDetails = () => {
             }}
           >
             {pickupTime}
-            <span className="dropdown_icon_container">
-              <img
-                src="/assets/img/Add To Cart.svg"
-                alt="chevron_down_icon"
-              />
-            </span>
+            <StyledOuterContainerIcon className="dropdown_icon_container">
+                <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
+              </StyledOuterContainerIcon>
           </Dropdown.Toggle>
 
           <Dropdown.Menu
