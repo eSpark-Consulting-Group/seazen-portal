@@ -422,7 +422,11 @@ function LocationPage() {
             <ArrowBackRoundedIcon fontSize="large" />
           </IconButton>
           <div className="d-flex align-items-center logo">
-            <img src="/assets/img/Logo.png" alt="Logo" />
+            <img
+              style={{ width: "81px", marginRight: "-5px" }}
+              src="/assets/img/order seazen logo.svg"
+              alt="Logo"
+            />{" "}
           </div>
           <IconButton
             size="large"

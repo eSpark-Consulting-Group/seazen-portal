@@ -60,7 +60,11 @@ const Navbar = (props) => {
         )}
       </div>
       <div className="d-flex align-items-center logo">
-        <img src="/assets/img/Logo.png" alt="Logo" />
+        <img
+          style={{ width: "81px", marginRight: "-5px" }}
+          src="/assets/img/order seazen logo.svg"
+          alt="Logo"
+        />
       </div>
 
       {variant === NavbarVariants.backWithProfile && (
@@ -79,7 +83,6 @@ const Navbar = (props) => {
           style={{
             columnGap: "10px",
             marginRight: "-4px",
-
           }}
         >
           <div
