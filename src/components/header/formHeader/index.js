@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import "../profileHeader/style.css";
 
 const FormHeader = () => {
-
   return (
     <nav>
       <div className="account">
@@ -11,7 +10,11 @@ const FormHeader = () => {
         </div>
       </div>
       <div className="logo">
-        <img src="/assets/img/Group 143.svg" alt="Logo" />
+        <img
+          style={{ width: "90px"}}
+          src="/assets/img/order seazen logo.svg"
+          alt="Logo"
+        />{" "}
       </div>
 
       <div className="option">

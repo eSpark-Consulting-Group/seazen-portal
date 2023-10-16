@@ -9,14 +9,10 @@
 .profileHeaderlogo {
   font-size: 1.5rem;
   color: #0d0d0d;
-  /* margin-left: 115px; */
-  /* margin-top: -16px; */
   justify-content: center;
   position: relative;
   top: 23px;
-  left: 171px;
-  /* width: 38px; */
-  /* height: 40px; */
+  left: 135px;
   opacity: 1;
 }
 
@@ -35,7 +31,8 @@
   cursor: pointer;
   z-index: 1000;
 }
-.profileHeaderaccount img{
+
+.profileHeaderaccount img {
   top: 7px;
   position: relative;
   left: 6px;
@@ -84,7 +81,7 @@
 
 .profileHeaderoption-icon {
   top: 7px;
-  left: 16px;
+  left: 15px;
   width: 11px;
   height: 20px;
   opacity: 1;
@@ -122,23 +119,28 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   padding: 20px;
   border-radius: 17px;
-  z-index: 99999999999; /* Place above the overlay */
+  z-index: 99999999999;
+  /* Place above the overlay */
   bottom: 0px;
   border-bottom-right-radius: 0px;
   border-bottom-left-radius: 0px;
 }
+
 .profileHeaderpopupWrapper {
   position: relative;
   height: 100%;
 }
+
 .profileHeaderpopup-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
-  z-index: 1; /* Ensure it's above other content */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black overlay */
+  z-index: 1;
+  /* Ensure it's above other content */
 }
 
 .profileHeaderpopup-heading h2 {
@@ -175,7 +177,8 @@
 }
 
 .profileHeadercountry {
-  width: 48%; /* Adjust the width for two columns */
+  width: 48%;
+  /* Adjust the width for two columns */
   display: flex;
   align-items: center;
   text-align: left;
@@ -185,7 +188,8 @@
 .profileHeadercountry img {
   width: 41px;
   height: 41px;
-  margin-right: 10px; /* Add spacing between flag and text */
+  margin-right: 10px;
+  /* Add spacing between flag and text */
   border: 1px solid #c0cdd7;
   border-radius: 50%;
   cursor: pointer;
@@ -277,7 +281,8 @@
 }
 
 .profileHeadercountry-info h2 {
-  padding-top: 2px; /* Push the h2 element to the bottom */
+  padding-top: 2px;
+  /* Push the h2 element to the bottom */
 }
 
 .profileHeadersymbol {
@@ -357,6 +362,7 @@
 .profile-header * {
   box-sizing: content-box;
 }
+
 .profile-header {
   height: 100%;
 }
@@ -375,15 +381,19 @@
     /* margin-bottom: 40px; */
     height: 294px;
   }
+
   .profileHeaderpopup2 {
     left: 185px;
   }
+
   .profileHeaderoption {
     left: 305px;
   }
+
   .profileHeadercircle-container {
     left: 239px;
   }
+
   .profileHeaderlogo {
     left: 151px;
   }
@@ -394,6 +404,7 @@
     position: fixed;
     /* top: 390px; */
   }
+
   .profileHeaderpopup2 {
     left: 188px;
   }
@@ -403,9 +414,11 @@
   .profileHeaderoption {
     left: 295px;
   }
+
   .profileHeadercircle-container {
     left: 230px;
   }
+
   .profileHeaderlogo {
     left: 151px;
   }
@@ -415,12 +428,15 @@
   .profileHeaderlogo {
     left: 185px;
   }
+
   .profileHeadercircle-container {
     left: 300px;
   }
+
   .profileHeaderoption {
     left: 370px;
   }
+
   .profileHeaderpopup2 {
     left: 215px;
   }

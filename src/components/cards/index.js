@@ -249,7 +249,7 @@ const BasicCard = (props) => {
   const iconHeight = "9px";
 
   return (
-    <div style={{height:"140px"}}>
+    <div>
     <div className="restaurantCard-container container-fluid">
       {restaurantsData.map((restaurant, index) => {
         if (restaurantsData && (index === 0 || index === 1)) {

@@ -368,12 +368,13 @@ function CartPage() {
       Number(getItemTotal()) +
       Number(getTipAmount()) -
       Number(getDiscountAmount()) +
-      Number(getDeliveryCharge()) 
+      Number(getDeliveryCharge())
     ).toFixed(3);
   };
   const checkoutData = {
     payment_method_id: "1",
-    order_total_price: totalPrice + tipValue - (!isEmpty(promoDiscount) && getDiscountAmount()),
+    order_total_price:
+      totalPrice + tipValue - (!isEmpty(promoDiscount) && getDiscountAmount()),
     currency_id: "3",
     country_id: "3",
     restaurant_id: "2",
@@ -402,6 +403,14 @@ function CartPage() {
 
   const trunct = (str) => {
     return truncateString(str, 100);
+  };
+
+  const tipHandler = (tip) => {
+    if (tip == tipValue) {
+      setTipValue(0);
+      return;
+    }
+    setTipValue(tip);
   };
 
   return (
@@ -819,10 +828,18 @@ function CartPage() {
               ),
             }}
           />
-          {/* {promoDiscount.message && <div className="promo-message-wrapper">
-             <p>{promoDiscount.message}</p> 
-             <span onClick={() => setPromoDiscount({})}><CancelIcon className="promo-cancel-icon" fontSize="small" color="grey" /></span>
-          </div>} */}
+          {promoDiscount.message && (
+            <div className="promo-message-wrapper">
+              <p>{promoDiscount.message}</p>
+              <span onClick={() => setPromoDiscount({})}>
+                <CancelIcon
+                  className="promo-cancel-icon"
+                  fontSize="small"
+                  color="grey"
+                />
+              </span>
+            </div>
+          )}
           {/* Dialog */}
           <Dialog
             open={isDialogOpen}
@@ -910,7 +927,7 @@ function CartPage() {
                     }),
                     boxShadow: (theme) => theme.shadows[7],
                   }}
-                  onClick={() => setTipValue(tip)}
+                  onClick={() => tipHandler(tip)}
                 >
                   <SvgIcon
                     fontSize="large"

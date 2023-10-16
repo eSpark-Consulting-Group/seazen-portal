@@ -89,7 +89,11 @@ const ProfileHeader = (props) => {
         </div>
       </div>
       <div className="profileHeaderlogo">
-        <img src="/assets/img/Group 143.svg" alt="Logo" />
+        <img
+          style={{ width: "90px" }}
+          src="/assets/img/order seazen logo.svg"
+          alt="Logo"
+        />
       </div>
       {showFlagOption && (
         <div className="profileHeaderflag-profile">

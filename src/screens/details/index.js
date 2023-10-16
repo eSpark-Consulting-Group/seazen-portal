@@ -722,7 +722,7 @@ export const Details = () => {
                                   <Checkbox color="themeColor" />
                                 ) : (
                                   <span
-                                    style={{ marginLeft: "12px" }}
+                                    style={{ marginLeft: "12px",  marginTop: "40px" }}
                                     color="themeColor"
                                   />
                                 )
@@ -745,14 +745,13 @@ export const Details = () => {
                                   marginRight:
                                     variant.name_en === "Extra Topping" &&
                                     isLastItem
-                                      ? "152px"
-                                      : "90px",
+                                      ? "90px"
+                                      : "105px",
                                 }}
                               >{`(Each +KWD ${option?.unit_price})`}</p>
                             )}
 
-                            {variant.name_en === "Extra Topping" &&
-                            !isLastItem ? (
+                            {variant.name_en === "Extra Topping" ? (
                               <IncDec
                                 IncButtonProps={{
                                   disabled: extraToppingCount == 7,
