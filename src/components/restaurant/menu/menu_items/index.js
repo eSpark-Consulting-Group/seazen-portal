@@ -26,7 +26,6 @@ const MenuItems = ({ itemCategoryList }) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
   const visibleCategoryElementID = useSelector(
     (state) => state.resturants.visibleCategoryElementID
@@ -35,12 +34,13 @@ const MenuItems = ({ itemCategoryList }) => {
     if (index || index === 0) {
       setValue(index);
     }
-  
+
     const container = document.getElementById(id);
     if (container) {
       container.scrollIntoView({ behavior: "auto" });
     }
   };
+  console.log(visibleCategoryElementID, "valuevalue");
 
   useEffect(() => {
     setValue(parseInt(visibleCategoryElementID - 1));
@@ -132,10 +132,10 @@ const MenuItems = ({ itemCategoryList }) => {
                 },
               }}
             >
-              {itemCategoryList?.map((val) => {
+              {itemCategoryList?.map((val, index) => {
                 return (
                   <Tab
-                    onClick={() => scrollToElement(val.id)}
+                    onClick={() => scrollToElement(index + 1)}
                     key={val.id}
                     label={
                       val.name_en.charAt(0).toUpperCase() +

@@ -67,7 +67,7 @@ const MenuCardListContainer = ({
   useEffect(() => {
     const options = {
       root: null, // Use the viewport as the root
-      rootMargin: "0px",
+      rootMargin: "-100px",
       threshold: 0.5, // Trigger when 50% of the element is visible
     };
 
@@ -184,10 +184,10 @@ const MenuCardListContainer = ({
                     />
                   </div>
                 )}
-                {Object.keys(categoriesWiseList).map((val) => {
+                {Object.keys(categoriesWiseList).map((val, index) => {
                   return (
                     <>
-                      <div id={val} className="card_list_title">
+                      <div id={index + 1} className="card_list_title">
                         {
                           itemCategoryList?.find((item) => item.id == val)
                             ?.name_en
@@ -209,7 +209,8 @@ const MenuCardListContainer = ({
                             id={item.id}
                             restaurant_id={item.restaurant_id}
                             showSubTractButton={
-                              item.has_extras === false && item.has_variants === false &&
+                              item.has_extras === false &&
+                              item.has_variants === false &&
                               item.has_options === false
                             }
                             setOpenModal={setOpenModal}

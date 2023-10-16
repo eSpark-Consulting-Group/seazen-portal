@@ -24,7 +24,7 @@ function CartItem(props) {
     itemName,
     totalPrice,
     itemImage,
-     // variant,
+    // variant,
     cartRefetch,
     item_code,
     item_id,
@@ -132,30 +132,30 @@ function CartItem(props) {
             },
           }}
         >
-            {imageNotFound ? (
-              <Box
-                sx={{
-                  height: 68,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "common.white",
-                  borderRadius: "8px"
-                }}
-              >
-                <ImageNotSupportedIcon fontSize="large"></ImageNotSupportedIcon>
+          {imageNotFound ? (
+            <Box
+              sx={{
+                height: 68,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "common.white",
+                borderRadius: "8px",
+              }}
+            >
+              <ImageNotSupportedIcon fontSize="large"></ImageNotSupportedIcon>
 
-                <Typography variant="caption">No Image Found</Typography>
-              </Box>
-            ) : (
-              <img
-                onError={() => setImageNotFound(true)}
-                style={{ borderRadius: "8px" }}
-                src={itemImage}
-                alt={menu_item_name_en || itemName}
-              />
-            )}
+              <Typography variant="caption">No Image Found</Typography>
+            </Box>
+          ) : (
+            <img
+              onError={() => setImageNotFound(true)}
+              style={{ borderRadius: "8px" }}
+              src={itemImage}
+              alt={menu_item_name_en || itemName}
+            />
+          )}
         </Box>
 
         <Stack
@@ -212,10 +212,12 @@ function CartItem(props) {
           onIncrease={onIncrease}
           onDecrease={onDecrease}
           onDelete={onDelete}
-          IncButtonProps={{
-            // disabled: updatedQuantity === 10,
-          }}
-          isSingleItem={updatedQuantity === 1}
+          IncButtonProps={
+            {
+              // disabled: updatedQuantity === 10,
+            }
+          }
+          isSingleItem={updatedQuantity < 2}
         />
       </Stack>
     </Stack>

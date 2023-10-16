@@ -129,6 +129,7 @@ const MenuCard = (props) => {
   let itemsProcessed = 0;
 
   const watchBranchHoursBeforeAdd = (id) => {
+    console.log(id, "watchBranchHoursBeforeAdd");
     restaurantBranchHours?.data?.forEach((res, _, array) => {
       const resLat = +res.latitude;
       const resLng = +res.longitude;
@@ -206,6 +207,7 @@ const MenuCard = (props) => {
   }, [cart]);
 
   function handleClickAdd(id) {
+    console.log(id, "handleClickAdd");
     if (token === null) {
       cartFunction(id);
     } else {
@@ -259,6 +261,7 @@ const MenuCard = (props) => {
   }
 
   const cartFunction = (id) => {
+    console.log(id, "iddd");
     if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
       clearCartItems();
     }
@@ -368,33 +371,38 @@ const MenuCard = (props) => {
     return [{ name_en: "rice" }, { name_en: "plate peppers" }];
   };
 
+  console.log(menuItemsVariances, "menuItemsVariances");
+
   const getExtraItemNames = (menuItemsVariant) => {
     const { sizeVariant, sideVariants, toppingVariants } = menuItemsVariant;
-  
+
     let extraItemNames = [];
-  
+
     if (sizeVariant) {
       extraItemNames.push(sizeVariant.name_en);
     }
-  
+
     if (sideVariants && sideVariants.length > 0) {
       extraItemNames.push(...sideVariants.map((variant) => variant.name_en));
     }
-  
+
     if (toppingVariants && toppingVariants.length > 0) {
       extraItemNames.push(...toppingVariants.map((variant) => variant.name_en));
     }
-  
-    return extraItemNames.join(', ');
+
+    return extraItemNames.join(", ");
   };
-  
 
   useEffect(() => {
-    getMenuItemsVariances();
+    // getMenuItemsVariances();
     if (cart.length > 0 && menuItemsVariances.length > 0) {
       setMenuCardDropdownOpen(true);
     }
   }, [cart, menuItemsVariances]);
+
+  const filteredItems = menuItemsVariances.filter((val) => {
+    return val.quantity > 0;
+  });
 
   return (
     <Stack
@@ -573,7 +581,7 @@ const MenuCard = (props) => {
           }}
         >
           <Stack>
-            {menuItemsVariances?.map((variance, index) => {
+            {filteredItems?.map((variance, index) => {
               return (
                 <ExtraItems
                   key={index}

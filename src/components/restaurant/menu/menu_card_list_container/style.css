@@ -244,7 +244,7 @@
   } */
 
 .scrollable-container {
-  max-height: calc(100vh - 550px);
+  max-height: calc(100vh - 56px);
   overflow-y: scroll;
   overflow-x: hidden;
   scrollbar-width: none;
