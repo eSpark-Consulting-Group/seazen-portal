@@ -129,7 +129,6 @@ const MenuCard = (props) => {
   let itemsProcessed = 0;
 
   const watchBranchHoursBeforeAdd = (id) => {
-    console.log(id, "watchBranchHoursBeforeAdd");
     restaurantBranchHours?.data?.forEach((res, _, array) => {
       const resLat = +res.latitude;
       const resLng = +res.longitude;
@@ -207,7 +206,6 @@ const MenuCard = (props) => {
   }, [cart]);
 
   function handleClickAdd(id) {
-    console.log(id, "handleClickAdd");
     if (token === null) {
       cartFunction(id);
     } else {
@@ -261,7 +259,6 @@ const MenuCard = (props) => {
   }
 
   const cartFunction = (id) => {
-    console.log(id, "iddd");
     if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
       clearCartItems();
     }
@@ -370,8 +367,6 @@ const MenuCard = (props) => {
 
     return [{ name_en: "rice" }, { name_en: "plate peppers" }];
   };
-
-  console.log(menuItemsVariances, "menuItemsVariances");
 
   const getExtraItemNames = (menuItemsVariant) => {
     const { sizeVariant, sideVariants, toppingVariants } = menuItemsVariant;

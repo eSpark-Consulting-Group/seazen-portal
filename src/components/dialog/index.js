@@ -112,7 +112,7 @@ export const DialogComponent = (props) => {
                       },
                     })
                   }
-                  className={[!home ? "btn change-button" : "btn back-button"]}
+                  className={!home ? "btn change-button" : "btn back-button"}
                 >
                   <span>Change Location</span>
                 </Button>

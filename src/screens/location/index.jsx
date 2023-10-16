@@ -38,7 +38,6 @@ import "@reach/combobox/styles.css";
 // import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 
 // import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
-import { ReactComponent as ProfileIcon } from "../../assets/icons/profile.svg";
 // import SearchIcon from "../../assets/icons/Icon - Search.jpg";
 import LocationGreen from "../../assets/icons/location-green.png";
 import LocationRed from "../../assets/icons/location-red.png";
@@ -437,7 +436,7 @@ function LocationPage() {
             onClick={() => navigate(-1)}
             className="right-icon"
           >
-            <SvgIcon component={ProfileIcon} fontSize="large" />
+            <img src="/assets/img/options icon.svg" alt="Options"></img>
           </IconButton>
         </Stack>
 

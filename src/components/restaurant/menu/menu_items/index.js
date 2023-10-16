@@ -40,7 +40,6 @@ const MenuItems = ({ itemCategoryList }) => {
       container.scrollIntoView({ behavior: "auto" });
     }
   };
-  console.log(visibleCategoryElementID, "valuevalue");
 
   useEffect(() => {
     setValue(parseInt(visibleCategoryElementID - 1));

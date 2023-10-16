@@ -1,3 +1,7 @@
+.hover-slider {
+  margin-bottom: 17px;
+}
+
 .card-spacing {
   margin-right: -15px;
   margin-left: -15px;
@@ -6,20 +10,22 @@
 
 .carouselBanner {
   border-radius: 20px;
-  margin: 0px 10px 0px 10px;
+  margin: 0px auto 8px;
   position: relative;
+  width: 327px;
+  height: 120px;
 }
 
 .carouselBanner img {
-  width: 327px;
-  height: 120px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 20px;
 }
 
 .caption {
   position: absolute;
-  bottom: 6.5px;
+  bottom: 0px;
   right: 0px;
   color: white;
   font-weight: bold;
