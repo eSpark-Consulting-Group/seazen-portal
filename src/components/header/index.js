@@ -59,9 +59,9 @@ const Navbar = (props) => {
           </div>
         )}
       </div>
-      <div className="d-flex align-items-center logo">
+      <div className="logo-home">
         <img
-          style={{ width: "81px", marginRight: "-5px" }}
+          style={{ width: "90px"}}
           src="/assets/img/order seazen logo.svg"
           alt="Logo"
         />

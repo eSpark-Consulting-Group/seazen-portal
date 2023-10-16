@@ -422,7 +422,7 @@ function LocationPage() {
           </IconButton>
           <div className="d-flex align-items-center logo">
             <img
-              style={{ width: "81px", marginRight: "-5px" }}
+              style={{ width: "90px", marginRight: "-5px" }}
               src="/assets/img/order seazen logo.svg"
               alt="Logo"
             />{" "}

@@ -11,7 +11,7 @@ const FormHeader = () => {
       </div>
       <div className="logo">
         <img
-          style={{ width: "81px", marginRight: "-5px" }}
+          style={{ width: "90px"}}
           src="/assets/img/order seazen logo.svg"
           alt="Logo"
         />{" "}
