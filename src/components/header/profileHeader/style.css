@@ -9,14 +9,10 @@
 .profileHeaderlogo {
   font-size: 1.5rem;
   color: #0d0d0d;
-  /* margin-left: 115px; */
-  /* margin-top: -16px; */
   justify-content: center;
   position: relative;
   top: 23px;
   left: 135px;
-  /* width: 38px; */
-  /* height: 40px; */
   opacity: 1;
 }
 
