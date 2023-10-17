@@ -405,16 +405,22 @@ const Home = () => {
       }
     }
 
+    if (!filterClassNear && selectedText === "Delivery") {
+      removeClasses();
+    }
+
     if (
       filterClassDelivery &&
       !filterClassNear &&
       selectedText === "Delivery"
     ) {
       addBrownClasses();
+      removeClasses();
     }
 
     if (!filterClassDelivery && selectedText === "Delivery") {
       removeBrownClasses();
+      removeClasses();
     }
   }, [
     resturantsData,

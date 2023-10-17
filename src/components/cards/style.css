@@ -32,6 +32,14 @@
   border: 2px solid #93674e;
 }
 
+.catering-border {
+  border: 2px solid #93674e !important;
+}
+
+.catering-bg {
+  background-color: #93674e !important;
+}
+
 .restaurantCard-border-near {
   border: 2px solid #4f948a;
   border-radius: 12px;

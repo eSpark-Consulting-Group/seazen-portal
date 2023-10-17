@@ -265,6 +265,13 @@ const BasicCard = (props) => {
                   selectedText !== "Delivery"
                     ? getCardClassName(images[index].service)
                     : null
+                } ${
+                  selectedText === "Catering" &&
+                  selectedText !== "Dine In" &&
+                  selectedText !== "Delivery" &&
+                  selectedText !== "Pickup"
+                    ? "catering-border"
+                    : ""
                 }`}
                 id="when-deliver"
               >
@@ -302,12 +309,27 @@ const BasicCard = (props) => {
                       className="inner-svg-container"
                       id="inner-svg-container"
                     >
-                      {restaurant.catering_status &&
-                        getServicesIcon("catering_status")}
-                      {restaurant.delivery_status && (
-                        <div className="icon-row rowsss" id="icon-row">
+                      {restaurant.catering_status && (
+                        <div className="icon-row">
                           <img
-                            className="iconssss"
+                            className={
+                              selectedText === "Catering" &&
+                              selectedText !== "Dine In" &&
+                              selectedText !== "Delivery" &&
+                              selectedText !== "Pickup"
+                                ? "catering-bg"
+                                : ""
+                            }
+                            src={icons["catering_status"]?.image}
+                            // alt={`Icon ${i + 1}`}
+                            style={{ width: iconWidth, height: iconHeight }}
+                          />
+                        </div>
+                      )}
+                      {restaurant.delivery_status && (
+                        <div className="icon-row" id="icon-row">
+                          <img
+                            className="icons"
                             src={icons["delivery_status"]?.image}
                             style={{ width: iconWidth, height: iconHeight }}
                             id="deliver-icon"
