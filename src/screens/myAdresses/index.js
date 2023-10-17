@@ -211,18 +211,6 @@ const App = () => {
                       width={60}
                       height={20}
                     />
-                    {/* <Skeleton
-                      className="skeleton-title2"
-                      variant="text"
-                      width={40}
-                      height={10}
-                    />
-                    <Skeleton
-                      className="skeleton-title2"
-                      variant="text"
-                      width={40}
-                      height={10}
-                    /> */}
                   </div>
 
                   <div>
@@ -235,30 +223,33 @@ const App = () => {
               </div>
             </>
           ))
-        : addressData.length &&
-          addressData.map((data) => (
-            <div key={data.id}>
-              <Card
-                iconUrl={
-                  data.address_type === "house"
-                    ? "/assets/img/salmiya home.svg"
-                    : data.address_type === "appartment"
-                    ? "/assets/img/salmiya appart.svg"
-                    : "/assets/img/salmiya office.svg"
-                }
-                data={data}
-                setOpen={setOpen}
-                open={open}
-                deleteAddress={deleteAddress}
-                selectCurrentAddress={selectCurrentAddress}
-                deselectCurrentAddress={deselectCurrentAddress}
-                isSelected={isSelected}
-                setIsSelected={setIsSelected}
-                address={location?.state?.latlng}
-                handleClickOpen={handleClickOpen}
-              />
+        : addressData.length && (
+            <div className="parent-address">
+              {addressData.map((data) => (
+                <div key={data.id}>
+                  <Card
+                    iconUrl={
+                      data.address_type === "house"
+                        ? "/assets/img/salmiya home.svg"
+                        : data.address_type === "appartment"
+                        ? "/assets/img/salmiya appart.svg"
+                        : "/assets/img/salmiya office.svg"
+                    }
+                    data={data}
+                    setOpen={setOpen}
+                    open={open}
+                    deleteAddress={deleteAddress}
+                    selectCurrentAddress={selectCurrentAddress}
+                    deselectCurrentAddress={deselectCurrentAddress}
+                    isSelected={isSelected}
+                    setIsSelected={setIsSelected}
+                    address={location?.state?.latlng}
+                    handleClickOpen={handleClickOpen}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          )}
       <AddressesButton
         restaurantName={location?.state?.restaurantName}
         restaurant_id={location?.state?.restaurant_id}

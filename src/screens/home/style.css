@@ -108,3 +108,24 @@ svg {
 .back-button span {
   color: #ffffff;
 }
+
+.delivery-false {
+  border: none;
+}
+
+.delivery-true {
+  border: 3px solid #4f948a;
+}
+
+.bg-dark img {
+  background-color: #4f948a !important;
+}
+
+.add-brown-border {
+  border: 3px solid #93674e;
+}
+
+.bg-brown img {
+  background-color: #93674e !important;
+
+}
