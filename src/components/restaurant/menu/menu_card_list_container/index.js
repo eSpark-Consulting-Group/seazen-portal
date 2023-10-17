@@ -107,10 +107,10 @@ const MenuCardListContainer = ({
     const lowercasedQuery = query.toLowerCase();
     const filtered = categoryList.filter((item) => {
       const itemName = item.name_en.toLowerCase();
-      const itemIngredients = item.description_en.toLowerCase();
+      const itemIngredients = item.description_en?.toLowerCase();
       return (
         itemName.includes(lowercasedQuery) ||
-        itemIngredients.includes(lowercasedQuery)
+        itemIngredients?.includes(lowercasedQuery)
       );
     });
     setFilteredItems(filtered);
@@ -291,7 +291,7 @@ const MenuCardListContainer = ({
           overflowY: "hidden",
         }}
       >
-        <div className="Modal_Search_Item">
+        <div className="Modal_Search_Item" tabIndex="">
           <div className="closebtnmodal">
             <Button className="closebtn">
               <CloseIcon sx={{ color: "#000" }} onClick={handleClose} />

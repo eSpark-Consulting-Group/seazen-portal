@@ -47,14 +47,14 @@ const OrderScreen = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (
-      searchParams.get("order_no") === null ||
-      searchParams.get("reference_number") === null
-    ) {
-      navigate("/order-failed");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (
+  //     searchParams.get("order_no") === null ||
+  //     searchParams.get("reference_number") === null
+  //   ) {
+  //     navigate("/order-failed");
+  //   }
+  // }, []);
 
   const {
     mutate: checkOrderStatus,
@@ -100,10 +100,10 @@ const OrderScreen = () => {
         }
       }
     },
-    onError: (error) => {
-      console.log(error);
-      navigate("/order-failed");
-    },
+    // onError: (error) => {
+    //   console.log(error);
+    //   navigate("/order-failed");
+    // },
   });
 
   useEffect(() => {

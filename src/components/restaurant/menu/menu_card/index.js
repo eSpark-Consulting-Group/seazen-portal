@@ -108,7 +108,9 @@ const MenuCard = (props) => {
   };
 
   const checkIfItemIsInCart = () => {
-    const itemIndex = cart.findIndex((cartItem) => cartItem.id === id);
+    const itemIndex = cart.findIndex(
+      (cartItem) => cartItem.id === id && cartItem.quantity > 0
+    );
 
     if (itemIndex === -1) {
       return false;
@@ -399,6 +401,22 @@ const MenuCard = (props) => {
     return val.quantity > 0;
   });
 
+  const uniqueObjects = new Set();
+
+  const resultArray = filteredItems.filter((obj) => {
+    const str = JSON.stringify({
+      id: obj.id,
+      sideVariants: obj.sideVariants,
+      sizeVariant: obj.sizeVariant,
+      toppingVariants: obj.toppingVariants,
+    });
+    const isUnique = !uniqueObjects.has(str);
+    if (isUnique) {
+      uniqueObjects.add(str);
+    }
+    return isUnique;
+  });
+
   return (
     <Stack
       spacing={0}
@@ -576,7 +594,7 @@ const MenuCard = (props) => {
           }}
         >
           <Stack>
-            {filteredItems?.map((variance, index) => {
+            {resultArray?.map((variance, index) => {
               return (
                 <ExtraItems
                   key={index}
