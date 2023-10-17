@@ -65,7 +65,9 @@ const Slider = () => {
                 }
               />
               <div className="caption">
-                <span className="caption-style">Order Now</span>
+                <span className="caption-style">
+                  {index == 0 ? "Reserve" : "Order Now"}
+                </span>
               </div>
             </div>
           </Carousel.Item>

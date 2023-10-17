@@ -146,6 +146,9 @@ function PhoneNumberVerificationOTP() {
                   "& input": {
                     fontSize: "2rem",
                   },
+                  "& input:focus::placeholder ": {
+                    color: "transparent",
+                  },
                 },
               },
             }}
