@@ -7,13 +7,16 @@
 }
 
 .profileHeaderlogo {
-  font-size: 1.5rem;
-  color: #0d0d0d;
+  /* font-size: 1.5rem;
+  color: #0d0d0d; */
   justify-content: center;
-  position: relative;
+  display: flex;
+  /* position: relative;
   top: 23px;
-  left: 135px;
+  left: 135px; */
   opacity: 1;
+  margin-top: 22px;
+
 }
 
 .profileHeaderaccount {
@@ -64,7 +67,7 @@
 
 .profileHeaderoption {
   top: 22px;
-  left: 328px;
+  right: 20px;
   width: 41px;
   height: 41px;
   font-size: 1.3rem;
@@ -100,7 +103,7 @@
   border-radius: 50%;
   cursor: pointer;
   position: absolute;
-  left: 263px;
+  right: 70px;
   top: 20px;
   border: 1px solid #c0cdd7;
 }
@@ -374,11 +377,11 @@
   }
 }
 
-@media screen and (max-width: 360px) and (min-width: 330px) {
+/* @media screen and (max-width: 360px) and (min-width: 330px) {
   .profileHeaderpopup {
     position: fixed;
-    /* top: 149px; */
-    /* margin-bottom: 40px; */
+    top: 149px;
+    margin-bottom: 40px;
     height: 294px;
   }
 
@@ -397,12 +400,12 @@
   .profileHeaderlogo {
     left: 151px;
   }
-}
-
+} */
+/* 
 @media screen and (max-width: 330px) and (min-width: 300px) {
   .profileHeaderpopup {
     position: fixed;
-    /* top: 390px; */
+    top: 390px;
   }
 
   .profileHeaderpopup2 {
@@ -440,4 +443,4 @@
   .profileHeaderpopup2 {
     left: 215px;
   }
-}
+} */

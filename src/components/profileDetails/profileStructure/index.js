@@ -18,7 +18,7 @@ const ProfileStructure = ({
   const location = useLocation();
 
   return (
-    <div className="profile-section container-fluid">
+    <div className="profile-section ">
       <div className="left-section">
         <img src={imageUrl} alt="Profile" className="image-style" />
         <div className="profile-name">{name}</div>

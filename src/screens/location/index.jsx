@@ -398,7 +398,7 @@ function LocationPage() {
           position: "absolute",
           zIndex: (theme) => theme.zIndex.appBar,
           top: 0,
-          p: 3,
+          padding: "24px 24px 0px 24px",
           backgroundColor: "transparent",
         }}
       >
@@ -441,23 +441,25 @@ function LocationPage() {
         </Stack>
 
         {isLoaded ? (
-          <Autocomplete
-            className="autocomplete"
-            onLoad={onLoad}
-            onPlaceChanged={onPlaceChanged}
-          >
-            <div className="dp-fl">
-              {/* <img src={SearchIcon} alt="Search Icon" className="icon" /> */}
-              <input
-                id="autocomplete"
-                type="text"
-                placeholder="Search an address"
-                className="input"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-          </Autocomplete>
+          <div>
+            <Autocomplete
+              className="autocomplete"
+              onLoad={onLoad}
+              onPlaceChanged={onPlaceChanged}
+            >
+              <div className="dp-fl">
+                {/* <img src={SearchIcon} alt="Search Icon" className="icon" /> */}
+                <input
+                  id="autocomplete"
+                  type="text"
+                  placeholder="Search an address"
+                  className="input"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                />
+              </div>
+            </Autocomplete>
+          </div>
         ) : null}
 
         {/* <PlacesAutocomplete

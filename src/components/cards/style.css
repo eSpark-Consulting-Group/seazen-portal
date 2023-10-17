@@ -16,23 +16,32 @@
 
 .restaurantCard-border-delivery {
   border: 2px solid #93674e;
-  border-radius: 12px; /* You can adjust the border color and width */
+  border-radius: 12px;
+  /* You can adjust the border color and width */
 }
+
 .restaurantCard-border-delivery:hover {
   border: 2px solid #93674e;
-  border-radius: 12px; /* You can adjust the border color and width */
+  border-radius: 12px;
+  /* You can adjust the border color and width */
   transform: scale(1.08) !important;
   transition: all 0.2s ease-in-out !important;
 }
 
+.addBorder {
+  border: 2px solid #93674e;
+}
+
 .restaurantCard-border-near {
   border: 2px solid #4f948a;
-  border-radius: 12px; /* You can adjust the border color and width */
+  border-radius: 12px;
+  /* You can adjust the border color and width */
 }
 
 .restaurantCard-border-near:hover {
   border: 2px solid #4f948a;
-  border-radius: 12px; /* You can adjust the border color and width */
+  border-radius: 12px;
+  /* You can adjust the border color and width */
   transform: scale(1.08) !important;
   transition: all 0.2s ease-in-out !important;
 }
@@ -100,6 +109,7 @@
 .button-icons-styles-both {
   background-color: #5f934e !important;
 }
+
 .button-icons-styles-near {
   background-color: #4f948a !important;
   padding: 1px 12px 1px 2px;
@@ -107,6 +117,7 @@
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
 }
+
 .button-icons-styles-none {
   padding: 1px 12px 1px 2px;
   margin-left: -2px;
@@ -142,6 +153,6 @@
   }
 } */
 
-.another-class{
+.another-class {
   border: none !important;
 }

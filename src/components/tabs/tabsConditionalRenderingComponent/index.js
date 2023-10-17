@@ -14,11 +14,13 @@ const TabsDynamicConditionalComponent = ({
   setOpenModal,
   setSelectedItemToDeliver,
 }) => {
-  const selectedService = useSelector((state)=> state.resturants.selectedService);
+  const selectedService = useSelector(
+    (state) => state.resturants.selectedService
+  );
   const [tabPosition, setTabPosition] = useState(selectedService);
   const [locationDeliver, setLocationDeliver] = useState(false);
   const [deliveryAvailable, setDeliveryAvailable] = useState(false);
-  
+
   switch (tabPosition) {
     case "dinein":
       return (
@@ -93,7 +95,6 @@ const TabsDynamicConditionalComponent = ({
             setLocationDeliver={setLocationDeliver}
             deliveryAvailable={deliveryAvailable}
             setDeliveryAvailable={setDeliveryAvailable}
-            errorMessage={"We don’t have delivery for this Restaurant!"}
           />
         </div>
       );

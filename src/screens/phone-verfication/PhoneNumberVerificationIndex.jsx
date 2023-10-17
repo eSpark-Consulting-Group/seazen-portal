@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import { Footer } from "../../components/footer/footerContent";
 import { paths } from "../../routes/paths";
 import mobileLogin from "../../api/customer/mobileLogin";
+import "./style.css";
 
 const mobileLoginSchema = Yup.object().shape({
   mobile_no: Yup.string()
@@ -92,7 +93,9 @@ function PhoneNumberVerificationIndex() {
         justifyContent="space-between"
         spacing={2}
       >
-        <Navbar variant={NavbarVariants.backWithProfile} />
+        <div className="Phone-Nav">
+          <Navbar variant={NavbarVariants.backWithProfile} />
+        </div>
         <Stack
           spacing={5}
           sx={{
