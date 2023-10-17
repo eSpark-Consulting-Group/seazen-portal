@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import "../../screens/order/style.css";
+import { useNavigate } from "react-router-dom";
+import { paths } from "../../routes/paths";
 
 const OrderIdSection = ({ orderID }) => {
-  const handleViewReceipt = () => {
-    alert("Recept");
+  const navigate = useNavigate();
+
+  const handleReceipt = () => {
+    navigate(paths.receipt + orderID);
   };
 
   return (
@@ -12,7 +16,7 @@ const OrderIdSection = ({ orderID }) => {
       <div className="orderid-with-tag">
         <p>{orderID}</p>
         <div id="order-id-tag">
-          <a href="" onClick={handleViewReceipt}>
+          <a href="" onClick={handleReceipt}>
             View Receipt
           </a>
         </div>
