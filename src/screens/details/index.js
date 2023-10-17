@@ -549,7 +549,7 @@ export const Details = () => {
               height: "35px",
               display: "flex",
               justifyContent: "center",
-              paddingTop: "6px",
+              paddingTop: "8px",
             }}
           >
             <Typography variant="body1" component="div">
@@ -566,7 +566,7 @@ export const Details = () => {
               <div
                 style={{
                   fontWeight: "700",
-                  marginTop: "-24px",
+                  marginTop: "-27px",
                   marginLeft: "29px",
                 }}
               >
@@ -828,7 +828,7 @@ export const Details = () => {
           >
             <Box
               sx={{
-                width: "85%",
+                width: "87%",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",

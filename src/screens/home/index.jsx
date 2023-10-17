@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import { setKey, geocode, RequestType } from "react-geocode";
 
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
+
+// import { useQuery } from "@tanstack/react-query";
 
 import Navbar from "../../components/header/index";
 import Slider from "../../components/carousel/slider/index";
@@ -18,40 +14,39 @@ import DraggableSlider from "../../components/draggableSlider";
 import { Footer } from "../../components/footer/footerContent";
 import RestaurantsOrderTypeButton from "../../components/category/button";
 import "../../components/carousel/slider/style.css";
-
-import { useQuery } from "@tanstack/react-query";
-import { useDispatch, useSelector } from "react-redux";
-import { addCountry, addToken } from "../../store/reducers/authSlice";
-import countryList from "../../api/common/getAllCountries";
-// import getAllAddress from "../../api/address/getAddress";
-// import {
-//   addAddressDetail,
-//   getAddress,
-// } from "../../store/reducers/addressSlice";
-import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
-
-import "./style.css";
 import Card from "../../components/adressList";
+import { DialogComponent } from "../../components/dialog";
+
+// import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
+import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
+import getAllAddress from "../../api/address/getAddress";
+import countryList from "../../api/common/getAllCountries";
+
+import { addCountry } from "../../store/reducers/authSlice";
+import { getAddress, isLoaded } from "../../store/reducers/addressSlice";
+import { getBranchHours } from "../../store/reducers/resturantsSlice";
+
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../utils/getAddress";
+
 import { paths } from "../../routes/paths";
-import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
-import { DialogComponent } from "../../components/dialog";
-import { getAddress, isLoaded } from "../../store/reducers/addressSlice";
-import getAllAddress from "../../api/address/getAddress";
+
+import "./style.css";
 
 const Home = () => {
+  const isToken = localStorage.getItem("token");
+
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
-  const isToken = localStorage.getItem("token");
   const addressData = useSelector((state) => state.address.addressData);
+  const branchHours = useSelector((state) => state.resturants.branchHours);
   const resturantsData = useSelector(
     (state) => state.resturants.resturantsData
   );
-  const dispatch = useDispatch();
 
   const fetchFunction = async () => {
     dispatch(isLoaded());
@@ -68,49 +63,38 @@ const Home = () => {
     }
   }, [location, isToken]);
 
-  // const defaultUser = {
-  //   email: "ikram2001@gmail.com",
-  //   password: "12345678",
-  // };
-  const [userCurrentAddress, setUserCurrentAddress] = useState({
-    latitude: 0,
-    longitude: 0,
-    service_type: "dinein",
-  });
-
-  // const { data, refetch } = useQuery({
-  //   queryFn: () => emailLogin(defaultUser),
-  //   onSuccess: (data) => {
-  //     dispatch(addToken(data.data.token));
-  //   },
+  // const [userCurrentAddress, setUserCurrentAddress] = useState({
+  //   latitude: 0,
+  //   longitude: 0,
+  //   service_type: "dinein",
   // });
 
-  useEffect(() => {
-    if (JSON.parse(localStorage.getItem("location") !== null)) {
-      const addressDetail = JSON.parse(localStorage.getItem("location"));
+  // useEffect(() => {
+  //   if (JSON.parse(localStorage.getItem("location") !== null)) {
+  //     const addressDetail = JSON.parse(localStorage.getItem("location"));
 
-      setUserCurrentAddress({
-        latitude: addressDetail.lat,
-        longitude: addressDetail.lng,
-        service_type: "dinein",
-      });
-    }
-  }, [localStorage]);
+  //     setUserCurrentAddress({
+  //       latitude: addressDetail.lat,
+  //       longitude: addressDetail.lng,
+  //       service_type: "dinein",
+  //     });
+  //   }
+  // }, [localStorage]);
 
-  const { data: restaurants, refetch: recall } = useQuery({
-    queryFn: () => getNearByRestaurants(userCurrentAddress),
-    onSuccess: (data) => {},
-    enabled: false,
-  });
+  // const { data: restaurants, refetch: recall } = useQuery({
+  //   queryFn: () => getNearByRestaurants(userCurrentAddress),
+  //   onSuccess: (data) => {},
+  //   enabled: false,
+  // });
 
-  useEffect(() => {
-    if (
-      userCurrentAddress.latitude !== 0 &&
-      userCurrentAddress.longitude !== 0
-    ) {
-      recall();
-    }
-  }, [userCurrentAddress]);
+  // useEffect(() => {
+  //   if (
+  //     userCurrentAddress.latitude !== 0 &&
+  //     userCurrentAddress.longitude !== 0
+  //   ) {
+  //     recall();
+  //   }
+  // }, [userCurrentAddress]);
 
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("location")) === null) {
@@ -142,7 +126,6 @@ const Home = () => {
                   address: address,
                 };
                 localStorage.setItem("location", JSON.stringify(addToRedux));
-                // dispatch(addAddressDetail({ currentAdd: addToRedux }));
               })
               .catch((err) => {
                 console.log(err);
@@ -153,24 +136,6 @@ const Home = () => {
       }
     }
   }, []);
-
-  // useEffect(() => {
-  //   if (!isToken) {
-  //     refetch()
-  //   }
-  // }, [isToken])
-
-  const [openAddressPopup, setOpenAddressPopup] = useState(false);
-  const [filterClassNear, setToggleFilterClassNear] = useState(false);
-  const [filterSelectedNow, setFilterSelectedNow] = useState();
-  const [fullAddress, setFullAddress] = useState(null);
-  const [restaurantId, setRestaurantId] = useState(null);
-  const [restaurantName, setRestaurantName] = useState("");
-  const [distanceIsFar, setDistanceIsFar] = useState(false);
-  const [fromPopular, setFromPopular] = useState(false);
-  const [popularId, setPopularId] = useState(null);
-  const [restBranch, setRestBranch] = useState([]);
-  const [newText, setNewText] = useState("");
 
   const isCountry = localStorage.getItem("country");
   useEffect(() => {
@@ -191,11 +156,38 @@ const Home = () => {
       });
   };
 
+  const [openAddressPopup, setOpenAddressPopup] = useState(false);
+  const [filterClassNear, setToggleFilterClassNear] = useState(false);
+  const [filterSelectedNow, setFilterSelectedNow] = useState("");
+  const [filterClassDelivery, setToggleFilterClassDelivery] = useState(false);
+  const [fullAddress, setFullAddress] = useState(null);
+  const [restaurantId, setRestaurantId] = useState(null);
+  const [restaurantName, setRestaurantName] = useState("");
+  const [distanceIsFar, setDistanceIsFar] = useState(false);
+  const [fromPopular, setFromPopular] = useState(false);
+  const [popularId, setPopularId] = useState(null);
+  const [restBranch, setRestBranch] = useState([]);
+  const [newText, setNewText] = useState("");
+  const [selectedText, setSelectedText] = useState("");
+
+  const parentDiv = document?.getElementById("parent-of-all");
+  const parentIcon = document?.getElementsByClassName("inner-svg-container");
+  const divs = parentDiv?.getElementsByClassName("restaurantCards");
+
   useEffect(() => {
     if (restaurantId !== null) {
       fetchBranchHours();
     }
   }, [restaurantId]);
+
+  const fetchBranchHours = () => {
+    getRestaurantBranchHours(restaurantId).then((res) => {
+      if (res.status === "ok") {
+        setRestBranch(res.data);
+        dispatch(getBranchHours(res.data));
+      }
+    });
+  };
 
   const chooseAddress = (item) => {
     const lat = +item.latitude;
@@ -206,54 +198,57 @@ const Home = () => {
 
   useEffect(() => {
     if (fullAddress !== null) {
-      if (restBranch.length) {
-        restBranch?.forEach((res) => {
-          const resLat = +res.latitude;
-          const resLng = +res.longitude;
+      if (filterSelectedNow === "") {
+        if (restBranch.length) {
+          restBranch?.forEach((res) => {
+            const resLat = +res.latitude;
+            const resLng = +res.longitude;
 
-          const distance = getDistanceFromLatLonInKm(
-            resLat,
-            resLng,
-            fullAddress.lat,
-            fullAddress.lng
-          );
-
-          if (distance > 50) {
-            const restaurant = resturantsData.find(
-              (res) => res.id === restaurantId
+            const distance = getDistanceFromLatLonInKm(
+              resLat,
+              resLng,
+              fullAddress.lat,
+              fullAddress.lng
             );
 
-            setNewText("New Location");
-            setRestaurantName(restaurant.name_en);
-            setDistanceIsFar(true);
-            setOpenAddressPopup(false);
-            // localStorage.removeItem("restaurantIdForRedirect");
-            // localStorage.removeItem("menuDetailId");
-          } else {
-            setNewText("");
-            setDistanceIsFar(false);
-            setOpenAddressPopup(false);
-            localStorage.setItem("selected", JSON.stringify(fullAddress));
+            if (distance > 50) {
+              const restaurant = resturantsData.find(
+                (res) => res.id === restaurantId
+              );
 
-            if (restaurantId === null) {
+              setNewText("New Location");
+              setRestaurantName(restaurant.name_en);
+              setDistanceIsFar(true);
               setOpenAddressPopup(false);
-            }
+            } else {
+              setNewText("");
+              setDistanceIsFar(false);
+              setOpenAddressPopup(false);
+              localStorage.setItem("selected", JSON.stringify(fullAddress));
 
-            if (restaurantId !== null && !fromPopular) {
-              goToRestaurantMenuPage(restaurantId);
-            }
+              if (restaurantId === null) {
+                setOpenAddressPopup(false);
+              }
 
-            if (fromPopular && popularId !== null) {
-              navigate(paths.details + "/" + popularId, {
-                state: {
-                  id: popularId,
-                  loc: "popular",
-                  restaurant_id: restaurantId,
-                },
-              });
+              if (restaurantId !== null && !fromPopular) {
+                goToRestaurantMenuPage(restaurantId);
+              }
+
+              if (fromPopular && popularId !== null) {
+                navigate(paths.details + "/" + popularId, {
+                  state: {
+                    id: popularId,
+                    loc: "popular",
+                    restaurant_id: restaurantId,
+                  },
+                });
+              }
             }
-          }
-        });
+          });
+        }
+      } else {
+        localStorage.setItem("selected", JSON.stringify(fullAddress));
+        setOpenAddressPopup(false);
       }
     }
   }, [fullAddress]);
@@ -270,15 +265,70 @@ const Home = () => {
     });
   };
 
+  const removeClasses = () => {
+    for (let i = 0; i < divs.length; i++) {
+      divs[i].classList.remove("delivery-true");
+    }
+    for (let j = 0; j < parentIcon.length; j++) {
+      const icons = parentIcon[j].querySelectorAll(".icon-row");
+      icons.forEach((icon) => {
+        if (icon.id === "icon-row") {
+          icon.classList.remove("bg-dark");
+        }
+      });
+    }
+  };
+
+  const removeBrownClasses = () => {
+    for (let i = 0; i < divs?.length; i++) {
+      divs[i].classList.remove("add-brown-border");
+    }
+    for (let j = 0; j < parentIcon?.length; j++) {
+      const icons = parentIcon[j].querySelectorAll(".icon-row");
+      icons.forEach((icon) => {
+        if (icon.id === "icon-row") {
+          icon.classList.remove("bg-brown");
+        }
+      });
+    }
+  };
+
+  const addBrownClasses = () => {
+    for (let i = 0; i < divs?.length; i++) {
+      divs[i].classList.add("add-brown-border");
+    }
+    for (let j = 0; j < parentIcon?.length; j++) {
+      const icons = parentIcon[j].querySelectorAll(".icon-row");
+      icons.forEach((icon) => {
+        if (icon.id === "icon-row") {
+          icon.classList.add("bg-brown");
+        }
+      });
+    }
+  };
+
+  const addClasses = () => {
+    for (let i = 0; i < divs.length; i++) {
+      divs[i].classList.add("delivery-true");
+    }
+    for (let j = 0; j < parentIcon.length; j++) {
+      const icons = parentIcon[j].querySelectorAll(".icon-row");
+      icons.forEach((icon) => {
+        if (icon.id === "icon-row") {
+          icon.classList.add("bg-dark");
+        }
+      });
+    }
+  };
+
   const handleClose = () => {
     setOpenAddressPopup(false);
     setToggleFilterClassNear(false);
+    setFilterSelectedNow("");
     setDistanceIsFar(false);
     setFromPopular(false);
     setNewText("");
-
-    // localStorage.removeItem("restaurantIdForRedirect");
-    // localStorage.removeItem("menuDetailId");
+    removeClasses();
   };
 
   const goToRestaurantMenuPage = (id) => {
@@ -286,13 +336,93 @@ const Home = () => {
     navigate(paths.menu + `/restaurant/${id}`);
   };
 
-  const fetchBranchHours = () => {
-    getRestaurantBranchHours(restaurantId).then((res) => {
-      if (res.status === "ok") {
-        setRestBranch(res.data);
+  useEffect(() => {
+    if (
+      resturantsData?.length &&
+      filterClassNear &&
+      selectedText === "Delivery"
+    ) {
+      removeBrownClasses();
+
+      for (let i = 0; i < resturantsData.length - 2; i++) {
+        const idToCheck = resturantsData[i].id;
+
+        getRestaurantBranchHours(idToCheck).then((res) => {
+          if (res.status === "ok") {
+            for (let j = 0; j < res.data.length; j++) {
+              const currentItem = res.data[j];
+
+              if (
+                fullAddress !== null &&
+                localStorage.getItem("selected") === null
+              ) {
+                const resLat = +currentItem.latitude;
+                const resLng = +currentItem.longitude;
+
+                const distance = getDistanceFromLatLonInKm(
+                  resLat,
+                  resLng,
+                  fullAddress.lat,
+                  fullAddress.lng
+                );
+                if (distance > 50) {
+                  if (res.data[j].restaurant_id === idToCheck) {
+                    removeClasses();
+                  }
+                } else {
+                  if (res.data[j].restaurant_id === idToCheck) {
+                    addClasses();
+                  }
+                }
+                //
+              } else if (
+                (fullAddress !== null || fullAddress === null) &&
+                localStorage.getItem("selected") !== null
+              ) {
+                const selected = JSON.parse(localStorage.getItem("selected"));
+                const resLat = +currentItem.latitude;
+                const resLng = +currentItem.longitude;
+
+                const distance = getDistanceFromLatLonInKm(
+                  resLat,
+                  resLng,
+                  selected.lat,
+                  selected.lng
+                );
+                if (distance > 50) {
+                  if (res.data[j].restaurant_id === idToCheck) {
+                    removeClasses();
+                  }
+                } else {
+                  if (res.data[j].restaurant_id === idToCheck) {
+                    addClasses();
+                  }
+                }
+              }
+            }
+          }
+        });
       }
-    });
-  };
+    }
+
+    if (
+      filterClassDelivery &&
+      !filterClassNear &&
+      selectedText === "Delivery"
+    ) {
+      addBrownClasses();
+    }
+
+    if (!filterClassDelivery && selectedText === "Delivery") {
+      removeBrownClasses();
+    }
+  }, [
+    resturantsData,
+    filterClassNear,
+    fullAddress,
+    filterClassDelivery,
+    selectedText,
+  ]);
 
   return (
     <div className="home-styling container-fluid">
@@ -313,6 +443,10 @@ const Home = () => {
         goToRestaurantMenuPage={goToRestaurantMenuPage}
         setRestaurantId={setRestaurantId}
         setRestaurantName={setRestaurantName}
+        filterClassDelivery={filterClassDelivery}
+        setToggleFilterClassDelivery={setToggleFilterClassDelivery}
+        selectedText={selectedText}
+        setSelectedText={setSelectedText}
       />
       {/* <BasicCard /> */}
       <DraggableSlider
@@ -352,8 +486,8 @@ const Home = () => {
         <DialogTitle className="dialog-title">Choose your location</DialogTitle>
         <DialogContent
           sx={{
-            fontFamily: "Titillium Web, sans-serif", // Set the font family
-            fontWeight: 600, // Set the font weight
+            fontFamily: "Titillium Web, sans-serif",
+            fontWeight: 600,
           }}
         >
           {addressData.map((data) => (

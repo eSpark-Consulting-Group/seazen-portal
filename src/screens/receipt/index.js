@@ -55,7 +55,11 @@ const Receipt = () => {
         <IconButton onClick={() => navigate(-1)}>
           <img src="/assets/img/Arrow.png" alt="" />
         </IconButton>
-        <img src="/assets/img/Logo.png" alt="" />
+        <img
+          style={{ width: "90px" }}
+          src="/assets/img/order seazen logo.svg"
+          alt="Logo"
+        />
         <IconButton className="brand-logo">
           <img src="/assets/img/Group 259.png" alt="" />
         </IconButton>

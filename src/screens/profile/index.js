@@ -6,7 +6,9 @@ export const Profile = () => {
   return (
     <div className="profileSectionContainer">
         <ProfileHeader/>
+        <div className="px-3">
         <ProfileInformation/>
+        </div>
         </div>
   )
 }

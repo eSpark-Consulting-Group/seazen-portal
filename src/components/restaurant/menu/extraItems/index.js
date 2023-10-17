@@ -28,11 +28,11 @@ const ExtraItems = ({ extraItemName, extraItemCount, item }) => {
     <div className="extra_item_outer_container">
       <div className="extra_item_text_container">{extraItemName}</div>
       <div className="extra_item_input_stepper my-1">
-        <button onClick={handleClickSubtractCount}>-</button>
+        <button style={{color:"black"}} onClick={handleClickSubtractCount}>-</button>
         <div className="extra_item_input_stepper_count mx-1">
           {extraItemCount}
         </div>
-        <button onClick={handleClickAddCount}>+</button>
+        <button style={{color:"black"}} onClick={handleClickAddCount}>+</button>
       </div>
     </div>
   );

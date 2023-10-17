@@ -16,6 +16,16 @@
   padding: 0 !important;
 }
 
+.shrink-expanded {
+  padding-right: 0px !important;
+}
+
+.shrink-expanded .orderTypebutton-text {
+  width: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .custom-button {
   display: flex;
   align-items: center;
@@ -30,8 +40,8 @@
   opacity: 1;
   /* justify-content: center; */
   cursor: pointer;
-  transform: scale(0.98);
-  transition: all 0.3s;
+  /* transform: scale(0.98); */
+  /* transition: all 0.3s; */
   padding-right: 6px;
 }
 
@@ -48,7 +58,8 @@
 
 .basic-card.expanded {
   /* Add border styles when expanded */
-  border: 2px solid #000; /* You can adjust the border styles as needed */
+  border: 2px solid #000;
+  /* You can adjust the border styles as needed */
 }
 
 .orderTypebutton-icon {
@@ -65,6 +76,16 @@
   opacity: 1;
   font-size: 9px;
   padding: 0.5px 0.5px 0.5px 0.5px !important;
+}
+
+.custom-button.hidden {
+  padding-right: 0px;
+}
+
+.custom-button.hidden .orderTypebutton-text {
+  width: 0px;
+  padding: 0px;
+  letter-spacing: unset;
 }
 
 .orderTypebutton-style-one {
@@ -107,7 +128,6 @@
   margin-left: 4px;
   margin-right: 4px;
   background: #ffffff 0% 0% no-repeat padding-box;
-
 }
 
 .orderTypebutton-style-two-active {
@@ -142,15 +162,19 @@
   .custom-button {
     padding-right: 18px;
   }
+
   .custom-button.expanded {
     padding-right: 8px !important;
   }
+
   .orderTypebutton-style-one {
     margin-left: 8px;
   }
+
   .orderTypebutton-style-two {
     margin-left: 6px;
   }
+
   .orderTypebutton-text {
     margin-left: 0;
     margin-right: 0;
@@ -161,6 +185,7 @@
   .orderTypebutton-style-one {
     width: 65px;
   }
+
   .orderTypebutton-style-two {
     width: 50px;
   }

@@ -1,41 +1,58 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Titillium+Web:wght@200;300;400;600;700;900&display=swap");
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #333;
   color: #fff;
-  padding: 10px 20px;
+  padding: 12px 23px;
   height: 56px;
   background: #ffffff00 0% 0% no-repeat padding-box;
   opacity: 1;
-  margin-bottom: 45px;
+  margin: 14px 0px 20px;
 }
+
+.left-icons {
+  box-shadow: 0px 0px 48px #314f7c1f;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .left-icons img {
-    height: 24px;
-    opacity: 1;
-    position: absolute;
-    top: 30px;
-    cursor: pointer;
-}
-.right-icons img {
-  height: 20px;
   opacity: 1;
-  position: absolute;
-  top: 31px;
-  /* left: 325px; */
-  margin-left: -8px;
+  cursor: pointer;
 }
+
+.right-icons {
+  box-shadow: 0px 0px 48px #314f7c1f;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.right-icons img {
+  position: relative;
+  top: auto;
+  margin-left: 0px;
+  height: auto;
+}
+
 .logo h3 {
-  top: 30px;
-  height: 22px;
   text-align: center;
   font: normal normal bold 18px/24px Montserrat;
   letter-spacing: 0.36px;
   color: #1f2933;
   opacity: 1;
-  position: absolute;
-  margin-left: -85px;
 }
 
 /* @media screen and (max-width: 500px) and (min-width: 380px) {

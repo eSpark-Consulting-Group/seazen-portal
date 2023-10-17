@@ -16,7 +16,7 @@
 
 .section {
   z-index: 1;
-  margin-top: -58px;
+  margin-top: -15px;
   background: #ffffff 0% 0% no-repeat padding-box;
   position: relative;
   padding-top: 10px;
@@ -57,7 +57,7 @@
 }
 
 .btn {
-  border-radius: 12px ;
+  border-radius: 12px;
   opacity: 1;
   width: 142px;
   line-height: 24px !important;
