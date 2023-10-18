@@ -1,5 +1,5 @@
 .branches-footer {
- margin-left: 15px;
+  margin-left: 15px;
 }
 
 @media screen and (max-width: 600px) {
@@ -8,7 +8,7 @@
   }
 }
 
-.branches-screen-container{
-  margin-top: 50px;
+.branches-screen-container {
+  margin-top: 13px;
   /* position: relative; */
 }

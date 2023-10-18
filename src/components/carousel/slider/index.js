@@ -64,8 +64,10 @@ const Slider = () => {
                   />
                 }
               />
-              <div className={index === 0 ? "reserve-style" : "caption"}>
-                <span className="caption-style">
+              <div className={index === 0 ? "reserve" : "caption"}>
+                <span
+                  className={index === 0 ? "reserve-style" : "caption-style"}
+                >
                   {index == 0 ? "Reserve" : "Order Now"}
                 </span>
               </div>

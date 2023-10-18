@@ -838,7 +838,7 @@ export const Details = () => {
           >
             <Box
               sx={{
-                width: "87%",
+                width: "85%",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",

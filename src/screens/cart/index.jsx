@@ -441,7 +441,7 @@ function CartPage() {
           edge="start"
           onClick={() => navigate(-1)}
         >
-          <ArrowBackRoundedIcon fontSize="medium" />
+          <ArrowBackRoundedIcon fontSize="medium" sx={{marginTop: "-18px",}} />
         </IconButton>
         <Typography
           variant="h5"
@@ -449,6 +449,7 @@ function CartPage() {
           fontWeight={700}
           sx={{
             mb: 0,
+            marginTop: "-18px",
           }}
         >
           Your Cart

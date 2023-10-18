@@ -30,8 +30,8 @@
 }
 
 .detailsheadericon-style {
-  top: 15px;
-  right: 22px;
+  top: 20px;
+  right: 24px;
   width: 42px;
   height: 42px;
   background: #ffffff 0% 0% no-repeat padding-box;
@@ -42,7 +42,7 @@
 }
 
 .detailsheaderarrowicons-style {
-  left: 22px;
+  left: 24px;
   width: 42px;
   height: 42px;
   background: #ffffff 0% 0% no-repeat padding-box;
@@ -50,7 +50,7 @@
   border-radius: 40px;
   opacity: 1;
   position: absolute;
-  top: 15px;
+  top: 20px;
 }
 
 .detailsheadercaption-container {

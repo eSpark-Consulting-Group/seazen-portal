@@ -6,7 +6,7 @@ const BranchHeader = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="branch-header mx-3">
+    <header className="branch-header px-4">
       <div className="branch-left-icons" onClick={()=>navigate(-1)}>
         <img src='/assets/img/Icon - Arrow.svg'></img>
       </div>
