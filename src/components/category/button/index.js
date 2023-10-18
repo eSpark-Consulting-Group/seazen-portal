@@ -595,6 +595,7 @@ const RestaurantsOrderTypeButton = (props) => {
           setRestaurantName={setRestaurantName}
           selectedText={selectedText}
           filterSelectedNow={filterSelectedNow}
+          typesState={typesState}
         />
       )}
     </>

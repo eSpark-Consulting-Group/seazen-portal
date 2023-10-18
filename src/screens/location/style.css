@@ -50,12 +50,16 @@
   right: 12px;
   bottom: 15%;
   width: 40px;
-  background-color: #fff;
+  background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
   cursor: pointer;
+}
+
+.clicked {
+  background-color: #e4e2e2;
 }
 
 .recenter-div img {
@@ -117,7 +121,7 @@
   /* padding: 3px 15px; */
 }
 
-.combobox-parent .combobox-option:hover + .border {
+.combobox-parent .combobox-option:hover+.border {
   margin: 0px;
 }
 

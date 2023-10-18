@@ -123,6 +123,7 @@ const BasicCard = (props) => {
     setRestaurantName,
     selectedText,
     filterSelectedNow,
+    typesState,
   } = props;
 
   const navigate = useNavigate();
@@ -269,7 +270,8 @@ const BasicCard = (props) => {
                   selectedText === "Catering" &&
                   selectedText !== "Dine In" &&
                   selectedText !== "Delivery" &&
-                  selectedText !== "Pickup"
+                  selectedText !== "Pickup" &&
+                  typesState.catering
                     ? "catering-border"
                     : ""
                 }`}

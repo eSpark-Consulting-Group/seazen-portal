@@ -95,6 +95,8 @@ function LocationPage() {
   const [autocomplete, setAutocomplete] = useState(null);
   const [distanceIsFar, setDistanceIsFar] = useState(false);
   const [noRegion, setNoRegion] = useState(false);
+  const [clicked, setClicked] = useState(false);
+
   const mapRef = useRef();
 
   useEffect(() => {
@@ -340,9 +342,15 @@ function LocationPage() {
   };
 
   const makeCenter = () => {
+    setClicked(true);
+
     navigator.geolocation.getCurrentPosition(async (position) => {
       getAdd(position.coords.latitude, position.coords.longitude);
     }, showError);
+
+    setTimeout(() => {
+      setClicked(false);
+    }, 100);
   };
 
   const showError = (error) => {
@@ -545,7 +553,10 @@ function LocationPage() {
             </Box>
           ) : null}
 
-          <div className="recenter-div" onClick={() => makeCenter()}>
+          <div
+            className={clicked ? "recenter-div clicked" : "recenter-div"}
+            onClick={() => makeCenter()}
+          >
             <img src="/assets/img/recenter.png" alt="" />
           </div>
         </GoogleMap>
