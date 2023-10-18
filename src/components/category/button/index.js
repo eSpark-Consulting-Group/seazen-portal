@@ -1,18 +1,23 @@
-import React, { useState } from "react";
-import "./style.css";
-import BasicCard from "../../cards/index";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { useQuery } from "@tanstack/react-query";
+
+import BasicCard from "../../cards/index";
+
+import ExpandedButton from "../expandableButton";
 
 import getAllRestaurants, {
   GET_ALL_RESTAURANTS_QUERY_KEY,
 } from "../../../api/home/getAllRestaurants";
-import { useDispatch, useSelector } from "react-redux";
+
 import {
   getResturants,
+  removeSelectedService,
   setSelectedService,
 } from "../../../store/reducers/resturantsSlice";
-import { useEffect } from "react";
-import ExpandedButton from "../expandableButton";
+
+import "./style.css";
 
 // const OrderTypeButtonExpandable = ({
 //   itemId,
@@ -265,7 +270,7 @@ const RestaurantsOrderTypeButton = (props) => {
       const icons = parentIcon[j].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
-          icon.classList.remove("bg-dark");
+          icon.classList.remove("delivers-image");
         }
       });
     }
@@ -347,7 +352,14 @@ const RestaurantsOrderTypeButton = (props) => {
   const handleClick = (selectedService, id) => {
     setSelectedId(id);
     setSelectedText(selectedService);
-    dispatch(setSelectedService(selectedService.toLowerCase()));
+    if (selectedService === "Dine In") {
+      const removeSpace = "dinein";
+      dispatch(setSelectedService(removeSpace));
+    } else {
+      dispatch(setSelectedService(selectedService.toLowerCase()));
+    }
+
+    setToggleFilterClassDelivery(true);
 
     if (selectedService !== "Catering") {
       setToggleExpanded(!expanded);
@@ -386,7 +398,6 @@ const RestaurantsOrderTypeButton = (props) => {
         // Set the delivery filter as active by default when expanding the button
         setToggleFilterClassDelivery(true);
         setToggleFilterClassNear(false);
-        setFilterSelectedNow(selectedService.toLowerCase());
         setFilterSelectedNow("delivery");
       }
     } else {
@@ -416,6 +427,16 @@ const RestaurantsOrderTypeButton = (props) => {
       setFilterSelectedNow("");
       setToggleFilterClassNear(false);
       removeBrownClasses();
+      removeClasses();
+    }
+
+    if (
+      !typesState.dinein &&
+      !typesState.catering &&
+      !typesState.delivery &&
+      !typesState.pickup
+    ) {
+      dispatch(removeSelectedService());
     }
   }, [typesState]);
 

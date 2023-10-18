@@ -17,6 +17,9 @@ function App() {
   const countryCode = useSelector(
     (state) => state.auth.user.mobile_country_code
   );
+  const restaurantData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
   const dispatch = useDispatch();
   const fetchAllCountries = () => {
     countryList()
@@ -34,12 +37,24 @@ function App() {
         console.log(err);
       });
   };
-
+  const restaurantId = localStorage.getItem("restaurantID");
   useEffect(() => {
     fetchAllCountries();
   }, []);
 
+  const setPageTitle = () => {
+    let title = "The Delivery Service for your favorite Restaurant";
+    if (currentURL.pathname.includes("restaurant") && restaurantData.length) {
+      title =
+        restaurantData.find((val) => val.id == restaurantId)?.name_en +
+        " " +
+        "Menu";
+    }
+    document.title = title;
+  };
+
   useEffect(() => {
+    setPageTitle();
     // Additional logic for page-specific CSS
     if (
       currentURL.pathname === "/menu/restaurant/1/delivery" ||

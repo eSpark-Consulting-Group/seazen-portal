@@ -22,6 +22,7 @@ const authSlice = createSlice({
     isLoading: false,
     error: null,
     country: {},
+    currency: "KWD",
   },
   reducers: {
     addToken: (state, action) => {
@@ -39,13 +40,14 @@ const authSlice = createSlice({
       } = action.payload;
       state.user.id = customer_id;
       state.user.first_name = first_name;
-      state.user.last_name =  last_name;
+      state.user.last_name = last_name;
       state.user.email = email;
       state.user.mobile_country_code = mobile_country_code;
       state.user.mobile = mobile_no;
     },
     addCountry: (state, action) => {
       state.country = action.payload;
+      state.currency = action.payload.currency;
     },
   },
 });

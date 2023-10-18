@@ -311,12 +311,25 @@ const MenuCardListContainer = ({
             {filteredItems?.map((item, index) => (
               <div className="categoryItemsList" key={index + 1}>
                 <MenuCard
+                  allData={item}
                   key={index}
+                  locationDeliver={locationDeliver}
+                  resturantId={resturantId}
+                  restaurantBranchHours={restaurantBranchHours}
+                  restaurantDetail={restaurantDetail}
                   foodItem={item.name_en}
                   foodIngredients={item.description_en}
                   foodPrice={item.price}
                   foodImage={item.image}
                   id={item.id}
+                  restaurant_id={item.restaurant_id}
+                  showSubTractButton={
+                    item.has_extras === false &&
+                    item.has_variants === false &&
+                    item.has_options === false
+                  }
+                  setOpenModal={setOpenModal}
+                  setSelectedItemToDeliver={setSelectedItemToDeliver}
                 />
               </div>
             ))}

@@ -56,6 +56,12 @@ const cartSlice = createSlice({
         state.cart[itemIndex].quantity = quantity;
       }
 
+      if (quantity < 1) {
+        state.cart = state.cart.filter((val) => {
+          return val.item_code !== itemCode;
+        });
+      }
+
       state.totalQuantity = state.cart.reduce(
         (total, item) => total + item.quantity,
         0

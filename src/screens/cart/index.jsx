@@ -323,7 +323,7 @@ function CartPage() {
               };
             });
             setCartItems(resData);
-            dispatch(addToCart(resData));
+            // dispatch(addToCart(resData));
             setIsLoading(false);
           })
           .catch((err) => {

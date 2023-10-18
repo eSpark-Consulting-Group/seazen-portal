@@ -9,11 +9,7 @@ import PrivateRoutes from "./privateRoutes";
 import PublicRoutes from "./publicRoutes";
 import OnlyPublicRoutes from "./onlyPublicRoutes";
 
-import {
-  addAddressDetail,
-  getAddress,
-  isLoaded,
-} from "../store/reducers/addressSlice";
+import { getAddress, isLoaded } from "../store/reducers/addressSlice";
 import getAllAddress from "../api/address/getAddress";
 
 const RouteProvider = () => {
@@ -36,23 +32,10 @@ const RouteProvider = () => {
   };
 
   useEffect(() => {
-    if (location.pathname !== "/my-addresses" || location.pathname === "/") {
+    if (location.pathname !== "/my-addresses") {
       fetchFunction();
     }
   }, [location, isToken]);
-
-  // useEffect(() => {
-  //   navigator.permissions &&
-  //     navigator.permissions
-  //       .query({ name: "geolocation" })
-  //       .then(function (PermissionStatus) {
-  //           if (PermissionStatus.state == "prompt") {
-  //           localStorage.removeItem("location");
-  //         } else {
-  //           localStorage.removeItem("location");
-  //         }
-  //       });
-  // }, []);
 
   // useEffect(() => {
   //   if (addressData.length === 0) {

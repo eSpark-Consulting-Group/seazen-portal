@@ -36,20 +36,17 @@
 .custom-button {
   display: flex;
   align-items: center;
-  /* margin-right: 10px ; */
   color: white;
   cursor: pointer;
-  /* height: 36px; */
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 24px 48px #314f7c14;
   border: 1px solid #ebeef0;
   border-radius: 16px;
   opacity: 1;
-  /* justify-content: center; */
   cursor: pointer;
-  /* transform: scale(0.98); */
-  /* transition: all 0.3s; */
-  /* padding-right: 6px; */
+  transform: scale(0.98);
+  transition: all 0.3s;
+  /* padding: 0.5px 0.5px 0.5px 0.5px !important; */
   width: 100%;
   margin-right: 4px;
 }
@@ -69,6 +66,10 @@
 
 .expanded .orderTypebutton-text{
   width: 60px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .basic-card.expanded {
@@ -90,7 +91,6 @@
   color: #323f4b;
   opacity: 1;
   font-size: 9px;
-  padding: 0.5px 0.5px 0.5px 0.5px !important;
 }
 
 .custom-button.hidden {
