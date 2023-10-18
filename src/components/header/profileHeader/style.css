@@ -15,15 +15,15 @@
   top: 23px;
   left: 135px; */
   opacity: 1;
-  margin-top: 22px;
+  margin-top: 20px;
 
 }
 
 .profileHeaderaccount {
   top: 20px;
   left: 24px;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   background: #ffffff 0% 0% no-repeat padding-box;
   border-radius: 50%;
   box-shadow: 0px 24px 48px #314f7c1f;
@@ -39,6 +39,8 @@
   top: 8px;
   position: relative;
   left: 7px;
+  width: 14px;
+  height: 20px;
 }
 
 .profileHeaderaccount-icon {
@@ -68,8 +70,8 @@
 .profileHeaderoption {
   top: 20px;
   right: 24px;
-  width: 41px;
-  height: 41px;
+  width: 40px;
+  height: 40px;
   font-size: 1.3rem;
   cursor: pointer;
   margin-left: 15px;
@@ -108,8 +110,8 @@
 }
 
 .profileHeadercircle-container img {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 1px solid #c0cdd7;
 }
