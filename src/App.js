@@ -44,7 +44,7 @@ function App() {
 
   const setPageTitle = () => {
     let title = "The Delivery Service for your favorite Restaurant";
-    if (currentURL.pathname.includes("restaurant")) {
+    if (currentURL.pathname.includes("restaurant") && restaurantData.length) {
       title =
         restaurantData.find((val) => val.id == restaurantId)?.name_en +
         " " +
