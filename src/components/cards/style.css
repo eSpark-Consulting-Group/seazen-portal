@@ -15,25 +15,21 @@
 }
 
 .restaurantCard-border-delivery {
-  border: 2px solid #93674e;
+  border-color: rgba(147, 103, 78, 1) !important;
   border-radius: 12px;
   /* You can adjust the border color and width */
 }
 
 .restaurantCard-border-delivery:hover {
-  border: 2px solid #93674e;
+  border-color: rgba(147, 103, 78, 1) !important;
   border-radius: 12px;
   /* You can adjust the border color and width */
-  transform: scale(1.08) !important;
+  /* transform: scale(1.08) !important; */
   transition: all 0.2s ease-in-out !important;
 }
 
 .addBorder {
-  border: 2px solid #93674e;
-}
-
-.catering-border {
-  border: 2px solid #93674e !important;
+  border-color: rgba(147, 103, 78, 1) !important;
 }
 
 .catering-bg {
@@ -41,13 +37,17 @@
 }
 
 .restaurantCard-border-near {
-  border: 2px solid #4f948a;
+  border-color: rgb(79, 148, 138, 1) !important;
   border-radius: 12px;
   /* You can adjust the border color and width */
 }
 
+.catering-border {
+  border-color: rgba(147, 103, 78, 1) !important;
+}
+
 .restaurantCard-border-near:hover {
-  border: 2px solid #4f948a;
+  border-color: rgba(79, 148, 138, 1) !important;
   border-radius: 12px;
   /* You can adjust the border color and width */
   transform: scale(1.08) !important;
@@ -63,6 +63,7 @@
   /* transition: transform 0.3s, box-shadow 0.3s; */
   cursor: pointer;
   border-radius: 12px;
+  border: 2px solid rgba(147, 103, 78, 0);
 }
 
 .restaurantCard-img {
@@ -140,7 +141,11 @@
 }
 
 .collapsed {
-  display: none;
+  opacity: 0;
+}
+
+.expanded {
+  opacity: 1;
 }
 
 /* @media screen and (max-width: 500px) and (min-width: 400px) {
@@ -162,5 +167,5 @@
 } */
 
 .another-class {
-  border: none !important;
+  border: 2px solid rgba(147, 103, 78, 0) !important;
 }

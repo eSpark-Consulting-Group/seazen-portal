@@ -47,7 +47,12 @@ const ExpandedButton = (props) => {
       />
       {(hideOther || !hideOther) && (
         <span
-          onClick={() => handleClick(text === "" ? otherText : text, id)}
+          onClick={() =>
+            handleClick(
+              hideOther && selectedText !== "Catering" ? otherText : text,
+              id
+            )
+          }
           className={`orderTypebutton-text`}
         >
           {hideOther && selectedText !== "Catering" ? otherText : text}

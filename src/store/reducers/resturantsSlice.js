@@ -9,7 +9,7 @@ const initialState = {
   nearbyRestaurants: [],
   branchHours: [],
   visibleCategoryElementID: 0,
-  selectedService:null,
+  selectedService: null,
 };
 
 const resturantsSlice = createSlice({
@@ -84,6 +84,9 @@ const resturantsSlice = createSlice({
     setSelectedService: (state, action) => {
       state.selectedService = action.payload;
     },
+    removeSelectedService: (state) => {
+      state.selectedService = null;
+    },
   },
 });
 
@@ -100,7 +103,8 @@ export const {
   setCategoryElementID,
   getNearByRest,
   getBranchHours,
-  setSelectedService
+  setSelectedService,
+  removeSelectedService,
 } = resturantsSlice.actions;
 
 export default resturantsSlice.reducer;

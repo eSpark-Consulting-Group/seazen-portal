@@ -19,11 +19,9 @@ import { DialogComponent } from "../../components/dialog";
 
 // import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
-import getAllAddress from "../../api/address/getAddress";
 import countryList from "../../api/common/getAllCountries";
 
 import { addCountry } from "../../store/reducers/authSlice";
-import { getAddress, isLoaded } from "../../store/reducers/addressSlice";
 import { getBranchHours } from "../../store/reducers/resturantsSlice";
 
 import {
@@ -47,21 +45,6 @@ const Home = () => {
   const resturantsData = useSelector(
     (state) => state.resturants.resturantsData
   );
-
-  const fetchFunction = async () => {
-    dispatch(isLoaded());
-    getAllAddress(isToken).then((res) => {
-      if (res.success === "ok") {
-        dispatch(getAddress(res.data));
-      }
-    });
-  };
-
-  useEffect(() => {
-    if (isToken !== null) {
-      fetchFunction();
-    }
-  }, [location, isToken]);
 
   // const [userCurrentAddress, setUserCurrentAddress] = useState({
   //   latitude: 0,
@@ -101,41 +84,55 @@ const Home = () => {
       // eslint-disable-next-line no-undef
       setKey(process.env.REACT_APP_GOOGLE_API_KEY);
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            let addToRedux = {
-              lat: "",
-              lng: "",
-              address: "",
-            };
-            geocode(
-              RequestType.LATLNG,
-              `${position.coords.latitude},${position.coords.longitude}`,
-              {
-                enable_address_descriptor: true,
-              }
-            )
-              .then(({ results }) => {
-                const address = results[0].formatted_address;
-                const lat = results[0].geometry.location.lat;
-                const lng = results[0].geometry.location.lng;
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          let addToRedux = {
+            lat: "",
+            lng: "",
+            address: "",
+          };
+          geocode(
+            RequestType.LATLNG,
+            `${position.coords.latitude},${position.coords.longitude}`,
+            {
+              enable_address_descriptor: true,
+            }
+          )
+            .then(({ results }) => {
+              const address = results[0].formatted_address;
+              const lat = results[0].geometry.location.lat;
+              const lng = results[0].geometry.location.lng;
 
-                addToRedux = {
-                  lat: lat,
-                  lng: lng,
-                  address: address,
-                };
-                localStorage.setItem("location", JSON.stringify(addToRedux));
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          },
-          () => {}
-        );
+              addToRedux = {
+                lat: lat,
+                lng: lng,
+                address: address,
+              };
+              localStorage.setItem("location", JSON.stringify(addToRedux));
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }, showError);
       }
     }
   }, []);
+
+  const showError = (error) => {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        console.log("User denied the request for Geolocation.");
+        break;
+      case error.POSITION_UNAVAILABLE:
+        console.log("Location information is unavailable.");
+        break;
+      case error.TIMEOUT:
+        console.log("The request to get user location timed out.");
+        break;
+      case error.UNKNOWN_ERROR:
+        console.log("An unknown error occurred.");
+        break;
+    }
+  };
 
   const isCountry = localStorage.getItem("country");
   useEffect(() => {
@@ -166,7 +163,6 @@ const Home = () => {
   const [distanceIsFar, setDistanceIsFar] = useState(false);
   const [fromPopular, setFromPopular] = useState(false);
   const [popularId, setPopularId] = useState(null);
-  const [restBranch, setRestBranch] = useState([]);
   const [newText, setNewText] = useState("");
   const [selectedText, setSelectedText] = useState("");
 
@@ -175,19 +171,36 @@ const Home = () => {
   const divs = parentDiv?.getElementsByClassName("restaurantCards");
 
   useEffect(() => {
-    if (restaurantId !== null) {
-      fetchBranchHours();
-    }
-  }, [restaurantId]);
+    if (resturantsData?.length) {
+      removeBrownClasses();
+      let promises = [];
 
-  const fetchBranchHours = () => {
-    getRestaurantBranchHours(restaurantId).then((res) => {
-      if (res.status === "ok") {
-        setRestBranch(res.data);
-        dispatch(getBranchHours(res.data));
+      for (let i = 0; i < resturantsData.length - 2; i++) {
+        const idToCheck = resturantsData[i].id;
+
+        promises.push(getRestaurantBranchHours(idToCheck));
       }
-    });
-  };
+
+      Promise.all(promises)
+        .then((responses) => {
+          let curr = [];
+
+          responses.forEach((res) => {
+            if (res.status === "ok") {
+              for (let j = 0; j < res.data.length; j++) {
+                if (!curr.includes(res.data[j])) {
+                  curr.push(res.data[j]);
+                }
+              }
+            }
+          });
+          dispatch(getBranchHours(curr));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [resturantsData]);
 
   const chooseAddress = (item) => {
     const lat = +item.latitude;
@@ -199,8 +212,8 @@ const Home = () => {
   useEffect(() => {
     if (fullAddress !== null) {
       if (filterSelectedNow === "") {
-        if (restBranch.length) {
-          restBranch?.forEach((res) => {
+        if (branchHours.length) {
+          branchHours?.forEach((res) => {
             const resLat = +res.latitude;
             const resLng = +res.longitude;
 
@@ -251,7 +264,7 @@ const Home = () => {
         setOpenAddressPopup(false);
       }
     }
-  }, [fullAddress]);
+  }, [fullAddress, branchHours]);
 
   const navigateUser = () => {
     const restaurant = resturantsData.find((res) => res.id === restaurantId);
@@ -338,67 +351,48 @@ const Home = () => {
 
   useEffect(() => {
     if (
-      resturantsData?.length &&
+      branchHours?.length &&
       filterClassNear &&
-      selectedText === "Delivery"
+      selectedText === "Delivery" &&
+      filterSelectedNow !== "Available for Delivery"
     ) {
       removeBrownClasses();
+      if (branchHours.length) {
+        branchHours?.forEach((res) => {
+          const resLat = +res.latitude;
+          const resLng = +res.longitude;
+          if (
+            fullAddress !== null &&
+            localStorage.getItem("selected") === null
+          ) {
+            const distance = getDistanceFromLatLonInKm(
+              resLat,
+              resLng,
+              fullAddress.lat,
+              fullAddress.lng
+            );
+            if (distance > 50) {
+              removeClasses();
+            } else {
+              addClasses();
+            }
+            //
+          } else if (
+            (fullAddress !== null || fullAddress === null) &&
+            localStorage.getItem("selected") !== null
+          ) {
+            const selected = JSON.parse(localStorage.getItem("selected"));
 
-      for (let i = 0; i < resturantsData.length - 2; i++) {
-        const idToCheck = resturantsData[i].id;
-
-        getRestaurantBranchHours(idToCheck).then((res) => {
-          if (res.status === "ok") {
-            for (let j = 0; j < res.data.length; j++) {
-              const currentItem = res.data[j];
-
-              if (
-                fullAddress !== null &&
-                localStorage.getItem("selected") === null
-              ) {
-                const resLat = +currentItem.latitude;
-                const resLng = +currentItem.longitude;
-
-                const distance = getDistanceFromLatLonInKm(
-                  resLat,
-                  resLng,
-                  fullAddress.lat,
-                  fullAddress.lng
-                );
-                if (distance > 50) {
-                  if (res.data[j].restaurant_id === idToCheck) {
-                    removeClasses();
-                  }
-                } else {
-                  if (res.data[j].restaurant_id === idToCheck) {
-                    addClasses();
-                  }
-                }
-                //
-              } else if (
-                (fullAddress !== null || fullAddress === null) &&
-                localStorage.getItem("selected") !== null
-              ) {
-                const selected = JSON.parse(localStorage.getItem("selected"));
-                const resLat = +currentItem.latitude;
-                const resLng = +currentItem.longitude;
-
-                const distance = getDistanceFromLatLonInKm(
-                  resLat,
-                  resLng,
-                  selected.lat,
-                  selected.lng
-                );
-                if (distance > 50) {
-                  if (res.data[j].restaurant_id === idToCheck) {
-                    removeClasses();
-                  }
-                } else {
-                  if (res.data[j].restaurant_id === idToCheck) {
-                    addClasses();
-                  }
-                }
-              }
+            const distance = getDistanceFromLatLonInKm(
+              resLat,
+              resLng,
+              selected.lat,
+              selected.lng
+            );
+            if (distance > 50) {
+              removeClasses();
+            } else {
+              addClasses();
             }
           }
         });
@@ -410,9 +404,10 @@ const Home = () => {
     }
 
     if (
-      filterClassDelivery &&
-      !filterClassNear &&
-      selectedText === "Delivery"
+      (filterClassDelivery &&
+        !filterClassNear &&
+        selectedText === "Delivery") ||
+      filterSelectedNow === "Available for Delivery"
     ) {
       addBrownClasses();
       removeClasses();
@@ -420,14 +415,15 @@ const Home = () => {
 
     if (!filterClassDelivery && selectedText === "Delivery") {
       removeBrownClasses();
-      removeClasses();
+      // removeClasses();
     }
   }, [
-    resturantsData,
+    branchHours,
     filterClassNear,
     fullAddress,
     filterClassDelivery,
     selectedText,
+    filterSelectedNow,
   ]);
 
   return (
