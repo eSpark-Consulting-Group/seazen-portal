@@ -399,23 +399,33 @@ const Home = () => {
       }
     }
 
-    if (!filterClassNear && selectedText === "Delivery") {
-      removeClasses();
+    if (selectedText === "Delivery" && filterClassDelivery && filterClassNear) {
+      addClasses();
     }
 
     if (
-      (filterClassDelivery &&
-        !filterClassNear &&
-        selectedText === "Delivery") ||
-      filterSelectedNow === "Available for Delivery"
+      selectedText === "Delivery" &&
+      filterClassDelivery &&
+      !filterClassNear
     ) {
       addBrownClasses();
-      removeClasses();
     }
 
-    if (!filterClassDelivery && selectedText === "Delivery") {
+    if (
+      selectedText === "Delivery" &&
+      !filterClassDelivery &&
+      filterClassNear
+    ) {
+      addClasses();
+    }
+
+    if (
+      selectedText === "Delivery" &&
+      !filterClassDelivery &&
+      !filterClassNear
+    ) {
+      removeClasses();
       removeBrownClasses();
-      // removeClasses();
     }
   }, [
     branchHours,

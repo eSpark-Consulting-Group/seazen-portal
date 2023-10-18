@@ -437,6 +437,8 @@ const RestaurantsOrderTypeButton = (props) => {
       !typesState.pickup
     ) {
       dispatch(removeSelectedService());
+      setToggleFilterClassNear(false);
+      setToggleFilterClassDelivery(false);
     }
   }, [typesState]);
 
