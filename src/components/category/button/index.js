@@ -270,7 +270,7 @@ const RestaurantsOrderTypeButton = (props) => {
       const icons = parentIcon[j].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
-          icon.classList.remove("bg-dark");
+          icon.classList.remove("delivers-image");
         }
       });
     }

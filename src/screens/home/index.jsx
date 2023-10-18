@@ -286,7 +286,7 @@ const Home = () => {
       const icons = parentIcon[j].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
-          icon.classList.remove("bg-dark");
+          icon.classList.remove("delivers-image");
         }
       });
     }
@@ -328,7 +328,7 @@ const Home = () => {
       const icons = parentIcon[j].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
-          icon.classList.add("bg-dark");
+          icon.classList.add("delivers-image");
         }
       });
     }
