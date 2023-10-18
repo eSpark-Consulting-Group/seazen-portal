@@ -18,12 +18,19 @@
 
 .shrink-expanded {
   padding-right: 0px !important;
+  width: 35px !important;
+}
+
+.orderTypebutton-content {
+  width: 100%;
 }
 
 .shrink-expanded .orderTypebutton-text {
   width: 0px;
   padding-left: 0px;
   padding-right: 0px;
+  margin-right: 0px;
+  margin-left: 0px;
 }
 
 .custom-button {
@@ -42,7 +49,9 @@
   cursor: pointer;
   /* transform: scale(0.98); */
   /* transition: all 0.3s; */
-  padding-right: 6px;
+  /* padding-right: 6px; */
+  width: 100%;
+  margin-right: 4px;
 }
 
 .orderTypebutton-text {
@@ -51,9 +60,15 @@
   color: #323f4b;
   opacity: 1;
   font-size: 9px;
-  padding-left: 3px;
-  padding-right: 13px;
-  width: 29px;
+  /* padding-left: 3px; */
+  /* padding-right: 13px; */
+  width: 170%;
+  margin-left: 3px;
+  /* margin-right: 15px; */
+}
+
+.expanded .orderTypebutton-text{
+  width: 60px;
 }
 
 .basic-card.expanded {
@@ -99,8 +114,9 @@
   color: #93694f;
   opacity: 1;
   background: #ffffff 0% 0% no-repeat padding-box;
-  width: 82px;
+  width: 100%;
   height: 16px;
+  
 }
 
 .orderTypebutton-style-one-active {
@@ -118,7 +134,7 @@
   border: 1px solid #4f948a;
   border-radius: 16px;
   opacity: 1;
-  width: 61px;
+  width: 100%;
   height: 16px;
   text-align: center;
   font: normal normal 600 7px/6px Titillium Web;

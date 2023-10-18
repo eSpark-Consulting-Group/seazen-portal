@@ -45,6 +45,20 @@
   padding-left: 27px;
 }
 
+.reserve-style{
+  background: #b69280 0% 0% no-repeat padding-box;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  color: white;
+  font-weight: bold;
+  width: 109px;
+  height: 28px;
+  border-radius: 16px 0px;
+  opacity: 1;
+
+}
+
 /* .bEjuCR{
   grid-template-columns: repeat(4,100%);
 
