@@ -83,7 +83,6 @@ function CartPage() {
     "14 August 2023, ASAP"
   );
 
-  const selectedAddress = JSON.parse(localStorage.getItem("selected"));
   const restaurantId = localStorage.getItem("restaurantID");
 
   // Function to handle closing the dialog
@@ -123,11 +122,13 @@ function CartPage() {
 
   const checkBranchHours = (array) => {
     if (array?.length) {
+      const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+
       array?.forEach((res) => {
         const resLat = +res.latitude;
         const resLng = +res.longitude;
-        const selectedLat = selectedAddress.lat;
-        const selectedLng = selectedAddress.lng;
+        const selectedLat = selectedAddress?.lat;
+        const selectedLng = selectedAddress?.lng;
 
         const distance = getDistanceFromLatLonInKm(
           resLat,
@@ -192,8 +193,10 @@ function CartPage() {
     let itemsProcessed = 0;
 
     getRestaurantBranchHours(restaurantId).then((res) => {
-      const selectedLat = selectedAddress.lat;
-      const selectedLng = selectedAddress.lng;
+      const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+
+      const selectedLat = selectedAddress?.lat;
+      const selectedLng = selectedAddress?.lng;
 
       res?.data?.forEach((res, _, array) => {
         itemsProcessed++;
@@ -454,6 +457,7 @@ function CartPage() {
               color: "#1F2933",
             }}
           />
+          <ArrowBackRoundedIcon fontSize="medium" sx={{ marginTop: "-18px" }} />
         </IconButton>
         <Typography
           variant="h5"

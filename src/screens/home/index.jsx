@@ -175,26 +175,27 @@ const Home = () => {
       removeBrownClasses();
       let promises = [];
 
-      for (let i = 0; i < resturantsData.length - 2; i++) {
-        const idToCheck = resturantsData[i].id;
-
-        promises.push(getRestaurantBranchHours(idToCheck));
-      }
+      resturantsData?.forEach((restaurant, index) => {
+        if (index === 0 || index === 1) {
+          const idToCheck = restaurant.id;
+          promises.push(getRestaurantBranchHours(idToCheck));
+        }
+      });
 
       Promise.all(promises)
         .then((responses) => {
-          let curr = [];
+          let allItems = [];
 
           responses.forEach((res) => {
             if (res.status === "ok") {
-              for (let j = 0; j < res.data.length; j++) {
-                if (!curr.includes(res.data[j])) {
-                  curr.push(res.data[j]);
+              res?.data?.forEach((item) => {
+                if (!allItems.includes(item)) {
+                  allItems.push(item);
                 }
-              }
+              });
             }
           });
-          dispatch(getBranchHours(curr));
+          dispatch(getBranchHours(allItems));
         })
         .catch((error) => {
           console.error(error);
@@ -278,12 +279,16 @@ const Home = () => {
     });
   };
 
+  // Removing border and background color from icon if Delivers to me is not selected
   const removeClasses = () => {
-    for (let i = 0; i < divs.length; i++) {
+    // Add border to restaurant image
+    for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("delivery-true");
     }
-    for (let j = 0; j < parentIcon.length; j++) {
-      const icons = parentIcon[j].querySelectorAll(".icon-row");
+
+    // Add background color to icon on restaurant image
+    for (let i = 0; i < parentIcon?.length; i++) {
+      const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
           icon.classList.remove("delivers-image");
@@ -292,12 +297,16 @@ const Home = () => {
     }
   };
 
+  // Removing border and background color from icon if Available to deliver is not selected
   const removeBrownClasses = () => {
+    // Add border to restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("add-brown-border");
     }
-    for (let j = 0; j < parentIcon?.length; j++) {
-      const icons = parentIcon[j].querySelectorAll(".icon-row");
+
+    // Add background color to icon on restaurant image
+    for (let i = 0; i < parentIcon?.length; i++) {
+      const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
           icon.classList.remove("bg-brown");
@@ -306,12 +315,16 @@ const Home = () => {
     }
   };
 
+  // Add border and background color from icon if Available to deliver is selected
   const addBrownClasses = () => {
+    // Add border to restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.add("add-brown-border");
     }
-    for (let j = 0; j < parentIcon?.length; j++) {
-      const icons = parentIcon[j].querySelectorAll(".icon-row");
+
+    // Add background color to icon on restaurant image
+    for (let i = 0; i < parentIcon?.length; i++) {
+      const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
           icon.classList.add("bg-brown");
@@ -320,12 +333,16 @@ const Home = () => {
     }
   };
 
+  // Add border and background color from icon if Delivers to me is selected
   const addClasses = () => {
-    for (let i = 0; i < divs.length; i++) {
+    // Add border to restaurant image
+    for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.add("delivery-true");
     }
-    for (let j = 0; j < parentIcon.length; j++) {
-      const icons = parentIcon[j].querySelectorAll(".icon-row");
+
+    // Add background color to icon on restaurant image
+    for (let i = 0; i < parentIcon?.length; i++) {
+      const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
           icon.classList.add("delivers-image");
