@@ -442,7 +442,9 @@ function CartPage() {
             height: "42px",
           }}
           edge="start"
-          onClick={() => navigate(-1)}
+          onClick={() =>
+            navigate(`${paths.menu}/restaurant/${restaurantId}/delivery`)
+          }
         >
           <ArrowBackRoundedIcon
             fontSize="medium"
