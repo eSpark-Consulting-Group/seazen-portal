@@ -447,12 +447,13 @@ const AddressForm = () => {
   };
 
   return (
-    <div className="button-style">
-      <MyAddresses
+    <>
+     <MyAddresses
         title={`${location?.state?.edit ? "Edit" : "Save New"} Address`}
         path={location?.state?.path}
         fromAllAddresses={false}
       />
+    <div className="button-style">
       <AddressTypeSelector
         addressType={addressType}
         handleAddressTypeChange={
@@ -547,6 +548,7 @@ const AddressForm = () => {
         </button>
       </form>
     </div>
+    </>
   );
 };
 

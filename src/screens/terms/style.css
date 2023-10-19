@@ -1,3 +1,11 @@
+.terms-section .profileHeaderoption {
+  border: none;
+}
+
+.terms-section .profileHeaderaccount {
+  border: none;
+}
+
 .terms-section h1 {
   /* top: 95px;
   left: 105px; */
@@ -11,6 +19,7 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .terms-paragraph-title {

@@ -15,20 +15,40 @@ const OrderNavbar = () => {
         size="large"
         sx={{
           boxShadow: (theme) => theme.shadows[16],
+          marginLeft: "0",
+          width: "42px",
+          height: "42px",
+          position: "relative",
+          top: "-6.5px",
         }}
         edge="start"
         onClick={() => {
           navigate(paths.profile);
         }}
-        className="back-location"
       >
-        <ArrowBackRoundedIcon fontSize="large" />
+        <ArrowBackRoundedIcon
+          sx={{
+            width: "24px",
+            height: "24px",
+            color: "#1F2933",
+          }}
+        />
       </IconButton>
-      <Typography variant="h5" component="h2" fontWeight={700} color="#1F2933">
+      <Typography
+        variant="h5"
+        component="h2"
+        fontWeight={700}
+        color="#1F2933"
+        sx={{ letterSpacing: "0.36px", marginTop: "-13px" }}
+      >
         My Orders
       </Typography>
       <IconButton className={`${styles.brand_logo}`}>
-        <img src="/assets/img/options icon.svg" alt="" />
+        <img
+          style={{ width: "11px", height: "20px" }}
+          src="/assets/img/Group 259.svg"
+          alt=""
+        />
       </IconButton>
     </div>
   );

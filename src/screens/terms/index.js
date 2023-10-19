@@ -6,8 +6,8 @@ import "./style.css";
 export const Terms = () => {
   return (
     <div >
+      <div  className="terms-section px-4">
       <ProfileHeader showFlagOption={false} />
-      <div style={{ marginTop: "10%" }}  className="terms-section px-4">
         <h1>Terms & Conditions</h1>
         <p className="terms-paragraph-title">1. Lorem ipsum </p>
         <p className="terms-paragraphOne">

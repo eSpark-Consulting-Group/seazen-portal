@@ -53,6 +53,7 @@ import getRestaurantBranchHours, {
 import { useDispatch } from "react-redux";
 import { addAddressDetail } from "../../store/reducers/addressSlice";
 import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
+import Navbar, { NavbarVariants } from "../../components/header";
 
 const containerStyle = {
   width: "100%",
@@ -413,18 +414,18 @@ function LocationPage() {
       }}
       className="parent-stack"
     >
-      <Stack
+        <Stack
         spacing={2}
         sx={{
           width: "100%",
           position: "absolute",
           zIndex: (theme) => theme.zIndex.appBar,
           top: 0,
-          padding: "24px 24px 0px 24px",
           backgroundColor: "transparent",
         }}
       >
-        <Stack
+    
+        {/* <Stack
           direction="row"
           alignItems="center"
           justifyContent="space-between"
@@ -440,7 +441,10 @@ function LocationPage() {
             onClick={() => navigate(-1)}
             className="back-location"
           >
-            <ArrowBackRoundedIcon fontSize="large" />
+            <ArrowBackRoundedIcon
+              fontSize="large"
+              sx={{ width: "24px", height: "24px" }}
+            />
           </IconButton>
           <div className="d-flex align-items-center logo">
             <img
@@ -453,7 +457,7 @@ function LocationPage() {
             size="large"
             sx={{
               boxShadow: (theme) => theme.shadows[16],
-              marginTop:"2px",
+              marginTop: "2px",
             }}
             edge="end"
             onClick={() => navigate(-1)}
@@ -461,8 +465,29 @@ function LocationPage() {
           >
             <img src="/assets/img/options icon.svg" alt="Options"></img>
           </IconButton>
+        </Stack> */}
+<Stack
+        sx={{
+          // minHeight: "70vh",
+          color: "text.primary",
+          paddingLeft:"16px !important",
+          paddingRight:"16px !important",
+          padding:"0",
+        }}
+        justifyContent="space-between"
+        spacing={2}
+      >
+        <div className="Phone-Nav">
+          <Navbar variant={NavbarVariants.backWithProfile} />
+        </div>
         </Stack>
-
+        <Stack
+        spacing={2}
+        sx={{
+          
+          padding: "24px 24px 0px 24px",
+        }}
+      >
         {isLoaded ? (
           <div>
             <Autocomplete
@@ -491,6 +516,7 @@ function LocationPage() {
           address={address}
           location={location.state}
         />  */}
+      </Stack>
       </Stack>
       {!isLoaded ? (
         <div className="progress-bar">

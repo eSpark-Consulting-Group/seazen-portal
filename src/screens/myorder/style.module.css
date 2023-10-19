@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 30px 0;
+  margin: 26.5px 24px;
 }
 
 .brand_logo {
@@ -17,9 +17,10 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-top: -8px !important;
+  width: 42px;
+  height: 42px;
+  margin-top: -13px !important;
+  box-shadow: 0px 24px 48px #314f7c1f;
 }
 
 .category_items {

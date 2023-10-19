@@ -1,3 +1,6 @@
-.Phone-Nav .logo-home{
-    margin: 0px -5px 0px 0px !important;
+.Phone-Nav .logo-home {
+    margin: 0px 0px 0px 0px !important;
+}
+.Phone-Nav {
+    margin-top: 12px !important;
 }

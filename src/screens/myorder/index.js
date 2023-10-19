@@ -125,8 +125,9 @@ const MyOrderScreen = () => {
   });
 
   return (
+    <>
+    <OrderNavbar />
     <div className={`${styles.my_orderscreen}`}>
-      <OrderNavbar />
       <div className={`${styles.category_items}`}>
         {category.map((item, index) => {
           return (
@@ -189,6 +190,7 @@ const MyOrderScreen = () => {
 
       <RateCard />
     </div>
+    </>
   );
 };
 

@@ -208,7 +208,7 @@
 .back-location {
   width: 42px !important;
   height: 42px !important;
-  margin-top: -8px !important;
+  margin-top: -5px !important;
   color: #1F2933 !important;
 
 }
@@ -216,7 +216,7 @@
 .right-icon {
   width: 42px !important;
   height: 42px !important;
-  margin-top: -8px !important;
+  margin-top: -5px !important;
 }
 
 .right-icon svg {

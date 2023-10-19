@@ -437,11 +437,21 @@ function CartPage() {
             position: "absolute",
             left: 0,
             boxShadow: (theme) => theme.shadows[16],
+            marginLeft: "0",
+            width: "42px",
+            height: "42px",
           }}
           edge="start"
           onClick={() => navigate(-1)}
         >
-          <ArrowBackRoundedIcon fontSize="medium" sx={{marginTop: "-18px",}} />
+          <ArrowBackRoundedIcon
+            fontSize="medium"
+            sx={{
+              width: "24px",
+              height: "24px",
+              color: "#1F2933",
+            }}
+          />
         </IconButton>
         <Typography
           variant="h5"
@@ -449,7 +459,7 @@ function CartPage() {
           fontWeight={700}
           sx={{
             mb: 0,
-            marginTop: "-18px",
+            // marginTop: "-18px",
           }}
         >
           Your Cart

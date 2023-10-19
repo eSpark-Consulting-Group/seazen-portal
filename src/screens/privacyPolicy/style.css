@@ -1,3 +1,11 @@
+.privacy-policy-section .profileHeaderoption {
+  border: none;
+}
+
+.privacy-policy-section .profileHeaderaccount {
+  border: none;
+}
+
 .privacy-policy-section h1 {
   top: 95px;
   left: 127px;
@@ -10,6 +18,7 @@
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .privacy-paragraph-title {

@@ -89,6 +89,8 @@ function PhoneNumberVerificationIndex() {
         sx={{
           minHeight: "70vh",
           color: "text.primary",
+          paddingLeft:"16px",
+          paddingRight:"16px",
         }}
         justifyContent="space-between"
         spacing={2}

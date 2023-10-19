@@ -6,8 +6,8 @@ import "./style.css";
 export const PrivacyPolicy = () => {
   return (
     <div>
+      <div  className="privacy-policy-section px-4">
       <ProfileHeader showFlagOption={false} />
-      <div style={{ marginTop: "10%" }}  className="privacy-policy-section px-4">
         <h1>Privacy Policy</h1>
         <p className="privacy-paragraph-title">1. Lorem ipsum </p>
         <p className="privacy-paragraphOne">

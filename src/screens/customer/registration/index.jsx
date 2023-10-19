@@ -11,6 +11,7 @@ import { Footer } from "../../../components/footer/footerContent";
 import { paths } from "../../../routes/paths";
 import updateProfile from "../../../api/customer/updateProfile";
 import { useMutation } from "@tanstack/react-query";
+import "./style.css";
 
 const initialState = {
   first_name: "",
@@ -71,11 +72,15 @@ function CustomerRegistration() {
       sx={{
         minHeight: "100vh",
         color: "text.primary",
+        paddingLeft: "16px",
+        paddingRight: "16px",
       }}
       justifyContent="space-between"
       spacing={2}
     >
-      <Navbar variant={NavbarVariants.backWithProfile} />
+      <div className="Register-Nav">
+        <Navbar variant={NavbarVariants.backWithProfile} />
+      </div>{" "}
       <Stack
         spacing={5}
         sx={{
@@ -174,7 +179,6 @@ function CustomerRegistration() {
           Terms & Conditions apply
         </Typography>
       </Stack>
-
       <Footer showCommentOption={false} />
     </Stack>
   );

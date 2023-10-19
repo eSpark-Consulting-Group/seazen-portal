@@ -6,7 +6,7 @@
   align-items: center;
   background-color: #333;
   color: #fff;
-  padding: 12px 23px;
+  padding: 12px 24px;
   height: 56px;
   background: #ffffff00 0% 0% no-repeat padding-box;
   opacity: 1;
@@ -15,8 +15,8 @@
 
 .left-icons {
   box-shadow: 0px 0px 48px #314f7c1f;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background-color: #fff;
   display: flex;
@@ -28,34 +28,47 @@
 .left-icons img {
   opacity: 1;
   cursor: pointer;
+  width: 24px;
+  height: 24px;
 }
 
 .right-icons {
   box-shadow: 0px 0px 48px #314f7c1f;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: -2px;
-
 }
 
 .right-icons img {
   position: relative;
   top: auto;
   margin-left: 0px;
-  height: auto;
+  width: 11px;
+  height: 20px;
 }
 
 .logo h3 {
-  text-align: center;
+  /* text-align: center;
   font: normal normal bold 18px/24px Montserrat;
   letter-spacing: 0.36px;
   color: #1f2933;
+  opacity: 1; */
+  text-align: center;
+  letter-spacing: 0.36px;
+  color: #1f2933;
   opacity: 1;
+  display: flex;
+  justify-content: center;
+  font-family: "Titillium Web", sans-serif;
+  font-size: 1.2857142857142856rem;
+  font-weight: bold;
+  margin-top: -2px;
+
 }
 
 /* @media screen and (max-width: 500px) and (min-width: 380px) {
