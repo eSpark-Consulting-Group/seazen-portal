@@ -3,23 +3,66 @@
 }
 
 .card-spacing {
-  margin-right: -15px;
-  margin-left: -15px;
+  /* margin-right: -15px; */
+  margin-left: -5px;
   margin-top: 13px;
+}
+
+@media screen and (max-width:425px) {
+  .card-spacing {
+    margin-left: -11px;
+}
 }
 
 .carouselBanner {
   border-radius: 20px;
   margin: 0px auto 8px;
   position: relative;
-  /* width: 327px; */
+  width: 327px;
   height: 120px;
-  width: 90%;
+}
+
+@media screen and (max-width: 424px) and (min-width: 400px) {
+  .carouselBanner img {
+    width: 365px !important;
+  }
+  .carouselBanner {
+    width: 365px;
+  }
+}
+
+@media screen and (max-width: 390px) and (min-width: 380px) {
+  .carouselBanner img {
+    width: 324px !important;
+  }
+  .carouselBanner {
+    width: 324px;
+  }
+}
+
+@media (max-width: 331px) {
+  .carouselBanner img {
+    width: 284px !important;
+    height: 120px;
+    min-width: 284px;
+  }
+  .carouselBanner {
+    width: 284px;
+  }
+}
+
+@media (max-width: 355px) {
+  .carouselBanner img {
+    width: 300px !important;
+  }
+  .carouselBanner {
+    width: 300px;
+  }
 }
 
 .carouselBanner img {
-  width: 100%;
-  height: 100%;
+  width: 327px;
+  height: 120px;
   object-fit: cover;
   border-radius: 20px;
 }

@@ -428,7 +428,8 @@ function CartPage() {
         alignItems="center"
         sx={{
           position: "relative",
-          py: 1,
+          paddingTop: "3px",
+          paddingBottom: "8px"
         }}
       >
         <IconButton
