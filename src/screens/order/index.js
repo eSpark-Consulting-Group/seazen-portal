@@ -11,6 +11,9 @@ import { useMutation } from "@tanstack/react-query";
 import getOrderStatus from "../../api/order/getOrderStatus";
 import { set } from "lodash";
 import { Box, CircularProgress } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { resetCart } from "../../store/reducers/cartSlice";
+import clearCart from "../../api/cart/clearCart";
 
 const OrderScreen = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,6 +24,20 @@ const OrderScreen = () => {
     { done: false },
     { done: false },
   ]);
+
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    dispatch(resetCart());
+    clearCart(token)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const [updateStatus, setUpdateStatus] = useState({
     Submitted: {

@@ -439,7 +439,9 @@ function CartPage() {
             boxShadow: (theme) => theme.shadows[16],
           }}
           edge="start"
-          onClick={() => navigate(-1)}
+          onClick={() =>
+            navigate(`${paths.menu}/restaurant/${restaurantId}/delivery`)
+          }
         >
           <ArrowBackRoundedIcon fontSize="medium" sx={{marginTop: "-18px",}} />
         </IconButton>
