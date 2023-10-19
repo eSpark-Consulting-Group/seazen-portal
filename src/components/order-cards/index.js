@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { Button, Card, Rating } from "@mui/material";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button, Card, Rating, Box } from "@mui/material";
 import styles from "../../screens/myorder/style.module.css";
 import RateCard from "../rate-card";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
+import addOrderRating from "../../api/order/addOrderRating";
+import { GET_ORDERS_QUERY_KEY } from "../../api/order/getOrders";
 
 const OrderCard = ({ item }) => {
+  const queryClient = useQueryClient();
+
   const [openRate, setOpenRate] = useState(false);
-  const [average, setAverage] = useState(0);
+  const [average, setAverage] = useState(item.rating || 0);
   const navigate = useNavigate();
 
   const handleRate = (val) => {
@@ -17,6 +22,7 @@ const OrderCard = ({ item }) => {
   const handleClose = (value) => {
     handleRate(false);
     setAverage(value);
+    handleRateOrder(value);
   };
 
   const handleReceipt = () => {
@@ -49,6 +55,23 @@ const OrderCard = ({ item }) => {
   const restaurantImagePath =
     `/assets/img/` +
     (item.restaurant_id === 1 ? "masgoof.svg" : "Groove_Logo.svg");
+
+  const { mutate: rateOrder } = useMutation({
+    mutationFn: addOrderRating,
+    onSuccess: (response) => {
+      if (response?.data?.rating) {
+        queryClient.invalidateQueries(GET_ORDERS_QUERY_KEY);
+        setAverage(response.data.rating);
+      }
+    },
+  });
+
+  const handleRateOrder = (rating) => {
+    rateOrder({
+      order_id: item.order_id,
+      rating,
+    });
+  };
 
   return (
     <Card style={{ border: "1px solid #C0CDD7", marginTop: "10px" }}>
@@ -104,40 +127,51 @@ const OrderCard = ({ item }) => {
           <div id={`${styles.card_content_right_unit}`}>KWD</div>
         </div>
       </div>
-      <div
-        className={
-          item.order_status === "Delivered" || item.order_status === "Cancelled"
-            ? `${styles.card_footer}`
-            : `${styles.card_single_footer}`
-        }
-      >
-        {average !== 0 ? (
-          <Rating name="read-only" value={average} />
-        ) : (
-          item.order_status === "Delivered" && (
-            <Button
-              sx={{ p: 1, border: " 1px solid #C0CDD7", color: "#40484E" }}
-              variant="outlined"
-              className={`${styles.card_footer_rate}`}
-              onClick={() => handleRate(true)}
-            >
-              Rate
-            </Button>
-          )
-        )}
+      {(item.order_status === "Delivered" ||
+        item.order_status === "Cancelled") && (
+        <Box
+          sx={{
+            px: 1.5,
+            pb: 1,
+            display: "flex",
+            justifyContent: "space-between",
+            ...(item.order_status === "Cancelled" && {
+              justifyContent: "flex-end",
+            }),
+            alignItems: "center",
+          }}
+        >
+          {average !== 0 ? (
+            <Rating name="read-only" value={average} />
+          ) : (
+            item.order_status === "Delivered" && (
+              <Button
+                sx={{
+                  border: "1px solid #C0CDD7",
+                  color: "#40484E",
+                }}
+                size="small"
+                variant="outlined"
+                onClick={() => handleRate(true)}
+              >
+                Rate
+              </Button>
+            )
+          )}
 
-        {item.order_status === "Cancelled" && (
           <Button
-            sx={{ p: 1, border: " 1px solid #C0CDD7", color: "#40484E" }}
+            sx={{
+              border: "1px solid #C0CDD7",
+              color: "#40484E",
+            }}
+            size="small"
             variant="outlined"
-            className={`${styles.card_footer_reorder}`}
-            href=""
             onClick={handleReorder}
           >
             Reorder
           </Button>
-        )}
-      </div>
+        </Box>
+      )}
       <RateCard isVisible={openRate} handleClose={(val) => handleClose(val)} />
     </Card>
   );

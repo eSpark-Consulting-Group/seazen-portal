@@ -44,6 +44,7 @@ const API_ENDPOINTS = {
   ORDER: {
     GET_ORDERS: "/order",
     GET_ORDER_DETAILS: "/order/",
+    ORDER_RATING: "/order/rating",
     GET_ORDER_STATUS: "/order/status",
   },
 };
