@@ -124,8 +124,8 @@
 
 @media screen and (min-width: 600px) {
   .dluTbn {
-    overflow: visible;
-    margin: 0;
+    overflow: visible !important;
+    margin: 0 !important;
   }
 }
 @media screen and (max-width: 767px) {
