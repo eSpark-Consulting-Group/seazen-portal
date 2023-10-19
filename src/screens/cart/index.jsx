@@ -448,10 +448,7 @@ function CartPage() {
             height: "42px",
           }}
           edge="start"
-          onClick={() => navigate(-1)}
-          // onClick={() =>
-          //   navigate(`${paths.menu}/restaurant/${restaurantId}/delivery`)
-          // }
+          onClick={() => navigate(location.state.back || -1)}
         >
           <ArrowBackRoundedIcon
             fontSize="medium"
@@ -1117,7 +1114,7 @@ function CartPage() {
                 }}
                 variant="contained"
                 size="large"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(location.state.back || -1)}
               >
                 Back
               </Button>
