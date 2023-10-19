@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 import { HomeAdress } from "../../components/address/forms/homeForm";
 // import AddressHeader from "../../components/address/adressHeader";
@@ -21,13 +21,14 @@ const AddressForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const contactInfo = useSelector((state) => state.auth.country);
-  const { whatsapp_country_code, whatsapp_no } = contactInfo;
+  // const contactInfo = useSelector((state) => state.auth.country);
+  // const { whatsapp_country_code, whatsapp_no } = contactInfo;
 
   const token = localStorage.getItem("token");
 
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
   const [address, setAddress] = useState({
+    area: "",
     block: "",
     street: "",
     avenue: "",
@@ -45,6 +46,7 @@ const AddressForm = () => {
     longitude: location?.state?.latlng.lng,
   });
   const [errorState, setErrorState] = useState({
+    areaErr: false,
     blockErr: false,
     buildingErr: false,
     floorErr: false,
@@ -58,6 +60,7 @@ const AddressForm = () => {
     if (location?.state?.edit) {
       const state = location?.state?.data;
       setAddress({
+        area: state.area ? state.area : "",
         block: state.block ? state.block : "",
         street: state.street ? state.street : "",
         avenue: state.avenue ? state.avenue : "",
@@ -86,6 +89,7 @@ const AddressForm = () => {
     setClickEv(false);
     setAddressType(type);
     setErrorState({
+      areaErr: false,
       blockErr: false,
       streetErr: false,
       houseNoErr: false,
@@ -125,58 +129,79 @@ const AddressForm = () => {
     }
   };
 
+  const checkIfIncludesPlus = () => {
+    let updateMobileCode;
+
+    if (address.country_code.includes("+")) {
+      updateMobileCode = address.country_code;
+    } else {
+      updateMobileCode = `+${address.country_code}`;
+    }
+
+    return updateMobileCode;
+  };
+
   const apiCall = () => {
-    const updateAddress = {
-      ...address,
-      country_code: whatsapp_country_code,
-      mobile_number: whatsapp_no,
-    };
+    let updateAddress = {};
+    if (address.country_code !== "") {
+      updateAddress = {
+        ...address,
+        country_code: checkIfIncludesPlus(),
+      };
+    }
 
-    addAddressApiCall(updateAddress, token).then((res) => {
-      if (res.success === "ok") {
-        if (
-          location?.state?.path === "/cart" ||
-          location?.state?.path === "/home" ||
-          location?.state?.path?.includes("menu-item-details") ||
-          location?.state?.path === "menu/restaurant"
-        ) {
-          const addToStorage = {
-            lat: location?.state?.latlng?.lat,
-            lng: location?.state?.latlng?.lng,
-            address: location?.state?.name,
-          };
+    console.log(updateAddress);
+    // const updateAddress = {
+    //   ...address,
+    //   country_code: whatsapp_country_code,
+    //   mobile_number: whatsapp_no,
+    // };
 
-          localStorage.setItem("selected", JSON.stringify(addToStorage));
+    // addAddressApiCall(address, token).then((res) => {
+    //   if (res.success === "ok") {
+    //     if (
+    //       location?.state?.path === "/cart" ||
+    //       location?.state?.path === "/home" ||
+    //       location?.state?.path?.includes("menu-item-details") ||
+    //       location?.state?.path === "menu/restaurant"
+    //     ) {
+    //       const addToStorage = {
+    //         lat: location?.state?.latlng?.lat,
+    //         lng: location?.state?.latlng?.lng,
+    //         address: location?.state?.name,
+    //       };
 
-          if (
-            location?.state?.path?.includes("menu-item-details") ||
-            location?.state?.path === "menu/restaurant"
-          ) {
-            navigate(
-              `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
-            );
-          } else if (location?.state?.path === "/home") {
-            navigate(paths.home);
-          } else {
-            navigate(paths.cart);
-          }
-        } else if (location?.state?.path === "/profile") {
-          navigate(paths.addresses, { state: { path: location?.state?.path } });
-        } else {
-          navigate(paths.addresses, { state: { path: location.pathname } });
-        }
-      }
-    });
+    //       localStorage.setItem("selected", JSON.stringify(addToStorage));
+
+    //       if (
+    //         location?.state?.path?.includes("menu-item-details") ||
+    //         location?.state?.path === "menu/restaurant"
+    //       ) {
+    //         navigate(
+    //           `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
+    //         );
+    //       } else if (location?.state?.path === "/home") {
+    //         navigate(paths.home);
+    //       } else {
+    //         navigate(paths.cart);
+    //       }
+    //     } else if (location?.state?.path === "/profile") {
+    //       navigate(paths.addresses, { state: { path: location?.state?.path } });
+    //     } else {
+    //       navigate(paths.addresses, { state: { path: location.pathname } });
+    //     }
+    //   }
+    // });
   };
 
   const updateApiCall = () => {
-    const updateAddress = {
-      ...address,
-      country_code: whatsapp_country_code,
-      mobile_number: whatsapp_no,
-    };
+    // const updateAddress = {
+    //   ...address,
+    //   country_code: whatsapp_country_code,
+    //   mobile_number: whatsapp_no,
+    // };
 
-    updateAddressApiCall(updateAddress, location?.state?.data.id, token).then(
+    updateAddressApiCall(address, location?.state?.data.id, token).then(
       (res) => {
         if (res.success === "ok") {
           if (
@@ -224,6 +249,7 @@ const AddressForm = () => {
 
     if (addressType === "house") {
       if (
+        address.area !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.house_no !== ""
@@ -238,6 +264,7 @@ const AddressForm = () => {
     }
     if (addressType === "apartment") {
       if (
+        address.area !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.building !== "" &&
@@ -254,6 +281,7 @@ const AddressForm = () => {
     }
     if (addressType === "office") {
       if (
+        address.area !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.building !== "" &&
@@ -273,165 +301,33 @@ const AddressForm = () => {
   useEffect(() => {
     if (clickEv) {
       if (addressType === "house") {
-        if (address.block === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            blockErr: true,
-          }));
-        }
-        if (address.street === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            streetErr: true,
-          }));
-        }
-        if (address.house_no === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            houseNoErr: true,
-          }));
-        }
-
-        if (address.block !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            blockErr: false,
-          }));
-        }
-        if (address.street !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            streetErr: false,
-          }));
-        }
-        if (address.house_no !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            houseNoErr: false,
-          }));
-        }
+        setErrorState((prevState) => ({
+          ...prevState,
+          areaErr: address.area === "" ? true : false,
+          blockErr: address.block === "" ? true : false,
+          streetErr: address.street === "" ? true : false,
+          houseNoErr: address.house_no === "" ? true : false,
+        }));
       } else if (addressType === "apartment") {
-        if (address.block === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            blockErr: true,
-          }));
-        }
-        if (address.street === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            streetErr: true,
-          }));
-        }
-        if (address.building === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            buildingErr: true,
-          }));
-        }
-        if (address.floor === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            floorErr: true,
-          }));
-        }
-        if (address.apartment_no === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            apartmentNoerr: true,
-          }));
-        }
-        if (address.block !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            blockErr: false,
-          }));
-        }
-        if (address.street !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            streetErr: false,
-          }));
-        }
-        if (address.building !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            buildingErr: false,
-          }));
-        }
-        if (address.floor !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            floorErr: false,
-          }));
-        }
-        if (address.apartment_no !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            apartmentNoerr: false,
-          }));
-        }
+        setErrorState((prevState) => ({
+          ...prevState,
+          areaErr: address.area === "" ? true : false,
+          blockErr: address.block === "" ? true : false,
+          streetErr: address.street === "" ? true : false,
+          buildingErr: address.building === "" ? true : false,
+          floorErr: address.floor === "" ? true : false,
+          apartmentNoerr: address.apartment_no === "" ? true : false,
+        }));
       } else if (addressType === "office") {
-        if (address.block === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            blockErr: true,
-          }));
-        }
-        if (address.street === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            streetErr: true,
-          }));
-        }
-        if (address.building === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            buildingErr: true,
-          }));
-        }
-        if (address.floor === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            floorErr: true,
-          }));
-        }
-        if (address.company_name === "") {
-          setErrorState((prev) => ({
-            ...prev,
-            companyNameErr: true,
-          }));
-        }
-        if (address.block !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            blockErr: false,
-          }));
-        }
-        if (address.street !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            streetErr: false,
-          }));
-        }
-        if (address.building !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            buildingErr: false,
-          }));
-        }
-        if (address.floor !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            floorErr: false,
-          }));
-        }
-        if (address.company_name !== "") {
-          setErrorState((prev) => ({
-            ...prev,
-            companyNameErr: false,
-          }));
-        }
+        setErrorState((prevState) => ({
+          ...prevState,
+          areaErr: address.area === "" ? true : false,
+          blockErr: address.block === "" ? true : false,
+          streetErr: address.street === "" ? true : false,
+          buildingErr: address.building === "" ? true : false,
+          floorErr: address.floor === "" ? true : false,
+          companyNameErr: address.company_name === "" ? true : false,
+        }));
       }
     }
   }, [addressType, address, clickEv]);
@@ -489,6 +385,7 @@ const AddressForm = () => {
           <HomeAdress
             handleChange={handleChange}
             address={address}
+            areaErr={errorState.areaErr}
             blockErr={errorState.blockErr}
             streetErr={errorState.streetErr}
             houseNoErr={errorState.houseNoErr}
@@ -498,6 +395,7 @@ const AddressForm = () => {
           <AppartmentAdress
             handleChange={handleChange}
             address={address}
+            areaErr={errorState.areaErr}
             blockErr={errorState.blockErr}
             streetErr={errorState.streetErr}
             buildingErr={errorState.buildingErr}
@@ -509,6 +407,7 @@ const AddressForm = () => {
           <OfficeAdress
             handleChange={handleChange}
             address={address}
+            areaErr={errorState.areaErr}
             blockErr={errorState.blockErr}
             streetErr={errorState.streetErr}
             buildingErr={errorState.buildingErr}
@@ -523,7 +422,7 @@ const AddressForm = () => {
           <div className="contact-field">
             <input
               className="country-code-input"
-              type="text"
+              type="number"
               name="CountryCode"
               placeholder="+956"
               value={address.country_code}
@@ -532,7 +431,7 @@ const AddressForm = () => {
 
             <input
               className="phone-number-input"
-              type="text"
+              type="number"
               name="PhoneNumber"
               placeholder="Alternative Phone Number"
               value={address.mobile_number}

@@ -83,7 +83,6 @@ function CartPage() {
     "14 August 2023, ASAP"
   );
 
-  const selectedAddress = JSON.parse(localStorage.getItem("selected"));
   const restaurantId = localStorage.getItem("restaurantID");
 
   // Function to handle closing the dialog
@@ -124,22 +123,25 @@ function CartPage() {
   const checkBranchHours = (array) => {
     if (array?.length) {
       array?.forEach((res) => {
-        const resLat = +res.latitude;
-        const resLng = +res.longitude;
-        const selectedLat = selectedAddress.lat;
-        const selectedLng = selectedAddress.lng;
+        const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+        if (selectedAddress !== null) {
+          const resLat = +res.latitude;
+          const resLng = +res.longitude;
+          const selectedLat = selectedAddress?.lat;
+          const selectedLng = selectedAddress?.lng;
 
-        const distance = getDistanceFromLatLonInKm(
-          resLat,
-          resLng,
-          selectedLat,
-          selectedLng
-        );
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            selectedLat,
+            selectedLng
+          );
 
-        if (distance > 50) {
-          setNotDeliver(true);
-        } else {
-          setNotDeliver(false);
+          if (distance > 50) {
+            setNotDeliver(true);
+          } else {
+            setNotDeliver(false);
+          }
         }
       });
     }
@@ -192,43 +194,46 @@ function CartPage() {
     let itemsProcessed = 0;
 
     getRestaurantBranchHours(restaurantId).then((res) => {
-      const selectedLat = selectedAddress.lat;
-      const selectedLng = selectedAddress.lng;
+      const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+      if (selectedAddress !== null) {
+        const selectedLat = selectedAddress?.lat;
+        const selectedLng = selectedAddress?.lng;
 
-      res?.data?.forEach((res, _, array) => {
-        itemsProcessed++;
+        res?.data?.forEach((res, _, array) => {
+          itemsProcessed++;
 
-        const resLat = +res.latitude;
-        const resLng = +res.longitude;
-        const distance = getDistanceFromLatLonInKm(
-          resLat,
-          resLng,
-          selectedLat,
-          selectedLng
-        );
+          const resLat = +res.latitude;
+          const resLng = +res.longitude;
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            selectedLat,
+            selectedLng
+          );
 
-        if (distance > 50) {
-          setNotDeliver(true);
-        } else {
-          if (itemsProcessed === array?.length && paymentMethod === "KNET") {
-            const data = {
-              ...checkoutData,
-              discount_price: getDiscountAmount(),
-            };
-            checkout(data, token)
-              .then((res) => {
-                const checkoutRedirectUrl =
-                  res.data?.payment_methods[0].redirect_url;
-                window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+          if (distance > 50) {
+            setNotDeliver(true);
+          } else {
+            if (itemsProcessed === array?.length && paymentMethod === "KNET") {
+              const data = {
+                ...checkoutData,
+                discount_price: getDiscountAmount(),
+              };
+              checkout(data, token)
+                .then((res) => {
+                  const checkoutRedirectUrl =
+                    res.data?.payment_methods[0].redirect_url;
+                  window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
 
-            return;
+              return;
+            }
           }
-        }
-      });
+        });
+      }
     });
   };
 
@@ -443,9 +448,10 @@ function CartPage() {
             height: "42px",
           }}
           edge="start"
-          onClick={() =>
-            navigate(`${paths.menu}/restaurant/${restaurantId}/delivery`)
-          }
+          onClick={() => navigate(-1)}
+          // onClick={() =>
+          //   navigate(`${paths.menu}/restaurant/${restaurantId}/delivery`)
+          // }
         >
           <ArrowBackRoundedIcon
             fontSize="medium"
@@ -455,6 +461,7 @@ function CartPage() {
               color: "#1F2933",
             }}
           />
+          {/* <ArrowBackRoundedIcon fontSize="medium" sx={{ marginTop: "-18px" }} /> */}
         </IconButton>
         <Typography
           variant="h5"

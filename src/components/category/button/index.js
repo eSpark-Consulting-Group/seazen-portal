@@ -262,12 +262,16 @@ const RestaurantsOrderTypeButton = (props) => {
   const parentIcon = document?.getElementsByClassName("inner-svg-container");
   const divs = parentDiv?.getElementsByClassName("restaurantCards");
 
+  // Removing border and background color from icon if Delivers to me is not selected
   const removeClasses = () => {
+    // Add border to restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("delivery-true");
     }
-    for (let j = 0; j < parentIcon?.length; j++) {
-      const icons = parentIcon[j].querySelectorAll(".icon-row");
+
+    // Add background color to icon on restaurant image
+    for (let i = 0; i < parentIcon?.length; i++) {
+      const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
           icon.classList.remove("delivers-image");
@@ -276,12 +280,16 @@ const RestaurantsOrderTypeButton = (props) => {
     }
   };
 
+  // Removing border and background color from icon if Available to deliver is not selected
   const removeBrownClasses = () => {
+    // Add border to restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("add-brown-border");
     }
-    for (let j = 0; j < parentIcon?.length; j++) {
-      const icons = parentIcon[j].querySelectorAll(".icon-row");
+
+    // Add background color to icon on restaurant image
+    for (let i = 0; i < parentIcon?.length; i++) {
+      const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
           icon.classList.remove("bg-brown");

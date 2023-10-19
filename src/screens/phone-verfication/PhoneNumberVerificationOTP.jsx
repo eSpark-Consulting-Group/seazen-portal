@@ -145,6 +145,7 @@ function PhoneNumberVerificationOTP() {
             value={otp}
             onChange={handleChange}
             TextFieldsProps={{
+              type: "number",
               placeholder: "0",
               disabled: otp.length === 4,
               sx: {

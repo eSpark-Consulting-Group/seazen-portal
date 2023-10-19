@@ -1,14 +1,92 @@
 import React from "react";
 
+import {
+  OutlinedInput,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  TextField,
+} from "@mui/material";
+
 import "./style.css";
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 export const HomeAdress = (props) => {
-  const { handleChange, address, blockErr, streetErr, houseNoErr } = props;
+  const { handleChange, address, areaErr, blockErr, streetErr, houseNoErr } =
+    props;
+  const [aree, setPersonName] = React.useState();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const areas = ["Area"];
+
   return (
     <form className="container-style px-3">
+      <Select
+        displayEmpty
+        value={address.area}
+        onChange={(e) => handleChange("area", e.target.value)}
+        input={<OutlinedInput />}
+        renderValue={(selected) => {
+          if (selected.length === 0) {
+            return (
+              <span
+                className={
+                  areaErr
+                    ? ["dropdown-placeholder", "error-placeholder"].join(" ")
+                    : "dropdown-placeholder"
+                }
+              >
+                Area
+              </span>
+            );
+          }
+
+          return selected;
+        }}
+        inputProps={{ "aria-label": "Without label" }}
+        className={areaErr ? ["form-style", "error"].join(" ") : "form-style"}
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        IconComponent={() => {
+          return (
+            <div className="area-dropdown">
+              <img src="/assets/img/dropdown.png" alt="Dropdown" />
+            </div>
+          );
+        }}
+      >
+        {/* <MenuItem disabled value="">
+          Area
+        </MenuItem> */}
+        {areas.map((name) => (
+          <MenuItem key={name} value={name} className="select-menuitem">
+            {name}
+          </MenuItem>
+        ))}
+      </Select>
+
       <input
         className={blockErr ? ["form-style", "error"].join(" ") : "form-style"}
-        // id="required"
         type="text"
         name="Block"
         placeholder="Block&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
