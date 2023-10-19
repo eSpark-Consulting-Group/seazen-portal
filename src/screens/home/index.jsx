@@ -357,6 +357,7 @@ const Home = () => {
       filterSelectedNow !== "Available for Delivery"
     ) {
       removeBrownClasses();
+
       if (branchHours.length) {
         branchHours?.forEach((res) => {
           const resLat = +res.latitude;
@@ -399,9 +400,12 @@ const Home = () => {
       }
     }
 
-    if (selectedText === "Delivery" && filterClassDelivery && filterClassNear) {
-      addClasses();
-    }
+    // if (
+    //   (selectedText === "Delivery" && filterClassDelivery && filterClassNear) ||
+    //   !distanceFar
+    // ) {
+    //   addClasses();
+    // }
 
     if (
       selectedText === "Delivery" &&
@@ -411,13 +415,9 @@ const Home = () => {
       addBrownClasses();
     }
 
-    if (
-      selectedText === "Delivery" &&
-      !filterClassDelivery &&
-      filterClassNear
-    ) {
-      addClasses();
-    }
+    // if ((selectedText === "Delivery" && !filterClassDelivery) || !distanceFar) {
+    //   addClasses();
+    // }
 
     if (
       selectedText === "Delivery" &&
