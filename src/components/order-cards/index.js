@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Card, Rating } from "@mui/material";
+import { Button, Card, Rating, Box } from "@mui/material";
 import styles from "../../screens/myorder/style.module.css";
 import RateCard from "../rate-card";
 import { useNavigate } from "react-router-dom";
@@ -127,40 +127,51 @@ const OrderCard = ({ item }) => {
           <div id={`${styles.card_content_right_unit}`}>KWD</div>
         </div>
       </div>
-      <div
-        className={
-          item.order_status === "Delivered" || item.order_status === "Cancelled"
-            ? `${styles.card_footer}`
-            : `${styles.card_single_footer}`
-        }
-      >
-        {average !== 0 ? (
-          <Rating name="read-only" value={average} />
-        ) : (
-          item.order_status === "Delivered" && (
-            <Button
-              sx={{ p: 1, border: " 1px solid #C0CDD7", color: "#40484E" }}
-              variant="outlined"
-              className={`${styles.card_footer_rate}`}
-              onClick={() => handleRate(true)}
-            >
-              Rate
-            </Button>
-          )
-        )}
+      {(item.order_status === "Delivered" ||
+        item.order_status === "Cancelled") && (
+        <Box
+          sx={{
+            px: 1.5,
+            pb: 1,
+            display: "flex",
+            justifyContent: "space-between",
+            ...(item.order_status === "Cancelled" && {
+              justifyContent: "flex-end",
+            }),
+            alignItems: "center",
+          }}
+        >
+          {average !== 0 ? (
+            <Rating name="read-only" value={average} />
+          ) : (
+            item.order_status === "Delivered" && (
+              <Button
+                sx={{
+                  border: "1px solid #C0CDD7",
+                  color: "#40484E",
+                }}
+                size="small"
+                variant="outlined"
+                onClick={() => handleRate(true)}
+              >
+                Rate
+              </Button>
+            )
+          )}
 
-        {item.order_status === "Cancelled" && (
           <Button
-            sx={{ p: 1, border: " 1px solid #C0CDD7", color: "#40484E" }}
+            sx={{
+              border: "1px solid #C0CDD7",
+              color: "#40484E",
+            }}
+            size="small"
             variant="outlined"
-            className={`${styles.card_footer_reorder}`}
-            href=""
             onClick={handleReorder}
           >
             Reorder
           </Button>
-        )}
-      </div>
+        </Box>
+      )}
       <RateCard isVisible={openRate} handleClose={(val) => handleClose(val)} />
     </Card>
   );
