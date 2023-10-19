@@ -439,7 +439,7 @@ function CartPage() {
             boxShadow: (theme) => theme.shadows[16],
           }}
           edge="start"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(location.state.back || -1)}
         >
           <ArrowBackRoundedIcon fontSize="medium" />
         </IconButton>
@@ -1096,7 +1096,7 @@ function CartPage() {
                 }}
                 variant="contained"
                 size="large"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(location.state.back || -1)}
               >
                 Back
               </Button>

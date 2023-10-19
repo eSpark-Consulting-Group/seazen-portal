@@ -10,7 +10,16 @@ export const OrderFailed = () => {
 
   return (
     <Stack>
-      <div className="closeButtonTag" onClick={() => navigate(paths.cart)}>
+      <div
+        className="closeButtonTag"
+        onClick={() =>
+          navigate(paths.cart, {
+            state: {
+              back: paths.home,
+            },
+          })
+        }
+      >
         <p style={{ color: "#1F2933", cursor: "pointer" }}>
           <strong>᙭</strong>
         </p>
@@ -59,7 +68,13 @@ export const OrderFailed = () => {
           <br /> and place your order again.
         </Typography>
         <Button
-          onClick={() => navigate(paths.cart)}
+          onClick={() =>
+            navigate(paths.cart, {
+              state: {
+                back: paths.home,
+              },
+            })
+          }
           sx={{
             background: "#98694E 0% 0% no-repeat padding-box",
             borderRadius: "8px",
