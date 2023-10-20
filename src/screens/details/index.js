@@ -597,6 +597,7 @@ export const Details = () => {
                     component="div"
                     sx={{
                       marginLeft: "12px !important",
+                      fontSize:"22px",
                     }}
                   >
                     {menuItemDetails?.data?.name_en}
