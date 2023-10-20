@@ -5,6 +5,9 @@ import { useLocation } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import countryList from "./api/common/getAllCountries";
 import { addCountry } from "./store/reducers/authSlice";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const LazyChatScript = React.lazy(() =>
   import("./components/chat/LazyChatScript")
 );
@@ -16,6 +19,9 @@ function App() {
   };
   const countryCode = useSelector(
     (state) => state.auth.user.mobile_country_code
+  );
+  const restaurantData = useSelector(
+    (state) => state.resturants.resturantsData
   );
   const dispatch = useDispatch();
   const fetchAllCountries = () => {
@@ -34,12 +40,24 @@ function App() {
         console.log(err);
       });
   };
-
+  const restaurantId = localStorage.getItem("restaurantID");
   useEffect(() => {
     fetchAllCountries();
   }, []);
 
+  const setPageTitle = () => {
+    let title = "The Delivery Service for your favorite Restaurant";
+    if (currentURL.pathname.includes("restaurant") && restaurantData.length) {
+      title =
+        restaurantData.find((val) => val.id == restaurantId)?.name_en +
+        " " +
+        "Menu";
+    }
+    document.title = title;
+  };
+
   useEffect(() => {
+    setPageTitle();
     // Additional logic for page-specific CSS
     if (
       currentURL.pathname === "/menu/restaurant/1/delivery" ||
@@ -63,6 +81,19 @@ function App() {
         </Suspense>
       </div>
       <div className="content-section"></div>
+
+      <ToastContainer
+        position="top-left"
+        autoClose={2500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

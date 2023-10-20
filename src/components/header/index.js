@@ -50,7 +50,7 @@ const Navbar = (props) => {
       <div className="d-flex align-items-center">
         {variant === NavbarVariants.backWithProfile && (
           <div
-            className="icon-btn"
+            className="arrowicon-btn"
             onClick={() => {
               navigate(previousRoute || -1);
             }}
@@ -69,7 +69,7 @@ const Navbar = (props) => {
 
       {variant === NavbarVariants.backWithProfile && (
         <div
-          className="icon-btn"
+          className="arabicicon-btn"
           onClick={() => {
             navigate(paths.cart);
           }}

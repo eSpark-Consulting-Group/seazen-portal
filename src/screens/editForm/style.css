@@ -140,7 +140,29 @@
   cursor: pointer;
 }
 
-@media screen and (max-width: 500px) and (min-width: 380px) {
+.EditForm-Nav .logo-home {
+  margin: 0px 0px 0px 0px !important;
+}
+.EditForm-Nav {
+  margin-top: 12px !important;
+}
+
+@media screen and (max-width: 600px){
+.EditForm-button {
+  position: fixed !important;
+  bottom: 20px !important;
+  width: 88% !important;
+}
+}
+ 
+  .EditForm-button {
+    width: 30.3%;
+    position: fixed;
+    bottom: 20px;
+  }
+
+
+/* @media screen and (max-width: 500px) and (min-width: 380px) {
   .editProfile-style h2 {
     left: 140px;
   }
@@ -169,4 +191,4 @@
     bottom: -165px;
     left: 22px;
   }
-}
+} */

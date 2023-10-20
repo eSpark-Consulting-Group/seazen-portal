@@ -50,12 +50,16 @@
   right: 12px;
   bottom: 15%;
   width: 40px;
-  background-color: #fff;
+  background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
   cursor: pointer;
+}
+
+.clicked {
+  background-color: #e4e2e2;
 }
 
 .recenter-div img {
@@ -204,17 +208,20 @@
 .back-location {
   width: 42px !important;
   height: 42px !important;
+  margin-top: -5px !important;
+  color: #1F2933 !important;
+
 }
 
 .right-icon {
   width: 42px !important;
   height: 42px !important;
+  margin-top: -5px !important;
 }
 
 .right-icon svg {
   width: 24px;
 }
-
 
 @media only screen and (max-width: 1536px) {
   .marker {
@@ -223,7 +230,6 @@
 
   .recenter-div {
     bottom: 18%;
-    width: 40px;
   }
 }
 
@@ -234,25 +240,32 @@
 
   .recenter-div {
     bottom: 25%;
-    width: 35px;
+  }
+
+  .info-window-box {
+    width: 75%;
+    top: 40%;
   }
 }
 
 @media only screen and (max-width: 1366px) {
   .recenter-div {
     bottom: 25%;
-    width: 35px;
   }
 }
 
-@media screen and (max-width:768px) {
+@media screen and (max-width: 768px) {
   .recenter-div {
     bottom: 18%;
-    width: 35px;
+  }
+
+  .info-window-box {
+    width: 75%;
+    top: 42%;
   }
 }
 
-@media screen and (max-width:375px) {
+@media screen and (max-width: 375px) {
   .recenter-div {
     bottom: 20%;
   }

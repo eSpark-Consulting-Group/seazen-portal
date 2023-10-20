@@ -17,6 +17,8 @@ import verifyOTP from "../../api/customer/verifyOTP";
 import resendOTP from "../../api/customer/resendOTP";
 import getUserInfo from "../../api/customer/getUserInfo";
 import { useDispatch } from "react-redux";
+import "./style.css";
+
 
 const MODAL_INFO_TYPE = {
   INVALID_OTP: "invalid-otp",
@@ -110,15 +112,19 @@ function PhoneNumberVerificationOTP() {
 
   return (
     <>
-      <Stack
+       <Stack
         sx={{
           minHeight: "70vh",
           color: "text.primary",
+          paddingLeft:"16px",
+          paddingRight:"16px",
         }}
         justifyContent="space-between"
         spacing={2}
       >
-        <Navbar variant={NavbarVariants.backWithProfile} />
+        <div className="Phone-Nav">
+          <Navbar variant={NavbarVariants.backWithProfile} />
+        </div>
         <Stack
           spacing={5}
           sx={{
@@ -139,6 +145,7 @@ function PhoneNumberVerificationOTP() {
             value={otp}
             onChange={handleChange}
             TextFieldsProps={{
+              type: "number",
               placeholder: "0",
               disabled: otp.length === 4,
               sx: {

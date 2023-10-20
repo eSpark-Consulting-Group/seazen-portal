@@ -153,7 +153,7 @@ export const Details = () => {
     isError,
   } = useQuery({
     queryKey: [GET_MENU_ITEM_DETAILS_QUERY_KEY],
-    queryFn: () => getMenuItemDetails(id, restaurant_id, restaurant_id)
+    queryFn: () => getMenuItemDetails(id, restaurant_id, restaurant_id),
   });
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
 
@@ -480,6 +480,12 @@ export const Details = () => {
     };
     // console.log(ItemDataObject, "shahItemDataObject");
 
+    const itemExists = cart.find(
+      (item) =>
+        JSON.stringify(item.variants) ===
+        JSON.stringify(ItemDataObject.variants)
+    );
+
     if (checkIfItemIsInCart()) {
       const item_code = cartItem?.item_code;
 
@@ -498,9 +504,10 @@ export const Details = () => {
         ...ItemDataObject,
         item_code,
       };
-
-      dispatch(addToCart(ItemDataObject));
-      addToCartApiHandler(ItemDataObject);
+      if (!itemExists) {
+        dispatch(addToCart(ItemDataObject));
+        addToCartApiHandler(ItemDataObject);
+      }
       navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`);
     }
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
@@ -722,7 +729,10 @@ export const Details = () => {
                                   <Checkbox color="themeColor" />
                                 ) : (
                                   <span
-                                    style={{ marginLeft: "12px",  marginTop: "40px" }}
+                                    style={{
+                                      marginLeft: "12px",
+                                      marginTop: "40px",
+                                    }}
                                     color="themeColor"
                                   />
                                 )
@@ -828,7 +838,7 @@ export const Details = () => {
           >
             <Box
               sx={{
-                width: "87%",
+                width: "85%",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",

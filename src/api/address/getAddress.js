@@ -18,8 +18,6 @@ const getAllAddress = async (token) => {
     });
     return data;
   } catch (error) {
-    console.log(error.response);
-    console.log(error);
     // Use the handleApiError function for error handling
     handleApiError(error);
   }

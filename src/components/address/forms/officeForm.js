@@ -5,6 +5,7 @@ export const OfficeAdress = (props) => {
   const {
     handleChange,
     address,
+    areaErr,
     blockErr,
     streetErr,
     buildingErr,
@@ -13,6 +14,21 @@ export const OfficeAdress = (props) => {
   } = props;
   return (
     <form className="container-style px-3">
+      <div className="area-main">
+        <input
+          className={areaErr ? ["form-style", "error"].join(" ") : "form-style"}
+          type="text"
+          name="Area"
+          placeholder="Area"
+          onChange={(e) => handleChange("area", e.target.value)}
+          value={address.area}
+        />
+
+        <div className="area-dropdown">
+          <img src="/assets/img/dropdown.png" alt="Dropdown" />
+        </div>
+      </div>
+
       <input
         className={blockErr ? ["form-style", "error"].join(" ") : "form-style"}
         type="text"

@@ -1,18 +1,23 @@
-import React, { useState } from "react";
-import "./style.css";
-import BasicCard from "../../cards/index";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { useQuery } from "@tanstack/react-query";
+
+import BasicCard from "../../cards/index";
+
+import ExpandedButton from "../expandableButton";
 
 import getAllRestaurants, {
   GET_ALL_RESTAURANTS_QUERY_KEY,
 } from "../../../api/home/getAllRestaurants";
-import { useDispatch, useSelector } from "react-redux";
+
 import {
   getResturants,
+  removeSelectedService,
   setSelectedService,
 } from "../../../store/reducers/resturantsSlice";
-import { useEffect } from "react";
-import ExpandedButton from "../expandableButton";
+
+import "./style.css";
 
 // const OrderTypeButtonExpandable = ({
 //   itemId,
@@ -257,26 +262,34 @@ const RestaurantsOrderTypeButton = (props) => {
   const parentIcon = document?.getElementsByClassName("inner-svg-container");
   const divs = parentDiv?.getElementsByClassName("restaurantCards");
 
+  // Removing border and background color from icon if Delivers to me is not selected
   const removeClasses = () => {
+    // Add border to restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("delivery-true");
     }
-    for (let j = 0; j < parentIcon?.length; j++) {
-      const icons = parentIcon[j].querySelectorAll(".icon-row");
+
+    // Add background color to icon on restaurant image
+    for (let i = 0; i < parentIcon?.length; i++) {
+      const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
-          icon.classList.remove("bg-dark");
+          icon.classList.remove("delivers-image");
         }
       });
     }
   };
 
+  // Removing border and background color from icon if Available to deliver is not selected
   const removeBrownClasses = () => {
+    // Add border to restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("add-brown-border");
     }
-    for (let j = 0; j < parentIcon?.length; j++) {
-      const icons = parentIcon[j].querySelectorAll(".icon-row");
+
+    // Add background color to icon on restaurant image
+    for (let i = 0; i < parentIcon?.length; i++) {
+      const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
         if (icon.id === "icon-row") {
           icon.classList.remove("bg-brown");
@@ -347,7 +360,14 @@ const RestaurantsOrderTypeButton = (props) => {
   const handleClick = (selectedService, id) => {
     setSelectedId(id);
     setSelectedText(selectedService);
-    dispatch(setSelectedService(selectedService.toLowerCase()));
+    if (selectedService === "Dine In") {
+      const removeSpace = "dinein";
+      dispatch(setSelectedService(removeSpace));
+    } else {
+      dispatch(setSelectedService(selectedService.toLowerCase()));
+    }
+
+    setToggleFilterClassDelivery(true);
 
     if (selectedService !== "Catering") {
       setToggleExpanded(!expanded);
@@ -386,7 +406,6 @@ const RestaurantsOrderTypeButton = (props) => {
         // Set the delivery filter as active by default when expanding the button
         setToggleFilterClassDelivery(true);
         setToggleFilterClassNear(false);
-        setFilterSelectedNow(selectedService.toLowerCase());
         setFilterSelectedNow("delivery");
       }
     } else {
@@ -416,6 +435,18 @@ const RestaurantsOrderTypeButton = (props) => {
       setFilterSelectedNow("");
       setToggleFilterClassNear(false);
       removeBrownClasses();
+      removeClasses();
+    }
+
+    if (
+      !typesState.dinein &&
+      !typesState.catering &&
+      !typesState.delivery &&
+      !typesState.pickup
+    ) {
+      dispatch(removeSelectedService());
+      setToggleFilterClassNear(false);
+      setToggleFilterClassDelivery(false);
     }
   }, [typesState]);
 
@@ -574,6 +605,7 @@ const RestaurantsOrderTypeButton = (props) => {
           setRestaurantName={setRestaurantName}
           selectedText={selectedText}
           filterSelectedNow={filterSelectedNow}
+          typesState={typesState}
         />
       )}
     </>

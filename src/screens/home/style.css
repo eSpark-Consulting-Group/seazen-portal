@@ -1,6 +1,6 @@
 .home-styling {
   padding: 20px !important;
-  margin-top: -9px;
+  margin-top: -8px;
 }
 
 img,
@@ -114,18 +114,17 @@ svg {
 }
 
 .delivery-true {
-  border: 3px solid #4f948a;
+  border-color: rgba(79, 148, 138, 1) !important;
 }
 
-.bg-dark img {
+.delivers-image img {
   background-color: #4f948a !important;
 }
 
 .add-brown-border {
-  border: 3px solid #93674e;
+  border-color: rgba(147, 103, 78, 1) !important;
 }
 
 .bg-brown img {
   background-color: #93674e !important;
-
 }
