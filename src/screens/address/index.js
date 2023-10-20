@@ -2,6 +2,8 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 // import { useSelector } from "react-redux";
 
+import { toast } from "react-toastify";
+
 import { HomeAdress } from "../../components/address/forms/homeForm";
 // import AddressHeader from "../../components/address/adressHeader";
 import AddressTypeSelector from "../../components/address/addressButton";
@@ -10,12 +12,21 @@ import { OfficeAdress } from "../../components/address/forms/officeForm";
 import MyAddresses from "../../components/header/myAdresses";
 import { useNavigate } from "react-router";
 
+import {
+  checkIfIncludesPlus,
+  checkNumberLength,
+  isArabicCountryMCC,
+} from "../../utils/numberCheck";
+
 import { paths } from "../../routes/paths";
 
 import addAddressApiCall from "../../api/address/addAddress";
 import updateAddressApiCall from "../../api/address/updateAddress";
 
 import "./style.css";
+
+const toastList = new Set();
+const MAX_TOAST = 1;
 
 const AddressForm = () => {
   const location = useLocation();
@@ -105,6 +116,21 @@ const AddressForm = () => {
     }));
   };
 
+  useEffect(() => {
+    if (
+      (address.country_code.length === 3 ||
+        address.country_code.length === 4) &&
+      !isArabicCountryMCC(address.country_code)
+    ) {
+      if (toastList.size < MAX_TOAST) {
+        const id = toast.error("Please enter valid mobile country code", {
+          onClose: () => toastList.delete(id),
+        });
+        toastList.add(id);
+      }
+    }
+  }, [address.country_code]);
+
   const handleChange = (key, value) => {
     if (key === "mobile_number") {
       // Use regex to allow only digits and optional spaces or dashes
@@ -121,25 +147,13 @@ const AddressForm = () => {
     }
   };
 
-  const checkIfIncludesPlus = () => {
-    let updateMobileCode;
-
-    if (address.country_code.includes("+")) {
-      updateMobileCode = address.country_code;
-    } else {
-      updateMobileCode = `+${address.country_code}`;
-    }
-
-    return updateMobileCode;
-  };
-
   const apiCall = () => {
     let updateAddress = {};
 
     if (address.country_code !== "") {
       updateAddress = {
         ...address,
-        country_code: checkIfIncludesPlus(),
+        country_code: checkIfIncludesPlus(address.country_code),
       };
     } else {
       updateAddress = address;
@@ -248,10 +262,30 @@ const AddressForm = () => {
         address.house_no !== ""
       ) {
         setClickEv(false);
-        if (location?.state?.edit) {
-          updateApiCall();
+
+        if (address.mobile_number !== "") {
+          if (!checkNumberLength(address.mobile_number)) {
+            if (toastList.size < MAX_TOAST) {
+              const id = toast.error("Mobile number must be exactly 8 digits", {
+                onClose: () => toastList.delete(id),
+              });
+              toastList.add(id);
+            }
+          }
+        }
+        if (address.mobile_number !== "" && address.country_code === "") {
+          if (toastList.size < MAX_TOAST) {
+            const id = toast.error("Add country code", {
+              onClose: () => toastList.delete(id),
+            });
+            toastList.add(id);
+          }
         } else {
-          apiCall();
+          if (location?.state?.edit) {
+            updateApiCall();
+          } else {
+            apiCall();
+          }
         }
       }
     }
@@ -265,10 +299,29 @@ const AddressForm = () => {
         address.apartment_no !== ""
       ) {
         setClickEv(false);
-        if (location?.state?.edit) {
-          updateApiCall();
+        if (address.mobile_number !== "") {
+          if (!checkNumberLength(address.mobile_number)) {
+            if (toastList.size < MAX_TOAST) {
+              const id = toast.error("Mobile number must be exactly 8 digits", {
+                onClose: () => toastList.delete(id),
+              });
+              toastList.add(id);
+            }
+          }
+        }
+        if (address.mobile_number !== "" && address.country_code === "") {
+          if (toastList.size < MAX_TOAST) {
+            const id = toast.error("Add country code", {
+              onClose: () => toastList.delete(id),
+            });
+            toastList.add(id);
+          }
         } else {
-          apiCall();
+          if (location?.state?.edit) {
+            updateApiCall();
+          } else {
+            apiCall();
+          }
         }
       }
     }
@@ -282,10 +335,29 @@ const AddressForm = () => {
         address.company_name !== ""
       ) {
         setClickEv(false);
-        if (location?.state?.edit) {
-          updateApiCall();
+        if (address.mobile_number !== "") {
+          if (!checkNumberLength(address.mobile_number)) {
+            if (toastList.size < MAX_TOAST) {
+              const id = toast.error("Mobile number must be exactly 8 digits", {
+                onClose: () => toastList.delete(id),
+              });
+              toastList.add(id);
+            }
+          }
+        }
+        if (address.mobile_number !== "" && address.country_code === "") {
+          if (toastList.size < MAX_TOAST) {
+            const id = toast.error("Add country code", {
+              onClose: () => toastList.delete(id),
+            });
+            toastList.add(id);
+          }
         } else {
-          apiCall();
+          if (location?.state?.edit) {
+            updateApiCall();
+          } else {
+            apiCall();
+          }
         }
       }
     }
@@ -417,7 +489,7 @@ const AddressForm = () => {
                 className="country-code-input"
                 type="number"
                 name="CountryCode"
-                placeholder="+956"
+                placeholder="+365"
                 value={address.country_code}
                 onChange={(e) => handleChange("country_code", e.target.value)}
               />

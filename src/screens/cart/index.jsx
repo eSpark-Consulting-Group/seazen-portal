@@ -1116,7 +1116,7 @@ function CartPage() {
                 }}
                 variant="contained"
                 size="large"
-                onClick={() => navigate(location.state.back || -1)}
+                onClick={() => navigate(location?.state?.back || -1)}
               >
                 Back
               </Button>
