@@ -448,7 +448,7 @@ function CartPage() {
             height: "42px",
           }}
           edge="start"
-          onClick={() => navigate(location.state.back || -1)}
+          onClick={() => navigate(location?.state?.back ? location?.state?.back : -1)}
         >
           <ArrowBackRoundedIcon
             fontSize="medium"

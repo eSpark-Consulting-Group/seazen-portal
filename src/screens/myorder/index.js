@@ -16,11 +16,11 @@ const MyOrderScreen = () => {
 
   const [category, setCategory] = useState([
     { type: "All", isActive: false },
-    { type: "Delivery", isActive: false },
+    { type: "delivery", isActive: false },
     // { type: "Pick Up", isActive: false },
     // { type: "Dine In", isActive: false },
   ]);
-  const [state, setState] = useState("Delivery");
+  const [state, setState] = useState("All");
 
   const randomPrice = (Math.random() * 10).toFixed(3);
   const randomOrderId = Math.floor(Math.random() * 1000000);
@@ -126,70 +126,90 @@ const MyOrderScreen = () => {
 
   return (
     <>
-    <OrderNavbar />
-    <div className={`${styles.my_orderscreen}`}>
-      <div className={`${styles.category_items}`}>
-        {category.map((item, index) => {
-          return (
-            <Button
-              variant="outlined"
-              style={{
-                backgroundColor: item.isActive ? "#98694E" : "white",
-                color: item.isActive ? "white" : "#3F484E",
-                border: " 1px solid #C0CDD7",
-              }}
-              onClick={() => handleItems(item, index)}
-              key={index}
-              className={`${styles.cat_item}`}
-              sx={{ p: 1, border: " 1px solid #C0CDD7", color: "#40484E" }}
-            >
-              {item.type}
-            </Button>
-          );
-        })}
-      </div>
-      <div className={`${styles.my_order_cards}`}>
-        {!isLoading &&
-        ordersResponse &&
-        ordersResponse.data &&
-        ordersResponse.data.length === 0 &&
-        !isError ? (
-          <div className={`${styles.empty_orders}`}>
-            <img src="/assets/img/cart_image.svg" alt="" />
-            <div className={`${styles.empty_orders_desc}`}>{emptyCartText}</div>
-            <Button
-              sx={{
-                width: "326px",
-                height: "56px",
-                fontSize: "22px",
-                fontWeight: "500",
-                backgroundColor: "#98694E",
-                color: "#fff",
-              }}
-              onClick={() => {
-                navigate(paths.home);
-              }}
-            >
-              Start Ordering
-            </Button>
-          </div>
-        ) : (
-          <div>
-            {!isLoading &&
-              !isError &&
-              ordersResponse &&
-              ordersResponse.data &&
-              ordersResponse.data.map((item, index) => (
-                <OrderCard item={item} key={index} handleRate={handleRate} />
-              ))}
-          </div>
-        )}
+      <OrderNavbar />
+      <div className={`${styles.my_orderscreen}`}>
+        <div className={`${styles.category_items}`}>
+          {category.map((item, index) => {
+            return (
+              <Button
+                variant="outlined"
+                style={{
+                  backgroundColor: item.isActive ? "#98694E" : "white",
+                  color: item.isActive ? "white" : "#3F484E",
+                  border: " 1px solid #C0CDD7",
+                }}
+                onClick={() => handleItems(item, index)}
+                key={index}
+                className={`${styles.cat_item}`}
+                sx={{ p: 1, border: " 1px solid #C0CDD7", color: "#40484E" }}
+              >
+                {item.type}
+              </Button>
+            );
+          })}
+        </div>
+        <div className={`${styles.my_order_cards}`}>
+          {!isLoading &&
+          ordersResponse &&
+          ordersResponse.data &&
+          ordersResponse.data.length === 0 &&
+          !isError ? (
+            <div className={`${styles.empty_orders}`}>
+              <img src="/assets/img/cart_image.svg" alt="" />
+              <div className={`${styles.empty_orders_desc}`}>
+                {emptyCartText}
+              </div>
+              <Button
+                sx={{
+                  width: "326px",
+                  height: "56px",
+                  fontSize: "22px",
+                  fontWeight: "500",
+                  backgroundColor: "#98694E",
+                  color: "#fff",
+                }}
+                onClick={() => {
+                  navigate(paths.home);
+                }}
+              >
+                Start Ordering
+              </Button>
+            </div>
+          ) : (
+            <div>
+              {!isLoading &&
+                !isError &&
+                ordersResponse &&
+                ordersResponse.data &&
+                ordersResponse.data
+                  .map((item, index) => {
+                    if (state === "All") {
+                      return (
+                        <OrderCard
+                          item={item}
+                          key={index}
+                          handleRate={handleRate}
+                        />
+                      );
+                    }else if(item.service_type === state){
+                      return (
+                        <OrderCard
+                          item={item}
+                          key={index}
+                          handleRate={handleRate}
+                        />
+                      );
+                    }
+                  })
+                  .filter((item) => !!item)}
+            </div>
+          )}
 
-        {isLoading && <CircularProgress size="large" />}
-      </div>
+          {isLoading && <CircularProgress size="large" />}
+        </div>
 
-      <RateCard />
-    </div>
+        <RateCard />
+      </div>
     </>
   );
 };
