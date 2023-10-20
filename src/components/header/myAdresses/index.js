@@ -17,11 +17,14 @@ const MyAddresses = (props) => {
               ? paths.profile
               : !fromAllAddresses && path === "/profile"
               ? paths.addresses
+              : fromAllAddresses && path === "/cart"
+              ? paths.cart
               : paths.home,
             {
               state: {
                 path:
                   !fromAllAddresses && path === "/profile" ? "/profile" : "",
+                back: fromAllAddresses && path === "/cart" ? paths.home : null,
               },
             }
           );

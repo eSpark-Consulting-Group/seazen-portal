@@ -28,7 +28,7 @@ const AddressForm = () => {
 
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
   const [address, setAddress] = useState({
-    area: "",
+    // area: "",
     block: "",
     street: "",
     avenue: "",
@@ -60,7 +60,7 @@ const AddressForm = () => {
     if (location?.state?.edit) {
       const state = location?.state?.data;
       setAddress({
-        area: state.area ? state.area : "",
+        // area: state.area ? state.area : "",
         block: state.block ? state.block : "",
         street: state.street ? state.street : "",
         avenue: state.avenue ? state.avenue : "",
@@ -89,7 +89,7 @@ const AddressForm = () => {
     setClickEv(false);
     setAddressType(type);
     setErrorState({
-      areaErr: false,
+      // areaErr: false,
       blockErr: false,
       streetErr: false,
       houseNoErr: false,
@@ -106,15 +106,7 @@ const AddressForm = () => {
   };
 
   const handleChange = (key, value) => {
-    if (key === "country_code") {
-      // Use regex to remove non-numeric characters
-      const numericValue = value.replace(/\D/g, "");
-      setAddress((prevAddress) => ({
-        ...prevAddress,
-        country_code: numericValue,
-      }));
-      //
-    } else if (key === "mobile_number") {
+    if (key === "mobile_number") {
       // Use regex to allow only digits and optional spaces or dashes
       const regex = /^[0-9]*[-\s]?[0-9]*$/;
       if (regex.test(value)) {
@@ -143,65 +135,66 @@ const AddressForm = () => {
 
   const apiCall = () => {
     let updateAddress = {};
+
     if (address.country_code !== "") {
       updateAddress = {
         ...address,
         country_code: checkIfIncludesPlus(),
       };
+    } else {
+      updateAddress = address;
     }
 
-    console.log(updateAddress);
-    // const updateAddress = {
-    //   ...address,
-    //   country_code: whatsapp_country_code,
-    //   mobile_number: whatsapp_no,
-    // };
+    addAddressApiCall(updateAddress, token).then((res) => {
+      if (res.success === "ok") {
+        if (
+          location?.state?.path === "/cart" ||
+          location?.state?.path === "/home" ||
+          location?.state?.path?.includes("menu-item-details") ||
+          location?.state?.path === "menu/restaurant"
+        ) {
+          const addToStorage = {
+            lat: location?.state?.latlng?.lat,
+            lng: location?.state?.latlng?.lng,
+            address: location?.state?.name,
+          };
 
-    // addAddressApiCall(address, token).then((res) => {
-    //   if (res.success === "ok") {
-    //     if (
-    //       location?.state?.path === "/cart" ||
-    //       location?.state?.path === "/home" ||
-    //       location?.state?.path?.includes("menu-item-details") ||
-    //       location?.state?.path === "menu/restaurant"
-    //     ) {
-    //       const addToStorage = {
-    //         lat: location?.state?.latlng?.lat,
-    //         lng: location?.state?.latlng?.lng,
-    //         address: location?.state?.name,
-    //       };
+          localStorage.setItem("selected", JSON.stringify(addToStorage));
 
-    //       localStorage.setItem("selected", JSON.stringify(addToStorage));
-
-    //       if (
-    //         location?.state?.path?.includes("menu-item-details") ||
-    //         location?.state?.path === "menu/restaurant"
-    //       ) {
-    //         navigate(
-    //           `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
-    //         );
-    //       } else if (location?.state?.path === "/home") {
-    //         navigate(paths.home);
-    //       } else {
-    //         navigate(paths.cart);
-    //       }
-    //     } else if (location?.state?.path === "/profile") {
-    //       navigate(paths.addresses, { state: { path: location?.state?.path } });
-    //     } else {
-    //       navigate(paths.addresses, { state: { path: location.pathname } });
-    //     }
-    //   }
-    // });
+          if (
+            location?.state?.path?.includes("menu-item-details") ||
+            location?.state?.path === "menu/restaurant"
+          ) {
+            navigate(
+              `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
+            );
+          } else if (location?.state?.path === "/home") {
+            navigate(paths.home);
+          } else {
+            navigate(paths.cart);
+          }
+        } else if (location?.state?.path === "/profile") {
+          navigate(paths.addresses, { state: { path: location?.state?.path } });
+        } else {
+          navigate(paths.addresses, { state: { path: location.pathname } });
+        }
+      }
+    });
   };
 
   const updateApiCall = () => {
-    // const updateAddress = {
-    //   ...address,
-    //   country_code: whatsapp_country_code,
-    //   mobile_number: whatsapp_no,
-    // };
+    let updateAddress = {};
 
-    updateAddressApiCall(address, location?.state?.data.id, token).then(
+    if (address.country_code !== "") {
+      updateAddress = {
+        ...address,
+        country_code: checkIfIncludesPlus(),
+      };
+    } else {
+      updateAddress = address;
+    }
+
+    updateAddressApiCall(updateAddress, location?.state?.data.id, token).then(
       (res) => {
         if (res.success === "ok") {
           if (
@@ -249,7 +242,7 @@ const AddressForm = () => {
 
     if (addressType === "house") {
       if (
-        address.area !== "" &&
+        // address.area !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.house_no !== ""
@@ -264,7 +257,7 @@ const AddressForm = () => {
     }
     if (addressType === "apartment") {
       if (
-        address.area !== "" &&
+        // address.area !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.building !== "" &&
@@ -281,7 +274,7 @@ const AddressForm = () => {
     }
     if (addressType === "office") {
       if (
-        address.area !== "" &&
+        // address.area !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.building !== "" &&
@@ -303,7 +296,7 @@ const AddressForm = () => {
       if (addressType === "house") {
         setErrorState((prevState) => ({
           ...prevState,
-          areaErr: address.area === "" ? true : false,
+          // areaErr: address.area === "" ? true : false,
           blockErr: address.block === "" ? true : false,
           streetErr: address.street === "" ? true : false,
           houseNoErr: address.house_no === "" ? true : false,
@@ -311,7 +304,7 @@ const AddressForm = () => {
       } else if (addressType === "apartment") {
         setErrorState((prevState) => ({
           ...prevState,
-          areaErr: address.area === "" ? true : false,
+          // areaErr: address.area === "" ? true : false,
           blockErr: address.block === "" ? true : false,
           streetErr: address.street === "" ? true : false,
           buildingErr: address.building === "" ? true : false,
@@ -321,7 +314,7 @@ const AddressForm = () => {
       } else if (addressType === "office") {
         setErrorState((prevState) => ({
           ...prevState,
-          areaErr: address.area === "" ? true : false,
+          // areaErr: address.area === "" ? true : false,
           blockErr: address.block === "" ? true : false,
           streetErr: address.street === "" ? true : false,
           buildingErr: address.building === "" ? true : false,
@@ -344,109 +337,109 @@ const AddressForm = () => {
 
   return (
     <>
-     <MyAddresses
+      <MyAddresses
         title={`${location?.state?.edit ? "Edit" : "Save New"} Address`}
         path={location?.state?.path}
         fromAllAddresses={false}
       />
-    <div className="button-style">
-      <AddressTypeSelector
-        addressType={addressType}
-        handleAddressTypeChange={
-          !location?.state?.edit && handleAddressTypeChange
-        }
-        edit={location?.state?.edit}
-      />
+      <div className="button-style">
+        <AddressTypeSelector
+          addressType={addressType}
+          handleAddressTypeChange={
+            !location?.state?.edit && handleAddressTypeChange
+          }
+          edit={location?.state?.edit}
+        />
 
-      {location?.state?.edit ? null : (
-        <div className="edit-container px-3">
-          <p className="address-name">
-            {truncateString(location?.state?.name)}
-          </p>
-          <button
-            className="edit-button"
-            onClick={() =>
-              navigate(paths.location, {
-                state: {
-                  name: location?.state?.name,
-                  latlng: location?.state?.latlng,
-                  editLocation: true,
-                },
-              })
-            }
-          >
-            <span className="edit-text">Edit Location</span>
+        {location?.state?.edit ? null : (
+          <div className="edit-container px-3">
+            <p className="address-name">
+              {truncateString(location?.state?.name)}
+            </p>
+            <button
+              className="edit-button"
+              onClick={() =>
+                navigate(paths.location, {
+                  state: {
+                    name: location?.state?.name,
+                    latlng: location?.state?.latlng,
+                    editLocation: true,
+                  },
+                })
+              }
+            >
+              <span className="edit-text">Edit Location</span>
+            </button>
+          </div>
+        )}
+        <form onSubmit={handleSubmit}>
+          {/* Add the form element and onSubmit handler */}
+          {addressType === "house" && (
+            <HomeAdress
+              handleChange={handleChange}
+              address={address}
+              // areaErr={errorState.areaErr}
+              blockErr={errorState.blockErr}
+              streetErr={errorState.streetErr}
+              houseNoErr={errorState.houseNoErr}
+            />
+          )}
+          {addressType === "apartment" && (
+            <AppartmentAdress
+              handleChange={handleChange}
+              address={address}
+              // areaErr={errorState.areaErr}
+              blockErr={errorState.blockErr}
+              streetErr={errorState.streetErr}
+              buildingErr={errorState.buildingErr}
+              floorErr={errorState.floorErr}
+              apartmentNoerr={errorState.apartmentNoerr}
+            />
+          )}
+          {addressType === "office" && (
+            <OfficeAdress
+              handleChange={handleChange}
+              address={address}
+              // areaErr={errorState.areaErr}
+              blockErr={errorState.blockErr}
+              streetErr={errorState.streetErr}
+              buildingErr={errorState.buildingErr}
+              floorErr={errorState.floorErr}
+              companyNameErr={errorState.companyNameErr}
+            />
+          )}
+          <div className="contact-style">
+            <div className="contact-section">
+              <h3>Contact Details</h3>
+            </div>
+            <div className="contact-field">
+              <input
+                className="country-code-input"
+                type="number"
+                name="CountryCode"
+                placeholder="+956"
+                value={address.country_code}
+                onChange={(e) => handleChange("country_code", e.target.value)}
+              />
+
+              <input
+                className="phone-number-input"
+                type="number"
+                name="PhoneNumber"
+                placeholder="Alternative Phone Number"
+                value={address.mobile_number}
+                onChange={(e) => handleChange("mobile_number", e.target.value)}
+              />
+            </div>
+          </div>
+          <button type="submit" className="address-button">
+            {/* Use type='submit' to make it a submit button */}
+            <span className="address-text">
+              {location?.state?.edit ? "Save Changes" : "Save"}
+            </span>
           </button>
-        </div>
-      )}
-      <form onSubmit={handleSubmit}>
-        {/* Add the form element and onSubmit handler */}
-        {addressType === "house" && (
-          <HomeAdress
-            handleChange={handleChange}
-            address={address}
-            areaErr={errorState.areaErr}
-            blockErr={errorState.blockErr}
-            streetErr={errorState.streetErr}
-            houseNoErr={errorState.houseNoErr}
-          />
-        )}
-        {addressType === "apartment" && (
-          <AppartmentAdress
-            handleChange={handleChange}
-            address={address}
-            areaErr={errorState.areaErr}
-            blockErr={errorState.blockErr}
-            streetErr={errorState.streetErr}
-            buildingErr={errorState.buildingErr}
-            floorErr={errorState.floorErr}
-            apartmentNoerr={errorState.apartmentNoerr}
-          />
-        )}
-        {addressType === "office" && (
-          <OfficeAdress
-            handleChange={handleChange}
-            address={address}
-            areaErr={errorState.areaErr}
-            blockErr={errorState.blockErr}
-            streetErr={errorState.streetErr}
-            buildingErr={errorState.buildingErr}
-            floorErr={errorState.floorErr}
-            companyNameErr={errorState.companyNameErr}
-          />
-        )}
-        <div className="contact-style">
-          <div className="contact-section">
-            <h3>Contact Details</h3>
-          </div>
-          <div className="contact-field">
-            <input
-              className="country-code-input"
-              type="number"
-              name="CountryCode"
-              placeholder="+956"
-              value={address.country_code}
-              onChange={(e) => handleChange("country_code", e.target.value)}
-            />
-
-            <input
-              className="phone-number-input"
-              type="number"
-              name="PhoneNumber"
-              placeholder="Alternative Phone Number"
-              value={address.mobile_number}
-              onChange={(e) => handleChange("mobile_number", e.target.value)}
-            />
-          </div>
-        </div>
-        <button type="submit" className="address-button">
-          {/* Use type='submit' to make it a submit button */}
-          <span className="address-text">
-            {location?.state?.edit ? "Save Changes" : "Save"}
-          </span>
-        </button>
-      </form>
-    </div>
+        </form>
+      </div>
     </>
   );
 };

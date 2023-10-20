@@ -101,7 +101,6 @@ const App = () => {
   useEffect(() => {
     if (fullAddress !== null) {
       localStorage.setItem("selected", JSON.stringify(fullAddress));
-      // localStorage.setItem("location", JSON.stringify(fullAddress));
 
       if (location?.state?.path === "/cart") {
         navigate(paths.cart, { state: { back: "back-to-cart" } });

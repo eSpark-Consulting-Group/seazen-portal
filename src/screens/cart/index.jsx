@@ -434,7 +434,7 @@ function CartPage() {
         sx={{
           position: "relative",
           paddingTop: "3px",
-          paddingBottom: "8px"
+          paddingBottom: "8px",
         }}
       >
         <IconButton
@@ -448,7 +448,9 @@ function CartPage() {
             height: "42px",
           }}
           edge="start"
-          onClick={() => navigate(location?.state?.back ? location?.state?.back : -1)}
+          onClick={() =>
+            navigate(location?.state?.back ? location?.state?.back : -1)
+          }
         >
           <ArrowBackRoundedIcon
             fontSize="medium"
