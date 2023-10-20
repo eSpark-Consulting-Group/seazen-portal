@@ -512,11 +512,15 @@ const MenuCard = (props) => {
                 {/* <div className="menu_card_currency">{foodCurrency}</div> */}
                 <StyledItemPrice className="menu_card_item_price">
                   <Typography
-                    variant="subtitle2"
+                    // variant="subtitle2"
                     color="GrayText"
                     component="sup"
                     sx={{
                       mr: 0.5,
+                      position: "relative",
+                      top: "-4.5px",
+                      fontSize:"10px",
+                      fontWeight:"700"
                     }}
                   >
                     KWD
