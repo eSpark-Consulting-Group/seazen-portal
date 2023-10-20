@@ -686,7 +686,7 @@ function CartPage() {
                 width: "375px",
                 left: "0px !important",
                 paddingTop: "20px",
-                "@media (max-width: 600px)": {
+                "@media (max-width: 425px)": {
                   width: "100%",
                 },
               },

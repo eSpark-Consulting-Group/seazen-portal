@@ -84,7 +84,7 @@
   margin-left: 15px;
 } */
 
-@media (max-width: 600px) {
+@media (max-width: 425px) {
   .privacy-paragraph-title,
   .privacy-paragraphOne,
   .privacy-paragraphTwo,

@@ -506,7 +506,7 @@ const Home = () => {
             left: "0",
             borderBottomLeftRadius: "0px",
             borderBottomRightRadius: "0px",
-            "@media (max-width: 600px)": {
+            "@media (max-width: 425px)": {
               width: "100%",
             },
           },
