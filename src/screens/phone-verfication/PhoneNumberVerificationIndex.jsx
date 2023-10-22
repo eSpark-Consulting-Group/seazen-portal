@@ -70,13 +70,24 @@ function PhoneNumberVerificationIndex() {
     initialValues: initialState,
     validationSchema: mobileLoginSchema,
     onSubmit: (values) => {
-      setMobileCountryCode(values.mobile_country_code);
-      setMobileNumber(values.mobile_no);
+      if (
+        !isArabicCountryMCC(formikUserMobileLogin?.values?.mobile_country_code)
+      ) {
+        if (toastList.size < MAX_TOAST) {
+          const id = toast.error("Please enter valid mobile country code", {
+            onClose: () => toastList.delete(id),
+          });
+          toastList.add(id);
+        }
+      } else {
+        setMobileCountryCode(checkIfIncludesPlus(values.mobile_country_code));
+        setMobileNumber(values.mobile_no.toString());
 
-      registration({
-        mobile: values.mobile_no,
-        mobile_country_code: checkIfIncludesPlus(values.mobile_country_code),
-      });
+        registration({
+          mobile: values.mobile_no.toString(),
+          mobile_country_code: checkIfIncludesPlus(values.mobile_country_code),
+        });
+      }
     },
   });
 
@@ -84,26 +95,6 @@ function PhoneNumberVerificationIndex() {
     formikUserMobileLogin?.errors.mobile_country_code ||
       formikUserMobileLogin?.errors.mobile_no
   );
-
-  useEffect(() => {
-    if (
-      (formikUserMobileLogin?.values?.mobile_country_code.toString().length ===
-        3 ||
-        formikUserMobileLogin?.values?.mobile_country_code.toString().length ===
-          4) &&
-      !isArabicCountryMCC(formikUserMobileLogin?.values?.mobile_country_code)
-    ) {
-      if (toastList.size < MAX_TOAST) {
-        const id = toast.error("Please enter valid mobile country code", {
-          onClose: () => toastList.delete(id),
-        });
-        toastList.add(id);
-      }
-    }
-  }, [
-    formikUserMobileLogin?.errors?.mobile_country_code,
-    formikUserMobileLogin?.values?.mobile_country_code,
-  ]);
 
   return (
     <>

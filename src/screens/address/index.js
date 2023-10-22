@@ -53,8 +53,8 @@ const AddressForm = () => {
     country_code: "",
     mobile_number: "",
     address_type: addressType,
-    latitude: location?.state?.latlng.lat,
-    longitude: location?.state?.latlng.lng,
+    latitude: location?.state?.latlng.lat.toString(),
+    longitude: location?.state?.latlng.lng.toString(),
   });
   const [errorState, setErrorState] = useState({
     areaErr: false,
@@ -84,13 +84,15 @@ const AddressForm = () => {
         floor: state.floor ? state.floor : "",
         apartment_no: state.apartment_no ? state.apartment_no : "",
         company_name: state.company_name ? state.company_name : "",
-        country_code: state.phone_country_code ? state.phone_country_code : "",
-        mobile_number: state.phone_no ? state.phone_no : "",
+        country_code: state.phone_country_code
+          ? parseInt(state.phone_country_code)
+          : "",
+        mobile_number: state.phone_no ? parseInt(state.phone_no) : "",
         address_type: state.address_type.toLowerCase()
           ? state.address_type.toLowerCase()
           : "",
-        latitude: location?.state?.latlng.lat,
-        longitude: location?.state?.latlng.lng,
+        latitude: location?.state?.latlng.lat.toString(),
+        longitude: location?.state?.latlng.lng.toString(),
       });
       setAddressType(state.address_type.toLowerCase());
     }
@@ -116,21 +118,6 @@ const AddressForm = () => {
     }));
   };
 
-  useEffect(() => {
-    if (
-      (address.country_code.length === 3 ||
-        address.country_code.length === 4) &&
-      !isArabicCountryMCC(address.country_code)
-    ) {
-      if (toastList.size < MAX_TOAST) {
-        const id = toast.error("Please enter valid mobile country code", {
-          onClose: () => toastList.delete(id),
-        });
-        toastList.add(id);
-      }
-    }
-  }, [address.country_code]);
-
   const handleChange = (key, value) => {
     if (key === "mobile_number") {
       // Use regex to allow only digits and optional spaces or dashes
@@ -153,6 +140,7 @@ const AddressForm = () => {
     if (address.country_code !== "") {
       updateAddress = {
         ...address,
+        mobile_number: address.mobile_number.toString(),
         country_code: checkIfIncludesPlus(address.country_code),
       };
     } else {
@@ -202,7 +190,8 @@ const AddressForm = () => {
     if (address.country_code !== "") {
       updateAddress = {
         ...address,
-        country_code: checkIfIncludesPlus(),
+        mobile_number: address.mobile_number.toString(),
+        country_code: checkIfIncludesPlus(address.country_code),
       };
     } else {
       updateAddress = address;
@@ -272,13 +261,35 @@ const AddressForm = () => {
               toastList.add(id);
             }
           }
-        }
-        if (address.mobile_number !== "" && address.country_code === "") {
-          if (toastList.size < MAX_TOAST) {
-            const id = toast.error("Add country code", {
-              onClose: () => toastList.delete(id),
-            });
-            toastList.add(id);
+
+          if (address.country_code === "") {
+            if (toastList.size < MAX_TOAST) {
+              const id = toast.error("Add country code", {
+                onClose: () => toastList.delete(id),
+              });
+              toastList.add(id);
+            }
+          }
+
+          if (!isArabicCountryMCC(address.country_code)) {
+            if (toastList.size < MAX_TOAST) {
+              const id = toast.error("Please enter valid mobile country code", {
+                onClose: () => toastList.delete(id),
+              });
+              toastList.add(id);
+            }
+          }
+
+          if (
+            address.country_code !== "" &&
+            checkNumberLength(address.mobile_number) &&
+            isArabicCountryMCC(address.country_code)
+          ) {
+            if (location?.state?.edit) {
+              updateApiCall();
+            } else {
+              apiCall();
+            }
           }
         } else {
           if (location?.state?.edit) {
@@ -299,6 +310,7 @@ const AddressForm = () => {
         address.apartment_no !== ""
       ) {
         setClickEv(false);
+
         if (address.mobile_number !== "") {
           if (!checkNumberLength(address.mobile_number)) {
             if (toastList.size < MAX_TOAST) {
@@ -308,13 +320,35 @@ const AddressForm = () => {
               toastList.add(id);
             }
           }
-        }
-        if (address.mobile_number !== "" && address.country_code === "") {
-          if (toastList.size < MAX_TOAST) {
-            const id = toast.error("Add country code", {
-              onClose: () => toastList.delete(id),
-            });
-            toastList.add(id);
+
+          if (address.country_code === "") {
+            if (toastList.size < MAX_TOAST) {
+              const id = toast.error("Add country code", {
+                onClose: () => toastList.delete(id),
+              });
+              toastList.add(id);
+            }
+          }
+
+          if (!isArabicCountryMCC(address.country_code)) {
+            if (toastList.size < MAX_TOAST) {
+              const id = toast.error("Please enter valid mobile country code", {
+                onClose: () => toastList.delete(id),
+              });
+              toastList.add(id);
+            }
+          }
+
+          if (
+            address.country_code !== "" &&
+            checkNumberLength(address.mobile_number) &&
+            isArabicCountryMCC(address.country_code)
+          ) {
+            if (location?.state?.edit) {
+              updateApiCall();
+            } else {
+              apiCall();
+            }
           }
         } else {
           if (location?.state?.edit) {
@@ -335,6 +369,7 @@ const AddressForm = () => {
         address.company_name !== ""
       ) {
         setClickEv(false);
+
         if (address.mobile_number !== "") {
           if (!checkNumberLength(address.mobile_number)) {
             if (toastList.size < MAX_TOAST) {
@@ -344,13 +379,35 @@ const AddressForm = () => {
               toastList.add(id);
             }
           }
-        }
-        if (address.mobile_number !== "" && address.country_code === "") {
-          if (toastList.size < MAX_TOAST) {
-            const id = toast.error("Add country code", {
-              onClose: () => toastList.delete(id),
-            });
-            toastList.add(id);
+
+          if (address.country_code === "") {
+            if (toastList.size < MAX_TOAST) {
+              const id = toast.error("Add country code", {
+                onClose: () => toastList.delete(id),
+              });
+              toastList.add(id);
+            }
+          }
+
+          if (!isArabicCountryMCC(address.country_code)) {
+            if (toastList.size < MAX_TOAST) {
+              const id = toast.error("Please enter valid mobile country code", {
+                onClose: () => toastList.delete(id),
+              });
+              toastList.add(id);
+            }
+          }
+
+          if (
+            address.country_code !== "" &&
+            checkNumberLength(address.mobile_number) &&
+            isArabicCountryMCC(address.country_code)
+          ) {
+            if (location?.state?.edit) {
+              updateApiCall();
+            } else {
+              apiCall();
+            }
           }
         } else {
           if (location?.state?.edit) {

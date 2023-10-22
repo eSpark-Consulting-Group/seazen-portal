@@ -14,7 +14,7 @@ export const checkIfIncludesPlus = (country_code) => {
     updateMobileCode = `+${country_code}`;
   }
 
-  return updateMobileCode;
+  return updateMobileCode.toString();
 };
 
 export const checkNumberLength = (number) => {
