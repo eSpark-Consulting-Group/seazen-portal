@@ -282,6 +282,7 @@ const BasicCard = (props) => {
                   borderRadius: "10px",
                   boxShadow: "none",
                   border: "none",
+                  maxHeight: "98%",
                 }}
                 className="restaurantCards"
                 onClick={() => {
