@@ -173,11 +173,13 @@
 .profile-footer {
   margin-top: 70px;
   position: relative;
-
 }
 .profile-footer .footer-container {
   bottom: 0px;
   position: fixed;
+  width: 100%;
+  padding-top: 10px;
+  background: #ffffff;
 }
 
 /* @media screen and (max-width: 320px) {
