@@ -46,7 +46,7 @@ function PhoneNumberVerificationIndex() {
 
   const sendOTP = () => {
     // remove + from mobileCountryCode
-    // const mobileCountryCodeWithoutPlus = mobileCountryCode.substring(1);
+    const mobileCountryCodeWithoutPlus = mobileCountryCode.substring(1);
 
     // navigate with query params
     navigate(
@@ -54,7 +54,7 @@ function PhoneNumberVerificationIndex() {
         "?" +
         createSearchParams({
           mobile: mobileNumber,
-          mobile_country_code: mobileCountryCode,
+          mobile_country_code: mobileCountryCodeWithoutPlus,
         })
     );
   };
