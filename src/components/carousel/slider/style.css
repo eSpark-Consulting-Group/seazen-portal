@@ -8,7 +8,7 @@
   margin-top: 13px;
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 500px) {
   .card-spacing {
     margin-left: -11px;
   }

@@ -24,7 +24,7 @@
   display: none;
 }
 /* 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 500px) {
   .PaperProps{
     width: 100% !important;
     position: fixed !important;

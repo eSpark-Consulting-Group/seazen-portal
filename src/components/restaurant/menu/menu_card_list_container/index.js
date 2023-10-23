@@ -246,7 +246,7 @@ const MenuCardListContainer = ({
             borderTopLeftRadius: (theme) => theme.spacing(2),
             borderTopRightRadius: (theme) => theme.spacing(2),
             backgroundColor: (theme) => theme.palette.themeColor.main,
-            "@media (max-width: 425px)": {
+            "@media (max-width: 500px)": {
               maxWidth: "100%",
             },
           }}

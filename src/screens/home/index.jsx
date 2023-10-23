@@ -498,7 +498,7 @@ const Home = () => {
             left: "0",
             borderBottomLeftRadius: "0px",
             borderBottomRightRadius: "0px",
-            "@media (max-width: 425px)": {
+            "@media (max-width: 500px)": {
               width: "100%",
             },
           },
