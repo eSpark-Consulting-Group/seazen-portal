@@ -10,6 +10,14 @@
   }
 }
 
+@media screen and (max-width: 450px) and (min-width: 420px) {
+  .logo-home {
+    color: #0d0d0d;
+    margin: 0px 32.5px 0px 68px;
+  }
+}
+
+
 .search-bar {
   padding: 15px;
   border-radius: 4px;
