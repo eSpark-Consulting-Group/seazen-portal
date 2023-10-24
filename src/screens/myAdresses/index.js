@@ -261,6 +261,7 @@ const App = () => {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        className="delete-modal"
         sx={{
           overflow: "hidden",
           "& .MuiDialog-paper": {
@@ -269,6 +270,7 @@ const App = () => {
             textAlign: "center",
             overflow: "hidden",
             overflowY: "hidden",
+
             "@media (min-width: 600px)": {
               left: "0",
               position: "fixed",

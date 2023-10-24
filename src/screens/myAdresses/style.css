@@ -75,6 +75,12 @@
   height: 75vh;
   overflow-y: auto;
   padding-top: 10px;
+  width: 375px;
+  margin: auto;
+}
+
+.parent-address::-webkit-scrollbar {
+  display: none;
 }
 
 @media only screen and (min-width: 1366px) and (max-width: 1366px) {
@@ -83,7 +89,21 @@
   }
 }
 
-@media screen and (max-width:500px) and (min-width:355px) {
+@media only screen and (max-width: 500px) {
+  .delete-modal .MuiDialog-paper {
+    width: 375px !important;
+    margin: 30px !important ;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .delete-modal .MuiDialog-paper {
+    width: 90% !important;
+    margin: 25px !important ;
+  }
+}
+
+@media screen and (max-width: 500px) and (min-width: 355px) {
   .parent-address {
     height: 72vh;
   }

@@ -200,9 +200,15 @@
 /* position: absolute; */
 /* } */
 
-/* @media screen and (max-width:500px) and (min-width:380px) {
-  .addresses-container{
-    margin-left: 50px;
+@media screen and (max-width: 500px) {
+  .addresses-container {
+    width: 100%;
+    box-shadow: 0px 0px 8px #314f7c1f;
   }
-  
-} */
+}
+
+@media screen and (max-width: 400px) {
+  .addresses-container {
+    width: 90%;
+  }
+}

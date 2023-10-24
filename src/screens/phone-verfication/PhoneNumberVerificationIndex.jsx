@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { createSearchParams, useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
@@ -34,15 +34,15 @@ const mobileLoginSchema = Yup.object().shape({
   mobile_country_code: Yup.string().required(),
 });
 
-const initialState = {
-  mobile_no: "",
-  mobile_country_code: "",
-};
-
 function PhoneNumberVerificationIndex() {
   const navigate = useNavigate();
-  const [mobileCountryCode, setMobileCountryCode] = React.useState("");
+  const [mobileCountryCode, setMobileCountryCode] = React.useState(+965);
   const [mobileNumber, setMobileNumber] = React.useState("");
+
+  const initialState = {
+    mobile_no: "",
+    mobile_country_code: +965,
+  };
 
   const sendOTP = () => {
     // remove + from mobileCountryCode
@@ -132,7 +132,7 @@ function PhoneNumberVerificationIndex() {
               fullWidth
               id="mobile_country_code"
               variant="outlined"
-              placeholder="+365"
+              placeholder="+965"
               sx={{
                 flex: 1,
               }}

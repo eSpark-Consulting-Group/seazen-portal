@@ -9,6 +9,9 @@ const RestaurantOptionsServicesContainer = ({
   resturantId,
   setOpenModal,
   setSelectedItemToDeliver,
+  scheduleForLater,
+  fromDetail,
+  setFromDetail,
 }) => {
   return (
     <div>
@@ -23,6 +26,9 @@ const RestaurantOptionsServicesContainer = ({
         restaurantDetail={restaurantDetail}
         setOpenModal={setOpenModal}
         setSelectedItemToDeliver={setSelectedItemToDeliver}
+        scheduleForLater={scheduleForLater}
+        fromDetail={fromDetail}
+        setFromDetail={setFromDetail}
       />
     </div>
   );

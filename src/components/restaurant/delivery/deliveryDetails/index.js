@@ -1,26 +1,43 @@
-import React, { useEffect } from "react";
-import "./style.css";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import { useQuery } from "@tanstack/react-query";
+
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState } from "react";
+
+import {
+  Stack,
+  Typography,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Button,
+} from "@mui/material";
+
 import { styled } from "@mui/material/styles"; // Import styled from MUI
 import { lighten } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+
+import dayjs from "dayjs";
+
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { MobileTimePicker } from "@mui/x-date-pickers";
+
+import getBranchesAndHours, {
+  GET_BRANCHES_AND_HOURS_QUERY_KEY,
+} from "../../../../api/restaurant/branches/getBranchesAndHours";
+
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../../../utils/getAddress";
-import { Stack, Typography } from "@mui/material";
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import dayjs from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { MobileTimePicker } from "@mui/x-date-pickers";
-import { useQuery } from "@tanstack/react-query";
-import getBranchesAndHours, {
-  GET_BRANCHES_AND_HOURS_QUERY_KEY,
-} from "../../../../api/restaurant/branches/getBranchesAndHours";
-import { useParams } from "react-router-dom";
+
+import { paths } from "../../../../routes/paths";
+
+import "./style.css";
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
@@ -33,8 +50,23 @@ const StyledOuterContainerIcon = styled("div")(({ theme }) => ({
 }));
 
 const DeliveryDetails = (props) => {
-  const { setLocationDeliver, restaurantBranchHours } = props;
+  const {
+    setLocationDeliver,
+    restaurantBranchHours,
+    scheduleForLater,
+    fromDetail,
+    setFromDetail,
+  } = props;
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const addressData = useSelector((state) => state.address.addressData);
+  const nearbyRestaurants = useSelector(
+    (state) => state.resturants.nearbyRestaurants
+  );
+  const restaurantDetail = useSelector(
+    (state) => state.resturants.restaurantDetail
+  );
   const selected = JSON.parse(localStorage.getItem("selected"));
 
   const truncateString = (str, len) => {
@@ -50,7 +82,7 @@ const DeliveryDetails = (props) => {
   };
   const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [latlng, setLatlng] = useState(null);
-  const [location, setLocation] = useState(
+  const [userLocation, setUserLocation] = useState(
     selected === null ? "No Address" : truncateString(selected?.address, 15)
   );
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
@@ -64,6 +96,7 @@ const DeliveryDetails = (props) => {
   );
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [pickTime, setPickTime] = useState(dayjs(asapTime).format("hh:mm a"));
+  const [restaurantOpen, setRestaurantOpen] = useState(false);
 
   const { id: restaurant_id } = useParams();
 
@@ -109,13 +142,42 @@ const DeliveryDetails = (props) => {
   const getUserAddress = (lat, lng) => {
     getFullAddress(lat, lng, setFullAddress);
   };
+
   const asapHandler = () => {
-    setIsAsap(true);
-    setIsDeliveryDropDown(false);
-    const currentTime = new Date();
-    currentTime.setMinutes(currentTime.getMinutes() + 30);
-    setPickTime(dayjs(currentTime).format("hh:mm a"));
-    setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
+    if (nearbyRestaurants?.length !== 0) {
+      const filterRestaurant = nearbyRestaurants?.filter((nearBy) =>
+        nearBy.branch_name_en?.includes(restaurantDetail?.name_en)
+      );
+      let itemsIsCalled = 0;
+
+      filterRestaurant?.forEach((restaurant, _, filterArr) => {
+        itemsIsCalled++;
+
+        if (restaurant.openingStatus === "Open") {
+          setIsAsap(true);
+          setIsDeliveryDropDown(false);
+          const currentTime = new Date();
+          currentTime.setMinutes(currentTime.getMinutes() + 30);
+          setPickTime(dayjs(currentTime).format("hh:mm a"));
+          setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
+
+          return;
+
+          //
+        } else if (restaurant.openingStatus === "Close") {
+          setRestaurantOpen(true);
+          return;
+          //
+        }
+      });
+    } else {
+      setIsAsap(true);
+      setIsDeliveryDropDown(false);
+      const currentTime = new Date();
+      currentTime.setMinutes(currentTime.getMinutes() + 30);
+      setPickTime(dayjs(currentTime).format("hh:mm a"));
+      setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
+    }
   };
 
   const { data: branchesAndHoursResponse, isSuccess } = useQuery({
@@ -142,7 +204,7 @@ const DeliveryDetails = (props) => {
     if (fullAddress !== null) {
       localStorage.setItem("selected", JSON.stringify(fullAddress));
 
-      setLocation(truncateString(fullAddress?.address, 15));
+      setUserLocation(truncateString(fullAddress?.address, 15));
       setLatlng({
         lat: fullAddress.lat,
         lng: fullAddress.lng,
@@ -187,7 +249,7 @@ const DeliveryDetails = (props) => {
                 padding: "0",
               }}
             >
-              {location}
+              {userLocation}
               <StyledOuterContainerIcon className="dropdown_icon_container">
                 <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
               </StyledOuterContainerIcon>
@@ -204,6 +266,16 @@ const DeliveryDetails = (props) => {
                 transform: "translate(0px, -22px)",
               }}
             >
+              <Dropdown.Item
+                defaultChecked
+                onClick={() =>
+                  navigate(paths.location, {
+                    state: { path: "menu/restaurant" },
+                  })
+                }
+              >
+                Add location
+              </Dropdown.Item>
               {addressData?.length ? (
                 addressData.map((address) => {
                   return (
@@ -246,21 +318,6 @@ const DeliveryDetails = (props) => {
                   No Address
                 </Dropdown.Item>
               )}
-
-              {/* <Dropdown.Item
-                onClick={() => {
-                  setLocation("Office (Ardiya) ");
-                }}
-              >
-                Office (Ardiya)
-              </Dropdown.Item>
-              <Dropdown.Item
-                onClick={() => {
-                  setLocation("Home Summer (Khiran) ");
-                }}
-              >
-                Home Summer (Khiran)
-              </Dropdown.Item> */}
             </Dropdown.Menu>
           </Dropdown>
         </div>
@@ -294,7 +351,14 @@ const DeliveryDetails = (props) => {
                 padding: "0",
               }}
             >
-              {pickDate.split("-")[0]} {isAsap ? "ASAP " : pickTime}
+              {fromDetail
+                ? `${scheduleForLater.pickDate.split("-")[0]} ${
+                    scheduleForLater.isAsap
+                      ? "ASAP "
+                      : scheduleForLater.pickTime
+                  }`
+                : `${pickDate.split("-")[0]} ${isAsap ? "ASAP " : pickTime}`}
+
               <StyledOuterContainerIcon className="dropdown_icon_container">
                 <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
               </StyledOuterContainerIcon>
@@ -386,6 +450,7 @@ const DeliveryDetails = (props) => {
             onChange={(time) => {
               setPickTime(time.format("hh:mm a"));
               setIsAsap(false);
+              setFromDetail(false);
             }}
             onClose={() => setShowTimePicker(false)}
             sx={{
@@ -394,6 +459,98 @@ const DeliveryDetails = (props) => {
           />
         )}
       </LocalizationProvider>
+      <Stack
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          bgcolor: (theme) => theme.palette.themeColor.main,
+          color: "common.white",
+          p: 1,
+          borderRadius: "8px",
+          position: "relative",
+          width: "33px",
+          height: "32px",
+          left: "-7px",
+          top: "8px",
+        }}
+        spacing={0}
+      >
+        <Typography
+          variant="h4"
+          fontWeight={600}
+          sx={{
+            lineHeight: 1,
+            fontSize: "19px",
+          }}
+        >
+          30
+        </Typography>
+        <Typography
+          variant="caption"
+          fontWeight={300}
+          sx={{
+            lineHeight: 1,
+            fontSize: "6px",
+          }}
+        >
+          minutes
+        </Typography>
+      </Stack>
+
+      <Dialog
+        open={restaurantOpen}
+        onClose={() => setRestaurantOpen(false)}
+        sx={{
+          margin: "0",
+          textAlign: "center",
+        }}
+        className="cart-dialog"
+        PaperProps={{
+          sx: {
+            overflow: "visible",
+            margin: "0px 0px 0px 27px",
+            width: "327px",
+
+            "@media (max-width: 500px)": {
+              width: "375px",
+            },
+
+            // "@media (max-width: 400px)": {
+            //   width: "90%",
+            //   margin: "0px 0px 0px 25px",
+            // },
+          },
+        }}
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          className="dialog-title title-cart"
+        >
+          <img src="/assets/img/exclaim.svg"></img>
+        </DialogTitle>
+        <DialogContent className="dialog-content-cart">
+          Restaurant is closed. Do you want to continue?
+        </DialogContent>
+
+        <div className="btn-navigate">
+          <Button
+            className="common-st add-btn"
+            onClick={() => navigate(paths.home)}
+          >
+            Home Page
+          </Button>
+
+          <Button
+            className="common-st go-to-btn"
+            onClick={() => {
+              setRestaurantOpen(false);
+              setOpenSchedulePopup(true);
+            }}
+          >
+            Schedule for later
+          </Button>
+        </div>
+      </Dialog>
     </StyledOuterContainer>
   );
 };
