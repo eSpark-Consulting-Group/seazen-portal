@@ -61,6 +61,12 @@
   justify-content: space-between;
   color: #3f484e;
 }
+
+.card_nav img {
+  height: 30px;
+  object-fit: contain;
+}
+
 .card_nav_tags {
   display: flex;
   align-items: center;
