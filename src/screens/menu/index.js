@@ -333,7 +333,12 @@ const Menu = () => {
             width: "327px",
 
             "@media (max-width: 500px)": {
-              width: "100%",
+              width: "375px",
+              margin: "0px 0px 0px 0px",
+            },
+
+            "@media (max-width: 400px)": {
+              width: "90%",
             },
           },
         }}
@@ -345,7 +350,7 @@ const Menu = () => {
           <img src="/assets/img/exclaim.svg"></img>
         </DialogTitle>
         <DialogContent className="dialog-content-cart">
-          Restaurant is closed. Do you want to continue?
+          Restaurant is closed. Do you want to schedule for later?
         </DialogContent>
 
         <div className="btn-navigate">

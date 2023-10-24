@@ -68,6 +68,7 @@ const DeliveryDetails = (props) => {
     (state) => state.resturants.restaurantDetail
   );
   const selected = JSON.parse(localStorage.getItem("selected"));
+  const token = localStorage.getItem("token");
 
   const truncateString = (str, len) => {
     if (str) {
@@ -266,16 +267,18 @@ const DeliveryDetails = (props) => {
                 transform: "translate(0px, -22px)",
               }}
             >
-              <Dropdown.Item
-                defaultChecked
-                onClick={() =>
-                  navigate(paths.location, {
-                    state: { path: "menu/restaurant" },
-                  })
-                }
-              >
-                Add location
-              </Dropdown.Item>
+              {token !== null ? (
+                <Dropdown.Item
+                  defaultChecked
+                  onClick={() =>
+                    navigate(paths.location, {
+                      state: { path: "menu/restaurant" },
+                    })
+                  }
+                >
+                  Add location
+                </Dropdown.Item>
+              ) : null}
               {addressData?.length ? (
                 addressData.map((address) => {
                   return (
@@ -513,12 +516,12 @@ const DeliveryDetails = (props) => {
 
             "@media (max-width: 500px)": {
               width: "375px",
+              margin: "0px 0px 0px 0px",
             },
 
-            // "@media (max-width: 400px)": {
-            //   width: "90%",
-            //   margin: "0px 0px 0px 25px",
-            // },
+            "@media (max-width: 400px)": {
+              width: "90%",
+            },
           },
         }}
       >
@@ -529,7 +532,7 @@ const DeliveryDetails = (props) => {
           <img src="/assets/img/exclaim.svg"></img>
         </DialogTitle>
         <DialogContent className="dialog-content-cart">
-          Restaurant is closed. Do you want to continue?
+          Restaurant is closed. Do you want to schedule for later?
         </DialogContent>
 
         <div className="btn-navigate">

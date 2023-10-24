@@ -104,6 +104,7 @@ function LocationPage() {
   const [distanceIsFar, setDistanceIsFar] = useState(false);
   const [noRegion, setNoRegion] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [placeChanged, setPlaceChanged] = useState(false);
 
   const mapRef = useRef();
 
@@ -283,9 +284,10 @@ function LocationPage() {
       const getCountry = address.split(",");
       const forCondition = getCountry[getCountry.length - 1];
 
-      if (!autocomplete) {
+      if (!placeChanged) {
         servicePlaceCheck(forCondition.trim());
       }
+
       //
     } else if (userSelected === null && userLocation !== null) {
       //
@@ -294,7 +296,7 @@ function LocationPage() {
       const getCountry = parsedUserLocation.address.split(",");
       const forCondition = getCountry[getCountry.length - 1];
 
-      if (!autocomplete) {
+      if (!placeChanged) {
         servicePlaceCheck(forCondition.trim());
       }
 
@@ -306,12 +308,12 @@ function LocationPage() {
       const getCountry = parsedUserLocation.address.split(",");
       const forCondition = getCountry[getCountry.length - 1];
 
-      if (!autocomplete) {
+      if (!placeChanged) {
         servicePlaceCheck(forCondition.trim());
       }
     }
     // }
-  }, [localStorage, address]);
+  }, [localStorage, address, placeChanged]);
 
   const servicePlaceCheck = (fullAddress) => {
     let countriesName = [];
@@ -345,6 +347,7 @@ function LocationPage() {
   };
 
   const onPlaceChanged = () => {
+    setPlaceChanged(true);
     if (autocomplete) {
       const lat = autocomplete.getPlace().geometry.location.lat();
       const lng = autocomplete.getPlace().geometry.location.lng();
@@ -366,7 +369,6 @@ function LocationPage() {
       if (countriesName.includes(forCondition)) {
         setNoRegion(false);
       } else {
-        console.log("object");
         setNoRegion(true);
       }
 

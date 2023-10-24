@@ -140,9 +140,9 @@ function CartPage() {
     if (cartItems !== undefined && cartItems?.length > 0) {
       if (branchHours?.length === 0) {
         getBranchHoursApiCall();
+      } else {
+        checkBranchHours(branchHours);
       }
-    } else {
-      checkBranchHours(branchHours);
     }
   }, [location.state, cartItems?.length, branchHours]);
 
@@ -1001,6 +1001,16 @@ function CartPage() {
                   position: "fixed",
                   margin: "20px",
                 },
+
+                "@media (max-width: 500px)": {
+                  width: "375px",
+                  margin: "30px",
+                },
+
+                "@media (max-width: 400px)": {
+                  width: "90%",
+                  margin: "25px",
+                },
               },
             }}
           >
@@ -1284,7 +1294,12 @@ function CartPage() {
             width: "327px",
 
             "@media (max-width: 500px)": {
-              width: "100%",
+              width: "375px",
+              margin: "0px 0px 0px 0px",
+            },
+
+            "@media (max-width: 400px)": {
+              width: "90%",
             },
           },
         }}

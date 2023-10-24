@@ -31,7 +31,7 @@
   position: absolute;
   border: 1px solid #c0cdd7;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .profileHeaderaccount img {
@@ -143,7 +143,7 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   /* Semi-transparent black overlay */
-  z-index: 1;
+  z-index: 100;
   /* Ensure it's above other content */
 }
 
@@ -374,7 +374,15 @@
 @media screen and (max-width: 500px) and (min-width: 360px) {
   .profileHeaderpopup {
     position: fixed;
-    /* top: 235px; */
+    width: 375px;
+    padding: 25px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .profileHeaderpopup {
+    width: 95%;
+    padding: 20px 9.39px;
   }
 }
 

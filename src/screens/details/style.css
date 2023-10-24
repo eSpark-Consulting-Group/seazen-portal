@@ -103,4 +103,12 @@
   .section {
     width: 100%;
   }
+
+  .text-detail {
+    margin-bottom: 28px;
+  }
+
+  .content {
+    padding: 16.5px 20px 24px !important;
+  }
 }

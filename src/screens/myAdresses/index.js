@@ -289,6 +289,7 @@ const App = () => {
                 font: "normal normal bold 16px/18px Titillium Web",
                 color: "#959FA8",
               }}
+              className="delete-para"
             >
               Are you sure you want to
               <br /> delete {addressType}?{" "}
