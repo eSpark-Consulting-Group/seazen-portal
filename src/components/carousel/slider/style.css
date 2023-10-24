@@ -22,6 +22,12 @@
   height: 120px;
 }
 
+@media (max-width: 500px) {
+  .carouselBanner {
+    margin: 0px 8px !important;
+  }
+}
+
 @media screen and (max-width: 424px) and (min-width: 400px) {
   .carouselBanner img {
     width: 365px !important;

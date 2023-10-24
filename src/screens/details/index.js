@@ -597,6 +597,7 @@ export const Details = () => {
                     component="div"
                     sx={{
                       marginLeft: "12px !important",
+                      fontSize: "22px",
                     }}
                   >
                     {menuItemDetails?.data?.name_en}
@@ -747,18 +748,9 @@ export const Details = () => {
                             />
 
                             {variant.name_en === "Extra Topping" && (
-                              <p
-                                style={{
-                                  fontSize: "10px",
-                                  paddingTop: "5px",
-                                  marginLeft: "1px",
-                                  marginRight:
-                                    variant.name_en === "Extra Topping" &&
-                                    isLastItem
-                                      ? "90px"
-                                      : "105px",
-                                }}
-                              >{`(Each +KWD ${option?.unit_price})`}</p>
+                              <div className="extra-topping-price-wrapper">
+                                <p className="extra-topping-price">{`(Each +KWD ${option?.unit_price})`}</p>
+                              </div>
                             )}
 
                             {variant.name_en === "Extra Topping" ? (

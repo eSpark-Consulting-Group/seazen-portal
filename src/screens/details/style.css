@@ -86,7 +86,20 @@
   color: #ffffff;
 }
 
-@media screen and (max-width: 600px) {
+.extra-topping-price-wrapper {
+  width: 100%;
+  display: flex;
+  position: relative;
+}
+
+.extra-topping-price {
+  font-size: 10px;
+  margin-left: 3px;
+  position: absolute;
+  top: -5px;
+}
+
+@media screen and (max-width: 500px) {
   .section {
     width: 100%;
   }

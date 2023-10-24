@@ -26,6 +26,10 @@ const TabsDynamicConditionalComponent = ({
       return (
         <div>
           <IconPositionTabs
+            isDineIn={restaurantDetail?.dinein_status}
+            isCatering={restaurantDetail?.catering_status}
+            isDelivery={restaurantDetail?.delivery_status}
+            isPickup={restaurantDetail?.pickup_status}
             tabPosition={tabPosition}
             setTabPosition={setTabPosition}
             locationDeliver={locationDeliver}
@@ -41,6 +45,10 @@ const TabsDynamicConditionalComponent = ({
       return (
         <div>
           <IconPositionTabs
+            isDineIn={restaurantDetail?.dinein_status}
+            isCatering={restaurantDetail?.catering_status}
+            isDelivery={restaurantDetail?.delivery_status}
+            isPickup={restaurantDetail?.pickup_status}
             tabPosition={tabPosition}
             setTabPosition={setTabPosition}
             locationDeliver={locationDeliver}
@@ -56,6 +64,10 @@ const TabsDynamicConditionalComponent = ({
       return (
         <div>
           <IconPositionTabs
+            isDineIn={restaurantDetail?.dinein_status}
+            isCatering={restaurantDetail?.catering_status}
+            isDelivery={restaurantDetail?.delivery_status}
+            isPickup={restaurantDetail?.pickup_status}
             tabPosition={tabPosition}
             setTabPosition={setTabPosition}
             locationDeliver={locationDeliver}
@@ -82,6 +94,10 @@ const TabsDynamicConditionalComponent = ({
       return (
         <div>
           <IconPositionTabs
+            isDineIn={restaurantDetail?.dinein_status}
+            isCatering={restaurantDetail?.catering_status}
+            isDelivery={restaurantDetail?.delivery_status}
+            isPickup={restaurantDetail?.pickup_status}
             tabPosition={tabPosition}
             setTabPosition={setTabPosition}
             locationDeliver={locationDeliver}
@@ -102,6 +118,10 @@ const TabsDynamicConditionalComponent = ({
       return (
         <div>
           <IconPositionTabs
+            isDineIn={restaurantDetail?.dinein_status}
+            isCatering={restaurantDetail?.catering_status}
+            isDelivery={restaurantDetail?.delivery_status}
+            isPickup={restaurantDetail?.pickup_status}
             tabPosition={tabPosition}
             setTabPosition={setTabPosition}
             locationDeliver={locationDeliver}

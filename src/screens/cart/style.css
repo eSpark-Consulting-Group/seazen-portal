@@ -48,9 +48,12 @@
   cursor: pointer;
   margin-top: 4px;
 }
-.MuiDialog-paperWidthSm {
-  position: absolute !important;
-  left: -5px;
+
+@media (min-width: 500px) {
+  .MuiDialog-paperWidthSm {
+    position: absolute !important;
+    left: -5px;
+  }
 }
 
 .scrollableContainerWrapper {

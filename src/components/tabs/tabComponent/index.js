@@ -18,6 +18,10 @@ export default function IconPositionTabs({
   locationDeliver,
   deliveryAvailable,
   resturantId,
+  isPickup,
+  isDelivery,
+  isCatering,
+  isDineIn,
 }) {
   const [value, setValue] = React.useState(0);
   const navigate = useNavigate();
@@ -38,27 +42,42 @@ export default function IconPositionTabs({
     );
   };
 
-  useEffect(()=>{
-    if(tabPosition !== null){
+  useEffect(() => {
+    if (tabPosition !== null) {
       setTabPositionAndNavigate(tabPosition);
     }
-  },[])
+  }, []);
+
+  useEffect(() => {
+    if (isDineIn) {
+      return setValue(0);
+    }
+    if (isCatering) {
+      return setValue(1);
+    }
+    if (isDelivery) {
+      return setValue(2);
+    }
+    if (isPickup) {
+      return setValue(3);
+    }
+  }, [isPickup, isDelivery, isCatering, isDineIn]);
 
   React.useEffect(() => {
-    if (option === "dinein") {
+    if (option === "dinein" && isDineIn) {
       setValue(0);
       setTabPosition("dinein");
-    } else if (option === "catering") {
+    } else if (option === "catering" && isCatering) {
       setValue(1);
       setTabPosition("catering");
-    } else if (option === "delivery") {
+    } else if (option === "delivery" && isDelivery) {
       setValue(2);
       setTabPosition("delivery");
-    } else if (option === "pickup") {
+    } else if (option === "pickup" && isPickup) {
       setValue(3);
       setTabPosition("pickup");
     }
-  }, [option]);
+  }, [option, isPickup, isDelivery, isCatering, isDineIn]);
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
   return (
     <Tabs
@@ -72,9 +91,12 @@ export default function IconPositionTabs({
       sx={{
         backgroundColor: restaurantTheme.main + 12,
         width: "100%",
-        padding: "0 20px",
+        padding: "0px 33px 0px 28px",
         color: "#323F4B",
         minHeight: "40px",
+        "& .MuiTabs-flexContainer": {
+          justifyContent: "space-between ",
+        },
         "& button": {
           width: "auto",
           padding: "0",
@@ -87,6 +109,7 @@ export default function IconPositionTabs({
       }}
     >
       <Tab
+        disabled={!isDineIn}
         onClick={() => {
           setTabPositionAndNavigate("dinein");
         }}
@@ -108,6 +131,7 @@ export default function IconPositionTabs({
         }}
       />
       <Tab
+        disabled={!isCatering}
         onClick={() => {
           setTabPositionAndNavigate("catering");
         }}
@@ -129,6 +153,7 @@ export default function IconPositionTabs({
         }}
       />
       <Tab
+        disabled={!isDelivery}
         onClick={() => {
           setTabPositionAndNavigate("delivery");
         }}
@@ -150,6 +175,7 @@ export default function IconPositionTabs({
         }}
       />
       <Tab
+        disabled={!isPickup}
         onClick={() => {
           setTabPositionAndNavigate("pickup");
         }}

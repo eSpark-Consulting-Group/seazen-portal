@@ -9,7 +9,7 @@
 }
 
 .detailsHeaderBackground {
-  height: 309px;
+  min-height: 309px;
 }
 
 .detailsheaderleft-icons {

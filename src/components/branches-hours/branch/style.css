@@ -6,7 +6,7 @@
 }
 
 .branch-status-container {
-  margin-right: 100px;
+  /* margin-right: 100px; */
 }
 
 .branch-info {
@@ -29,6 +29,8 @@
   position: absolute;
   left: 38px;
   top: 12px;
+  width: 30%;
+  line-height: 1;
 }
 
 .branches-heading {
@@ -141,4 +143,7 @@
 .branch-status-section {
   margin-left: 66px;
   margin-top: 6px;
+  width: 76%;
+  display: flex;
+  justify-content: center;
 }
