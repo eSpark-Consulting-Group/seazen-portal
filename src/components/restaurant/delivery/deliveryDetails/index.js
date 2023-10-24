@@ -162,7 +162,7 @@ const DeliveryDetails = (props) => {
   return (
     <StyledOuterContainer
       className="delivery_outer_container"
-      style={{ background: restaurantTheme.main + 24 }}
+      style={{ background: restaurantTheme.main + 24, position: "relative" }}
     >
       <div className="delivery_inner_container">
         <div className="left_dropdown_container">
@@ -321,6 +321,44 @@ const DeliveryDetails = (props) => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
+        <Stack
+          justifyContent="center"
+          alignItems="center"
+          sx={{
+            bgcolor: (theme) => theme.palette.themeColor.main,
+            color: "common.white",
+            p: 1,
+            borderRadius: "8px",
+            position: "absolute",
+            width: "33px",
+            height: "32px",
+            // left: "-7px",
+            top: "8px",
+            right: "12px",
+          }}
+          spacing={0}
+        >
+          <Typography
+            variant="h4"
+            fontWeight={600}
+            sx={{
+              lineHeight: 1,
+              fontSize: "19px",
+            }}
+          >
+            30
+          </Typography>
+          <Typography
+            variant="caption"
+            fontWeight={300}
+            sx={{
+              lineHeight: 1,
+              fontSize: "6px",
+            }}
+          >
+            minutes
+          </Typography>
+        </Stack>
       </div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MobileDatePicker
@@ -356,43 +394,6 @@ const DeliveryDetails = (props) => {
           />
         )}
       </LocalizationProvider>
-      <Stack
-        justifyContent="center"
-        alignItems="center"
-        sx={{
-          bgcolor: (theme) => theme.palette.themeColor.main,
-          color: "common.white",
-          p: 1,
-          borderRadius: "8px",
-          position: "relative",
-          width: "33px",
-          height: "32px",
-          left: "-7px",
-          top: "8px",
-        }}
-        spacing={0}
-      >
-        <Typography
-          variant="h4"
-          fontWeight={600}
-          sx={{
-            lineHeight: 1,
-            fontSize: "19px",
-          }}
-        >
-          30
-        </Typography>
-        <Typography
-          variant="caption"
-          fontWeight={300}
-          sx={{
-            lineHeight: 1,
-            fontSize: "6px",
-          }}
-        >
-          minutes
-        </Typography>
-      </Stack>
     </StyledOuterContainer>
   );
 };

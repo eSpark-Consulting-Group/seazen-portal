@@ -9,6 +9,7 @@
 .orderType-button-container {
   display: flex;
   justify-content: space-between;
+  gap: 2px;
   margin-top: 10px;
 }
 
@@ -161,6 +162,7 @@
 @media screen and (max-width: 500px) and (min-width: 400px) {
   .custom-button {
     padding-right: 18px;
+    width: 100%;
   }
 
   .custom-button.expanded {
@@ -175,9 +177,15 @@
     margin-left: 6px;
   }
 
+  .orderTypebutton-icon {
+    width: 32px;
+    height: 32px;
+  }
+
   .orderTypebutton-text {
-    margin-left: 0;
+    margin-left: 5px;
     margin-right: 0;
+    font-size: 12px;
   }
 }
 
