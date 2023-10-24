@@ -267,18 +267,16 @@ const DeliveryDetails = (props) => {
                 transform: "translate(0px, -22px)",
               }}
             >
-              {token !== null ? (
-                <Dropdown.Item
-                  defaultChecked
-                  onClick={() =>
-                    navigate(paths.location, {
-                      state: { path: "menu/restaurant" },
-                    })
-                  }
-                >
-                  Add location
-                </Dropdown.Item>
-              ) : null}
+              <Dropdown.Item
+                defaultChecked
+                onClick={() =>
+                  navigate(paths.location, {
+                    state: { path: "menu/restaurant" },
+                  })
+                }
+              >
+                Add location
+              </Dropdown.Item>
               {addressData?.length ? (
                 addressData.map((address) => {
                   return (
