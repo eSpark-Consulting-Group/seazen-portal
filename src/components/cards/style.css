@@ -63,8 +63,9 @@
   /* transition: transform 0.3s, box-shadow 0.3s; */
   cursor: pointer;
   border-radius: 12px;
-  border: 2px solid rgba(147, 103, 78, 0);
+  border: 3px solid rgba(147, 103, 78, 0);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 95%;
 }
 
 .restaurantCard-img {
@@ -101,6 +102,7 @@
   border-bottom-left-radius: 2px;
   display: inline-block;
   margin-left: -4px;
+  margin-bottom: 7px;
 }
 
 .icon-row-selected {
@@ -168,5 +170,5 @@
 } */
 
 .another-class {
-  border: 2px solid rgba(147, 103, 78, 0) !important;
+  border: 3px solid rgba(147, 103, 78, 0) !important;
 }

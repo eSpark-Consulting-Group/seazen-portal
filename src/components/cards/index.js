@@ -248,8 +248,8 @@ const BasicCard = (props) => {
   };
 
   // Define the width and height for the SVG icons
-  const iconWidth = "7px";
-  const iconHeight = "9px";
+  const iconWidth = "9px";
+  const iconHeight = "11px";
 
   return (
     <div>
@@ -321,7 +321,7 @@ const BasicCard = (props) => {
                           }
                           src={icons["catering_status"]?.image}
                           // alt={`Icon ${i + 1}`}
-                          style={{ width: iconWidth, height: iconHeight }}
+                          style={{ width: "12px", height: "11px" }}
                         />
                       </div>
                     )}

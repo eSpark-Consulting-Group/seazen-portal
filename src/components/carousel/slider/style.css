@@ -25,6 +25,12 @@
 @media (max-width: 500px) {
   .carouselBanner {
     margin: 0px 8px !important;
+    height: 130px;
+  }
+
+  .carouselBanner img {
+    margin: 0px 8px !important;
+    height: 100% !important;
   }
 }
 
@@ -32,15 +38,18 @@
   .carouselBanner img {
     width: 365px !important;
   }
+
   .carouselBanner {
     width: 365px;
   }
+
 }
 
 @media screen and (min-width: 425px) {
   .carouselBanner {
     width: 100%;
   }
+
   .carouselBanner img {
     width: 100% !important;
   }
@@ -50,6 +59,7 @@
   .carouselBanner img {
     width: 324px !important;
   }
+
   .carouselBanner {
     width: 324px;
   }
@@ -61,6 +71,7 @@
     height: 120px;
     min-width: 284px;
   }
+
   .carouselBanner {
     width: 284px;
   }
@@ -70,6 +81,7 @@
   .carouselBanner img {
     width: 300px !important;
   }
+
   .carouselBanner {
     width: 300px;
   }
@@ -142,7 +154,10 @@
     overflow: visible !important;
     margin: 0 !important;
   }
+
+
 }
+
 @media screen and (max-width: 767px) {
   .gYgxKc {
     grid-template-columns: repeat(2, 100%);
@@ -159,5 +174,11 @@
   .kLfeLb {
     padding-left: 10px;
     grid-template-columns: repeat(1, 97%);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .reserve {
+    right: -8px;
   }
 }

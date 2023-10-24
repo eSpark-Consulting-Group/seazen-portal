@@ -178,14 +178,18 @@
   }
 
   .orderTypebutton-icon {
-    width: 32px;
-    height: 32px;
+    /* width: 32px; */
+    /* height: 32px; */
   }
+
+  .shrink-expanded .orderTypebutton-text {
+    margin-left: 0px !important;
+  }
+
 
   .orderTypebutton-text {
     margin-left: 5px;
     margin-right: 0;
-    font-size: 12px;
   }
 }
 
