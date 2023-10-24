@@ -19,6 +19,7 @@
 
 .shrink-expanded {
   padding-right: 0px !important;
+  width: auto !important;
 }
 
 .shrink-expanded .orderTypebutton-text {
@@ -30,6 +31,7 @@
 .custom-button {
   display: flex;
   align-items: center;
+  justify-content: center;
   color: white;
   cursor: pointer;
   background: #ffffff 0% 0% no-repeat padding-box;
@@ -40,7 +42,7 @@
   cursor: pointer;
   transform: scale(0.98);
   transition: all 0.3s;
-  padding: 0.5px 0.5px 0.5px 0.5px !important;
+  /* padding: 0.5px 0.5px 0.5px 0.5px !important; */
 }
 
 .orderTypebutton-text {
@@ -162,7 +164,7 @@
 @media screen and (max-width: 500px) and (min-width: 400px) {
   .custom-button {
     padding-right: 18px;
-    width: 100%;
+    /* width: 100%; */
   }
 
   .custom-button.expanded {
