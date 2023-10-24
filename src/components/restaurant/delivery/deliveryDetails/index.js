@@ -459,7 +459,7 @@ const DeliveryDetails = (props) => {
           />
         )}
       </LocalizationProvider>
-      <Stack
+      {/* <Stack
         justifyContent="center"
         alignItems="center"
         sx={{
@@ -495,7 +495,7 @@ const DeliveryDetails = (props) => {
         >
           minutes
         </Typography>
-      </Stack>
+      </Stack> */}
 
       <Dialog
         open={restaurantOpen}
