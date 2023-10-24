@@ -41,7 +41,7 @@
   padding-top: 20px;
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 500px) {
   .content-section {
     display: none;
   }
@@ -56,13 +56,13 @@ h6 {
   all: unset;
 }
 
-@media screen and (min-width: 425px) {
+@media screen and (min-width: 500px) {
   .design-section {
     min-width: 375px;
     max-width: 375px;
   }
 }
-@media screen and (min-width: 601px) {
+@media screen and (min-width: 500px) {
   #fc_frame {
     left: 290px !important;
   }
@@ -102,9 +102,10 @@ iframe#webpack-dev-server-client-overlay {
 }
 
 .specific-page-body-style #fc_frame {
-  bottom: 52px !important;
+  /* bottom: 52px !important; */
+  transform: translateY(-40px);
 }
 
-.another-specific-page-body-style #fc_frame{
+.another-specific-page-body-style #fc_frame {
   bottom: 82px !important;
 }

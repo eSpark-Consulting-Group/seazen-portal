@@ -107,12 +107,14 @@ function CartPage() {
   }, [location]);
 
   useLayoutEffect(() => {
-    if (branchHours?.length === 0) {
-      getBranchHours();
+    if (cartItems !== undefined && cartItems?.length > 0) {
+      if (branchHours?.length === 0) {
+        getBranchHours();
+      }
     } else {
       checkBranchHours(branchHours);
     }
-  }, [branchHours]);
+  }, [location.state, cartItems?.length, branchHours]);
 
   const getBranchHours = () => {
     getRestaurantBranchHours(restaurantId).then((res) => {
@@ -193,48 +195,49 @@ function CartPage() {
   const checkoutHandler = () => {
     let itemsProcessed = 0;
 
-    getRestaurantBranchHours(restaurantId).then((res) => {
-      const selectedAddress = JSON.parse(localStorage.getItem("selected"));
-      if (selectedAddress !== null) {
-        const selectedLat = selectedAddress?.lat;
-        const selectedLng = selectedAddress?.lng;
+    // getRestaurantBranchHours(restaurantId).then((res) => {
+    const selectedAddress = JSON.parse(localStorage.getItem("selected"));
 
-        res?.data?.forEach((res, _, array) => {
-          itemsProcessed++;
+    if (selectedAddress !== null) {
+      const selectedLat = selectedAddress?.lat;
+      const selectedLng = selectedAddress?.lng;
 
-          const resLat = +res.latitude;
-          const resLng = +res.longitude;
-          const distance = getDistanceFromLatLonInKm(
-            resLat,
-            resLng,
-            selectedLat,
-            selectedLng
-          );
+      branchHours?.forEach((res, _, array) => {
+        itemsProcessed++;
 
-          if (distance > 50) {
-            setNotDeliver(true);
-          } else {
-            if (itemsProcessed === array?.length && paymentMethod === "KNET") {
-              const data = {
-                ...checkoutData,
-                discount_price: getDiscountAmount(),
-              };
-              checkout(data, token)
-                .then((res) => {
-                  const checkoutRedirectUrl =
-                    res.data?.payment_methods[0].redirect_url;
-                  window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
+        const resLat = +res.latitude;
+        const resLng = +res.longitude;
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          selectedLat,
+          selectedLng
+        );
 
-              return;
-            }
+        if (distance > 50) {
+          setNotDeliver(true);
+        } else {
+          if (itemsProcessed === array?.length && paymentMethod === "KNET") {
+            const data = {
+              ...checkoutData,
+              discount_price: getDiscountAmount(),
+            };
+            checkout(data, token)
+              .then((res) => {
+                const checkoutRedirectUrl =
+                  res.data?.payment_methods[0].redirect_url;
+                window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+
+            return;
           }
-        });
-      }
-    });
+        }
+      });
+    }
+    // });
   };
 
   useEffect(() => {
@@ -686,7 +689,7 @@ function CartPage() {
                 width: "375px",
                 left: "0px !important",
                 paddingTop: "20px",
-                "@media (max-width: 600px)": {
+                "@media (max-width: 500px)": {
                   width: "100%",
                 },
               },
@@ -1116,7 +1119,7 @@ function CartPage() {
                 }}
                 variant="contained"
                 size="large"
-                onClick={() => navigate(location.state.back || -1)}
+                onClick={() => navigate(location?.state?.back || -1)}
               >
                 Back
               </Button>

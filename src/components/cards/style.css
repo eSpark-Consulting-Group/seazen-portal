@@ -69,7 +69,7 @@
 
 .restaurantCard-img {
   width: 99%;
-  height: 74px;
+  /* height: 74px; */
   object-fit: cover;
   margin-bottom: -6.5px;
   border: 1px solid white;

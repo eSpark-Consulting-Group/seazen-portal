@@ -129,7 +129,7 @@ export const DialogComponent = (props) => {
                         location?.state?.resturantId === undefined
                           ? localStorage.getItem("restaurantID")
                           : +location.state.resturantId
-                      }`
+                      }/delivery`
                     )
                   }
                 >
@@ -219,7 +219,9 @@ const ListItemsNotDelivered = (props) => {
           className="common-st add-btn"
           onClick={() =>
             navigate(
-              `${paths.menu}/restaurant/${localStorage.getItem("restaurantID")}`
+              `${paths.menu}/restaurant/${localStorage.getItem(
+                "restaurantID"
+              )}/delivery`
             )
           }
         >

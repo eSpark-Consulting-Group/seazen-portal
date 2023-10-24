@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import {
   GoogleMap,
-  MarkerF,
+  // MarkerF,
   useLoadScript,
   Autocomplete,
 } from "@react-google-maps/api";
@@ -20,11 +20,11 @@ import {
   Stack,
   Button,
   Typography,
-  IconButton,
+  // IconButton,
   CircularProgress,
 } from "@mui/material";
-import SvgIcon from "@mui/material/SvgIcon";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+// import SvgIcon from "@mui/material/SvgIcon";
+// import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
 import {
   Combobox,
@@ -50,8 +50,8 @@ import { useQuery } from "@tanstack/react-query";
 import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantBranchHours";
-import { useDispatch } from "react-redux";
-import { addAddressDetail } from "../../store/reducers/addressSlice";
+// import { useDispatch } from "react-redux";
+// import { addAddressDetail } from "../../store/reducers/addressSlice";
 import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
 import Navbar, { NavbarVariants } from "../../components/header";
 
@@ -249,32 +249,6 @@ function LocationPage() {
     }
   }, [location?.state]);
 
-  // useEffect(() => {
-  // if (
-  //   location?.state?.latlng === undefined &&
-  //   selectedAdd === null &&
-  //   token !== null
-  // ) {
-  //   navigator.geolocation.getCurrentPosition(
-  //     async (position) => {
-  //       setCenter({
-  //         lat: position.coords.latitude,
-  //         lng: position.coords.longitude,
-  //       });
-  //       getAdd(position.coords.latitude, position.coords.longitude);
-  //     },
-  //     () => {}
-  //   );
-  // }
-  // }, []);
-
-  // useEffect(() => {
-  // if (location?.state?.latlng === undefined && selectedAdd !== null) {
-  //   setCenter({ lat: selectedAdd.lat, lng: selectedAdd.lng });
-  //   getAdd(selectedAdd?.lat, selectedAdd?.lng);
-  // }
-  // }, []);
-
   const getAdd = async (latitude, longitude) => {
     // eslint-disable-next-line no-undef
     setKey(process.env.REACT_APP_GOOGLE_API_KEY);
@@ -345,35 +319,32 @@ function LocationPage() {
   const makeCenter = () => {
     setClicked(true);
 
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      getAdd(position.coords.latitude, position.coords.longitude);
-    }, showError);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        getAdd(position.coords.latitude, position.coords.longitude);
+      },
+      () => {}
+    );
 
     setTimeout(() => {
       setClicked(false);
     }, 100);
   };
 
-  const showError = (error) => {
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
-        console.log("User denied the request for Geolocation.");
-        break;
-      case error.POSITION_UNAVAILABLE:
-        console.log("Location information is unavailable.");
-        break;
-      case error.TIMEOUT:
-        console.log("The request to get user location timed out.");
-        break;
-      case error.UNKNOWN_ERROR:
-        console.log("An unknown error occurred.");
-        break;
-    }
-  };
-
   const confirmLocation = () => {
     if (token === null) {
-      navigate(paths.phone_verification_index);
+      if (location?.state?.guestUser) {
+        const fullAddress = {
+          address,
+          lat: center.lat,
+          lng: center.lng,
+        };
+
+        localStorage.setItem("location", JSON.stringify(fullAddress));
+        navigate(paths.home);
+      } else {
+        navigate(paths.phone_verification_index);
+      }
     } else if (
       location?.state?.path === "/cart" ||
       location?.state?.path === "/home" ||
@@ -414,7 +385,7 @@ function LocationPage() {
       }}
       className="parent-stack"
     >
-        <Stack
+      <Stack
         spacing={2}
         sx={{
           width: "100%",
@@ -424,7 +395,6 @@ function LocationPage() {
           backgroundColor: "transparent",
         }}
       >
-    
         {/* <Stack
           direction="row"
           alignItems="center"
@@ -466,57 +436,59 @@ function LocationPage() {
             <img src="/assets/img/options icon.svg" alt="Options"></img>
           </IconButton>
         </Stack> */}
-<Stack
-        sx={{
-          // minHeight: "70vh",
-          color: "text.primary",
-          paddingLeft:"16px !important",
-          paddingRight:"16px !important",
-          padding:"0",
-        }}
-        justifyContent="space-between"
-        spacing={2}
-      >
-        <div className="Phone-Nav">
-          <Navbar variant={NavbarVariants.backWithProfile} />
-        </div>
+        <Stack
+          sx={{
+            // minHeight: "70vh",
+            color: "text.primary",
+            paddingLeft: "16px !important",
+            paddingRight: "16px !important",
+            padding: "0",
+          }}
+          justifyContent="space-between"
+          spacing={2}
+        >
+          <div className="Phone-Nav">
+            <Navbar
+              variant={NavbarVariants.backWithProfile}
+              guestUser={location.state?.guestUser ? true : false}
+            />
+          </div>
         </Stack>
         <Stack
-        spacing={2}
-        sx={{
-          
-          padding: "24px 24px 0px 24px",
-        }}
-      >
-        {isLoaded ? (
-          <div>
-            <Autocomplete
-              className="autocomplete"
-              onLoad={onLoad}
-              onPlaceChanged={onPlaceChanged}
-            >
-              <div className="dp-fl">
-                {/* <img src={SearchIcon} alt="Search Icon" className="icon" /> */}
-                <input
-                  id="autocomplete"
-                  type="text"
-                  placeholder="Search an address"
-                  className="input"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-              </div>
-            </Autocomplete>
-          </div>
-        ) : null}
+          spacing={2}
+          sx={{
+            padding: "24px 24px 0px 24px",
+          }}
+        >
+          {isLoaded ? (
+            <div>
+              <Autocomplete
+                className="autocomplete"
+                onLoad={onLoad}
+                onPlaceChanged={onPlaceChanged}
+              >
+                <div className="dp-fl">
+                  {/* <img src={SearchIcon} alt="Search Icon" className="icon" /> */}
+                  <input
+                    id="autocomplete"
+                    type="text"
+                    placeholder="Search an address"
+                    className="input"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                </div>
+              </Autocomplete>
+            </div>
+          ) : null}
 
-        {/* <PlacesAutocomplete
+          {/* <PlacesAutocomplete
           setSelected={setCenter}
           setAddress={setAddress}
           address={address}
           location={location.state}
         />  */}
-      </Stack>
+        </Stack>
       </Stack>
       {!isLoaded ? (
         <div className="progress-bar">

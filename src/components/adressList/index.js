@@ -36,7 +36,7 @@ const Card = (props) => {
   // }, [address, data]);
 
   const navigate = useNavigate();
-  const latlng = { lat: data.latitude, lng: data.longitute };
+  const latlng = { lat: data.latitude, lng: data.longitude };
 
   return (
     <div
