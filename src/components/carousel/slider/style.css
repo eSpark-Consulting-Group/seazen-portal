@@ -55,7 +55,17 @@
   }
 }
 
-@media screen and (max-width: 390px) and (min-width: 370px) {
+@media screen and (max-width: 400px) and (min-width: 380px) {
+  .carouselBanner img {
+    width: 100% !important;
+  }
+
+  .carouselBanner {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 380px) and (min-width: 370px) {
   .carouselBanner img {
     width: 324px !important;
   }
