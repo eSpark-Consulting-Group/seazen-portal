@@ -58,7 +58,6 @@ const DeliveryDetails = (props) => {
     setFromDetail,
   } = props;
   const navigate = useNavigate();
-  const location = useLocation();
 
   const addressData = useSelector((state) => state.address.addressData);
   const nearbyRestaurants = useSelector(
@@ -67,7 +66,9 @@ const DeliveryDetails = (props) => {
   const restaurantDetail = useSelector(
     (state) => state.resturants.restaurantDetail
   );
+
   const selected = JSON.parse(localStorage.getItem("selected"));
+  const currentLocation = JSON.parse(localStorage.getItem("location"));
   const token = localStorage.getItem("token");
 
   const truncateString = (str, len) => {
@@ -81,11 +82,23 @@ const DeliveryDetails = (props) => {
       }
     }
   };
+
+  const returnLocation = () => {
+    let location = "";
+    if (currentLocation === null && selected === null) {
+      location = "No Address";
+    } else if (currentLocation !== null && selected === null) {
+      location = truncateString(currentLocation?.address, 15);
+    } else if (currentLocation !== null && selected !== null) {
+      location = truncateString(selected?.address, 15);
+    }
+
+    return location;
+  };
+
   const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [latlng, setLatlng] = useState(null);
-  const [userLocation, setUserLocation] = useState(
-    selected === null ? "No Address" : truncateString(selected?.address, 15)
-  );
+  const [userLocation, setUserLocation] = useState(returnLocation());
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
   const [openDropdown, setOpendropdown] = useState(false);
   const [isDeliveryDropDown, setIsDeliveryDropDown] = useState(false);
@@ -155,12 +168,7 @@ const DeliveryDetails = (props) => {
         itemsIsCalled++;
 
         if (restaurant.openingStatus === "Open") {
-          setIsAsap(true);
-          setIsDeliveryDropDown(false);
-          const currentTime = new Date();
-          currentTime.setMinutes(currentTime.getMinutes() + 30);
-          setPickTime(dayjs(currentTime).format("hh:mm a"));
-          setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
+          asapCall();
 
           return;
 
@@ -172,13 +180,17 @@ const DeliveryDetails = (props) => {
         }
       });
     } else {
-      setIsAsap(true);
-      setIsDeliveryDropDown(false);
-      const currentTime = new Date();
-      currentTime.setMinutes(currentTime.getMinutes() + 30);
-      setPickTime(dayjs(currentTime).format("hh:mm a"));
-      setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
+      asapCall();
     }
+  };
+
+  const asapCall = () => {
+    setIsAsap(true);
+    setIsDeliveryDropDown(false);
+    const currentTime = new Date();
+    currentTime.setMinutes(currentTime.getMinutes() + 30);
+    setPickTime(dayjs(currentTime).format("hh:mm a"));
+    setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
   };
 
   const { data: branchesAndHoursResponse, isSuccess } = useQuery({
@@ -219,6 +231,18 @@ const DeliveryDetails = (props) => {
   const toggleDropdown = () => {
     if (fullAddress === null) {
       setOpendropdown(!openDropdown);
+    }
+  };
+
+  const addLocation = () => {
+    if (token === null) {
+      navigate(paths.location, {
+        state: { path: "menu/restaurant", guestUser: true },
+      });
+    } else {
+      navigate(paths.location, {
+        state: { path: "menu/restaurant" },
+      });
     }
   };
 
@@ -267,18 +291,9 @@ const DeliveryDetails = (props) => {
                 transform: "translate(0px, -22px)",
               }}
             >
-              {token !== null ? (
-                <Dropdown.Item
-                  defaultChecked
-                  onClick={() =>
-                    navigate(paths.location, {
-                      state: { path: "menu/restaurant" },
-                    })
-                  }
-                >
-                  Add location
-                </Dropdown.Item>
-              ) : null}
+              <Dropdown.Item defaultChecked onClick={addLocation}>
+                Add location
+              </Dropdown.Item>
               {addressData?.length ? (
                 addressData.map((address) => {
                   return (

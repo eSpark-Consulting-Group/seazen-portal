@@ -254,6 +254,12 @@
   }
 }
 
+@media only screen and (max-width: 900px) {
+  .info-window-box {
+    top: 42%;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .recenter-div {
     bottom: 18%;
@@ -261,7 +267,6 @@
 
   .info-window-box {
     width: 75%;
-    top: 42%;
   }
 }
 

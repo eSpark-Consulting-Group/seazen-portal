@@ -87,9 +87,11 @@ function LocationPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const selectedAdd = JSON.parse(localStorage.getItem("selected"));
   const countries = useSelector((state) => state.auth.countries);
+
+  const selectedAdd = JSON.parse(localStorage.getItem("selected"));
   const token = localStorage.getItem("token");
+  const restaurantID = localStorage.getItem("restaurantID");
 
   const { isLoaded } = useLoadScript({
     id: "google-map-script",
@@ -274,7 +276,7 @@ function LocationPage() {
       });
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const userSelected = localStorage.getItem("selected");
     const userLocation = localStorage.getItem("location");
 
@@ -291,6 +293,7 @@ function LocationPage() {
       //
     } else if (userSelected === null && userLocation !== null) {
       //
+
       const parsedUserLocation = JSON.parse(userLocation);
 
       const getCountry = parsedUserLocation.address.split(",");
@@ -303,6 +306,7 @@ function LocationPage() {
       //
     } else if (userSelected !== null && userLocation !== null) {
       //
+
       const parsedUserLocation = JSON.parse(userSelected);
 
       const getCountry = parsedUserLocation.address.split(",");
@@ -417,7 +421,12 @@ function LocationPage() {
         };
 
         localStorage.setItem("location", JSON.stringify(fullAddress));
-        navigate(paths.home);
+
+        if (location?.state?.path === "menu/restaurant") {
+          navigate(`${paths.menu}/restaurant/${restaurantID}/delivery`);
+        } else {
+          navigate(paths.home);
+        }
       } else {
         navigate(paths.phone_verification_index);
       }
