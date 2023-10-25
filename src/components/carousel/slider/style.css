@@ -1,5 +1,6 @@
 .hover-slider {
   margin-bottom: 17px;
+  /* margin-right: -24px; */
 }
 
 .card-spacing {
@@ -170,7 +171,7 @@
 @media screen and (max-width: 767px) {
   .kLfeLb {
     padding-left: 10px;
-    grid-template-columns: repeat(1, 97%);
+    grid-template-columns: repeat(1, 97%) !important;
   }
 }
 
