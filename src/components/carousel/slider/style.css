@@ -35,7 +35,7 @@
   }
 }
 
-@media screen and (max-width: 424px) and (min-width: 400px) {
+@media screen and (max-width: 425px) and (min-width: 400px) {
   .carouselBanner img {
     width: 365px !important;
   }
@@ -45,7 +45,7 @@
   }
 }
 
-@media screen and (min-width: 425px) {
+@media screen and (min-width: 400px) {
   .carouselBanner {
     width: 100%;
   }
@@ -55,7 +55,7 @@
   }
 }
 
-@media screen and (max-width: 390px) and (min-width: 380px) {
+@media screen and (max-width: 390px) and (min-width: 370px) {
   .carouselBanner img {
     width: 324px !important;
   }
