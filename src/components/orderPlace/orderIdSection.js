@@ -3,7 +3,7 @@ import "../../screens/order/style.css";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
 
-const OrderIdSection = ({ orderID }) => {
+const OrderIdSection = ({ orderID, orderNo }) => {
   const navigate = useNavigate();
 
   const handleReceipt = () => {
@@ -14,7 +14,7 @@ const OrderIdSection = ({ orderID }) => {
     <div className="order-id-section">
       <p id="order-id-text">Order ID</p>
       <div className="orderid-with-tag">
-        <p>{orderID}</p>
+        <p>{orderNo}</p>
         <div id="order-id-tag">
           <a href="" onClick={handleReceipt}>
             View Receipt
