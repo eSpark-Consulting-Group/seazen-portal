@@ -50,7 +50,7 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
               marginTop: "15px",
             }}
           >
-            {"Branches & Hours "}
+            Branches & Hours
             <span
               style={{ marginLeft: "5px", position: "relative", top: "2px" }}
             >
@@ -58,6 +58,15 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
                 src="/assets/img/information_icon.svg"
                 alt="information_icon"
               />
+            </span>
+            <span
+              style={{
+                display: "block",
+                fontSize: "10px",
+                textAlign: "right",
+              }}
+            >
+              Min. order: 10 KWD
             </span>
           </StyledItemPrice>
         </div>
