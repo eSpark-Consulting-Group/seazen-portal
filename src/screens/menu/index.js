@@ -108,25 +108,29 @@ const Menu = () => {
   }, [country]);
 
   useEffect(() => {
-    const filterRestaurant = nearbyRestaurants?.filter((nearBy) =>
-      nearBy.branch_name_en?.includes(restaurantDetail?.name_en)
-    );
-    let itemsIsCalled = 0;
+    if (sessionStorage.getItem("popupOpened") === null) {
+      const filterRestaurant = nearbyRestaurants?.filter((nearBy) =>
+        nearBy.branch_name_en?.includes(restaurantDetail?.name_en)
+      );
+      let itemsIsCalled = 0;
 
-    filterRestaurant?.forEach((restaurant, _, filterArr) => {
-      itemsIsCalled++;
+      filterRestaurant?.forEach((restaurant, _, filterArr) => {
+        itemsIsCalled++;
 
-      if (restaurant.openingStatus === "Open") {
-        setRestaurantOpen(false);
-        return;
+        if (restaurant.openingStatus === "Open") {
+          setRestaurantOpen(false);
+          return;
 
-        //
-      } else if (restaurant.openingStatus === "Close") {
-        setRestaurantOpen(true);
-        return;
-        //
-      }
-    });
+          //
+        } else if (restaurant.openingStatus === "Close") {
+          setRestaurantOpen(true);
+          return;
+          //
+        }
+      });
+    } else {
+      setRestaurantOpen(false);
+    }
   }, [nearbyRestaurants, restaurantDetail]);
 
   const [userCurrentAddress, setUserCurrentAddress] = useState({
@@ -320,6 +324,7 @@ const Menu = () => {
         onClose={() => {
           setFromDetail(false);
           setRestaurantOpen(false);
+          sessionStorage.setItem("popupOpened", true);
         }}
         sx={{
           margin: "0",
