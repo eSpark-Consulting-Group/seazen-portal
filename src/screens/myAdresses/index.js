@@ -222,9 +222,9 @@ const App = () => {
               </div>
             </>
           ))
-        : addressData.length && (
+        : addressData?.length && (
             <div className="parent-address">
-              {addressData.map((data) => (
+              {addressData?.map((data) => (
                 <div key={data.id}>
                   <Card
                     iconUrl={
