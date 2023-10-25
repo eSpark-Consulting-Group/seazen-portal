@@ -228,6 +228,11 @@ const OrderScreen = () => {
           <AddressSection />
           <OrderIdSection
             orderID={
+              searchParams.get("order_id") !== null
+                ? searchParams.get("order_id")
+                : ""
+            }
+            orderNo={
               searchParams.get("order_no") !== null
                 ? searchParams.get("order_no")
                 : ""
