@@ -51,6 +51,7 @@ export const DialogComponent = (props) => {
           width: "327px",
           textAlign: "center",
           overflow: "visible",
+          margin: "27px",
 
           "@media (max-width: 500px)": {
             width: "375px",
