@@ -91,7 +91,6 @@ function LocationPage() {
 
   const selectedAdd = JSON.parse(localStorage.getItem("selected"));
   const token = localStorage.getItem("token");
-  const restaurantID = localStorage.getItem("restaurantID");
 
   const { isLoaded } = useLoadScript({
     id: "google-map-script",
@@ -461,7 +460,10 @@ function LocationPage() {
         localStorage.setItem("location", JSON.stringify(fullAddress));
 
         if (location?.state?.path === "menu/restaurant") {
-          navigate(`${paths.menu}/restaurant/${restaurantID}/delivery`);
+          navigate(
+            `${paths.menu}/restaurant/${+location?.state
+              ?.restaurant_id}/delivery`
+          );
         } else {
           navigate(paths.home);
         }
@@ -574,6 +576,7 @@ function LocationPage() {
             <Navbar
               variant={NavbarVariants.backWithProfile}
               guestUser={location.state?.guestUser ? true : false}
+              path={location?.state?.path}
             />
           </div>
         </Stack>

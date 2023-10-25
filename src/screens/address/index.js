@@ -381,6 +381,7 @@ const AddressForm = () => {
         title={`${location?.state?.edit ? "Edit" : "Save New"} Address`}
         path={location?.state?.path}
         fromAllAddresses={false}
+        edit={location?.state?.edit}
       />
       <div className="button-style">
         <AddressTypeSelector

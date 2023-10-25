@@ -8,7 +8,7 @@ export const NavbarVariants = {
 };
 
 const Navbar = (props) => {
-  const { variant, previousRoute, guestUser } = props;
+  const { variant, previousRoute, guestUser, path } = props;
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef(null);
@@ -53,7 +53,11 @@ const Navbar = (props) => {
             className="arrowicon-btn"
             onClick={() => {
               if (guestUser) {
-                navigate(paths.home);
+                if (path === "menu/restaurant") {
+                  navigate(-1);
+                } else {
+                  navigate(paths.home);
+                }
               } else {
                 navigate(previousRoute || -1);
               }

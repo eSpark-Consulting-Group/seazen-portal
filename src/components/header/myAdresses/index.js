@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { paths } from "../../../routes/paths";
 
 const MyAddresses = (props) => {
-  const { title, path, fromAllAddresses } = props;
+  const { title, path, fromAllAddresses, edit } = props;
   const navigate = useNavigate();
 
   return (
@@ -19,6 +19,8 @@ const MyAddresses = (props) => {
               ? paths.addresses
               : fromAllAddresses && path === "/cart"
               ? paths.cart
+              : edit !== undefined
+              ? paths.addresses
               : paths.home,
             {
               state: {
