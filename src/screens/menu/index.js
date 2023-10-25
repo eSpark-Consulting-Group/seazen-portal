@@ -281,7 +281,7 @@ const Menu = () => {
           />
         )}
       </LocalizationProvider>
-      <Stack
+      {/* <Stack
         justifyContent="center"
         alignItems="center"
         sx={{
@@ -317,7 +317,7 @@ const Menu = () => {
         >
           minutes
         </Typography>
-      </Stack>
+      </Stack> */}
 
       <Dialog
         open={restaurantOpen}

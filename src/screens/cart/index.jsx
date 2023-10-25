@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 
+import { toast } from "react-toastify";
+
 import { useTheme } from "@mui/material";
 import {
   Box,
@@ -67,6 +69,9 @@ import {
   getBranchHours,
   getNearByRest,
 } from "../../store/reducers/resturantsSlice";
+
+const toastList = new Set();
+const MAX_TOAST = 1;
 
 function CartPage() {
   const navigate = useNavigate();
@@ -265,9 +270,20 @@ function CartPage() {
 
                   checkout(data, token)
                     .then((res) => {
-                      const checkoutRedirectUrl =
-                        res.data?.payment_methods[0].redirect_url;
-                      window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
+                      if (res?.success === "error") {
+                        const parsedError = res?.message?.split(":")[1]?.trim();
+
+                        if (toastList.size < MAX_TOAST) {
+                          const id = toast.error(parsedError, {
+                            onClose: () => toastList.delete(id),
+                          });
+                          toastList.add(id);
+                        }
+                      } else {
+                        const checkoutRedirectUrl =
+                          res.data?.payment_methods[0].redirect_url;
+                        window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
+                      }
                     })
                     .catch((err) => {
                       console.log(err);
