@@ -147,9 +147,13 @@
   justify-content: center;
 }
 
-@media screen and (max-width: 500px) and (min-width: 420px) {
+@media screen and (max-width: 500px) and (min-width: 410px) {
   .inner-svg-container {
     top: -48px !important;
+  }
+  .icon-row img {
+    width: 16px !important;
+    height: 16px !important;
   }
 }
 
@@ -159,6 +163,7 @@
 
 .expanded {
   opacity: 1;
+  width: auto !important;
 }
 
 /* @media screen and (max-width: 500px) and (min-width: 400px) {
