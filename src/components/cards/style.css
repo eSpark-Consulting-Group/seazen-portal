@@ -85,7 +85,7 @@
 }
 
 .svg-container {
-  position: relative;
+  /* position: relative; */
 }
 
 .icon-row {
@@ -139,7 +139,7 @@
 
 .inner-svg-container {
   position: absolute;
-  top: -37px;
+  top: 2px;
   right: -6px;
   height: 100%;
   display: flex;
@@ -149,7 +149,7 @@
 
 @media screen and (max-width: 500px) and (min-width: 410px) {
   .inner-svg-container {
-    top: -45px !important;
+    /* top: -45px !important; */
   }
   .icon-row img {
     width: 16px !important;
