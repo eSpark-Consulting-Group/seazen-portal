@@ -284,7 +284,17 @@ function LocationPage() {
     if (userSelected === null && userLocation === null) {
       //
       const getCountry = address.split(",");
-      const forCondition = getCountry[getCountry.length - 1];
+      const lastElem = getCountry[getCountry.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudi Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
 
       if (!placeChanged) {
         servicePlaceCheck(forCondition.trim());
@@ -297,7 +307,17 @@ function LocationPage() {
       const parsedUserLocation = JSON.parse(userLocation);
 
       const getCountry = parsedUserLocation.address.split(",");
-      const forCondition = getCountry[getCountry.length - 1];
+      const lastElem = getCountry[getCountry.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudi Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
 
       if (!placeChanged) {
         servicePlaceCheck(forCondition.trim());
@@ -310,7 +330,17 @@ function LocationPage() {
       const parsedUserLocation = JSON.parse(userSelected);
 
       const getCountry = parsedUserLocation.address.split(",");
-      const forCondition = getCountry[getCountry.length - 1];
+      const lastElem = getCountry[getCountry.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudi Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
 
       if (!placeChanged) {
         servicePlaceCheck(forCondition.trim());
@@ -362,7 +392,15 @@ function LocationPage() {
 
       const lastElem = restrictToRegion[restrictToRegion.length - 1];
       const findCountry = lastElem?.split(" ");
-      const forCondition = findCountry[findCountry.length - 1];
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudi Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
 
       let countriesName = [];
 

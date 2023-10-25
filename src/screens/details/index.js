@@ -54,6 +54,7 @@ export const Details = () => {
     (state) => state.resturants.resturantsData
   );
   const branchHours = useSelector((state) => state.resturants.branchHours);
+
   const token = localStorage.getItem("token");
 
   const [cartItem, setCartItem] = React.useState();
@@ -116,10 +117,11 @@ export const Details = () => {
           setFromPopBranch(res.data);
         }
       });
-    } else {
-      calculateDistance(branchHours);
-      setFromPopBranch(branchHours);
     }
+    // else {
+    //   calculateDistance(branchHours);
+    //   setFromPopBranch(branchHours);
+    // }
   };
 
   const calculateDistance = (array) => {

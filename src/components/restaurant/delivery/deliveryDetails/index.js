@@ -236,12 +236,18 @@ const DeliveryDetails = (props) => {
 
   const addLocation = () => {
     if (token === null) {
+      const restaurant_id = restaurantDetail?.id;
+
       navigate(paths.location, {
-        state: { path: "menu/restaurant", guestUser: true },
+        state: {
+          path: "menu/restaurant",
+          guestUser: true,
+          restaurant_id: restaurant_id,
+        },
       });
     } else {
       navigate(paths.location, {
-        state: { path: "menu/restaurant" },
+        state: { path: "menu/restaurant", restaurant_id: restaurant_id },
       });
     }
   };
