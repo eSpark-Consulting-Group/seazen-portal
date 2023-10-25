@@ -12,6 +12,8 @@ const RestaurantOptionsServicesContainer = ({
   scheduleForLater,
   fromDetail,
   setFromDetail,
+  setNotDeliver,
+  setRestaurantOpen,
 }) => {
   return (
     <div>
@@ -29,6 +31,8 @@ const RestaurantOptionsServicesContainer = ({
         scheduleForLater={scheduleForLater}
         fromDetail={fromDetail}
         setFromDetail={setFromDetail}
+        setNotDeliver={setNotDeliver}
+        setRestaurantOpen={setRestaurantOpen}
       />
     </div>
   );

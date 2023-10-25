@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useParams } from "react-router";
 
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +10,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogContentText,
   Stack,
   Typography,
 } from "@mui/material";
@@ -57,6 +58,7 @@ const Menu = () => {
   );
 
   const [openModal, setOpenModal] = useState(false);
+  const [notDeliver, setNotDeliver] = useState(false);
   const [selectedItemToDeliver, setSelectedItemToDeliver] = useState({});
   const [restaurantOpen, setRestaurantOpen] = useState(false);
   const [pickDate, setPickDate] = useState(
@@ -216,6 +218,10 @@ const Menu = () => {
     pickDate,
   };
 
+  const handleClose = () => {
+    setNotDeliver(false);
+  };
+
   return (
     <div>
       <Navbar restaurantDetail={restaurantDetail} />
@@ -228,6 +234,8 @@ const Menu = () => {
         scheduleForLater={scheduleForLater}
         fromDetail={fromDetail}
         setFromDetail={setFromDetail}
+        setNotDeliver={setNotDeliver}
+        setRestaurantOpen={setRestaurantOpen}
       />
 
       <DialogComponent
@@ -281,43 +289,6 @@ const Menu = () => {
           />
         )}
       </LocalizationProvider>
-      {/* <Stack
-        justifyContent="center"
-        alignItems="center"
-        sx={{
-          bgcolor: (theme) => theme.palette.themeColor.main,
-          color: "common.white",
-          p: 1,
-          borderRadius: "8px",
-          position: "relative",
-          width: "33px",
-          height: "32px",
-          left: "-7px",
-          top: "8px",
-        }}
-        spacing={0}
-      >
-        <Typography
-          variant="h4"
-          fontWeight={600}
-          sx={{
-            lineHeight: 1,
-            fontSize: "19px",
-          }}
-        >
-          30
-        </Typography>
-        <Typography
-          variant="caption"
-          fontWeight={300}
-          sx={{
-            lineHeight: 1,
-            fontSize: "6px",
-          }}
-        >
-          minutes
-        </Typography>
-      </Stack> */}
 
       <Dialog
         open={restaurantOpen}
@@ -376,6 +347,82 @@ const Menu = () => {
             Schedule for later
           </Button>
         </div>
+      </Dialog>
+
+      <Dialog
+        open={notDeliver}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        className="not-delivered"
+        sx={{
+          overflow: "hidden",
+          "& .MuiDialog-paper": {
+            width: "327px",
+            textAlign: "center",
+            overflow: "visible",
+            margin: "27px",
+
+            "@media (max-width: 500px)": {
+              width: "375px",
+              margin: "30px",
+            },
+
+            "@media (max-width: 400px)": {
+              width: "90%",
+              margin: "25px",
+            },
+          },
+        }}
+      >
+        <DialogTitle id="alert-dialog-title" className="dialog-title">
+          <img src="/assets/img/exclaim.svg"></img>
+        </DialogTitle>
+        <DialogContent className="content">
+          <DialogContentText id="alert-dialog-description">
+            <div className="text-detail">
+              {`${restaurantDetail?.name_en} Restaurant`} does not
+              <br /> deliver to your current location.
+            </div>
+
+            <>
+              <div className="disp-flex">
+                <Button
+                  onClick={() => {
+                    navigate(paths.home);
+                  }}
+                  className="btn change-button"
+                >
+                  <span>Change Restaurant</span>
+                </Button>
+
+                <Button
+                  onClick={() =>
+                    navigate(paths.location, {
+                      state: {
+                        path: "menu/restaurant",
+                        restaurantName: restaurantDetail?.name_en,
+                        restaurant_id: restaurantDetail?.id,
+                      },
+                    })
+                  }
+                  className="btn change-button"
+                >
+                  <span>Change Location</span>
+                </Button>
+              </div>
+
+              <Button
+                color="primary"
+                autoFocus
+                className="btn back-button"
+                onClick={() => handleClose()}
+              >
+                <span>Go to menu</span>
+              </Button>
+            </>
+          </DialogContentText>
+        </DialogContent>
       </Dialog>
     </div>
   );

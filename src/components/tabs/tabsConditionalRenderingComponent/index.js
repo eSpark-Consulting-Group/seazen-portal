@@ -16,6 +16,8 @@ const TabsDynamicConditionalComponent = ({
   scheduleForLater,
   fromDetail,
   setFromDetail,
+  setNotDeliver,
+  setRestaurantOpen,
 }) => {
   const selectedService = useSelector(
     (state) => state.resturants.selectedService
@@ -93,6 +95,8 @@ const TabsDynamicConditionalComponent = ({
             scheduleForLater={scheduleForLater}
             fromDetail={fromDetail}
             setFromDetail={setFromDetail}
+            setNotDeliver={setNotDeliver}
+            setRestaurantOpen={setRestaurantOpen}
           />
         </div>
       );

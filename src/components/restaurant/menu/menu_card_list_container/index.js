@@ -24,6 +24,8 @@ const MenuCardListContainer = ({
   restaurantDetail,
   setOpenModal,
   setSelectedItemToDeliver,
+  setNotDeliver,
+  setRestaurantOpen,
 }) => {
   const navigate = useNavigate();
   const originalCartTotal = useSelector((state) => state.cart.total);
@@ -215,6 +217,8 @@ const MenuCardListContainer = ({
                             }
                             setOpenModal={setOpenModal}
                             setSelectedItemToDeliver={setSelectedItemToDeliver}
+                            setNotDeliver={setNotDeliver}
+                            setRestaurantOpen={setRestaurantOpen}
                           />
                         );
                       })}
