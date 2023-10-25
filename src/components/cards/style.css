@@ -149,7 +149,7 @@
 
 @media screen and (max-width: 500px) and (min-width: 410px) {
   .inner-svg-container {
-    top: -48px !important;
+    top: -45px !important;
   }
   .icon-row img {
     width: 16px !important;
