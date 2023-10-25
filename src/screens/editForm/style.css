@@ -147,7 +147,7 @@
   margin-top: 12px !important;
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 500px) {
   .EditForm-button {
     position: fixed !important;
     bottom: 20px !important;

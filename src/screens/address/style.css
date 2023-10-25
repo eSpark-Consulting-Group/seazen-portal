@@ -178,7 +178,8 @@
   height: 64px;
   margin-right: 10px;
   padding-left: 19px;
-  font: normal normal bold 16px/28px Titillium Web;
+  font: normal normal 16px/28px Titillium Web;
+  color: #000000;
 }
 
 .phone-number-input {
@@ -188,18 +189,19 @@
   border: 1px solid #c0cdd7;
   border-radius: 12px;
   opacity: 1;
-  font: normal normal bold 16px/28px Titillium Web;
+  font: normal normal 16px/28px Titillium Web;
   padding-left: 19px;
+  color: #000000;
 }
 
 .country-code-input:focus {
   outline: none;
-  color: #959fa8;
+  /* color: #959fa8; */
 }
 
 .phone-number-input:focus {
   outline: none;
-  color: #959fa8;
+  /* color: #959fa8; */
 }
 
 .error {

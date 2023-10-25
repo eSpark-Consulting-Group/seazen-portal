@@ -378,6 +378,12 @@ const RestaurantsOrderTypeButton = (props) => {
           delivery: false,
           pickup: false,
         });
+        // setTypesState({
+        //   dinein: selectedService === "Dine In" && !typesState.dinein,
+        //   catering: false,
+        //   delivery: selectedService === "Delivery" && !typesState.delivery,
+        //   pickup: selectedService === "Pickup" && !typesState.pickup,
+        // });
         removeClasses();
         removeBrownClasses();
       }

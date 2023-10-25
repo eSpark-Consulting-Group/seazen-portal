@@ -84,55 +84,41 @@ const Home = () => {
       // eslint-disable-next-line no-undef
       setKey(process.env.REACT_APP_GOOGLE_API_KEY);
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-          let addToRedux = {
-            lat: "",
-            lng: "",
-            address: "",
-          };
-          geocode(
-            RequestType.LATLNG,
-            `${position.coords.latitude},${position.coords.longitude}`,
-            {
-              enable_address_descriptor: true,
-            }
-          )
-            .then(({ results }) => {
-              const address = results[0].formatted_address;
-              const lat = results[0].geometry.location.lat;
-              const lng = results[0].geometry.location.lng;
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            let addToRedux = {
+              lat: "",
+              lng: "",
+              address: "",
+            };
+            geocode(
+              RequestType.LATLNG,
+              `${position.coords.latitude},${position.coords.longitude}`,
+              {
+                enable_address_descriptor: true,
+              }
+            )
+              .then(({ results }) => {
+                const address = results[0].formatted_address;
+                const lat = results[0].geometry.location.lat;
+                const lng = results[0].geometry.location.lng;
 
-              addToRedux = {
-                lat: lat,
-                lng: lng,
-                address: address,
-              };
-              localStorage.setItem("location", JSON.stringify(addToRedux));
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }, showError);
+                addToRedux = {
+                  lat: lat,
+                  lng: lng,
+                  address: address,
+                };
+                localStorage.setItem("location", JSON.stringify(addToRedux));
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          },
+          () => {}
+        );
       }
     }
   }, []);
-
-  const showError = (error) => {
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
-        console.log("User denied the request for Geolocation.");
-        break;
-      case error.POSITION_UNAVAILABLE:
-        console.log("Location information is unavailable.");
-        break;
-      case error.TIMEOUT:
-        console.log("The request to get user location timed out.");
-        break;
-      case error.UNKNOWN_ERROR:
-        console.log("An unknown error occurred.");
-        break;
-    }
-  };
 
   const isCountry = localStorage.getItem("country");
   useEffect(() => {
@@ -366,6 +352,21 @@ const Home = () => {
     navigate(paths.menu + `/restaurant/${id}`);
   };
 
+  const distanceCheck = (resLat, resLng, location) => {
+    const distance = getDistanceFromLatLonInKm(
+      resLat,
+      resLng,
+      location.lat,
+      location.lng
+    );
+
+    if (distance > 50) {
+      removeClasses();
+    } else {
+      addClasses();
+    }
+  };
+
   useEffect(() => {
     if (
       branchHours?.length &&
@@ -379,21 +380,13 @@ const Home = () => {
         branchHours?.forEach((res) => {
           const resLat = +res.latitude;
           const resLng = +res.longitude;
+
           if (
             fullAddress !== null &&
             localStorage.getItem("selected") === null
           ) {
-            const distance = getDistanceFromLatLonInKm(
-              resLat,
-              resLng,
-              fullAddress.lat,
-              fullAddress.lng
-            );
-            if (distance > 50) {
-              removeClasses();
-            } else {
-              addClasses();
-            }
+            distanceCheck(resLat, resLng, fullAddress);
+
             //
           } else if (
             (fullAddress !== null || fullAddress === null) &&
@@ -401,28 +394,31 @@ const Home = () => {
           ) {
             const selected = JSON.parse(localStorage.getItem("selected"));
 
-            const distance = getDistanceFromLatLonInKm(
-              resLat,
-              resLng,
-              selected.lat,
-              selected.lng
-            );
-            if (distance > 50) {
-              removeClasses();
-            } else {
-              addClasses();
-            }
+            distanceCheck(resLat, resLng, selected);
+            //
+          } else if (
+            (fullAddress !== null || fullAddress === null) &&
+            localStorage.getItem("selected") === null &&
+            localStorage.getItem("location") !== null &&
+            isToken === null
+          ) {
+            const location = JSON.parse(localStorage.getItem("location"));
+
+            distanceCheck(resLat, resLng, location);
+            //
+          } else if (
+            (fullAddress !== null || fullAddress === null) &&
+            localStorage.getItem("selected") === null &&
+            localStorage.getItem("location") === null &&
+            isToken === null &&
+            selectedText === "Delivery" &&
+            filterSelectedNow === "Delivers to Me"
+          ) {
+            navigate(paths.location, { state: { guestUser: true } });
           }
         });
       }
     }
-
-    // if (
-    //   (selectedText === "Delivery" && filterClassDelivery && filterClassNear) ||
-    //   !distanceFar
-    // ) {
-    //   addClasses();
-    // }
 
     if (
       selectedText === "Delivery" &&
@@ -431,10 +427,6 @@ const Home = () => {
     ) {
       addBrownClasses();
     }
-
-    // if ((selectedText === "Delivery" && !filterClassDelivery) || !distanceFar) {
-    //   addClasses();
-    // }
 
     if (
       selectedText === "Delivery" &&
@@ -506,7 +498,7 @@ const Home = () => {
             left: "0",
             borderBottomLeftRadius: "0px",
             borderBottomRightRadius: "0px",
-            "@media (max-width: 425px)": {
+            "@media (max-width: 500px)": {
               width: "100%",
             },
           },

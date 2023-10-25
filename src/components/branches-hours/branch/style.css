@@ -6,7 +6,8 @@
 }
 
 .branch-status-container {
-  margin-right: 100px;
+  position: absolute;
+  margin-top: -13px;
 }
 
 .branch-info {
@@ -26,13 +27,16 @@
   letter-spacing: 0px;
   color: #40484e;
   opacity: 1;
-  position: absolute;
-  left: 38px;
-  top: 12px;
+  width: max-content;
+  margin-right: 10px;
 }
 
 .branches-heading {
-  margin-right: -20px;
+  width: 91%;
+  display: flex;
+  align-items: baseline;
+  padding: 11px 0px 0px 13px;
+  justify-content: flex-start;
 }
 
 .branch-open-now {
@@ -139,6 +143,6 @@
 }
 
 .branch-status-section {
-  margin-left: 66px;
-  margin-top: 6px;
+  /* margin-left: 66px;
+  margin-top: 6px; */
 }

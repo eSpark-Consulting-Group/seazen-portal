@@ -62,21 +62,21 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours, branchesData }) => {
       <div className="branch-info mx-4 ">
         <div className="branches-heading">
           <h1>{name}</h1>
-        </div>
-        <div className="branch-status-section">
-          <div className="branch-status-container">
-            <div
-              className={`branch-status-tag ${status.toLowerCase()} ${
-                status === "Closed"
-                  ? "branch-closed"
-                  : status === "Closing Soon"
-                  ? "branch-closing-soon"
-                  : status === "Open Now"
-                  ? "branch-open-now"
-                  : ""
-              }`}
-            >
-              {status.toUpperCase()}
+          <div className="branch-status-section">
+            <div className="branch-status-container">
+              <div
+                className={`branch-status-tag ${status.toLowerCase()} ${
+                  status === "Closed"
+                    ? "branch-closed"
+                    : status === "Closing Soon"
+                    ? "branch-closing-soon"
+                    : status === "Open Now"
+                    ? "branch-open-now"
+                    : ""
+                }`}
+              >
+                {status.toUpperCase()}
+              </div>
             </div>
           </div>
         </div>

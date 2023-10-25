@@ -8,10 +8,10 @@
   margin-top: 13px;
 }
 
-@media screen and (max-width:425px) {
+@media screen and (max-width: 500px) {
   .card-spacing {
     margin-left: -11px;
-}
+  }
 }
 
 .carouselBanner {
@@ -28,6 +28,15 @@
   }
   .carouselBanner {
     width: 365px;
+  }
+}
+
+@media screen and (min-width: 425px) {
+  .carouselBanner {
+    width: 100%;
+  }
+  .carouselBanner img {
+    width: 100% !important;
   }
 }
 
@@ -137,5 +146,12 @@
 @media screen and (max-width: 767px) {
   .cBSMIr {
     grid-template-columns: repeat(2, 100%);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .kLfeLb {
+    padding-left: 10px;
+    grid-template-columns: repeat(1, 97%);
   }
 }

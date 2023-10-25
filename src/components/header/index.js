@@ -8,7 +8,7 @@ export const NavbarVariants = {
 };
 
 const Navbar = (props) => {
-  const { variant, previousRoute } = props;
+  const { variant, previousRoute, guestUser } = props;
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef(null);
@@ -52,7 +52,11 @@ const Navbar = (props) => {
           <div
             className="arrowicon-btn"
             onClick={() => {
-              navigate(previousRoute || -1);
+              if (guestUser) {
+                navigate(paths.home);
+              } else {
+                navigate(previousRoute || -1);
+              }
             }}
           >
             <img src="/assets/img/Icon - Arrow.svg" alt="go back" />
@@ -61,7 +65,7 @@ const Navbar = (props) => {
       </div>
       <div className="logo-home">
         <img
-          style={{ width: "90px"}}
+          style={{ width: "90px" }}
           src="/assets/img/order seazen logo.svg"
           alt="Logo"
         />
