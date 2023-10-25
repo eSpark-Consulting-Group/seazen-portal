@@ -196,10 +196,10 @@
   }
 
   .orderTypebutton-text {
-    margin-left: 6px;
+    margin-left: 1px;
     margin-right: 0;
     font-size: 12px;
-    width: auto !important;
+    width: 38px !important;
   }
 }
 
@@ -211,4 +211,8 @@
   .orderTypebutton-style-two {
     width: 50px;
   }
+}
+
+.text-width {
+  width: auto !important;
 }
