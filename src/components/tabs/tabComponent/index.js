@@ -2,10 +2,16 @@ import * as React from "react";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import DineInIcon from "../../svgIcons/dineInIcon";
-import CateringIcon from "../../svgIcons/cateringIcon";
-import DeliveryIcon from "../../svgIcons/deliveryIcon";
-import PickupIcon from "../../svgIcons/pickupIcon";
+import { DineInIconLight, DineInIconDark } from "../../svgIcons/dineInIcon";
+import {
+  CateringIconLight,
+  CateringIconDark,
+} from "../../svgIcons/cateringIcon";
+import {
+  DeliveryIconLight,
+  DeliveryIconDark,
+} from "../../svgIcons/deliveryIcon";
+import { PickupIconLight, PickupIconDark } from "../../svgIcons/pickupIcon";
 import { useParams } from "react-router-dom/dist";
 import { lighten } from "@mui/material/styles";
 import { styled } from "@mui/material/styles"; // Import styled from MUI
@@ -116,7 +122,7 @@ export default function IconPositionTabs({
         iconPosition="start"
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
-            <DineInIcon />
+            {!isDineIn ? <DineInIconLight /> : <DineInIconDark />}
             <span style={{ marginLeft: "8px", fontWeight: 600 }}>Dine In</span>
           </div>
         }
@@ -138,7 +144,7 @@ export default function IconPositionTabs({
         iconPosition="start"
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
-            <CateringIcon />
+            {!isCatering ? <CateringIconLight /> : <CateringIconDark />}
             <span style={{ marginLeft: "8px", fontWeight: 600 }}>Catering</span>
           </div>
         }
@@ -160,7 +166,7 @@ export default function IconPositionTabs({
         iconPosition="start"
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
-            <DeliveryIcon />
+            {!isDelivery ? <DeliveryIconLight /> : <DeliveryIconDark />}
             <span style={{ marginLeft: "8px", fontWeight: 600 }}>Delivery</span>
           </div>
         }
@@ -182,7 +188,7 @@ export default function IconPositionTabs({
         iconPosition="start"
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
-            <PickupIcon />
+            {!isPickup ? <PickupIconLight /> : <PickupIconDark />}
             <span style={{ marginLeft: "8px", fontWeight: 600 }}>Pickup</span>
           </div>
         }
