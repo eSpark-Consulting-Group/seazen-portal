@@ -163,6 +163,9 @@
 
 .expanded {
   opacity: 1;
+  /* width: auto !important; */
+}
+.expanded-width {
   width: auto !important;
 }
 

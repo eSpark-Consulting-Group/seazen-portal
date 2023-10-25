@@ -6,16 +6,24 @@ import { paths } from "../../../routes/paths";
 
 const Navbar = ({ restaurantDetail }) => {
   const navigate = useNavigate();
+  const defaultImagePath = "/assets/img/menu_background_image.png";
   return (
-    <div className="Nav_Image_Container">
-      {restaurantDetail?.cover_page_image ? (
+    <div
+      className="Nav_Image_Container"
+      style={{
+        backgroundImage: `url(${
+          restaurantDetail?.cover_page_image || defaultImagePath
+        })`,
+      }}
+    >
+      {/* {restaurantDetail?.cover_page_image ? (
         <img alt="background_image" src={restaurantDetail?.cover_page_image} />
       ) : (
         <img
           alt="background_image"
           src="\assets\img\menu_background_image.png"
         />
-      )}
+      )} */}
       <nav className="upper_navigation">
         <div className="back_button" onClick={() => navigate(paths.home)}>
           <div className="back_button-icon">

@@ -305,7 +305,9 @@ const BasicCard = (props) => {
                 />
                 <div
                   className={`svg-container ${
-                    clickedButtonIndex !== null ? "expanded" : "collapsed"
+                    clickedButtonIndex !== null
+                      ? "expanded expanded-width"
+                      : "collapsed"
                   }`}
                 >
                   <div className="inner-svg-container" id="inner-svg-container">

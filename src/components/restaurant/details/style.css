@@ -6,7 +6,7 @@
   height: 55px;
   margin-bottom: 12px;
   background-color: white;
-  margin-top: 21px;
+  /* margin-top: 21px; */
   z-index: 999;
   position: relative;
 }
@@ -35,7 +35,7 @@
   font-family: Titillium Web;
   font-weight: 400;
   font-size: 12px;
-  color: #7F8FA6 !important;
+  color: #7f8fa6 !important;
   margin-top: 8px;
 }
 
