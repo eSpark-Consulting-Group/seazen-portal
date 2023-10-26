@@ -9,7 +9,7 @@ import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
 import Navbar from "../../components/header/index";
-import Slider from "../../components/carousel/slider/index";
+import HomeBannerSlider from "../../components/carousel/slider/index";
 import DraggableSlider from "../../components/draggableSlider";
 import { Footer } from "../../components/footer/footerContent";
 import RestaurantsOrderTypeButton from "../../components/category/button";
@@ -479,9 +479,7 @@ const Home = () => {
   return (
     <div className="home-styling container-fluid">
       <Navbar />
-      <div className="card-spacing">
-        <Slider />
-      </div>
+      <HomeBannerSlider />
       <RestaurantsOrderTypeButton
         setOpenAddressPopup={
           localStorage.getItem("selected") === null && isToken !== null

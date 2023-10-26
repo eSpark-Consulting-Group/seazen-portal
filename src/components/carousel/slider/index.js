@@ -1,6 +1,4 @@
 import React from "react";
-import Carousel from "better-react-carousel";
-import MyDot from "../sliderDots";
 import { useEffect } from "react";
 import getAllRestaurantsBanner from "../../../api/home/getAllRestaurantsBanner";
 import { useState } from "react";
@@ -9,6 +7,9 @@ import "./style.css";
 import { getRestaurantsBanner } from "../../../store/reducers/resturantsSlice";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Skeleton } from "@mui/material";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const slides = [
   { src: "/assets/img/slider1.png", alt: "Slide 1" },
@@ -17,7 +18,16 @@ const slides = [
   { src: "/assets/img/2.png", alt: "Slide 4" },
 ];
 
-const Slider = () => {
+const settings = {
+  dots: true,
+  infinite: true,
+  speed: 200,
+  slidesToShow: 1,
+  autoplay: true,
+  fade: true,
+};
+
+const HomeBannerSlider = () => {
   const country = useSelector((state) => state.auth.country);
   const restaurantBanner = useSelector(
     (state) => state.resturants.resturantsBanner
@@ -39,44 +49,31 @@ const Slider = () => {
     }, 1000);
   }, [country]);
   return (
-    <div className="hover-slider">
-      <Carousel
-        dot={MyDot}
-        cols={1}
-        rows={1}
-        gap={10}
-        showDots={true}
-        hideArrow={true}
-        loop={true}
-        autoplay={2000}
-      >
+    <div className="slick-slider-wrapper">
+      <Slider {...settings}>
         {restaurantBanner.map((slide, index) => (
-          <Carousel.Item key={index}>
-            <div className="carouselBanner">
-              <LazyLoadImage
-                src={slide.banner}
-                alt="restaurant banner"
-                placeholder={
-                  <Skeleton
-                    variant="rectangular"
-                    width={"100%"}
-                    height={"100%"}
-                  />
-                }
-              />
-              <div className={index === 0 ? "reserve" : "caption"}>
-                <span
-                  className={index === 0 ? "reserve-style" : "caption-style"}
-                >
-                  {index == 0 ? "Reserve" : "Order Now"}
-                </span>
-              </div>
+          <div key={index} className="home-banner-images" tabIndex={"0"}>
+            <LazyLoadImage
+              src={slide.banner}
+              alt="restaurant banner"
+              placeholder={
+                <Skeleton
+                  variant="rectangular"
+                  width={"100%"}
+                  height={"100%"}
+                />
+              }
+            />
+            <div className={index === 0 ? "reserve" : "caption"}>
+              <span className={index === 0 ? "reserve-style" : "caption-style"}>
+                {index == 0 ? "Reserve" : "Order Now"}
+              </span>
             </div>
-          </Carousel.Item>
+          </div>
         ))}
-      </Carousel>
+      </Slider>
     </div>
   );
 };
 
-export default Slider;
+export default HomeBannerSlider;

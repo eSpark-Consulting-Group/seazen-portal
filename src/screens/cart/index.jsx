@@ -113,6 +113,7 @@ function CartPage() {
   const [updateText, setUpdateText] = useState("");
   const [farLocation, setFarLocation] = useState(true);
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
+  const [userTrusted, setUserTrusted] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(
     "14 August 2023, ASAP"
   );
@@ -123,6 +124,29 @@ function CartPage() {
   // Function to handle closing the dialog
   const handleDialogClose = () => {
     setDialogOpen(false);
+  };
+
+  useEffect(() => {
+    // Check if the user has already trusted the site
+    const redirectPreference = localStorage.getItem("redirectPermission");
+    if (redirectPreference === "allowed") {
+      setUserTrusted(true);
+    }
+
+    // Add a beforeunload event listener to prevent the prompt
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      // Clean up the event listener when the component unmounts
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  const handleBeforeUnload = (event) => {
+    if (!userTrusted) {
+      // Show a confirmation prompt to prevent accidental navigation
+      event.returnValue = "Are you sure you want to leave this page?";
+    }
   };
 
   useLayoutEffect(() => {
@@ -227,9 +251,11 @@ function CartPage() {
     setCartItems(cart);
   }, [cart]);
 
-  const checkoutHandler = () => {
+  const checkoutHandler = (event) => {
+    event.preventDefault();
     let itemsProcessed = 0;
-
+    setUserTrusted(true);
+    localStorage.setItem("redirectPermission", "allowed");
     // getRestaurantBranchHours(restaurantId).then((res) => {
     const selectedAddress = JSON.parse(localStorage.getItem("selected"));
 
@@ -299,7 +325,7 @@ function CartPage() {
                           } else {
                             const checkoutRedirectUrl =
                               res.data?.payment_methods[0].redirect_url;
-                            window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
+                            window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
                           }
                         })
                         .catch((err) => {
@@ -331,7 +357,7 @@ function CartPage() {
                       } else {
                         const checkoutRedirectUrl =
                           res.data?.payment_methods[0].redirect_url;
-                        window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
+                        window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
                       }
                     })
                     .catch((err) => {
@@ -1271,7 +1297,7 @@ function CartPage() {
           </Stack>
 
           <Button
-            onClick={() => checkoutHandler()}
+            onClick={(e) => checkoutHandler(e)}
             variant="contained"
             size="large"
           >

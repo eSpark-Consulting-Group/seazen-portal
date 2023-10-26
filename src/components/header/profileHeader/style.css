@@ -380,7 +380,7 @@
   }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 500px) {
   .profileHeaderpopup {
     width: 95%;
     padding: 20px 9.39px;
