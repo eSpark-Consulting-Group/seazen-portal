@@ -196,3 +196,9 @@
 .slick-dots li button:before {
   font-size: 7px !important;
 }
+
+@media screen and (max-width: 500px) and (min-width: 380px) {
+  .home-banner-images img {
+    height: 150px !important;
+  }
+}
