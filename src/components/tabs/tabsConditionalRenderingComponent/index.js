@@ -26,6 +26,46 @@ const TabsDynamicConditionalComponent = ({
   const [locationDeliver, setLocationDeliver] = useState(false);
   const [deliveryAvailable, setDeliveryAvailable] = useState(false);
 
+  const getDefaultService = () => {
+    if (restaurantDetail?.dinein_status) {
+      return <DineInCoditionalComponent />;
+    }
+    if (restaurantDetail?.catering_status) {
+      return <CateringDetails />;
+    }
+    if (restaurantDetail?.delivery_status) {
+      return (
+        <DeliveryConditionalComponent
+          locationDeliver={locationDeliver}
+          setLocationDeliver={setLocationDeliver}
+          deliveryAvailable={deliveryAvailable}
+          setDeliveryAvailable={setDeliveryAvailable}
+          errorMessage={"We don’t deliver to your location!"}
+          resturantId={resturantId}
+          restaurantBranchHours={restaurantBranchHours}
+          restaurantDetail={restaurantDetail}
+          setOpenModal={setOpenModal}
+          setSelectedItemToDeliver={setSelectedItemToDeliver}
+          scheduleForLater={scheduleForLater}
+          fromDetail={fromDetail}
+          setFromDetail={setFromDetail}
+          setNotDeliver={setNotDeliver}
+          setRestaurantOpen={setRestaurantOpen}
+        />
+      );
+    }
+    if (restaurantDetail?.pickup_status) {
+      return (
+        <PickupConditionalComponent
+          locationDeliver={locationDeliver}
+          setLocationDeliver={setLocationDeliver}
+          deliveryAvailable={deliveryAvailable}
+          setDeliveryAvailable={setDeliveryAvailable}
+        />
+      );
+    }
+  };
+
   switch (tabPosition) {
     case "dinein":
       return (
@@ -140,7 +180,7 @@ const TabsDynamicConditionalComponent = ({
             setDeliveryAvailable={setDeliveryAvailable}
             resturantId={resturantId}
           />
-          <DineInCoditionalComponent />
+          {getDefaultService()}
         </div>
       );
   }

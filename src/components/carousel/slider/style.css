@@ -3,18 +3,6 @@
   /* margin-right: -24px; */
 }
 
-.card-spacing {
-  /* margin-right: -15px; */
-  margin-left: -5px;
-  margin-top: 13px;
-}
-
-@media screen and (max-width: 500px) {
-  .card-spacing {
-    margin-left: -22px;
-  }
-}
-
 .carouselBanner {
   border-radius: 20px;
   margin: 0px auto 8px;
@@ -111,6 +99,7 @@
   bottom: 0px;
   right: 0px;
   color: white;
+  bottom: 6px;
   font-weight: bold;
   width: 109px;
   height: 28px;
@@ -140,7 +129,7 @@
 .reserve {
   background: #b69280 0% 0% no-repeat padding-box;
   position: absolute;
-  bottom: 0px;
+  bottom: 6px;
   right: 0px;
   color: white;
   font-weight: bold;
@@ -186,9 +175,24 @@
     grid-template-columns: repeat(1, 97%) !important;
   }
 }
-
-@media screen and (max-width: 500px) {
-  .reserve {
-    right: -8px;
-  }
+.home-banner-images {
+  cursor: pointer;
+}
+.slick-slider-wrapper {
+  margin: 13px 0px;
+}
+.home-banner-images img {
+  height: 120px;
+  width: 100%;
+  border-radius: 20px;
+}
+.slick-dots li {
+  height: auto !important;
+  width: 3px !important;
+}
+.slick-dots li.slick-active button:before {
+  font-size: 12px !important;
+}
+.slick-dots li button:before {
+  font-size: 7px !important;
 }
