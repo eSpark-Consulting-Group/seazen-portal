@@ -52,7 +52,7 @@ const HomeBannerSlider = () => {
     <div className="slick-slider-wrapper">
       <Slider {...settings}>
         {restaurantBanner.map((slide, index) => (
-          <div className="home-banner-images" tabIndex={"0"}>
+          <div key={index} className="home-banner-images" tabIndex={"0"}>
             <LazyLoadImage
               src={slide.banner}
               alt="restaurant banner"
