@@ -25,12 +25,14 @@
 
 @media (max-width: 500px) {
   .carouselBanner {
-    margin: 0px 8px !important;
+    margin: 0px 6px !important;
+    padding-left: 2px;
     height: 130px;
   }
 
   .carouselBanner img {
-    margin: 0px 8px !important;
+    margin: 0px 6px !important;
+    padding-left: 2px !important;
     height: 100% !important;
   }
 }
