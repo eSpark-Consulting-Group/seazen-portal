@@ -436,7 +436,7 @@ export const Details = () => {
           console.log(err);
         });
     } else {
-      addToCartApiCall(cartItemDataForApi, token)
+      addToCartApiCall(cartItemDataForApi)
         .then((res) => {})
         .catch((err) => {
           console.log(err);
@@ -446,7 +446,7 @@ export const Details = () => {
 
   const clearCartItems = () => {
     dispatch(resetCart());
-    clearCart(token)
+    clearCart()
       .then((res) => {
         console.log(res);
       })
@@ -478,7 +478,6 @@ export const Details = () => {
       itemImage: data?.image,
       restaurant_id: data.restaurant_id,
     };
-    // console.log(ItemDataObject, "shahItemDataObject");
 
     const itemExists = cart.find(
       (item) =>
@@ -597,7 +596,7 @@ export const Details = () => {
                     component="div"
                     sx={{
                       marginLeft: "12px !important",
-                      fontSize:"22px",
+                      fontSize: "22px",
                     }}
                   >
                     {menuItemDetails?.data?.name_en}

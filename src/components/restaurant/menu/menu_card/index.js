@@ -120,7 +120,7 @@ const MenuCard = (props) => {
 
   const clearCartItems = () => {
     dispatch(resetCart());
-    clearCart(token)
+    clearCart()
       .then((res) => {
         console.log(res);
       })
@@ -316,7 +316,7 @@ const MenuCard = (props) => {
           side_variant: [],
         };
 
-        addToCartApiCall(cartItemDataForApi, token)
+        addToCartApiCall(cartItemDataForApi)
           .then((res) => {
             console.log(res);
           })

@@ -69,7 +69,7 @@ const ProfileHeader = (props) => {
     dispatch(resetCart());
     dispatch(getRestaurantsBanner([]));
     dispatch(getCategoryItemList([]));
-    clearCart(token)
+    clearCart()
       .then((res) => {
         console.log(res);
       })

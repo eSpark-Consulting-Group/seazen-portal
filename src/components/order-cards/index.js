@@ -182,6 +182,7 @@ const OrderCard = ({ item }) => {
         isVisible={openReorder}
         handleClose={handleReorderClose}
         items={item.order_item}
+        restaurant_id={item.restaurant_id}
       />
     </Card>
   );

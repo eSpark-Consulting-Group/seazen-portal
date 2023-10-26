@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { v4 as uuidv4 } from "uuid";
+import { useDispatch } from "react-redux";
 import Modal from "@mui/material/Modal";
 import Slide from "@mui/material/Slide";
 import Stack from "@mui/material/Stack";
@@ -6,8 +10,17 @@ import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { forEach } from "lodash";
+import { resetCart } from "../../store/reducers/cartSlice";
+import addToCartApiCall from "../../api/cart/addToCart";
+import clearCart from "../../api/cart/clearCart";
+import { paths } from "../../routes/paths";
 
-const ReOrderCard = ({ isVisible, handleClose, items }) => {
+const ReOrderCard = ({ isVisible, handleClose, items, restaurant_id }) => {
+  const [selectedItems, setSelectedItems] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const getOrderItemPrice = (item) => {
     let itemUnitPrice = item?.unit_price;
 
@@ -33,17 +46,84 @@ const ReOrderCard = ({ isVisible, handleClose, items }) => {
     if (item.topping_variant && item.topping_variant.length > 0) {
       forEach(item.topping_variant, (topping) => {
         if (topping.option_quantity > 0) {
-          itemUnitPrice += parseFloat(topping.unit_price) * topping.option_quantity;
+          itemUnitPrice +=
+            parseFloat(topping.unit_price) * topping.option_quantity;
         }
       });
     }
 
     let itemTotalPrice = itemUnitPrice * item.quantity;
 
-    console.log(item, itemUnitPrice, itemTotalPrice);
-
     return `KWD ${itemTotalPrice.toFixed(2)}`;
   };
+
+  const handleCheckboxChange = (event, item) => {
+    if (event.target.checked) {
+      setSelectedItems([...selectedItems, item]);
+    } else {
+      setSelectedItems(selectedItems.filter((i) => i.item_id !== item.item_id));
+    }
+  };
+
+  const handleAddItemsToCart = () => {
+    setIsLoading(true);
+    clearCartItems();
+
+    // wait for all items to be added to cart Promise to finish - then close modal
+    Promise.all(
+      selectedItems.map((item) => {
+        addItemToCart(item);
+      })
+    )
+      .then(() => {
+        setIsLoading(false);
+        handleClose();
+        navigate(paths.cart, {
+          state: {
+            back: paths.myorder,
+          },
+        });
+      })
+      .catch(() => {
+        setIsLoading(false);
+        handleClose();
+      });
+  };
+
+  const addItemToCart = (item) => {
+    const cartItem = {
+      item_code: uuidv4(),
+      item_id: item.item_id,
+      quantity: item.quantity,
+      topping_variant_id: item.topping_variant_id,
+      side_variant_id: item.side_variant_id,
+      size_variant_id: item.size_variant_id,
+      size_variant: item.size_variant,
+      topping_variant: item.topping_variant,
+      side_variant: item.side_variant,
+    };
+
+    addToCart(cartItem);
+  };
+
+  const clearCartItems = () => {
+    dispatch(resetCart());
+    emptyCart();
+  };
+
+  const { mutate: addToCart } = useMutation(addToCartApiCall);
+
+  const { mutate: emptyCart } = useMutation(clearCart);
+
+  useEffect(() => {
+    setSelectedItems(items);
+  }, [items]);
+
+  const goToMenu = () => {
+    handleClose();
+    navigate(`${paths.menu}/restaurant/${restaurant_id}/delivery`);
+  };
+
   return (
     <div>
       <Modal open={isVisible} onClose={() => handleClose()}>
@@ -74,7 +154,14 @@ const ReOrderCard = ({ isVisible, handleClose, items }) => {
                     },
                   }}
                   key={`item-${item.id}`}
-                  control={<Checkbox />}
+                  control={
+                    <Checkbox
+                      checked={selectedItems.some(
+                        (i) => i.item_id === item.item_id
+                      )}
+                      onChange={(e) => handleCheckboxChange(e, item)}
+                    />
+                  }
                   label={
                     <Stack
                       direction="row"
@@ -94,11 +181,15 @@ const ReOrderCard = ({ isVisible, handleClose, items }) => {
               ))}
             </Stack>
 
-            <Button variant="outlined" onClick={() => handleClose()}>
+            <Button variant="outlined" onClick={() => goToMenu()}>
               Go to Menu
             </Button>
-            <Button variant="contained" onClick={() => handleClose()}>
-              Add to Cart
+            <Button
+              variant="contained"
+              disabled={selectedItems.length === 0}
+              onClick={() => handleAddItemsToCart()}
+            >
+              {isLoading ? "Loading..." : "Add to Cart"}
             </Button>
           </Stack>
         </Slide>
