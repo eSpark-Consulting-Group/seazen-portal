@@ -1,46 +1,43 @@
 import React from "react";
 
-import {
-  OutlinedInput,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  TextField,
-} from "@mui/material";
+// import {
+//   OutlinedInput,
+//   Select,
+//   MenuItem,
+//   FormControl,
+//   InputLabel,
+//   TextField,
+// } from "@mui/material";
 
 import "./style.css";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+// const ITEM_HEIGHT = 48;
+// const ITEM_PADDING_TOP = 8;
 
 export const HomeAdress = (props) => {
-  const { handleChange, address, areaErr, blockErr, streetErr, houseNoErr } =
-    props;
-  const [aree, setPersonName] = React.useState();
-  const [open, setOpen] = React.useState(false);
+  const {
+    handleChange,
+    address,
+    //  areaErr,
+    blockErr,
+    streetErr,
+    houseNoErr,
+  } = props;
+  // const [open, setOpen] = React.useState(false);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const areas = ["Area"];
+  // const areas = ["Area"];
 
   return (
     <form className="container-style px-3">
-      <Select
+      {/* <Select
         displayEmpty
         value={address.area}
         onChange={(e) => handleChange("area", e.target.value)}
@@ -75,15 +72,15 @@ export const HomeAdress = (props) => {
           );
         }}
       >
-        {/* <MenuItem disabled value="">
+        <MenuItem disabled value="">
           Area
-        </MenuItem> */}
+        </MenuItem>
         {areas.map((name) => (
           <MenuItem key={name} value={name} className="select-menuitem">
             {name}
           </MenuItem>
         ))}
-      </Select>
+      </Select> */}
 
       <input
         className={blockErr ? ["form-style", "error"].join(" ") : "form-style"}

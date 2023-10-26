@@ -1,33 +1,89 @@
 import React from "react";
+
+// import {
+//   OutlinedInput,
+//   Select,
+//   MenuItem,
+//   FormControl,
+//   InputLabel,
+//   TextField,
+// } from "@mui/material";
+
 import "./style.css";
+
+// const ITEM_HEIGHT = 48;
+// const ITEM_PADDING_TOP = 8;
 
 export const OfficeAdress = (props) => {
   const {
     handleChange,
     address,
-    areaErr,
+    //  areaErr,
     blockErr,
     streetErr,
     buildingErr,
     floorErr,
     companyNameErr,
   } = props;
+
+  // const [open, setOpen] = React.useState(false);
+
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
+
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
+
+  // const areas = ["Area"];
+
   return (
     <form className="container-style px-3">
-      <div className="area-main">
-        <input
-          className={areaErr ? ["form-style", "error"].join(" ") : "form-style"}
-          type="text"
-          name="Area"
-          placeholder="Area"
-          onChange={(e) => handleChange("area", e.target.value)}
-          value={address.area}
-        />
+      {/* <Select
+        displayEmpty
+        value={address.area}
+        onChange={(e) => handleChange("area", e.target.value)}
+        input={<OutlinedInput />}
+        renderValue={(selected) => {
+          if (selected.length === 0) {
+            return (
+              <span
+                className={
+                  areaErr
+                    ? ["dropdown-placeholder", "error-placeholder"].join(" ")
+                    : "dropdown-placeholder"
+                }
+              >
+                Area
+              </span>
+            );
+          }
 
-        <div className="area-dropdown">
-          <img src="/assets/img/dropdown.png" alt="Dropdown" />
-        </div>
-      </div>
+          return selected;
+        }}
+        inputProps={{ "aria-label": "Without label" }}
+        className={areaErr ? ["form-style", "error"].join(" ") : "form-style"}
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        IconComponent={() => {
+          return (
+            <div className="area-dropdown">
+              <img src="/assets/img/dropdown.png" alt="Dropdown" />
+            </div>
+          );
+        }}
+      >
+        <MenuItem disabled value="">
+          Area
+        </MenuItem>
+        {areas.map((name) => (
+          <MenuItem key={name} value={name} className="select-menuitem">
+            {name}
+          </MenuItem>
+        ))}
+      </Select> */}
 
       <input
         className={blockErr ? ["form-style", "error"].join(" ") : "form-style"}

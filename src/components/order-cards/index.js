@@ -59,9 +59,7 @@ const OrderCard = ({ item }) => {
     }
   };
 
-  const restaurantImagePath =
-    `/assets/img/` +
-    (item.restaurant_id === 1 ? "masgoof.svg" : "Groove_Logo.svg");
+  const restaurantImagePath = `/assets/img/order seazen logo.svg`;
 
   const { mutate: rateOrder } = useMutation({
     mutationFn: addOrderRating,

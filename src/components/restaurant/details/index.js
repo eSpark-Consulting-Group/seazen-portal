@@ -34,7 +34,7 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
           {/* {restaurantDetail?.name_en === "Masgouf" && (
             <img src={restaurantDetail?.logo} alt="restaurant_logo" />
           )} */}
-          <img src={getLogoSrc()} alt="restaurant_logo" />
+          {getLogoSrc() && <img src={getLogoSrc()} alt="restaurant_logo" />}
           {/* {restaurantDetail?.name_en === "Grove" && (
             <img src={restaurantDetail?.logo} alt="restaurant_logo" />
           )} */}

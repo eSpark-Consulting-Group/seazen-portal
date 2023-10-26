@@ -20,7 +20,8 @@ const Receipt = () => {
   const { id } = useParams();
 
   const handleOrderHelp = () => {
-    alert("Help");
+    // phone number
+    window.open("tel:+9651818555", "_blank");
   };
 
   const {
@@ -94,6 +95,11 @@ const Receipt = () => {
                 <img src="/assets/img/location.svg" alt="" />
               </div>
               <div id="heading-cont">
+                {orderDetailsResponse?.data?.address?.house_no
+                  ? orderDetailsResponse?.data?.address?.house_no + ", "
+                  : orderDetailsResponse?.data?.address?.apartment_no
+                  ? orderDetailsResponse?.data?.address?.apartment_no + ", "
+                  : ""}
                 {orderDetailsResponse?.data?.address?.street}
               </div>
             </div>
