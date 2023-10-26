@@ -222,9 +222,9 @@ const App = () => {
               </div>
             </>
           ))
-        : addressData.length && (
+        : addressData?.length && (
             <div className="parent-address">
-              {addressData.map((data) => (
+              {addressData?.map((data) => (
                 <div key={data.id}>
                   <Card
                     iconUrl={
@@ -261,6 +261,7 @@ const App = () => {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        className="delete-modal"
         sx={{
           overflow: "hidden",
           "& .MuiDialog-paper": {
@@ -269,6 +270,7 @@ const App = () => {
             textAlign: "center",
             overflow: "hidden",
             overflowY: "hidden",
+
             "@media (min-width: 600px)": {
               left: "0",
               position: "fixed",
@@ -287,6 +289,7 @@ const App = () => {
                 font: "normal normal bold 16px/18px Titillium Web",
                 color: "#959FA8",
               }}
+              className="delete-para"
             >
               Are you sure you want to
               <br /> delete {addressType}?{" "}

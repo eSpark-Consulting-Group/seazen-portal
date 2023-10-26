@@ -85,23 +85,31 @@ export const OfficeAdress = (props) => {
         ))}
       </Select> */}
 
-      <input
-        className={blockErr ? ["form-style", "error"].join(" ") : "form-style"}
-        type="text"
-        name="Block"
-        placeholder="Block&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
-        onChange={(e) => handleChange("block", e.target.value)}
-        value={address.block}
-      />
+      <div className="inputwrapper" data-required="(Required)">
+        <input
+          className={
+            blockErr ? ["form-style", "error"].join(" ") : "form-style"
+          }
+          type="text"
+          name="Block"
+          placeholder="Block"
+          onChange={(e) => handleChange("block", e.target.value)}
+          value={address.block}
+        />
+      </div>
 
-      <input
-        className={streetErr ? ["form-style", "error"].join(" ") : "form-style"}
-        type="text"
-        name="Street"
-        placeholder="Street&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
-        onChange={(e) => handleChange("street", e.target.value)}
-        value={address.street}
-      />
+      <div className="inputwrapper" data-required="(Required)">
+        <input
+          className={
+            streetErr ? ["form-style", "error"].join(" ") : "form-style"
+          }
+          type="text"
+          name="Street"
+          placeholder="Street"
+          onChange={(e) => handleChange("street", e.target.value)}
+          value={address.street}
+        />
+      </div>
 
       <input
         className="form-style"
@@ -112,36 +120,44 @@ export const OfficeAdress = (props) => {
         value={address.avenue}
       />
 
-      <input
-        className={
-          buildingErr ? ["form-style", "error"].join(" ") : "form-style"
-        }
-        type="text"
-        name="Building"
-        placeholder="Building&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
-        onChange={(e) => handleChange("building", e.target.value)}
-        value={address.building}
-      />
+      <div className="inputwrapper" data-required="(Required)">
+        <input
+          className={
+            buildingErr ? ["form-style", "error"].join(" ") : "form-style"
+          }
+          type="text"
+          name="Building"
+          placeholder="Building"
+          onChange={(e) => handleChange("building", e.target.value)}
+          value={address.building}
+        />
+      </div>
 
-      <input
-        className={floorErr ? ["form-style", "error"].join(" ") : "form-style"}
-        type="text"
-        name="Floor"
-        placeholder="Floor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
-        onChange={(e) => handleChange("floor", e.target.value)}
-        value={address.floor}
-      />
+      <div className="inputwrapper" data-required="(Required)">
+        <input
+          className={
+            floorErr ? ["form-style", "error"].join(" ") : "form-style"
+          }
+          type="text"
+          name="Floor"
+          placeholder="Floor"
+          onChange={(e) => handleChange("floor", e.target.value)}
+          value={address.floor}
+        />
+      </div>
 
-      <input
-        className={
-          companyNameErr ? ["form-style", "error"].join(" ") : "form-style"
-        }
-        type="text"
-        name="Company Name"
-        placeholder="Company Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Required)"
-        onChange={(e) => handleChange("company_name", e.target.value)}
-        value={address.company_name}
-      />
+      <div className="inputwrapper" data-required="(Required)">
+        <input
+          className={
+            companyNameErr ? ["form-style", "error"].join(" ") : "form-style"
+          }
+          type="text"
+          name="Company Name"
+          placeholder="Company Name"
+          onChange={(e) => handleChange("company_name", e.target.value)}
+          value={address.company_name}
+        />
+      </div>
 
       <input
         className="form-style"

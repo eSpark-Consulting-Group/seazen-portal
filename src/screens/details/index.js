@@ -53,7 +53,11 @@ export const Details = () => {
   const resturantsData = useSelector(
     (state) => state.resturants.resturantsData
   );
+  const nearbyRestaurants = useSelector(
+    (state) => state.resturants.nearbyRestaurants
+  );
   const branchHours = useSelector((state) => state.resturants.branchHours);
+
   const token = localStorage.getItem("token");
 
   const [cartItem, setCartItem] = React.useState();
@@ -117,16 +121,24 @@ export const Details = () => {
         }
       });
     } else {
-      calculateDistance(branchHours);
-      setFromPopBranch(branchHours);
+      const forCurrent = branchHours?.filter(
+        (rest) => rest.restaurant_id === restaurantId
+      );
+
+      calculateDistance(forCurrent);
+      setFromPopBranch(forCurrent);
     }
   };
+
+  let itemsIsCalled = 0;
 
   const calculateDistance = (array) => {
     const selected = JSON.parse(localStorage?.getItem("selected"));
 
     if (array?.length) {
-      array?.forEach((res) => {
+      array?.forEach((res, _, arr) => {
+        itemsIsCalled++;
+
         const resLat = +res.latitude;
         const resLng = +res.longitude;
 
@@ -140,6 +152,39 @@ export const Details = () => {
         if (distance > 50) {
           setFarRestaurant(true);
         } else {
+          if (itemsIsCalled === arr.length) {
+            const isAsap = localStorage.getItem("isAsap");
+
+            let itemsProcessed = 0;
+
+            // if (isAsap === "true") {
+            //   const filterRestaurant = nearbyRestaurants?.filter((rest) =>
+            //     rest?.branch_name_en?.includes(restaurantDetail.name_en)
+            //   );
+
+            //   if (filterRestaurant?.length === 0) {
+            //     setNotDeliver(true);
+            //   } else {
+            //     setNotDeliver(false);
+
+            //     filterRestaurant?.forEach((restaurant, _, filterArray) => {
+            //       itemsIsCalled++;
+
+            //       if (itemsIsCalled === filterArray?.length) {
+            //         if (restaurant.openingStatus === "Open") {
+            //           setFarAway(true);
+            //           cartFunction(id);
+            //         } else if (restaurant.openingStatus === "Close") {
+            //           setRestaurantOpen(true);
+            //         }
+            //       }
+            //     });
+            //   }
+            // } else {
+            //   setFarAway(true);
+            //   cartFunction(id);
+            // }
+          }
           setFarRestaurant(false);
         }
       });
@@ -597,7 +642,7 @@ export const Details = () => {
                     component="div"
                     sx={{
                       marginLeft: "12px !important",
-                      fontSize:"22px",
+                      fontSize: "22px",
                     }}
                   >
                     {menuItemDetails?.data?.name_en}
@@ -748,18 +793,9 @@ export const Details = () => {
                             />
 
                             {variant.name_en === "Extra Topping" && (
-                              <p
-                                style={{
-                                  fontSize: "10px",
-                                  paddingTop: "5px",
-                                  marginLeft: "1px",
-                                  marginRight:
-                                    variant.name_en === "Extra Topping" &&
-                                    isLastItem
-                                      ? "90px"
-                                      : "105px",
-                                }}
-                              >{`(Each +KWD ${option?.unit_price})`}</p>
+                              <div className="extra-topping-price-wrapper">
+                                <p className="extra-topping-price">{`(Each +KWD ${option?.unit_price})`}</p>
+                              </div>
                             )}
 
                             {variant.name_en === "Extra Topping" ? (

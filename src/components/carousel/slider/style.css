@@ -1,5 +1,6 @@
 .hover-slider {
   margin-bottom: 17px;
+  /* margin-right: -24px; */
 }
 
 .card-spacing {
@@ -10,7 +11,7 @@
 
 @media screen and (max-width: 500px) {
   .card-spacing {
-    margin-left: -11px;
+    margin-left: -22px;
   }
 }
 
@@ -22,28 +23,55 @@
   height: 120px;
 }
 
-@media screen and (max-width: 424px) and (min-width: 400px) {
+@media (max-width: 500px) {
+  .carouselBanner {
+    margin: 0px 6px !important;
+    padding-left: 2px;
+    height: 130px;
+  }
+
+  .carouselBanner img {
+    margin: 0px 6px !important;
+    padding-left: 2px !important;
+    height: 100% !important;
+  }
+}
+
+@media screen and (max-width: 425px) and (min-width: 400px) {
   .carouselBanner img {
     width: 365px !important;
   }
+
   .carouselBanner {
     width: 365px;
   }
 }
 
-@media screen and (min-width: 425px) {
+@media screen and (min-width: 400px) {
   .carouselBanner {
     width: 100%;
   }
+
   .carouselBanner img {
     width: 100% !important;
   }
 }
 
-@media screen and (max-width: 390px) and (min-width: 380px) {
+@media screen and (max-width: 400px) and (min-width: 380px) {
+  .carouselBanner img {
+    width: 100% !important;
+  }
+
+  .carouselBanner {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 380px) and (min-width: 370px) {
   .carouselBanner img {
     width: 324px !important;
   }
+
   .carouselBanner {
     width: 324px;
   }
@@ -55,6 +83,7 @@
     height: 120px;
     min-width: 284px;
   }
+
   .carouselBanner {
     width: 284px;
   }
@@ -64,6 +93,7 @@
   .carouselBanner img {
     width: 300px !important;
   }
+
   .carouselBanner {
     width: 300px;
   }
@@ -137,6 +167,7 @@
     margin: 0 !important;
   }
 }
+
 @media screen and (max-width: 767px) {
   .gYgxKc {
     grid-template-columns: repeat(2, 100%);
@@ -152,6 +183,12 @@
 @media screen and (max-width: 767px) {
   .kLfeLb {
     padding-left: 10px;
-    grid-template-columns: repeat(1, 97%);
+    grid-template-columns: repeat(1, 97%) !important;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .reserve {
+    right: -8px;
   }
 }

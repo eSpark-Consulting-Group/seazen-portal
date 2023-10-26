@@ -51,13 +51,16 @@ export const DialogComponent = (props) => {
           width: "327px",
           textAlign: "center",
           overflow: "visible",
-          borderBottomLeftRadius: "0px",
-          borderBottomRightRadius: "0px",
+          margin: "27px",
 
-          "@media (min-width: 600px)": {
-            left: "0",
-            position: "fixed",
-            margin: "20px",
+          "@media (max-width: 500px)": {
+            width: "375px",
+            margin: "30px",
+          },
+
+          "@media (max-width: 400px)": {
+            width: "90%",
+            margin: "25px",
           },
         },
       }}
@@ -71,7 +74,11 @@ export const DialogComponent = (props) => {
             <div className="text-detail">
               {location?.state?.restaurantDetail !== undefined
                 ? location?.state?.restaurantDetail?.page_title_en
-                : `${restaurantName} Restaurant`}{" "}
+                : `${
+                    localStorage.getItem("restaurantName") !== null
+                      ? localStorage.getItem("restaurantName")
+                      : restaurantName
+                  } Restaurant`}{" "}
               does not
               <br /> deliver to your {newText ? "new " : "current"}location.
             </div>

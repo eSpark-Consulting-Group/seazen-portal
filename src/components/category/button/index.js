@@ -486,7 +486,7 @@ const RestaurantsOrderTypeButton = (props) => {
           isButtonExpanded={typesState.dinein}
           selectedId={selectedId}
           customButtonExpandedClass={
-            typesState.dinein ? "custom-button-expanded" : ""
+            typesState.dinein ? "custom-button-expanded expanded-width" : ""
           }
           handleFilterClick={handleFilterClick}
           notIncludes={
@@ -553,7 +553,7 @@ const RestaurantsOrderTypeButton = (props) => {
           isButtonExpanded={typesState.delivery}
           selectedId={selectedId}
           customButtonExpandedClass={
-            typesState.delivery ? "custom-button-expanded" : ""
+            typesState.delivery ? "custom-button-expanded expanded-width" : ""
           }
           notIncludes={
             !typesState.delivery && (typesState.dinein || typesState.pickup)
@@ -588,7 +588,7 @@ const RestaurantsOrderTypeButton = (props) => {
           isButtonExpanded={typesState.pickup}
           selectedId={selectedId}
           customButtonExpandedClass={
-            typesState.pickup ? "custom-button-expanded" : ""
+            typesState.pickup ? "custom-button-expanded expanded-width" : ""
           }
           notIncludes={
             !typesState.pickup && (typesState.dinein || typesState.delivery)

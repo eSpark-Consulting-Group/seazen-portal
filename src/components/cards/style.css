@@ -63,8 +63,9 @@
   /* transition: transform 0.3s, box-shadow 0.3s; */
   cursor: pointer;
   border-radius: 12px;
-  border: 2px solid rgba(147, 103, 78, 0);
+  border: 3px solid rgba(147, 103, 78, 0);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 95%;
 }
 
 .restaurantCard-img {
@@ -84,7 +85,7 @@
 }
 
 .svg-container {
-  position: relative;
+  /* position: relative; */
 }
 
 .icon-row {
@@ -101,6 +102,7 @@
   border-bottom-left-radius: 2px;
   display: inline-block;
   margin-left: -4px;
+  margin-bottom: 7px;
 }
 
 .icon-row-selected {
@@ -137,8 +139,22 @@
 
 .inner-svg-container {
   position: absolute;
-  top: -75px;
+  top: 2px;
   right: -6px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media screen and (max-width: 500px) and (min-width: 410px) {
+  .inner-svg-container {
+    /* top: -45px !important; */
+  }
+  .icon-row img {
+    width: 16px !important;
+    height: 16px !important;
+  }
 }
 
 .collapsed {
@@ -147,6 +163,10 @@
 
 .expanded {
   opacity: 1;
+  /* width: auto !important; */
+}
+.expanded-width {
+  width: auto !important;
 }
 
 /* @media screen and (max-width: 500px) and (min-width: 400px) {
@@ -168,5 +188,5 @@
 } */
 
 .another-class {
-  border: 2px solid rgba(147, 103, 78, 0) !important;
+  border: 3px solid rgba(147, 103, 78, 0) !important;
 }

@@ -1,58 +1,91 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import SvgIcon from "@mui/material/SvgIcon";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
-import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CartItem from "../../components/shared/cart/CartItem";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { ReactComponent as DollarIcon } from "../../assets/icons/dollar.svg";
-import { ReactComponent as KNETIcon } from "../../assets/icons/knet.svg";
-import { paths } from "../../routes/paths";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import CloseIcon from "@mui/icons-material/Close";
-import { useTheme } from "@mui/material";
-import { setThemeColor } from "../../store/reducers/themeSlice";
 import { useDispatch, useSelector } from "react-redux";
-import "./style.css";
+
 import { useQuery } from "@tanstack/react-query";
-import cartList from "../../api/cart/cartList";
-import CircularProgress from "@mui/material/CircularProgress";
-import checkout from "../../api/cart/checkout";
-import getRestaurantDetails from "../../api/restaurant/getRestaurantDetails";
-import { addToCart } from "../../store/reducers/cartSlice";
-import applyPromoCode from "../../api/cart/promocode";
-import CancelIcon from "@mui/icons-material/Cancel";
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+
+import { toast } from "react-toastify";
+
+import { useTheme } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Button,
+  SvgIcon,
+  TextField,
+  Typography,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  CloseIcon,
+  CircularProgress,
+} from "@mui/material";
+
 import dayjs from "dayjs";
+
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileTimePicker } from "@mui/x-date-pickers";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+
+import { isEmpty } from "lodash";
+
+import { ReactComponent as DollarIcon } from "../../assets/icons/dollar.svg";
+import { ReactComponent as KNETIcon } from "../../assets/icons/knet.svg";
+
+import CartItem from "../../components/shared/cart/CartItem";
+import { DialogComponent } from "../../components/dialog";
+
+import cartList from "../../api/cart/cartList";
+import checkout from "../../api/cart/checkout";
+import getRestaurantDetails from "../../api/restaurant/getRestaurantDetails";
+import applyPromoCode from "../../api/cart/promocode";
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../api/restaurant/branches/getBranchesAndHours";
+import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
+
+import { addToCart } from "../../store/reducers/cartSlice";
+import { setThemeColor } from "../../store/reducers/themeSlice";
+
 import {
   getDistanceFromLatLonInKm,
   truncateString,
 } from "../../utils/getAddress";
-import { DialogComponent } from "../../components/dialog";
-import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
-import { isEmpty } from "lodash";
+
+import { paths } from "../../routes/paths";
+
+import "./style.css";
+import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
+import {
+  getBranchHours,
+  getNearByRest,
+} from "../../store/reducers/resturantsSlice";
+
+const toastList = new Set();
+const MAX_TOAST = 1;
 
 function CartPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
+
   const branchHours = useSelector((state) => state.resturants.branchHours);
+  const nearbyRestaurants = useSelector(
+    (state) => state.resturants.nearbyRestaurants
+  );
+  const cart = useSelector((state) => state.cart.cart);
+  const totalPrice = useSelector((state) => state.cart.total);
+  const country = useSelector((state) => state.auth.country);
 
   const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [tipValue, setTipValue] = React.useState(0.25);
@@ -76,6 +109,7 @@ function CartPage() {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [notDeliver, setNotDeliver] = useState(false);
+  const [restaurantOpen, setRestaurantOpen] = useState(false);
   const [updateText, setUpdateText] = useState("");
   const [farLocation, setFarLocation] = useState(true);
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
@@ -83,6 +117,7 @@ function CartPage() {
     "14 August 2023, ASAP"
   );
 
+  const token = localStorage.getItem("token");
   const restaurantId = localStorage.getItem("restaurantID");
 
   // Function to handle closing the dialog
@@ -109,16 +144,20 @@ function CartPage() {
   useLayoutEffect(() => {
     if (cartItems !== undefined && cartItems?.length > 0) {
       if (branchHours?.length === 0) {
-        getBranchHours();
+        getBranchHoursApiCall();
+      } else {
+        const forCurrent = branchHours?.filter(
+          (rest) => rest.restaurant_id === +restaurantId
+        );
+        checkBranchHours(forCurrent);
       }
-    } else {
-      checkBranchHours(branchHours);
     }
   }, [location.state, cartItems?.length, branchHours]);
 
-  const getBranchHours = () => {
+  const getBranchHoursApiCall = () => {
     getRestaurantBranchHours(restaurantId).then((res) => {
       checkBranchHours(res.data);
+      dispatch(getBranchHours(res.data));
     });
   };
 
@@ -126,6 +165,7 @@ function CartPage() {
     if (array?.length) {
       array?.forEach((res) => {
         const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+
         if (selectedAddress !== null) {
           const resLat = +res.latitude;
           const resLng = +res.longitude;
@@ -148,11 +188,6 @@ function CartPage() {
       });
     }
   };
-
-  const token = localStorage.getItem("token");
-  const cart = useSelector((state) => state.cart.cart);
-  const totalPrice = useSelector((state) => state.cart.total);
-  const dispatch = useDispatch();
 
   // Function to handle opening the dialog
   const handleDialogOpen = () => {
@@ -202,11 +237,16 @@ function CartPage() {
       const selectedLat = selectedAddress?.lat;
       const selectedLng = selectedAddress?.lng;
 
-      branchHours?.forEach((res, _, array) => {
+      const forCurrent = branchHours?.filter(
+        (rest) => rest.restaurant_id === +restaurantId
+      );
+
+      forCurrent?.forEach((res, _, array) => {
         itemsProcessed++;
 
         const resLat = +res.latitude;
         const resLng = +res.longitude;
+
         const distance = getDistanceFromLatLonInKm(
           resLat,
           resLng,
@@ -218,27 +258,153 @@ function CartPage() {
           setNotDeliver(true);
         } else {
           if (itemsProcessed === array?.length && paymentMethod === "KNET") {
-            const data = {
-              ...checkoutData,
-              discount_price: getDiscountAmount(),
-            };
-            checkout(data, token)
-              .then((res) => {
-                const checkoutRedirectUrl =
-                  res.data?.payment_methods[0].redirect_url;
-                window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+            const firstWord = restaurantName.split(" ")[0];
+            const filterRestaurant = nearbyRestaurants?.filter((nearBy) =>
+              nearBy.branch_name_en?.includes(firstWord)
+            );
 
-            return;
+            let itemsIsCalled = 0;
+
+            if (filterRestaurant?.length === 0) {
+              setNotDeliver(true);
+            } else {
+              setNotDeliver(false);
+
+              filterRestaurant?.forEach((restaurant, _, filterArray) => {
+                itemsIsCalled++;
+
+                if (isAsap) {
+                  if (restaurant.openingStatus === "Open") {
+                    setRestaurantOpen(false);
+
+                    if (itemsIsCalled === filterArray?.length) {
+                      const data = {
+                        ...checkoutData,
+                        discount_price: getDiscountAmount(),
+                      };
+
+                      checkout(data, token)
+                        .then((res) => {
+                          if (res?.success === "error") {
+                            const parsedError = res?.message
+                              ?.split(":")[1]
+                              ?.trim();
+
+                            if (toastList.size < MAX_TOAST) {
+                              const id = toast.error(parsedError, {
+                                onClose: () => toastList.delete(id),
+                              });
+                              toastList.add(id);
+                            }
+                          } else {
+                            const checkoutRedirectUrl =
+                              res.data?.payment_methods[0].redirect_url;
+                            window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
+                          }
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+
+                      return;
+                    }
+                  } else if (restaurant.openingStatus === "Close") {
+                    setRestaurantOpen(true);
+                  }
+                } else {
+                  const data = {
+                    ...checkoutData,
+                    discount_price: getDiscountAmount(),
+                  };
+
+                  checkout(data, token)
+                    .then((res) => {
+                      if (res?.success === "error") {
+                        const parsedError = res?.message?.split(":")[1]?.trim();
+
+                        if (toastList.size < MAX_TOAST) {
+                          const id = toast.error(parsedError, {
+                            onClose: () => toastList.delete(id),
+                          });
+                          toastList.add(id);
+                        }
+                      } else {
+                        const checkoutRedirectUrl =
+                          res.data?.payment_methods[0].redirect_url;
+                        window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
+                      }
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+
+                  return;
+                }
+              });
+            }
           }
         }
       });
     }
     // });
   };
+
+  const [userCurrentAddress, setUserCurrentAddress] = useState({
+    latitude: 0,
+    longitude: 0,
+    service_type: "dinein",
+  });
+
+  useEffect(() => {
+    const userSelected = localStorage.getItem("selected");
+    const userLocation = localStorage.getItem("location");
+    const defaultLocation = { lat: 29.3140728, lng: 47.68022 };
+
+    if (userSelected === null && userLocation === null) {
+      setUserCurrentAddress({
+        latitude: defaultLocation.lat,
+        longitude: defaultLocation.lng,
+        service_type: "dinein",
+      });
+      //
+    } else if (userSelected === null && userLocation !== null) {
+      const parsedUserLocation = JSON.parse(userLocation);
+
+      setUserCurrentAddress({
+        latitude: parsedUserLocation.lat,
+        longitude: parsedUserLocation.lng,
+        service_type: "dinein",
+      });
+      //
+    } else if (userSelected !== null && userLocation !== null) {
+      const parsedUserLocation = JSON.parse(userSelected);
+
+      setUserCurrentAddress({
+        latitude: parsedUserLocation.lat,
+        longitude: parsedUserLocation.lng,
+        service_type: "dinein",
+      });
+      //
+    }
+  }, []);
+
+  const { refetch: recall } = useQuery({
+    queryFn: () => getNearByRestaurants(userCurrentAddress),
+    onSuccess: (data) => {
+      dispatch(getNearByRest(data.data));
+    },
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (
+      userCurrentAddress.latitude !== 0 &&
+      userCurrentAddress.longitude !== 0 &&
+      nearbyRestaurants?.length === 0
+    ) {
+      recall();
+    }
+  }, [userCurrentAddress, nearbyRestaurants]);
 
   useEffect(() => {
     let isCartEmpty = searchParams.get("empty");
@@ -256,12 +422,32 @@ function CartPage() {
   }, []);
 
   const asapHandler = () => {
-    const currentTime = new Date();
-    currentTime.setMinutes(currentTime.getMinutes() + 30);
-    setPickTime(dayjs(currentTime).format("hh:mm a"));
-    setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
-    setOpenPopup(false);
-    setIsAsap(true);
+    const firstWord = restaurantName.split(" ")[0];
+    const filterRestaurant = nearbyRestaurants?.filter((nearBy) =>
+      nearBy.branch_name_en?.includes(firstWord)
+    );
+    let itemsIsCalled = 0;
+
+    filterRestaurant?.forEach((restaurant, _, filterArray) => {
+      itemsIsCalled++;
+
+      if (restaurant.openingStatus === "Open") {
+        setRestaurantOpen(false);
+
+        if (itemsIsCalled === filterArray?.length) {
+          const currentTime = new Date();
+          currentTime.setMinutes(currentTime.getMinutes() + 30);
+          setPickTime(dayjs(currentTime).format("hh:mm a"));
+          setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
+          setOpenPopup(false);
+          setIsAsap(true);
+
+          return;
+        }
+      } else if (restaurant.openingStatus === "Close") {
+        setRestaurantOpen(true);
+      }
+    });
   };
 
   useEffect(() => {
@@ -272,8 +458,6 @@ function CartPage() {
       });
     }
   }, []);
-
-  const country = useSelector((state) => state.auth.country);
 
   useEffect(() => {
     cartRefetch();
@@ -689,6 +873,7 @@ function CartPage() {
                 width: "375px",
                 left: "0px !important",
                 paddingTop: "20px",
+
                 "@media (max-width: 500px)": {
                   width: "100%",
                 },
@@ -878,6 +1063,16 @@ function CartPage() {
                   left: "0",
                   position: "fixed",
                   margin: "20px",
+                },
+
+                "@media (max-width: 500px)": {
+                  width: "375px",
+                  margin: "30px",
+                },
+
+                "@media (max-width: 400px)": {
+                  width: "90%",
+                  margin: "25px",
                 },
               },
             }}
@@ -1146,6 +1341,63 @@ function CartPage() {
         cartItems={cartItems?.length ? cartItems : []}
         updateText={updateText}
       />
+
+      <Dialog
+        open={restaurantOpen}
+        onClose={() => setRestaurantOpen(false)}
+        sx={{
+          margin: "0",
+          textAlign: "center",
+        }}
+        className="cart-dialog"
+        PaperProps={{
+          sx: {
+            overflow: "visible",
+            margin: "0px 0px 0px 27px",
+            width: "327px",
+
+            "@media (max-width: 500px)": {
+              width: "375px",
+              margin: "0px 0px 0px 0px",
+            },
+
+            "@media (max-width: 400px)": {
+              width: "90%",
+            },
+          },
+        }}
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          className="dialog-title title-cart"
+        >
+          <img src="/assets/img/exclaim.svg"></img>
+        </DialogTitle>
+        <DialogContent className="dialog-content-cart">
+          Restaurant you’re about to order is closed. Do you want to schedule
+          for later?
+        </DialogContent>
+
+        <div className="btn-navigate">
+          <Button
+            className="common-st add-btn"
+            onClick={() => navigate(paths.home)}
+          >
+            Home Page
+          </Button>
+
+          <Button
+            className="common-st go-to-btn"
+            onClick={() => {
+              setOpenSchedulePopup(true);
+              setOpenPopup(false);
+              setRestaurantOpen(false);
+            }}
+          >
+            Schedule for later
+          </Button>
+        </div>
+      </Dialog>
     </Stack>
   );
 }

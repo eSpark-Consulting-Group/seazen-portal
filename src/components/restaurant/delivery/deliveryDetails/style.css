@@ -5,6 +5,12 @@
   background-color: #e0ecea;
 }
 
+@media (max-width: 500px) {
+  .delivery_outer_container {
+    justify-content: space-around;
+  }
+}
+
 .delivery_inner_container {
   height: 100%;
   display: flex;

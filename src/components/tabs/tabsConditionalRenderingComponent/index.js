@@ -13,6 +13,11 @@ const TabsDynamicConditionalComponent = ({
   restaurantDetail,
   setOpenModal,
   setSelectedItemToDeliver,
+  scheduleForLater,
+  fromDetail,
+  setFromDetail,
+  setNotDeliver,
+  setRestaurantOpen,
 }) => {
   const selectedService = useSelector(
     (state) => state.resturants.selectedService
@@ -26,6 +31,10 @@ const TabsDynamicConditionalComponent = ({
       return (
         <div>
           <IconPositionTabs
+            isDineIn={restaurantDetail?.dinein_status}
+            isCatering={restaurantDetail?.catering_status}
+            isDelivery={restaurantDetail?.delivery_status}
+            isPickup={restaurantDetail?.pickup_status}
             tabPosition={tabPosition}
             setTabPosition={setTabPosition}
             locationDeliver={locationDeliver}
@@ -41,6 +50,10 @@ const TabsDynamicConditionalComponent = ({
       return (
         <div>
           <IconPositionTabs
+            isDineIn={restaurantDetail?.dinein_status}
+            isCatering={restaurantDetail?.catering_status}
+            isDelivery={restaurantDetail?.delivery_status}
+            isPickup={restaurantDetail?.pickup_status}
             tabPosition={tabPosition}
             setTabPosition={setTabPosition}
             locationDeliver={locationDeliver}
@@ -56,6 +69,10 @@ const TabsDynamicConditionalComponent = ({
       return (
         <div>
           <IconPositionTabs
+            isDineIn={restaurantDetail?.dinein_status}
+            isCatering={restaurantDetail?.catering_status}
+            isDelivery={restaurantDetail?.delivery_status}
+            isPickup={restaurantDetail?.pickup_status}
             tabPosition={tabPosition}
             setTabPosition={setTabPosition}
             locationDeliver={locationDeliver}
@@ -75,6 +92,11 @@ const TabsDynamicConditionalComponent = ({
             restaurantDetail={restaurantDetail}
             setOpenModal={setOpenModal}
             setSelectedItemToDeliver={setSelectedItemToDeliver}
+            scheduleForLater={scheduleForLater}
+            fromDetail={fromDetail}
+            setFromDetail={setFromDetail}
+            setNotDeliver={setNotDeliver}
+            setRestaurantOpen={setRestaurantOpen}
           />
         </div>
       );
@@ -82,6 +104,10 @@ const TabsDynamicConditionalComponent = ({
       return (
         <div>
           <IconPositionTabs
+            isDineIn={restaurantDetail?.dinein_status}
+            isCatering={restaurantDetail?.catering_status}
+            isDelivery={restaurantDetail?.delivery_status}
+            isPickup={restaurantDetail?.pickup_status}
             tabPosition={tabPosition}
             setTabPosition={setTabPosition}
             locationDeliver={locationDeliver}
@@ -102,6 +128,10 @@ const TabsDynamicConditionalComponent = ({
       return (
         <div>
           <IconPositionTabs
+            isDineIn={restaurantDetail?.dinein_status}
+            isCatering={restaurantDetail?.catering_status}
+            isDelivery={restaurantDetail?.delivery_status}
+            isPickup={restaurantDetail?.pickup_status}
             tabPosition={tabPosition}
             setTabPosition={setTabPosition}
             locationDeliver={locationDeliver}

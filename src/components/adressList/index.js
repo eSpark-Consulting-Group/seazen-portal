@@ -98,28 +98,28 @@ const Card = (props) => {
         <div className="addresses-details-and-map">
           <div className="addresses-details">
             <p className="addresses-name">
-              Block: {data.block}, Street:{data.street}
+              Block: {data?.block}, Street:{data?.street}
             </p>
 
-            {data.address_type === "house" ? (
-              <p className="addresses-name">House No: {data.house_no}</p>
+            {data?.address_type === "house" ? (
+              <p className="addresses-name">House No: {data?.house_no}</p>
             ) : (
-              <p className="addresses-name">Building No: {data.building}</p>
+              <p className="addresses-name">Building No: {data?.building}</p>
             )}
 
-            <p className="addresses-name">{data.avenue}</p>
+            <p className="addresses-name">{data?.avenue}</p>
 
-            {data.address_type.toLowerCase() === "apartment" ? (
-              <p className="addresses-name">{`Floor: ${data.floor}, Apartment: ${data.apartment_no}`}</p>
-            ) : data.address_type.toLowerCase() === "office" ? (
-              <p className="addresses-name">{`Floor: ${data.floor}, ${data.company_name}`}</p>
+            {data?.address_type.toLowerCase() === "apartment" ? (
+              <p className="addresses-name">{`Floor: ${data?.floor}, Apartment: ${data?.apartment_no}`}</p>
+            ) : data?.address_type.toLowerCase() === "office" ? (
+              <p className="addresses-name">{`Floor: ${data?.floor}, ${data?.company_name}`}</p>
             ) : null}
 
-            <p className="addresses-name">{data.address_label}</p>
+            <p className="addresses-name">{data?.address_label}</p>
 
-            {data.additional_direction !== "" ? (
+            {data?.additional_direction !== "" ? (
               <p className="additional-addresses">
-                Additional Directions: <br /> {data.additional_direction}
+                Additional Directions: <br /> {data?.additional_direction}
               </p>
             ) : null}
           </div>
