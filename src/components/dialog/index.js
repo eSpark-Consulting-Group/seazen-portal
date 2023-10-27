@@ -30,6 +30,7 @@ export const DialogComponent = (props) => {
     newText,
     home,
     updateText,
+    menuCard,
   } = props;
 
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ export const DialogComponent = (props) => {
                       : restaurantName
                   } Restaurant`}{" "}
               does not
-              <br /> deliver to your {newText ? "new " : "current"}location.
+              <br /> deliver to your {newText ? "new " : "current"} location.
             </div>
           ) : (
             <div className="text-detail">
@@ -94,7 +95,11 @@ export const DialogComponent = (props) => {
               <div className="disp-flex">
                 <Button
                   onClick={() => {
-                    !home ? navigate(paths.home) : handleClose();
+                    !home
+                      ? navigate(paths.home)
+                      : home && menuCard
+                      ? navigate(paths.home)
+                      : handleClose();
                   }}
                   className="btn change-button"
                 >
@@ -105,7 +110,11 @@ export const DialogComponent = (props) => {
                   onClick={() =>
                     navigate(paths.location, {
                       state: {
-                        path: home ? "/home" : location.pathname,
+                        path: menuCard
+                          ? "menu/restaurant"
+                          : home && !menuCard
+                          ? "/home"
+                          : location.pathname,
                         restaurantName: home
                           ? restaurantName
                           : localStorage.getItem("restaurantName") !== null
