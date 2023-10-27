@@ -648,7 +648,13 @@ function CartPage() {
           }}
           edge="start"
           onClick={() =>
-            navigate(location?.state?.back ? location?.state?.back : -1)
+            navigate(
+              location?.state?.back
+                ? location?.state?.back
+                : location?.state?.noAddress
+                ? `${paths.menu}/restaurant/${cart[0]?.restaurant_id}/delivery`
+                : -1
+            )
           }
         >
           <ArrowBackRoundedIcon
