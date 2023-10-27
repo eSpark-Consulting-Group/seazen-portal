@@ -38,6 +38,8 @@ import {
 import { paths } from "../../../../routes/paths";
 
 import "./style.css";
+import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant";
+import { getNearByRest } from "../../../../store/reducers/resturantsSlice";
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
@@ -201,6 +203,20 @@ const DeliveryDetails = (props) => {
     getFullAddress(lat, lng, setFullAddress);
   };
 
+  const fetchNearbyRestaurant = (lat, lng) => {
+    const address = {
+      latitude: lat,
+      longitude: lng,
+      service_type: "dinein",
+    };
+
+    getNearByRestaurants(address).then((res) => {
+      if (res.status === "ok") {
+        dispatch(getNearByRest(res?.data));
+      }
+    });
+  };
+
   const asapHandler = () => {
     if (nearbyRestaurants?.length !== 0) {
       const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
@@ -357,6 +373,10 @@ const DeliveryDetails = (props) => {
                     <Dropdown.Item
                       onClick={() => {
                         getUserAddress(address.latitude, address.longitude);
+                        fetchNearbyRestaurant(
+                          address.latitude,
+                          address.longitude
+                        );
                       }}
                       style={{
                         textTransform: "capitalize",
