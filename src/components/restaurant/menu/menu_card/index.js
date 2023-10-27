@@ -56,6 +56,8 @@ const MenuCard = (props) => {
     setSelectedItemToDeliver,
     setNotDeliver,
     setRestaurantOpen,
+    setOpenAddressPopup,
+    setRestaurantIsOpen,
   } = props;
 
   const plusIcon = "/assets/img/Icon - Plus.svg";
@@ -83,6 +85,7 @@ const MenuCard = (props) => {
   const nearbyRestaurants = useSelector(
     (state) => state.resturants.nearbyRestaurants
   );
+  const addressData = useSelector((state) => state.address.addressData);
 
   useEffect(() => {
     const quantity = getItemQuantity();
@@ -131,65 +134,45 @@ const MenuCard = (props) => {
         console.log(err);
       });
   };
-  let itemsProcessed = 0;
+  // let itemsProcessed = 0;
 
   const watchBranchHoursBeforeAdd = (id) => {
-    restaurantBranchHours?.data?.forEach((res, _, array) => {
-      const resLat = +res.latitude;
-      const resLng = +res.longitude;
+    for (let i = 0; i < restaurantBranchHours?.data?.length; i++) {
+      const resLat = +restaurantBranchHours?.data[i]?.latitude;
+      const resLng = +restaurantBranchHours?.data[i]?.longitude;
 
+      const currentLocation = JSON.parse(localStorage.getItem("location"));
       const selected = JSON.parse(localStorage.getItem("selected"));
+
+      let fromLocation;
+      if (selected === null && currentLocation !== null) {
+        fromLocation = currentLocation;
+      } else if (selected !== null && currentLocation !== null) {
+        fromLocation = selected;
+      }
 
       const distance = getDistanceFromLatLonInKm(
         resLat,
         resLng,
-        selected.lat,
-        selected.lng
+        fromLocation.lat,
+        fromLocation.lng
       );
-      itemsProcessed++;
 
       if (distance > 50) {
         if (allData.id === id) {
           setSelectedItemToDeliver(allData);
         }
-
         setFarAway(false);
         setOpenModal(true);
       } else {
-        if (itemsProcessed === array.length) {
-          const isAsap = localStorage.getItem("isAsap");
-          let itemsIsCalled = 0;
+        // let itemsIsCalled = 0;
 
-          if (isAsap === "true") {
-            const filterRestaurant = nearbyRestaurants?.filter((rest) =>
-              rest?.branch_name_en?.includes(restaurantDetail.name_en)
-            );
+        setFarAway(true);
+        cartFunction(id);
 
-            if (filterRestaurant?.length === 0) {
-              setNotDeliver(true);
-            } else {
-              setNotDeliver(false);
-
-              filterRestaurant?.forEach((restaurant, _, filterArray) => {
-                itemsIsCalled++;
-
-                if (itemsIsCalled === filterArray?.length) {
-                  if (restaurant.openingStatus === "Open") {
-                    setFarAway(true);
-                    cartFunction(id);
-                  } else if (restaurant.openingStatus === "Close") {
-                    setRestaurantOpen(true);
-                  }
-                }
-              });
-            }
-          } else {
-            setFarAway(true);
-            cartFunction(id);
-          }
-        }
+        break;
       }
-    });
+    }
   };
 
   const getMenuItemsVariances = () => {
@@ -245,7 +228,7 @@ const MenuCard = (props) => {
       watchBranchHoursBeforeAdd(id);
     }
   }
-  let itemsProcessedRedirect = 0;
+  // let itemsProcessedRedirect = 0;
 
   function autoRedirect(id) {
     if (token === null) {
@@ -255,37 +238,48 @@ const MenuCard = (props) => {
         },
       });
     } else if (restaurantBranchHours?.data?.length) {
-      restaurantBranchHours?.data?.forEach((res, _, array) => {
-        itemsProcessedRedirect++;
+      const currentLocation = JSON.parse(localStorage.getItem("location"));
+      const selected = JSON.parse(localStorage.getItem("selected"));
 
-        const resLat = +res.latitude;
-        const resLng = +res.longitude;
-
-        const selected = JSON.parse(localStorage.getItem("selected"));
-
-        const distance = getDistanceFromLatLonInKm(
-          resLat,
-          resLng,
-          selected.lat,
-          selected.lng
-        );
-
-        if (distance > 50) {
-          if (allData.id === id) {
-            setSelectedItemToDeliver(allData);
+      if (addressData?.length > 0 && selected === null) {
+        setOpenAddressPopup(true);
+      } else {
+        for (let i = 0; i < restaurantBranchHours?.data?.length; i++) {
+          let fromLocation;
+          if (selected === null && currentLocation !== null) {
+            fromLocation = currentLocation;
+          } else if (selected !== null && currentLocation !== null) {
+            fromLocation = selected;
           }
-          setOpenModal(true);
-        } else {
-          setOpenModal(false);
-          if (itemsProcessedRedirect === array.length) {
+
+          const resLat = +restaurantBranchHours?.data[i]?.latitude;
+          const resLng = +restaurantBranchHours?.data[i]?.longitude;
+
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            fromLocation.lat,
+            fromLocation.lng
+          );
+
+          if (distance > 50) {
+            if (allData.id === id) {
+              setSelectedItemToDeliver(allData);
+            }
+            setOpenModal(true);
+          } else {
+            setRestaurantIsOpen(false);
+            setOpenModal(false);
             navigate(paths.details + "/" + id, {
               state: {
                 id: id,
               },
             });
+
+            break;
           }
         }
-      });
+      }
     }
   }
 
@@ -302,11 +296,38 @@ const MenuCard = (props) => {
       return;
     }
     if ((!hasVariant && !farAway) || token === null) {
+      const itemCode = uuidv4();
+
+      const addtoCart = {
+        id: id,
+        itemName: foodItem,
+        restaurant_id,
+        totalPrice: foodPriceWithoutCurrency(),
+        quantity: foodItemQuantity + 1,
+        itemImage: foodImage,
+        item_code: itemCode,
+      };
+
+      const cartItemDataForApi = {
+        item_code: itemCode,
+        item_id: id,
+        quantity: foodItemQuantity + 1,
+        topping_variant_id: 0,
+        side_variant_id: 0,
+        size_variant_id: 0,
+        size_variant: [],
+        topping_variant: [],
+        side_variant: [],
+      };
+
       navigate(paths.location, {
         state: {
           restaurant_id: restaurantDetail.id,
           restaurantName: restaurantDetail.page_title_en,
-          path: "menu/restaurant",
+          path: location.pathname,
+          cartItemDataForApi,
+          addtoCart,
+          autoRedirect: true,
         },
       });
     } else {
@@ -519,16 +540,24 @@ const MenuCard = (props) => {
           <div
             className="menu_card_price_text_container pointer"
             onClick={() => {
-              if (hasVariant) {
+              if (token === null) {
                 navigate(paths.details + "/" + id, {
                   state: {
                     id: id,
-                    locationDeliver: locationDeliver,
-                    branchRestaurants: restaurantBranchHours,
-                    resturantId: resturantId,
-                    restaurantDetail,
                   },
                 });
+              } else {
+                if (hasVariant) {
+                  navigate(paths.details + "/" + id, {
+                    state: {
+                      id: id,
+                      locationDeliver: locationDeliver,
+                      branchRestaurants: restaurantBranchHours,
+                      resturantId: resturantId,
+                      restaurantDetail,
+                    },
+                  });
+                }
               }
             }}
           >
