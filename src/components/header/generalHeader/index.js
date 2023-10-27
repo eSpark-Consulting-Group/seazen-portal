@@ -1,11 +1,23 @@
 // src/Navbar.js
 import React from "react";
 import { useNavigate } from "react-router";
-import "./style.css";
+import { useSelector } from "react-redux";
+
 import { paths } from "../../../routes/paths";
 
-const Navbar = ({ restaurantDetail }) => {
+import "./style.css";
+
+const Navbar = (props) => {
+  const { restaurantDetail, setOpenAddressPopup } = props;
+
   const navigate = useNavigate();
+
+  const cart = useSelector((state) => state.cart.cart);
+  const addressData = useSelector((state) => state.address.addressData);
+
+  const token = localStorage.getItem("token");
+  const currentLocation = JSON.parse(localStorage.getItem("location"));
+
   const defaultImagePath = "/assets/img/menu_background_image.png";
   return (
     <div
@@ -32,7 +44,27 @@ const Navbar = ({ restaurantDetail }) => {
         </div>
         <div
           className="shopping_container pointer"
-          onClick={() => navigate(paths.cart)}
+          onClick={() => {
+            token === null
+              ? navigate(paths.cart)
+              : addressData?.length === 0
+              ? navigate(paths.address, {
+                  state: {
+                    noAddress: true,
+                    latlng: {
+                      lat: currentLocation?.lat,
+                      lng: currentLocation?.lng,
+                    },
+                    name: currentLocation?.address,
+                    path: "menu/restaurant",
+                    restaurant_id: cart[0]?.restaurant_id,
+                  },
+                })
+              : addressData?.length > 0 &&
+                localStorage.getItem("selected") === null
+              ? setOpenAddressPopup(true)
+              : navigate(paths.cart);
+          }}
         >
           <div className="shopping_icon">
             <img alt="Bag_Icon" src="/assets/img/Icon - Bag.svg" />

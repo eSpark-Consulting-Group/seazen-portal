@@ -8,17 +8,22 @@ import { paths } from "../../../routes/paths";
 import "./style.css";
 
 export const DetailsHeader = (props) => {
-  const { image } = props;
+  const { image, setOpenAddressPopup } = props;
+
   const navigate = useNavigate();
   const currentURL = useLocation();
+
+  const cart = useSelector((state) => state.cart.cart);
+  const addressData = useSelector((state) => state.address.addressData);
+
+  const token = localStorage.getItem("token");
+  const currentLocation = JSON.parse(localStorage.getItem("location"));
 
   const [imageNotFound, setImageNotFound] = useState(false);
 
   const onImageError = () => {
     setImageNotFound(true);
   };
-
-  const cart = useSelector((state) => state.cart.cart);
 
   const backHandler = () => {
     if (currentURL.search.includes("item_code")) {
@@ -67,7 +72,27 @@ export const DetailsHeader = (props) => {
 
       <div
         className="detailsheadericon-style pointer"
-        onClick={() => navigate(paths.cart)}
+        onClick={() => {
+          token === null
+            ? navigate(paths.cart)
+            : addressData?.length === 0
+            ? navigate(paths.address, {
+                state: {
+                  noAddress: true,
+                  latlng: {
+                    lat: currentLocation?.lat,
+                    lng: currentLocation?.lng,
+                  },
+                  name: currentLocation?.address,
+                  path: "menu/restaurant",
+                  restaurant_id: cart[0]?.restaurant_id,
+                },
+              })
+            : addressData?.length > 0 &&
+              localStorage.getItem("selected") === null
+            ? setOpenAddressPopup(true)
+            : navigate(paths.cart);
+        }}
       >
         <img
           className="detailsheaderright-icons"
