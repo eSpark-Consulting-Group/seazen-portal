@@ -1,5 +1,6 @@
 import React from "react";
-import { createSearchParams, useNavigate } from "react-router-dom";
+import { createSearchParams, useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import { toast } from "react-toastify";
 
@@ -36,6 +37,8 @@ const mobileLoginSchema = Yup.object().shape({
 
 function PhoneNumberVerificationIndex() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [mobileCountryCode, setMobileCountryCode] = React.useState(+965);
   const [mobileNumber, setMobileNumber] = React.useState("");
 
@@ -55,7 +58,8 @@ function PhoneNumberVerificationIndex() {
         createSearchParams({
           mobile: mobileNumber,
           mobile_country_code: mobileCountryCodeWithoutPlus,
-        })
+        }),
+      { state: location?.state }
     );
   };
 
