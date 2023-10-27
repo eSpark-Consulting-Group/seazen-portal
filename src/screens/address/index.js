@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-// import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import { toast } from "react-toastify";
 
@@ -10,7 +10,6 @@ import AddressTypeSelector from "../../components/address/addressButton";
 import { AppartmentAdress } from "../../components/address/forms/appartmentForm";
 import { OfficeAdress } from "../../components/address/forms/officeForm";
 import MyAddresses from "../../components/header/myAdresses";
-import { useNavigate } from "react-router";
 
 import {
   checkIfIncludesPlus,
@@ -24,6 +23,8 @@ import addAddressApiCall from "../../api/address/addAddress";
 import updateAddressApiCall from "../../api/address/updateAddress";
 
 import "./style.css";
+import getAllAddress from "../../api/address/getAddress";
+import { getAddress } from "../../store/reducers/addressSlice";
 
 const toastList = new Set();
 const MAX_TOAST = 1;
@@ -31,6 +32,7 @@ const MAX_TOAST = 1;
 const AddressForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // const contactInfo = useSelector((state) => state.auth.country);
   // const { whatsapp_country_code, whatsapp_no } = contactInfo;
@@ -149,6 +151,8 @@ const AddressForm = () => {
 
     addAddressApiCall(updateAddress, token).then((res) => {
       if (res.success === "ok") {
+        fetchFunction();
+
         if (
           location?.state?.path === "/cart" ||
           location?.state?.path === "/home" ||
@@ -167,9 +171,17 @@ const AddressForm = () => {
             location?.state?.path?.includes("menu-item-details") ||
             location?.state?.path === "menu/restaurant"
           ) {
-            navigate(
-              `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
-            );
+            if (location?.state?.noAddress) {
+              navigate(paths.cart, {
+                state: { noAddress: location?.state?.noAddress },
+              });
+            } else if (location?.state?.addNew) {
+              navigate(paths.cart);
+            } else {
+              navigate(
+                `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
+              );
+            }
           } else if (location?.state?.path === "/home") {
             navigate(paths.home);
           } else {
@@ -200,6 +212,8 @@ const AddressForm = () => {
     updateAddressApiCall(updateAddress, location?.state?.data.id, token).then(
       (res) => {
         if (res.success === "ok") {
+          fetchFunction();
+
           if (
             location?.state?.path === "/cart" ||
             location?.state?.path === "/home" ||
@@ -218,9 +232,17 @@ const AddressForm = () => {
               location?.state?.path?.includes("menu-item-details") ||
               location?.state?.path === "menu/restaurant"
             ) {
-              navigate(
-                `${paths.menu}/restaurant/${location?.state?.restaurant_id}`
-              );
+              if (location?.state?.noAddress) {
+                navigate(paths.cart, {
+                  state: { noAddress: location?.state?.noAddress },
+                });
+              } else if (location?.state?.addNew) {
+                navigate(paths.cart);
+              } else {
+                navigate(
+                  `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
+                );
+              }
             } else if (location?.state?.path === "/home") {
               navigate(paths.home);
             } else {
@@ -331,6 +353,15 @@ const AddressForm = () => {
     }
   };
 
+  const fetchFunction = async () => {
+    // setIsloading(true);
+    getAllAddress(token).then((res) => {
+      if (res.success === "ok") {
+        dispatch(getAddress(res.data));
+      }
+    });
+  };
+
   useEffect(() => {
     if (clickEv) {
       if (addressType === "house") {
@@ -382,7 +413,11 @@ const AddressForm = () => {
         path={location?.state?.path}
         fromAllAddresses={false}
         edit={location?.state?.edit}
+        noAddress={location?.state?.noAddress}
+        addNew={location?.state?.addNew}
+        restaurant_id={location?.state?.restaurant_id}
       />
+
       <div className="button-style">
         <AddressTypeSelector
           addressType={addressType}

@@ -4,7 +4,15 @@ import { useNavigate } from "react-router";
 import { paths } from "../../../routes/paths";
 
 const MyAddresses = (props) => {
-  const { title, path, fromAllAddresses, edit } = props;
+  const {
+    title,
+    path,
+    fromAllAddresses,
+    edit,
+    noAddress,
+    addNew,
+    restaurant_id,
+  } = props;
   const navigate = useNavigate();
 
   return (
@@ -21,6 +29,10 @@ const MyAddresses = (props) => {
               ? paths.cart
               : edit !== undefined
               ? paths.addresses
+              : noAddress !== undefined
+              ? -1
+              : addNew !== undefined
+              ? `${paths.menu}/restaurant/${restaurant_id}/delivery`
               : paths.home,
             {
               state: {

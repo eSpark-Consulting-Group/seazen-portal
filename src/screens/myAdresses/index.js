@@ -47,6 +47,7 @@ const App = () => {
   const [addressId, setAddressId] = useState(null);
   const [fullAddress, setFullAddress] = useState(null);
   const [deleteAdd, setDeleteAdd] = useState(false);
+  const [addressToBeDeleted, setAddressToBeDeleted] = useState({});
   // const [isLoading, setIsloading] = useState(false);
 
   // useLayoutEffect(() => {
@@ -124,6 +125,23 @@ const App = () => {
     setDeleteAdd(true);
     deleteAddressApiCall(id, isToken).then((res) => {
       if (res.statusCode === 200) {
+        const selected = JSON.parse(localStorage.getItem("selected"));
+
+        if (addressToBeDeleted && selected !== null) {
+          const lat = selected.lat;
+          const lng = selected.lng;
+
+          const deleteLat = +addressToBeDeleted?.latitude;
+          const deleteLng = +addressToBeDeleted?.longitude;
+
+          if (
+            parseFloat(lat) === parseFloat(deleteLat) &&
+            parseFloat(lng) === parseFloat(deleteLng)
+          ) {
+            localStorage.removeItem("selected");
+          }
+        }
+
         fetchFunction();
       }
     });
@@ -139,6 +157,7 @@ const App = () => {
     setAddressType(item.address_type);
     setAddressId(item.id);
     setOpen(true);
+    setAddressToBeDeleted(item);
   };
 
   return (
@@ -244,6 +263,7 @@ const App = () => {
                     setIsSelected={setIsSelected}
                     address={location?.state?.latlng}
                     handleClickOpen={handleClickOpen}
+                    setAddressToBeDeleted={setAddressToBeDeleted}
                   />
                 </div>
               ))}
