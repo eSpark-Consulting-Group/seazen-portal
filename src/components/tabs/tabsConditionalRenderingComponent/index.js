@@ -137,6 +137,7 @@ const TabsDynamicConditionalComponent = ({
             setFromDetail={setFromDetail}
             setNotDeliver={setNotDeliver}
             setRestaurantOpen={setRestaurantOpen}
+            onDelivery={true}
           />
         </div>
       );
