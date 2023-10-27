@@ -287,15 +287,7 @@ const BasicCard = (props) => {
                 }}
                 className="restaurantCards"
                 onClick={() => {
-                  if (
-                    localStorage.getItem("selected") === null &&
-                    isToken !== null
-                  ) {
-                    setOpenAddressPopup(true);
-                    setRestaurantId(restaurant.id);
-                  } else {
-                    goToRestaurantMenuPage(restaurant.id);
-                  }
+                  goToRestaurantMenuPage(restaurant.id);
                 }}
               >
                 <img
