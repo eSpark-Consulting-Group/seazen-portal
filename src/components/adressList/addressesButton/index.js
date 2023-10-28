@@ -3,18 +3,56 @@ import "./style.css";
 import { useNavigate } from "react-router";
 import { paths } from "../../../routes/paths";
 
-export const AddressesButton = ({ restaurantName, restaurant_id, path }) => {
+export const AddressesButton = ({
+  restaurantName,
+  restaurant_id,
+  path,
+  location,
+}) => {
   const navigate = useNavigate();
 
   const sendToLocation = () => {
     if (restaurantName !== undefined && restaurant_id !== undefined) {
-      navigate(paths.location, {
-        state: {
-          restaurantName: restaurantName,
-          restaurant_id: restaurant_id,
-          path,
-        },
-      });
+      const initialState = {
+        restaurantName: restaurantName,
+        restaurant_id: restaurant_id,
+      };
+
+      if (location?.state?.fromHome !== undefined) {
+        navigate(paths.location, {
+          state: {
+            path: "/home",
+            fromHome: location?.state?.fromHome,
+            ...initialState,
+          },
+        });
+        //
+      } else if (location?.state?.fromMenu !== undefined) {
+        navigate(paths.location, {
+          state: {
+            path: "menu/restaurant",
+            fromMenu: location?.state?.fromMenu,
+            ...initialState,
+          },
+        });
+        //
+      } else if (location?.state?.fromDetail !== undefined) {
+        navigate(paths.location, {
+          state: {
+            path: "menu/restaurant",
+            fromDetail: location?.state?.fromDetail,
+            ...initialState,
+          },
+        });
+        //
+      } else {
+        navigate(paths.location, {
+          state: {
+            ...initialState,
+            path,
+          },
+        });
+      }
     } else {
       navigate(paths.location, { state: { path: path } });
     }

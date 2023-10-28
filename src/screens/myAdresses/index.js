@@ -48,7 +48,7 @@ const App = () => {
   const [fullAddress, setFullAddress] = useState(null);
   const [deleteAdd, setDeleteAdd] = useState(false);
   const [addressToBeDeleted, setAddressToBeDeleted] = useState({});
-  // const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsloading] = useState(false);
 
   // useLayoutEffect(() => {
   //   if (addressData.length === 2) {
@@ -65,26 +65,31 @@ const App = () => {
   // }, [addressData]);
 
   const fetchFunction = async () => {
-    // setIsloading(true);
+    setIsloading(true);
     getAllAddress(isToken).then((res) => {
       if (res.success === "ok") {
         dispatch(getAddress(res.data));
-        // setIsloading(false);
+        setIsloading(false);
         setDeleteAdd(false);
         setOpen(false);
       }
     });
   };
 
-  // useEffect(() => {
-  //   fetchFunction();
-  // }, []);
+  useEffect(() => {
+    fetchFunction();
+  }, []);
 
-  const { isLoading, refetch } = useQuery({
+  const { refetch } = useQuery({
     queryFn: () => getAllAddress(isToken),
     onSuccess: (data) => {
       dispatch(getAddress(data.data));
+
+      setIsloading(false);
+      setDeleteAdd(false);
+      setOpen(false);
     },
+    enabled: false,
   });
 
   const selectCurrentAddress = (item) => {
@@ -142,7 +147,7 @@ const App = () => {
           }
         }
 
-        fetchFunction();
+        refetch();
       }
     });
   };
@@ -166,6 +171,8 @@ const App = () => {
         title="Your Addresses"
         path={location?.state?.path}
         fromAllAddresses={true}
+        fromMenu={location?.state?.fromMenu}
+        fromDetail={location?.state?.fromDetail}
       />
       {isLoading
         ? Array.from({ length: 3 }).map((_) => (
@@ -264,6 +271,7 @@ const App = () => {
                     address={location?.state?.latlng}
                     handleClickOpen={handleClickOpen}
                     setAddressToBeDeleted={setAddressToBeDeleted}
+                    location={location}
                   />
                 </div>
               ))}
@@ -273,6 +281,7 @@ const App = () => {
         restaurantName={location?.state?.restaurantName}
         restaurant_id={location?.state?.restaurant_id}
         path={location?.state?.path}
+        location={location}
       />
 
       {/* Delete Confirmation Dialog */}

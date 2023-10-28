@@ -319,6 +319,7 @@ const Menu = () => {
       <Navbar
         restaurantDetail={restaurantDetail}
         setOpenAddressPopup={setOpenAddressPopup}
+        fromMenu={true}
       />
       <RestaurantOptionsServicesContainer
         restaurantDetail={restaurantDetail}

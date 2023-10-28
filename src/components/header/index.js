@@ -120,7 +120,9 @@ const Navbar = (props) => {
                 : addressData?.length > 0 &&
                   localStorage.getItem("selected") === null
                 ? setOpenAddressPopup(true)
-                : navigate(paths.cart);
+                : navigate(paths.cart, {
+                    state: { fromHome: true, path: "/home" },
+                  });
             }}
           >
             <img src="/assets/img/cart.svg" alt="Shopping Icon" />
