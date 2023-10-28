@@ -18,8 +18,9 @@ const ProfileStructure = ({
   const location = useLocation();
 
   return (
-    <div style={{ height: "500px" }}>
-      <div className="profile-section ">
+    // <div style={{ height: "500px" }}>
+    <div className="profile-section ">
+      <div style={{ height: "100%" }}>
         <div className="left-section">
           <img src={imageUrl} alt="Profile" className="image-style" />
           <div className="profile-name">{name}</div>
@@ -49,12 +50,13 @@ const ProfileStructure = ({
           <img className="box-style" src="/assets/img/box.svg"></img>
           <p>My Orders</p>
         </div>
-        <DetailsButton />
-        <div className="profile-footer">
-          <Footer showCommentOption={false} />
-        </div>
+      </div>
+      <DetailsButton />
+      <div className="profile-footer">
+        <Footer showCommentOption={false} />
       </div>
     </div>
+    // </div>
   );
 };
 

@@ -53,7 +53,9 @@ const ExpandedButton = (props) => {
               id
             )
           }
-          className={`orderTypebutton-text`}
+          className={`orderTypebutton-text ${
+            !hideOther && !text ? "text-width" : ""
+          }`}
         >
           {hideOther && selectedText !== "Catering" ? otherText : text}
         </span>

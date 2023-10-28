@@ -4,7 +4,7 @@ import "./App.css";
 import { useLocation } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import countryList from "./api/common/getAllCountries";
-import { addCountry } from "./store/reducers/authSlice";
+import { addCountry, allCountries } from "./store/reducers/authSlice";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -35,6 +35,7 @@ function App() {
         });
         localStorage.setItem("country", JSON.stringify(countryByCode));
         dispatch(addCountry(countryByCode));
+        dispatch(allCountries(res.data));
       })
       .catch((err) => {
         console.log(err);

@@ -22,6 +22,7 @@ import "./style.css";
 import clearCart from "../../../../api/cart/clearCart";
 import addToCartApiCall from "../../../../api/cart/addToCart";
 import { getDistanceFromLatLonInKm } from "../../../../utils/getAddress";
+import { DialogComponent } from "../../../dialog";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
@@ -53,6 +54,8 @@ const MenuCard = (props) => {
     restaurantDetail,
     setOpenModal,
     setSelectedItemToDeliver,
+    setNotDeliver,
+    setRestaurantOpen,
   } = props;
 
   const plusIcon = "/assets/img/Icon - Plus.svg";
@@ -77,8 +80,8 @@ const MenuCard = (props) => {
   const hasVariant = !!allData?.variants?.length;
 
   const cart = useSelector((state) => state.cart.cart);
-  const resturantsData = useSelector(
-    (state) => state.resturants.resturantsData
+  const nearbyRestaurants = useSelector(
+    (state) => state.resturants.nearbyRestaurants
   );
 
   useEffect(() => {
@@ -154,8 +157,36 @@ const MenuCard = (props) => {
         setOpenModal(true);
       } else {
         if (itemsProcessed === array.length) {
-          setFarAway(true);
-          cartFunction(id);
+          const isAsap = localStorage.getItem("isAsap");
+          let itemsIsCalled = 0;
+
+          if (isAsap === "true") {
+            const filterRestaurant = nearbyRestaurants?.filter((rest) =>
+              rest?.branch_name_en?.includes(restaurantDetail.name_en)
+            );
+
+            if (filterRestaurant?.length === 0) {
+              setNotDeliver(true);
+            } else {
+              setNotDeliver(false);
+
+              filterRestaurant?.forEach((restaurant, _, filterArray) => {
+                itemsIsCalled++;
+
+                if (itemsIsCalled === filterArray?.length) {
+                  if (restaurant.openingStatus === "Open") {
+                    setFarAway(true);
+                    cartFunction(id);
+                  } else if (restaurant.openingStatus === "Close") {
+                    setRestaurantOpen(true);
+                  }
+                }
+              });
+            }
+          } else {
+            setFarAway(true);
+            cartFunction(id);
+          }
         }
       }
     });
@@ -214,7 +245,6 @@ const MenuCard = (props) => {
       watchBranchHoursBeforeAdd(id);
     }
   }
-
   let itemsProcessedRedirect = 0;
 
   function autoRedirect(id) {
@@ -241,13 +271,12 @@ const MenuCard = (props) => {
         );
 
         if (distance > 50) {
-          if (itemsProcessedRedirect === array.length) {
-            if (allData.id === id) {
-              setSelectedItemToDeliver(allData);
-            }
-            setOpenModal(true);
+          if (allData.id === id) {
+            setSelectedItemToDeliver(allData);
           }
+          setOpenModal(true);
         } else {
+          setOpenModal(false);
           if (itemsProcessedRedirect === array.length) {
             navigate(paths.details + "/" + id, {
               state: {
@@ -519,8 +548,8 @@ const MenuCard = (props) => {
                       mr: 0.5,
                       position: "relative",
                       top: "-4.5px",
-                      fontSize:"10px",
-                      fontWeight:"700"
+                      fontSize: "10px",
+                      fontWeight: "700",
                     }}
                   >
                     KWD

@@ -6,7 +6,7 @@ import { setKey, geocode, RequestType } from "react-geocode";
 
 import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 
-// import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import Navbar from "../../components/header/index";
 import Slider from "../../components/carousel/slider/index";
@@ -17,12 +17,15 @@ import "../../components/carousel/slider/style.css";
 import Card from "../../components/adressList";
 import { DialogComponent } from "../../components/dialog";
 
-// import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
+import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import countryList from "../../api/common/getAllCountries";
 
 import { addCountry } from "../../store/reducers/authSlice";
-import { getBranchHours } from "../../store/reducers/resturantsSlice";
+import {
+  getBranchHours,
+  getNearByRest,
+} from "../../store/reducers/resturantsSlice";
 
 import {
   getDistanceFromLatLonInKm,
@@ -46,38 +49,66 @@ const Home = () => {
     (state) => state.resturants.resturantsData
   );
 
-  // const [userCurrentAddress, setUserCurrentAddress] = useState({
-  //   latitude: 0,
-  //   longitude: 0,
-  //   service_type: "dinein",
-  // });
+  const [userCurrentAddress, setUserCurrentAddress] = useState({
+    latitude: 0,
+    longitude: 0,
+    service_type: "dinein",
+  });
 
-  // useEffect(() => {
-  //   if (JSON.parse(localStorage.getItem("location") !== null)) {
-  //     const addressDetail = JSON.parse(localStorage.getItem("location"));
+  useEffect(() => {
+    const userSelected = localStorage.getItem("selected");
+    const userLocation = localStorage.getItem("location");
+    const defaultLocation = { lat: 29.3140728, lng: 47.68022 };
 
-  //     setUserCurrentAddress({
-  //       latitude: addressDetail.lat,
-  //       longitude: addressDetail.lng,
-  //       service_type: "dinein",
-  //     });
-  //   }
-  // }, [localStorage]);
+    if (userSelected === null && userLocation === null) {
+      setUserCurrentAddress({
+        latitude: defaultLocation.lat,
+        longitude: defaultLocation.lng,
+        service_type: "dinein",
+      });
+      //
+    } else if (userSelected === null && userLocation !== null) {
+      const parsedUserLocation = JSON.parse(userLocation);
 
-  // const { data: restaurants, refetch: recall } = useQuery({
-  //   queryFn: () => getNearByRestaurants(userCurrentAddress),
-  //   onSuccess: (data) => {},
-  //   enabled: false,
-  // });
+      setUserCurrentAddress({
+        latitude: parsedUserLocation.lat,
+        longitude: parsedUserLocation.lng,
+        service_type: "dinein",
+      });
+      //
+    } else if (userSelected !== null && userLocation !== null) {
+      const parsedUserLocation = JSON.parse(userSelected);
 
-  // useEffect(() => {
-  //   if (
-  //     userCurrentAddress.latitude !== 0 &&
-  //     userCurrentAddress.longitude !== 0
-  //   ) {
-  //     recall();
-  //   }
-  // }, [userCurrentAddress]);
+      setUserCurrentAddress({
+        latitude: parsedUserLocation.lat,
+        longitude: parsedUserLocation.lng,
+        service_type: "dinein",
+      });
+      //
+    }
+
+    // if (JSON.parse(localStorage.getItem("location") !== null)) {
+    //   const addressDetail = JSON.parse(localStorage.getItem("location"));
+
+    // }
+  }, [localStorage]);
+
+  const { refetch: recall } = useQuery({
+    queryFn: () => getNearByRestaurants(userCurrentAddress),
+    onSuccess: (data) => {
+      dispatch(getNearByRest(data.data));
+    },
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (
+      userCurrentAddress.latitude !== 0 &&
+      userCurrentAddress.longitude !== 0
+    ) {
+      recall();
+    }
+  }, [userCurrentAddress]);
 
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("location")) === null) {
@@ -498,6 +529,7 @@ const Home = () => {
             left: "0",
             borderBottomLeftRadius: "0px",
             borderBottomRightRadius: "0px",
+
             "@media (max-width: 500px)": {
               width: "100%",
             },

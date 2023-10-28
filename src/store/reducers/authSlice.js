@@ -23,6 +23,7 @@ const authSlice = createSlice({
     error: null,
     country: {},
     currency: "KWD",
+    countries: [],
   },
   reducers: {
     addToken: (state, action) => {
@@ -49,9 +50,13 @@ const authSlice = createSlice({
       state.country = action.payload;
       state.currency = action.payload.currency;
     },
+    allCountries: (state, action) => {
+      state.countries = action.payload;
+    },
   },
 });
 
-export const { addToken, addUserInfo, addCountry } = authSlice.actions;
+export const { addToken, addUserInfo, addCountry, allCountries } =
+  authSlice.actions;
 
 export default authSlice.reducer;

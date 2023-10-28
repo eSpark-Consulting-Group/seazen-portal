@@ -38,19 +38,21 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
           {/* {restaurantDetail?.name_en === "Grove" && (
             <img src={restaurantDetail?.logo} alt="restaurant_logo" />
           )} */}
-          <StyledItemPrice
-            className="information_container"
-            onClick={() => {
-              handleBranchHoursClick();
-            }}
-            style={{
-              cursor: "pointer",
-              fontSize: "12px",
-              marginRight: "5px",
-              marginTop: "15px",
-            }}
-          >
-            {"Branches & Hours "}
+          <StyledItemPrice className="information_container">
+            <span
+              style={{
+                cursor: "pointer",
+                marginRight: "5px",
+                marginTop: "15px",
+                font: "normal normal 12px/20px Titillium Web",
+              }}
+              onClick={() => {
+                handleBranchHoursClick();
+              }}
+            >
+              Branches & Hours
+            </span>
+
             <span
               style={{ marginLeft: "5px", position: "relative", top: "2px" }}
             >
@@ -58,6 +60,15 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
                 src="/assets/img/information_icon.svg"
                 alt="information_icon"
               />
+            </span>
+            <span
+              style={{
+                display: "block",
+                textAlign: "right",
+                font: "normal normal 10px/20px Titillium Web",
+              }}
+            >
+              Min. order: 10 KWD
             </span>
           </StyledItemPrice>
         </div>

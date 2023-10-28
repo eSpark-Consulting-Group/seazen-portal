@@ -128,3 +128,13 @@ svg {
 .bg-brown img {
   background-color: #93674e !important;
 }
+
+@media only screen and (max-width: 500px) {
+  .text-detail {
+    margin-bottom: 28px;
+  }
+
+  .content {
+    padding: 16.5px 20px 24px !important;
+  }
+}

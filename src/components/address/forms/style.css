@@ -23,13 +23,14 @@
   letter-spacing: 0px;
   color: #000000;
   opacity: 1;
-}
-
-.form-style .MuiOutlinedInput-root {
   cursor: pointer;
 }
 
-.form-style .MuiInputBase-root {
+.form-style.MuiOutlinedInput-root {
+  cursor: pointer;
+}
+
+.form-style.MuiInputBase-root {
   cursor: pointer;
 }
 
@@ -41,8 +42,8 @@
 .form-style::placeholder {
   text-align: left;
   font: normal normal bold 16px/28px Titillium Web;
-  letter-spacing: 0px;
   color: #959fa8;
+  letter-spacing: 0px;
   opacity: 1;
 }
 
@@ -131,8 +132,26 @@
   margin-top: 10px;
 }
 
+.inputwrapper {
+  position: relative;
+}
+
+.inputwrapper::after {
+  content: attr(data-required);
+  position: absolute;
+  right: 8px;
+  bottom: 0;
+  transform: translateY(-100%);
+  font: normal normal bold 16px/28px Titillium Web;
+  color: #959fa8;
+}
+
+.inputwrapper:has(> .form-style:not(:placeholder-shown))::after {
+  content: "" !important;
+}
+
 /* @media screen and (max-width: 500px) and (min-width: 380px) {
   .container-style {
     margin-left: 30px;
-  }
+  } 
 } */

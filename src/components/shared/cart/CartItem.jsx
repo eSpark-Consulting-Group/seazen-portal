@@ -24,7 +24,7 @@ function CartItem(props) {
     itemName,
     totalPrice,
     itemImage,
-    // variant,
+    variants,
     cartRefetch,
     item_code,
     item_id,
@@ -167,33 +167,35 @@ function CartItem(props) {
         >
           <Typography fontWeight={600}>{getItemName()}</Typography>
 
-          <Button
-            variant="text"
-            color="inherit"
-            size="small"
-            disableRipple
-            disableElevation
-            endIcon={<EditTwoToneIcon />}
-            onClick={() => {
-              navigate(`${paths.details}/${id}?item_code=${item_code}`);
-            }}
-            sx={{
-              p: 0,
-              minHeight: "auto",
-              minWidth: "auto",
-              textTransform: "none",
-              textDecoration: "underline",
-              "&:hover": {
-                backgroundColor: "inherit",
+          {!variants ? null : (
+            <Button
+              variant="text"
+              color="inherit"
+              size="small"
+              disableRipple
+              disableElevation
+              endIcon={<EditTwoToneIcon />}
+              onClick={() => {
+                navigate(`${paths.details}/${id}?item_code=${item_code}`);
+              }}
+              sx={{
+                p: 0,
+                minHeight: "auto",
+                minWidth: "auto",
+                textTransform: "none",
                 textDecoration: "underline",
-              },
-              "& .MuiButton-endIcon > *:nth-of-type(1)": {
-                fontSize: "16px",
-              },
-            }}
-          >
-            Edit
-          </Button>
+                "&:hover": {
+                  backgroundColor: "inherit",
+                  textDecoration: "underline",
+                },
+                "& .MuiButton-endIcon > *:nth-of-type(1)": {
+                  fontSize: "16px",
+                },
+              }}
+            >
+              Edit
+            </Button>
+          )}
         </Stack>
       </Stack>
 

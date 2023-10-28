@@ -177,9 +177,9 @@
 .profile-footer .footer-container {
   bottom: 0px;
   position: fixed;
-  width: 355px;
+  /* width: 355px;
   padding-top: 10px;
-  background: #ffffff;
+  background: #ffffff; */
 }
 
 /* @media screen and (max-width: 320px) {

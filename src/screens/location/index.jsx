@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import {
   GoogleMap,
@@ -7,6 +8,8 @@ import {
   useLoadScript,
   Autocomplete,
 } from "@react-google-maps/api";
+
+import { useQuery } from "@tanstack/react-query";
 
 import { setKey, geocode, RequestType } from "react-geocode";
 
@@ -37,23 +40,25 @@ import "@reach/combobox/styles.css";
 
 // import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 
+import Navbar, { NavbarVariants } from "../../components/header";
+
 // import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
 // import SearchIcon from "../../assets/icons/Icon - Search.jpg";
 import LocationGreen from "../../assets/icons/location-green.png";
 import LocationRed from "../../assets/icons/location-red.png";
 
 // import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { paths } from "../../routes/paths";
 
-import "./style.css";
-import { useQuery } from "@tanstack/react-query";
 import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantBranchHours";
-// import { useDispatch } from "react-redux";
 // import { addAddressDetail } from "../../store/reducers/addressSlice";
+
 import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
-import Navbar, { NavbarVariants } from "../../components/header";
+
+import { paths } from "../../routes/paths";
+
+import "./style.css";
 
 const containerStyle = {
   width: "100%",
@@ -81,6 +86,9 @@ const lib = ["places"];
 function LocationPage() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const countries = useSelector((state) => state.auth.countries);
+
   const selectedAdd = JSON.parse(localStorage.getItem("selected"));
   const token = localStorage.getItem("token");
 
@@ -97,6 +105,7 @@ function LocationPage() {
   const [distanceIsFar, setDistanceIsFar] = useState(false);
   const [noRegion, setNoRegion] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [placeChanged, setPlaceChanged] = useState(false);
 
   const mapRef = useRef();
 
@@ -254,7 +263,6 @@ function LocationPage() {
     setKey(process.env.REACT_APP_GOOGLE_API_KEY);
     geocode(RequestType.LATLNG, `${latitude},${longitude}`, {
       enable_address_descriptor: true,
-      // location_type: "ROOFTOP",
     })
       .then(({ results }) => {
         const address = results[0].formatted_address;
@@ -267,11 +275,112 @@ function LocationPage() {
       });
   };
 
+  useLayoutEffect(() => {
+    const userSelected = localStorage.getItem("selected");
+    const userLocation = localStorage.getItem("location");
+
+    // if (token !== null) {
+    if (userSelected === null && userLocation === null) {
+      //
+      const getCountry = address.split(",");
+      const lastElem = getCountry[getCountry.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudi Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
+
+      if (!placeChanged) {
+        servicePlaceCheck(forCondition.trim());
+      }
+
+      //
+    } else if (userSelected === null && userLocation !== null) {
+      //
+
+      const parsedUserLocation = JSON.parse(userLocation);
+
+      const getCountry = parsedUserLocation.address.split(",");
+      const lastElem = getCountry[getCountry.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudi Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
+
+      if (!placeChanged) {
+        servicePlaceCheck(forCondition.trim());
+      }
+
+      //
+    } else if (userSelected !== null && userLocation !== null) {
+      //
+
+      const parsedUserLocation = JSON.parse(userSelected);
+
+      const getCountry = parsedUserLocation.address.split(",");
+      const lastElem = getCountry[getCountry.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudi Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
+
+      if (!placeChanged) {
+        servicePlaceCheck(forCondition.trim());
+      }
+    }
+    // }
+  }, [localStorage, address, placeChanged]);
+
+  const servicePlaceCheck = (fullAddress) => {
+    let countriesName = [];
+
+    if (countries.length) {
+      countriesName = countries.map((obj) => obj.name_en);
+    }
+
+    if (countriesName.includes(fullAddress)) {
+      setNoRegion(false);
+    } else {
+      setNoRegion(true);
+    }
+
+    // if (
+    //   fullAddress === "Kuwait" ||
+    //   fullAddress === "Bahrain" ||
+    //   fullAddress === "Emirates" ||
+    //   fullAddress === "Oman" ||
+    //   fullAddress === "Qatar" ||
+    //   fullAddress === "Arabia"
+    // ) {
+    //   setNoRegion(false);
+    // } else {
+    //   setNoRegion(true);
+    // }
+  };
+
   const onLoad = (autocompleteInstance) => {
     setAutocomplete(autocompleteInstance);
   };
 
   const onPlaceChanged = () => {
+    setPlaceChanged(true);
     if (autocomplete) {
       const lat = autocomplete.getPlace().geometry.location.lat();
       const lng = autocomplete.getPlace().geometry.location.lng();
@@ -279,18 +388,26 @@ function LocationPage() {
       const restrictToRegion = autocomplete
         .getPlace()
         .formatted_address.split(",");
+
       const lastElem = restrictToRegion[restrictToRegion.length - 1];
       const findCountry = lastElem?.split(" ");
-      const forCondition = findCountry[findCountry.length - 1];
+      let forCondition = findCountry[findCountry.length - 1];
 
-      if (
-        forCondition === "Kuwait" ||
-        forCondition === "Bahrain" ||
-        forCondition === "Emirates" ||
-        forCondition === "Oman" ||
-        forCondition === "Qatar" ||
-        forCondition === "Arabia"
-      ) {
+      if (forCondition === "Arabia") {
+        forCondition = "Saudi Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
+
+      let countriesName = [];
+
+      if (countries.length) {
+        countriesName = countries.map((obj) => obj.name_en);
+      }
+
+      if (countriesName.includes(forCondition)) {
         setNoRegion(false);
       } else {
         setNoRegion(true);
@@ -341,7 +458,15 @@ function LocationPage() {
         };
 
         localStorage.setItem("location", JSON.stringify(fullAddress));
-        navigate(paths.home);
+
+        if (location?.state?.path === "menu/restaurant") {
+          navigate(
+            `${paths.menu}/restaurant/${+location?.state
+              ?.restaurant_id}/delivery`
+          );
+        } else {
+          navigate(paths.home);
+        }
       } else {
         navigate(paths.phone_verification_index);
       }
@@ -451,6 +576,7 @@ function LocationPage() {
             <Navbar
               variant={NavbarVariants.backWithProfile}
               guestUser={location.state?.guestUser ? true : false}
+              path={location?.state?.path}
             />
           </div>
         </Stack>

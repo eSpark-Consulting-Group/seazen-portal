@@ -10,6 +10,7 @@ const initialState = {
   branchHours: [],
   visibleCategoryElementID: 0,
   selectedService: null,
+  restaurantDetail: {},
 };
 
 const resturantsSlice = createSlice({
@@ -27,6 +28,9 @@ const resturantsSlice = createSlice({
     },
     getCategoryItemList: (state, action) => {
       state.listItemByCategory = action.payload;
+    },
+    getResturantsDetails: (state, action) => {
+      state.restaurantDetail = action.payload;
     },
     setVariantSize: (state, action) => {
       if (!state.details.includes(action.payload.id)) {
@@ -105,6 +109,7 @@ export const {
   getBranchHours,
   setSelectedService,
   removeSelectedService,
+  getResturantsDetails,
 } = resturantsSlice.actions;
 
 export default resturantsSlice.reducer;
