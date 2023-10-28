@@ -719,6 +719,7 @@ export const Details = () => {
       <DetailsHeader
         image={menuItemDetails?.data?.image}
         setOpenAddressPopup={setOpenAddressPopup}
+        fromDetail={true}
       />
       <div className="container-fluid section">
         <Stack

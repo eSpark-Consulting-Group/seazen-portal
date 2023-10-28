@@ -119,7 +119,7 @@ function CartPage() {
   );
 
   const token = localStorage.getItem("token");
-  const restaurantId = localStorage.getItem("restaurantID");
+  // const restaurantId = localStorage.getItem("restaurantID");
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
@@ -165,8 +165,6 @@ function CartPage() {
     }
   }, [location?.state?.back]);
 
-  console.log("cartItems", cartItems);
-
   useLayoutEffect(() => {
     if (cartItems !== undefined && cartItems?.length > 0) {
       if (branchHours?.length === 0) {
@@ -181,7 +179,7 @@ function CartPage() {
   }, [cartItems?.length, branchHours]);
 
   const getBranchHoursApiCall = () => {
-    getRestaurantBranchHours(restaurantId).then((res) => {
+    getRestaurantBranchHours(cart[0]?.restaurant_id).then((res) => {
       checkBranchHours(res.data);
       dispatch(getBranchHours(res.data));
     });
@@ -221,7 +219,7 @@ function CartPage() {
   const handleDialogOpen = () => {
     applyPromoCode(
       {
-        restaurant_id: restaurantId,
+        restaurant_id: cart[0]?.restaurant_id,
         promo_code: promoCode,
       },
       token
@@ -267,7 +265,7 @@ function CartPage() {
       const selectedLng = selectedAddress?.lng;
 
       const forCurrent = branchHours?.filter(
-        (rest) => rest.restaurant_id === +restaurantId
+        (rest) => rest.restaurant_id === +cart[0]?.restaurant_id
       );
 
       for (let i = 0; i < forCurrent?.length; i++) {
@@ -286,9 +284,18 @@ function CartPage() {
         } else {
           if (paymentMethod === "KNET") {
             const firstWord = restaurantName.split(" ")[0];
-            const filterRestaurant = nearbyRestaurants?.filter((nearBy) =>
-              nearBy.branch_name_en?.includes(firstWord)
-            );
+            // const filterRestaurant = nearbyRestaurants?.filter((nearBy) =>
+            //   nearBy.branch_name_en?.includes(firstWord)
+            // );
+
+            const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
+              const splitLogo = nearBy?.logo?.split("/");
+              const splitName = splitLogo[splitLogo.length - 1];
+
+              const name = splitName.split("-")[0];
+
+              return name === firstWord?.toLowerCase();
+            });
 
             if (filterRestaurant?.length === 0) {
               setNotDeliver(true);
@@ -442,9 +449,15 @@ function CartPage() {
 
   const asapHandler = () => {
     const firstWord = restaurantName.split(" ")[0];
-    const filterRestaurant = nearbyRestaurants?.filter((nearBy) =>
-      nearBy.branch_name_en?.includes(firstWord)
-    );
+
+    const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
+      const splitLogo = nearBy?.logo?.split("/");
+      const splitName = splitLogo[splitLogo.length - 1];
+
+      const name = splitName.split("-")[0];
+
+      return name === firstWord?.toLowerCase();
+    });
 
     for (let i = 0; i < filterRestaurant?.length; i++) {
       if (filterRestaurant[i]?.openingStatus === "Open") {
@@ -468,6 +481,7 @@ function CartPage() {
         break;
       } else if (filterRestaurant[i]?.openingStatus === "Close") {
         setRestaurantOpen(true);
+        setOpenPopup(false);
       }
     }
   };
@@ -653,6 +667,11 @@ function CartPage() {
                 ? location?.state?.back
                 : location?.state?.noAddress
                 ? `${paths.menu}/restaurant/${cart[0]?.restaurant_id}/delivery`
+                : location?.state?.fromHome !== undefined
+                ? paths.home
+                : location?.state?.fromMenu !== undefined ||
+                  location?.state?.fromDetail !== undefined
+                ? `${paths.menu}/restaurant/${cart[0].restaurant_id}`
                 : -1
             )
           }
@@ -773,16 +792,46 @@ function CartPage() {
                   fontSize: "16px",
                 },
               }}
-              onClick={() =>
-                navigate(paths.addresses, {
-                  state: {
-                    restaurant_id: cartItems[0].restaurant_id,
-                    restaurantName,
-                    path: location.pathname,
-                    // latlng: JSON.parse(localStorage.getItem("selected")),
-                  },
-                })
-              }
+              onClick={() => {
+                if (location?.state?.fromHome !== undefined) {
+                  navigate(paths.addresses, {
+                    state: {
+                      restaurant_id: cartItems[0].restaurant_id,
+                      restaurantName,
+                      path: location.pathname,
+                      fromHome: location?.state?.fromHome,
+                    },
+                  });
+                } else if (location?.state?.fromMenu !== undefined) {
+                  navigate(paths.addresses, {
+                    state: {
+                      restaurant_id: cart[0].restaurant_id,
+                      restaurantName,
+                      path: location.pathname,
+                      fromMenu: location?.state?.fromMenu,
+                    },
+                  });
+                } else if (location?.state?.fromDetail !== undefined) {
+                  navigate(paths.addresses, {
+                    state: {
+                      restaurant_id: cart[0].restaurant_id,
+                      restaurantName,
+                      path: location.pathname,
+                      fromDetail: location?.state?.fromDetail,
+                    },
+                  });
+                } else {
+                  navigate(paths.addresses, {
+                    state: {
+                      restaurant_id: cartItems[0].restaurant_id,
+                      restaurantName,
+                      path: location.pathname,
+                      fromCart: true,
+                      // latlng: JSON.parse(localStorage.getItem("selected")),
+                    },
+                  });
+                }
+              }}
             >
               Change
             </Button>

@@ -8,7 +8,7 @@ import { paths } from "../../../routes/paths";
 import "./style.css";
 
 export const DetailsHeader = (props) => {
-  const { image, setOpenAddressPopup } = props;
+  const { image, setOpenAddressPopup, fromDetail } = props;
 
   const navigate = useNavigate();
   const currentURL = useLocation();
@@ -91,7 +91,9 @@ export const DetailsHeader = (props) => {
             : addressData?.length > 0 &&
               localStorage.getItem("selected") === null
             ? setOpenAddressPopup(true)
-            : navigate(paths.cart);
+            : navigate(paths.cart, {
+                state: { fromDetail, restaurant_id: cart[0]?.restaurant_id },
+              });
         }}
       >
         <img

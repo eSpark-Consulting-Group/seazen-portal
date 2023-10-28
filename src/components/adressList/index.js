@@ -21,6 +21,7 @@ const Card = (props) => {
     handleClickOpen,
     home,
     chooseAddress,
+    location,
   } = props;
 
   // useEffect(() => {
@@ -71,13 +72,56 @@ const Card = (props) => {
 
           <button
             className="addresses-edit-button"
-            onClick={() =>
+            onClick={() => {
+              const initialState = {
+                data: data,
+                latlng,
+                edit: true,
+              };
+
               home
                 ? chooseAddress()
-                : navigate(paths.address, {
-                    state: { data: data, latlng, edit: true },
+                : location?.state?.fromCart !== undefined
+                ? navigate(paths.address, {
+                    state: {
+                      ...initialState,
+                      path: location?.state?.path,
+                      fromCart: location?.state?.fromCart,
+                      fromHome: location?.state?.fromHome,
+                    },
                   })
-            }
+                : location?.state?.fromHome !== undefined
+                ? navigate(paths.address, {
+                    state: {
+                      ...initialState,
+                      path: "/home",
+                      fromHome: location?.state?.fromHome,
+                    },
+                  })
+                : location?.state?.fromMenu !== undefined
+                ? navigate(paths.address, {
+                    state: {
+                      ...initialState,
+                      path: "menu/restaurant",
+                      fromMenu: location?.state?.fromMenu,
+                      restaurant_id: location?.state?.restaurant_id,
+                    },
+                  })
+                : location?.state?.fromDetail !== undefined
+                ? navigate(paths.address, {
+                    state: {
+                      ...initialState,
+                      path: "menu/restaurant",
+                      fromDetail: location?.state?.fromDetail,
+                      restaurant_id: location?.state?.restaurant_id,
+                    },
+                  })
+                : navigate(paths.address, {
+                    state: {
+                      ...initialState,
+                    },
+                  });
+            }}
           >
             <span className="addresses-edit-text">
               {!home ? "Edit" : "Choose"}

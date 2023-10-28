@@ -8,7 +8,7 @@ import { paths } from "../../../routes/paths";
 import "./style.css";
 
 const Navbar = (props) => {
-  const { restaurantDetail, setOpenAddressPopup } = props;
+  const { restaurantDetail, setOpenAddressPopup, fromMenu } = props;
 
   const navigate = useNavigate();
 
@@ -63,7 +63,13 @@ const Navbar = (props) => {
               : addressData?.length > 0 &&
                 localStorage.getItem("selected") === null
               ? setOpenAddressPopup(true)
-              : navigate(paths.cart);
+              : navigate(paths.cart, {
+                  state: {
+                    fromMenu,
+                    path: "menu/restaurant",
+                    restaurant_id: cart[0]?.restaurant_id,
+                  },
+                });
           }}
         >
           <div className="shopping_icon">

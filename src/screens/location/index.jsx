@@ -262,14 +262,14 @@ function LocationPage() {
   const getAdd = async (latitude, longitude) => {
     // eslint-disable-next-line no-undef
     setKey(process.env.REACT_APP_GOOGLE_API_KEY);
-    geocode(RequestType.LATLNG, `${latitude},${longitude}`, {
+    geocode(RequestType.LATLNG, `${+latitude},${+longitude}`, {
       enable_address_descriptor: true,
     })
       .then(({ results }) => {
         const address = results[0].formatted_address;
 
         setAddress(address);
-        setCenter({ lat: latitude, lng: longitude });
+        setCenter({ lat: +latitude, lng: +longitude });
       })
       .catch((err) => {
         console.log(err);
@@ -491,6 +491,26 @@ function LocationPage() {
               addNew: true,
             },
           });
+        } else if (location?.state?.fromMenu) {
+          navigate(paths.address, {
+            state: {
+              name: address,
+              latlng: center,
+              path: location?.state?.path,
+              restaurant_id: +location?.state?.restaurant_id,
+              fromMenu: location?.state?.fromMenu,
+            },
+          });
+        } else if (location?.state?.fromDetail) {
+          navigate(paths.address, {
+            state: {
+              name: address,
+              latlng: center,
+              path: location?.state?.path,
+              restaurant_id: +location?.state?.restaurant_id,
+              fromDetail: location?.state?.fromDetail,
+            },
+          });
         } else {
           navigate(paths.address, {
             state: {
@@ -501,6 +521,15 @@ function LocationPage() {
             },
           });
         }
+      } else if (location?.state?.fromHome !== undefined) {
+        navigate(paths.address, {
+          state: {
+            name: address,
+            latlng: center,
+            path: location?.state?.path,
+            fromHome: location?.state?.fromHome,
+          },
+        });
       } else {
         navigate(paths.address, {
           state: { name: address, latlng: center, path: location?.state?.path },

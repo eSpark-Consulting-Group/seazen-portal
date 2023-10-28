@@ -12,6 +12,10 @@ const MyAddresses = (props) => {
     noAddress,
     addNew,
     restaurant_id,
+    fromCart,
+    fromHome,
+    fromMenu,
+    fromDetail,
   } = props;
   const navigate = useNavigate();
 
@@ -25,7 +29,11 @@ const MyAddresses = (props) => {
               ? paths.profile
               : !fromAllAddresses && path === "/profile"
               ? paths.addresses
-              : fromAllAddresses && path === "/cart"
+              : (fromAllAddresses && path === "/cart") ||
+                (fromCart !== undefined && path === "/cart") ||
+                fromHome !== undefined ||
+                fromMenu !== undefined ||
+                fromDetail !== undefined
               ? paths.cart
               : edit !== undefined
               ? paths.addresses
@@ -39,6 +47,9 @@ const MyAddresses = (props) => {
                 path:
                   !fromAllAddresses && path === "/profile" ? "/profile" : "",
                 back: fromAllAddresses && path === "/cart" ? paths.home : null,
+                fromHome: fromHome,
+                fromMenu: fromMenu,
+                fromDetail: fromDetail,
               },
             }
           );

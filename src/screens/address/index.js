@@ -2,6 +2,8 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
+import { RequestType, geocode, setKey } from "react-geocode";
+
 import { toast } from "react-toastify";
 
 import { HomeAdress } from "../../components/address/forms/homeForm";
@@ -21,10 +23,10 @@ import { paths } from "../../routes/paths";
 
 import addAddressApiCall from "../../api/address/addAddress";
 import updateAddressApiCall from "../../api/address/updateAddress";
-
-import "./style.css";
 import getAllAddress from "../../api/address/getAddress";
 import { getAddress } from "../../store/reducers/addressSlice";
+
+import "./style.css";
 
 const toastList = new Set();
 const MAX_TOAST = 1;
@@ -33,6 +35,35 @@ const AddressForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [addressName, setAddressName] = useState("");
+
+  useEffect(() => {
+    if (
+      location?.state?.fromCart !== undefined ||
+      location?.state?.fromHome !== undefined ||
+      location?.state?.fromMenu !== undefined ||
+      location?.state?.fromDetail !== undefined
+    ) {
+      const getAdd = async (latitude, longitude) => {
+        // eslint-disable-next-line no-undef
+        setKey(process.env.REACT_APP_GOOGLE_API_KEY);
+        geocode(RequestType.LATLNG, `${latitude},${longitude}`, {
+          enable_address_descriptor: true,
+        })
+          .then(({ results }) => {
+            const address = results[0].formatted_address;
+
+            setAddressName(address);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      };
+
+      getAdd(location?.state?.latlng.lat, location?.state?.latlng.lng);
+    }
+  }, [location?.state]);
 
   // const contactInfo = useSelector((state) => state.auth.country);
   // const { whatsapp_country_code, whatsapp_no } = contactInfo;
@@ -177,13 +208,23 @@ const AddressForm = () => {
               });
             } else if (location?.state?.addNew) {
               navigate(paths.cart);
+            } else if (location?.state?.fromMenu !== undefined) {
+              navigate(paths.cart, {
+                state: { fromMenu: location?.state?.fromMenu },
+              });
+            } else if (location?.state?.fromDetail !== undefined) {
+              navigate(paths.cart, {
+                state: { fromDetail: location?.state?.fromDetail },
+              });
             } else {
               navigate(
                 `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
               );
             }
-          } else if (location?.state?.path === "/home") {
-            navigate(paths.home);
+          } else if (location?.state?.fromHome !== undefined) {
+            navigate(paths.cart, {
+              state: { fromHome: location?.state?.fromHome },
+            });
           } else {
             navigate(paths.cart);
           }
@@ -220,13 +261,28 @@ const AddressForm = () => {
             location?.state?.path?.includes("menu-item-details") ||
             location?.state?.path === "menu/restaurant"
           ) {
-            const addToStorage = {
-              lat: location?.state?.latlng?.lat,
-              lng: location?.state?.latlng?.lng,
-              address: location?.state?.name,
-            };
+            if (
+              location?.state?.fromCart !== undefined ||
+              location?.state?.fromHome !== undefined ||
+              location?.state?.fromMenu !== undefined ||
+              location?.state?.fromDetail !== undefined
+            ) {
+              const addToStorage = {
+                lat: location?.state?.latlng?.lat,
+                lng: location?.state?.latlng?.lng,
+                address: addressName,
+              };
 
-            localStorage.setItem("selected", JSON.stringify(addToStorage));
+              localStorage.setItem("selected", JSON.stringify(addToStorage));
+            } else {
+              const addToStorage = {
+                lat: location?.state?.latlng?.lat,
+                lng: location?.state?.latlng?.lng,
+                address: location?.state?.name,
+              };
+
+              localStorage.setItem("selected", JSON.stringify(addToStorage));
+            }
 
             if (
               location?.state?.path?.includes("menu-item-details") ||
@@ -238,13 +294,23 @@ const AddressForm = () => {
                 });
               } else if (location?.state?.addNew) {
                 navigate(paths.cart);
+              } else if (location?.state?.fromMenu !== undefined) {
+                navigate(paths.cart, {
+                  state: { fromMenu: location?.state?.fromMenu },
+                });
+              } else if (location?.state?.fromDetail !== undefined) {
+                navigate(paths.cart, {
+                  state: { fromDetail: location?.state?.fromDetail },
+                });
               } else {
                 navigate(
                   `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
                 );
               }
-            } else if (location?.state?.path === "/home") {
-              navigate(paths.home);
+            } else if (location?.state?.fromHome !== undefined) {
+              navigate(paths.cart, {
+                state: { fromHome: location?.state?.fromHome },
+              });
             } else {
               navigate(paths.cart);
             }
@@ -416,6 +482,10 @@ const AddressForm = () => {
         noAddress={location?.state?.noAddress}
         addNew={location?.state?.addNew}
         restaurant_id={location?.state?.restaurant_id}
+        fromCart={location?.state?.fromCart}
+        fromHome={location?.state?.fromHome}
+        fromMenu={location?.state?.fromMenu}
+        fromDetail={location?.state?.fromDetail}
       />
 
       <div className="button-style">
