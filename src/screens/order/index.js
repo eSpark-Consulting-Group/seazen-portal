@@ -30,7 +30,7 @@ const OrderScreen = () => {
 
   useEffect(() => {
     dispatch(resetCart());
-    clearCart(token)
+    clearCart()
       .then((res) => {
         console.log(res);
       })

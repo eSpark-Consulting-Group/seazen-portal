@@ -7,18 +7,20 @@ import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
 import addOrderRating from "../../api/order/addOrderRating";
 import { GET_ORDERS_QUERY_KEY } from "../../api/order/getOrders";
+import ReOrderCard from "../ReOrderCard";
 
 const OrderCard = ({ item }) => {
   const queryClient = useQueryClient();
 
   const [openRate, setOpenRate] = useState(false);
+  const [openReorder, setOpenReorder] = useState(false);
   const [average, setAverage] = useState(item.rating || 0);
   const navigate = useNavigate();
 
   const handleRate = (val) => {
     setOpenRate(val);
   };
-
+  
   const handleClose = (value) => {
     handleRate(false);
     setAverage(value);
@@ -30,7 +32,12 @@ const OrderCard = ({ item }) => {
   };
 
   const handleReorder = () => {
-    navigate(paths.menu + paths.branches + item.restaurant_id);
+    // navigate(paths.menu + paths.branches + item.restaurant_id);
+    setOpenReorder(true);
+  };
+
+  const handleReorderClose = () => {
+    setOpenReorder(false);
   };
 
   const iconPath = `/assets/img/DeliveryOrder.svg`;
@@ -171,6 +178,12 @@ const OrderCard = ({ item }) => {
         </Box>
       )}
       <RateCard isVisible={openRate} handleClose={(val) => handleClose(val)} />
+      <ReOrderCard
+        isVisible={openReorder}
+        handleClose={handleReorderClose}
+        items={item.order_item}
+        restaurant_id={item.restaurant_id}
+      />
     </Card>
   );
 };
