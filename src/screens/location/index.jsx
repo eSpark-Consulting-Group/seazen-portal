@@ -215,10 +215,10 @@ function LocationPage() {
 
   const watchBranchHours = (array) => {
     if (array.length) {
-      array?.forEach((res) => {
+      for (let i = 0; i < array?.length; i++) {
         if (center.lat !== 0 && center.lng !== 0) {
-          const resLat = +res.latitude;
-          const resLng = +res.longitude;
+          const resLat = +array[i]?.latitude;
+          const resLng = +array[i]?.longitude;
 
           const distance = getDistanceFromLatLonInKm(
             resLat,
@@ -231,9 +231,10 @@ function LocationPage() {
             setDistanceIsFar(true);
           } else {
             setDistanceIsFar(false);
+            break;
           }
         }
-      });
+      }
     }
   };
 
@@ -450,15 +451,15 @@ function LocationPage() {
 
   const confirmLocation = () => {
     if (token === null) {
+      const fullAddress = {
+        address,
+        lat: center.lat,
+        lng: center.lng,
+      };
+
+      localStorage.setItem("location", JSON.stringify(fullAddress));
+
       if (location?.state?.guestUser) {
-        const fullAddress = {
-          address,
-          lat: center.lat,
-          lng: center.lng,
-        };
-
-        localStorage.setItem("location", JSON.stringify(fullAddress));
-
         if (location?.state?.path === "menu/restaurant") {
           navigate(
             `${paths.menu}/restaurant/${+location?.state
@@ -468,7 +469,7 @@ function LocationPage() {
           navigate(paths.home);
         }
       } else {
-        navigate(paths.phone_verification_index);
+        navigate(paths.phone_verification_index, { state: location?.state });
       }
     } else if (
       location?.state?.path === "/cart" ||
@@ -480,14 +481,26 @@ function LocationPage() {
         location?.state?.path?.includes("menu-item-details") ||
         location?.state?.path === "menu/restaurant"
       ) {
-        navigate(paths.address, {
-          state: {
-            name: address,
-            latlng: center,
-            path: location?.state?.path,
-            restaurant_id: +location?.state?.restaurant_id,
-          },
-        });
+        if (location?.state?.addNew) {
+          navigate(paths.address, {
+            state: {
+              name: address,
+              latlng: center,
+              path: location?.state?.path,
+              restaurant_id: +location?.state?.restaurant_id,
+              addNew: true,
+            },
+          });
+        } else {
+          navigate(paths.address, {
+            state: {
+              name: address,
+              latlng: center,
+              path: location?.state?.path,
+              restaurant_id: +location?.state?.restaurant_id,
+            },
+          });
+        }
       } else {
         navigate(paths.address, {
           state: { name: address, latlng: center, path: location?.state?.path },
@@ -699,16 +712,19 @@ function LocationPage() {
         <Typography fontWeight="semi-bold" gutterBottom>
           Pinned Address: {isLoaded ? address : null}
         </Typography>
-        <Button
-          size="large"
-          fullWidth
-          variant="contained"
-          className="confirm-button"
-          onClick={() => confirmLocation()}
-          disabled={address === "" || distanceIsFar || noRegion}
-        >
-          Confirm Your Location
-        </Button>
+
+        {location?.state?.fromBranch === undefined ? (
+          <Button
+            size="large"
+            fullWidth
+            variant="contained"
+            className="confirm-button"
+            onClick={() => confirmLocation()}
+            disabled={address === "" || distanceIsFar || noRegion}
+          >
+            Confirm Your Location
+          </Button>
+        ) : null}
       </Stack>
     </Stack>
   );

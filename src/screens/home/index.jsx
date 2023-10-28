@@ -16,6 +16,8 @@ import RestaurantsOrderTypeButton from "../../components/category/button";
 import "../../components/carousel/slider/style.css";
 import Card from "../../components/adressList";
 import { DialogComponent } from "../../components/dialog";
+import ScheduleDialog from "../../components/dialog/scheduleDialog";
+import SchedulePicker from "../../components/shared/schedulePicker";
 
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
@@ -35,6 +37,7 @@ import {
 import { paths } from "../../routes/paths";
 
 import "./style.css";
+import SelectLocation from "../../components/dialog/selectLocation";
 
 const Home = () => {
   const isToken = localStorage.getItem("token");
@@ -47,6 +50,10 @@ const Home = () => {
   const branchHours = useSelector((state) => state.resturants.branchHours);
   const resturantsData = useSelector(
     (state) => state.resturants.resturantsData
+  );
+  const cart = useSelector((state) => state.cart.cart);
+  const nearbyRestaurants = useSelector(
+    (state) => state.resturants.nearbyRestaurants
   );
 
   const [userCurrentAddress, setUserCurrentAddress] = useState({
@@ -86,11 +93,6 @@ const Home = () => {
       });
       //
     }
-
-    // if (JSON.parse(localStorage.getItem("location") !== null)) {
-    //   const addressDetail = JSON.parse(localStorage.getItem("location"));
-
-    // }
   }, [localStorage]);
 
   const { refetch: recall } = useQuery({
@@ -182,6 +184,11 @@ const Home = () => {
   const [popularId, setPopularId] = useState(null);
   const [newText, setNewText] = useState("");
   const [selectedText, setSelectedText] = useState("");
+  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [restaurantOpen, setRestaurantOpen] = useState(false);
+  const [chooseFullAddress, setChooseFullAddress] = useState(null);
+  const [openAddressToChoose, setOpenAddressToChoose] = useState(null);
 
   const parentDiv = document?.getElementById("parent-of-all");
   const parentIcon = document?.getElementsByClassName("inner-svg-container");
@@ -227,13 +234,119 @@ const Home = () => {
     getFullAddress(lat, lng, setFullAddress);
   };
 
+  const onChooseFullAddress = (item) => {
+    const lat = +item.latitude;
+    const lng = +item.longitude;
+
+    getFullAddress(lat, lng, setChooseFullAddress);
+  };
+
+  useEffect(() => {
+    const filterBranch = branchHours?.filter(
+      (rest) => rest.restaurant_id === cart[0]?.restaurant_id
+    );
+
+    if (chooseFullAddress !== null) {
+      if (branchHours.length && filterBranch?.length) {
+        for (let i = 0; i < filterBranch?.length; i++) {
+          const resLat = +filterBranch[i]?.latitude;
+          const resLng = +filterBranch[i]?.longitude;
+
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            chooseFullAddress.lat,
+            chooseFullAddress.lng
+          );
+
+          const restaurant = resturantsData.find(
+            (res) => res.id === cart[0]?.restaurant_id
+          );
+
+          if (distance > 50) {
+            setRestaurantName(restaurant?.name_en);
+            setDistanceIsFar(true);
+            setOpenAddressToChoose(false);
+          } else {
+            const address = {
+              latitude: chooseFullAddress.lat,
+              longitude: chooseFullAddress.lng,
+              service_type: "dinein",
+            };
+
+            fetchNearbyRestaurant(address);
+
+            setDistanceIsFar(false);
+            setOpenAddressToChoose(false);
+
+            break;
+          }
+        }
+      }
+    }
+  }, [chooseFullAddress, branchHours]);
+
+  const fetchNearbyRestaurant = (address) => {
+    if (nearbyRestaurants.length === 0) {
+      getNearByRestaurants(address).then((res) => {
+        if (res.status === "ok") {
+          localStorage.setItem("selected", JSON.stringify(chooseFullAddress));
+
+          dispatch(getNearByRest(res?.data));
+          setOpenAddressToChoose(false);
+          checkNearByRest(res?.data);
+        }
+      });
+    } else {
+      localStorage.setItem("selected", JSON.stringify(chooseFullAddress));
+
+      setOpenAddressToChoose(false);
+      checkNearByRest(nearbyRestaurants);
+    }
+  };
+
+  const checkNearByRest = (nearby) => {
+    const restaurant = resturantsData.find(
+      (res) => res.id === cart[0]?.restaurant_id
+    );
+
+    const filterRestaurant = nearby?.filter((nearBy) => {
+      const splitLogo = nearBy?.logo?.split("/");
+      const splitName = splitLogo[splitLogo.length - 1];
+
+      const name = splitName.split("-")[0];
+
+      return name === restaurant?.name_en?.toLowerCase();
+    });
+
+    if (filterRestaurant?.length === 0) {
+      setRestaurantName(restaurant?.name_en);
+      setDistanceIsFar(true);
+      setOpenAddressToChoose(false);
+    } else {
+      if (localStorage.getItem("isAsap") === "true") {
+        for (let i = 0; i < filterRestaurant?.length; i++) {
+          if (filterRestaurant[i]?.openingStatus === "Open") {
+            setRestaurantOpen(false);
+            navigate(paths?.cart);
+            break;
+          } else {
+            setRestaurantOpen(true);
+          }
+        }
+      } else {
+        setRestaurantOpen(false);
+        navigate(paths?.cart);
+      }
+    }
+  };
   useEffect(() => {
     if (fullAddress !== null) {
       if (filterSelectedNow === "") {
         if (branchHours.length) {
-          branchHours?.forEach((res) => {
-            const resLat = +res.latitude;
-            const resLng = +res.longitude;
+          for (let i = 0; i < branchHours.length; i++) {
+            const resLat = +branchHours[i]?.latitude;
+            const resLng = +branchHours[i]?.longitude;
 
             const distance = getDistanceFromLatLonInKm(
               resLat,
@@ -274,8 +387,10 @@ const Home = () => {
                   },
                 });
               }
+
+              break;
             }
-          });
+          }
         }
       } else {
         localStorage.setItem("selected", JSON.stringify(fullAddress));
@@ -292,6 +407,21 @@ const Home = () => {
         path: "/home",
         restaurant_id: restaurantId,
         restaurantName: restaurant.name_en,
+      },
+    });
+  };
+
+  const onNavigateUser = () => {
+    const restaurant = resturantsData.find(
+      (res) => res.id === cart[0]?.restaurant_id
+    );
+
+    navigate(paths.location, {
+      state: {
+        path: "menu/restaurant",
+        restaurant_id: cart[0].id,
+        restaurantName: restaurant?.name_en,
+        addNew: true,
       },
     });
   };
@@ -478,7 +608,7 @@ const Home = () => {
 
   return (
     <div className="home-styling container-fluid">
-      <Navbar />
+      <Navbar setOpenAddressPopup={setOpenAddressToChoose} />
       <div className="card-spacing">
         <Slider />
       </div>
@@ -508,6 +638,8 @@ const Home = () => {
         setPopularId={setPopularId}
         setRestaurantId={setRestaurantId}
         distanceIsFar={distanceIsFar}
+        setDistanceIsFar={setDistanceIsFar}
+        setRestaurantOpen={setRestaurantOpen}
       />
       <Footer showFooterSection={true} />
 
@@ -569,6 +701,13 @@ const Home = () => {
         </div>
       </Dialog>
 
+      <SelectLocation
+        openAddressPopup={openAddressToChoose}
+        handleClose={() => setOpenAddressToChoose(false)}
+        chooseAddress={onChooseFullAddress}
+        navigateUser={onNavigateUser}
+      />
+
       <DialogComponent
         notDeliver={distanceIsFar}
         setNotDeliver={setDistanceIsFar}
@@ -577,6 +716,20 @@ const Home = () => {
         resturantId={restaurantId}
         location={location}
         newText={newText}
+        home={true}
+      />
+
+      <SchedulePicker
+        openSchedulePopup={openSchedulePopup}
+        setOpenSchedulePopup={setOpenSchedulePopup}
+        showTimePicker={showTimePicker}
+        setShowTimePicker={setShowTimePicker}
+      />
+
+      <ScheduleDialog
+        restaurantOpen={restaurantOpen}
+        setRestaurantOpen={setRestaurantOpen}
+        setOpenSchedulePopup={setOpenSchedulePopup}
         home={true}
       />
     </div>

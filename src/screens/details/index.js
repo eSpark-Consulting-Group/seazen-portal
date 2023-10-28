@@ -1,17 +1,14 @@
 import React, { Fragment, useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { v4 as uuidv4 } from "uuid";
 
 import {
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Box,
   Stack,
   Checkbox,
@@ -19,28 +16,42 @@ import {
   FormControlLabel,
   Skeleton,
   Typography,
+  Divider,
+  alpha,
 } from "@mui/material";
+import { AddShoppingCartRounded, Label } from "@mui/icons-material";
 
 import { DetailsHeader } from "../../components/header/detailsHeader";
-import "./style.css";
+import IncDec from "../../components/Input/InputWithIncDec";
+import { DialogComponent } from "../../components/dialog";
+
 import getMenuItemDetails, {
   GET_MENU_ITEM_DETAILS_QUERY_KEY,
 } from "../../api/menu/getMenuItemDetails";
-import { Divider, alpha } from "@mui/material";
-import IncDec from "../../components/Input/InputWithIncDec";
-import { AddShoppingCartRounded, Label } from "@mui/icons-material";
+import addToCartApiCall from "../../api/cart/addToCart";
+import updateCartApiCall from "../../api/cart/updateCart";
+import clearCart from "../../api/cart/clearCart";
+import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
+
 import {
   updateCartItem,
   addToCart,
   resetCart,
 } from "../../store/reducers/cartSlice";
-import addToCartApiCall from "../../api/cart/addToCart";
+
 import { paths } from "../../routes/paths";
-import updateCartApiCall from "../../api/cart/updateCart";
-import clearCart from "../../api/cart/clearCart";
-import { DialogComponent } from "../../components/dialog";
-import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
-import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
+
+import {
+  getDistanceFromLatLonInKm,
+  getFullAddress,
+} from "../../utils/getAddress";
+
+import "./style.css";
+import SelectLocation from "../../components/dialog/selectLocation";
+import { getNearByRest } from "../../store/reducers/resturantsSlice";
+import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
+import SchedulePicker from "../../components/shared/schedulePicker";
+import ScheduleDialog from "../../components/dialog/scheduleDialog";
 
 export const Details = () => {
   const { id } = useParams();
@@ -59,6 +70,7 @@ export const Details = () => {
   const branchHours = useSelector((state) => state.resturants.branchHours);
 
   const token = localStorage.getItem("token");
+  const restaurant_id = localStorage.getItem("restaurantID");
 
   const [cartItem, setCartItem] = React.useState();
   const [quantity, setQuantity] = React.useState(1);
@@ -74,8 +86,14 @@ export const Details = () => {
   const [restaurantDetail, setRestaurantDetail] = useState({});
   const [specialInstructions, setSpecialInstructions] = React.useState("");
   const [extraToppingCount, setExtraToppingCount] = React.useState(0);
+  const [openAddressPopup, setOpenAddressPopup] = useState(false);
+  const [fullAddress, setFullAddress] = useState(null);
+  const [distanceIsFar, setDistanceIsFar] = useState(false);
+  const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
+  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
   const { search } = useLocation();
-  const restaurant_id = localStorage.getItem("restaurantID");
 
   useLayoutEffect(() => {
     if (
@@ -130,64 +148,36 @@ export const Details = () => {
     }
   };
 
-  let itemsIsCalled = 0;
-
   const calculateDistance = (array) => {
     const selected = JSON.parse(localStorage?.getItem("selected"));
+    const currentLocation = JSON.parse(localStorage.getItem("location"));
 
     if (array?.length) {
-      array?.forEach((res, _, arr) => {
-        itemsIsCalled++;
+      for (let i = 0; i < array?.length; i++) {
+        const resLat = +array[i]?.latitude;
+        const resLng = +array[i]?.longitude;
 
-        const resLat = +res.latitude;
-        const resLng = +res.longitude;
+        let fromLocation;
+        if (selected === null && currentLocation !== null) {
+          fromLocation = currentLocation;
+        } else if (selected !== null && currentLocation !== null) {
+          fromLocation = selected;
+        }
 
         const distance = getDistanceFromLatLonInKm(
           resLat,
           resLng,
-          selected.lat,
-          selected.lng
+          fromLocation.lat,
+          fromLocation.lng
         );
 
         if (distance > 50) {
           setFarRestaurant(true);
         } else {
-          if (itemsIsCalled === arr.length) {
-            const isAsap = localStorage.getItem("isAsap");
-
-            let itemsProcessed = 0;
-
-            // if (isAsap === "true") {
-            //   const filterRestaurant = nearbyRestaurants?.filter((rest) =>
-            //     rest?.branch_name_en?.includes(restaurantDetail.name_en)
-            //   );
-
-            //   if (filterRestaurant?.length === 0) {
-            //     setNotDeliver(true);
-            //   } else {
-            //     setNotDeliver(false);
-
-            //     filterRestaurant?.forEach((restaurant, _, filterArray) => {
-            //       itemsIsCalled++;
-
-            //       if (itemsIsCalled === filterArray?.length) {
-            //         if (restaurant.openingStatus === "Open") {
-            //           setFarAway(true);
-            //           cartFunction(id);
-            //         } else if (restaurant.openingStatus === "Close") {
-            //           setRestaurantOpen(true);
-            //         }
-            //       }
-            //     });
-            //   }
-            // } else {
-            //   setFarAway(true);
-            //   cartFunction(id);
-            // }
-          }
           setFarRestaurant(false);
+          break;
         }
-      });
+      }
     }
   };
 
@@ -564,11 +554,47 @@ export const Details = () => {
   };
 
   const moveToLocation = () => {
+    const { data } = menuItemDetails;
+
+    var ItemDataObject = {
+      id: data?.id,
+      itemName: data?.name_en,
+      discountedPrice: data?.discounted_price,
+      price: data?.price,
+      quantity: quantity,
+      variants: {
+        sizeVariant: sizeVariant,
+        toppingVariant: toppingVariant,
+        sideVariant: sideVariant,
+      },
+      totalPrice: Number(totalPrice).toFixed(3),
+      specialInstructions: specialInstructions,
+      itemImage: data?.image,
+      restaurant_id: data.restaurant_id,
+    };
+
+    const item_code = uuidv4();
+
+    ItemDataObject = {
+      ...ItemDataObject,
+      item_code,
+    };
+
+    const restaurantIdForRedirect = localStorage?.getItem(
+      "restaurantIdForRedirect"
+    );
+    const findName = resturantsData?.find(
+      (restaurant) => restaurant.id === +restaurantIdForRedirect
+    );
+
     navigate(paths.location, {
       state: {
         restaurant_id: +restaurant_id,
         path: location.pathname,
-        restaurantName: location?.state?.restaurantDetail?.page_title_en,
+        restaurantName: findName?.name_en,
+        ItemDataObject,
+        menuItemDetails,
+        guest: true,
       },
     });
   };
@@ -577,9 +603,122 @@ export const Details = () => {
     setNotDeliver(false);
   };
 
+  const chooseAddress = (item) => {
+    const lat = +item.latitude;
+    const lng = +item.longitude;
+
+    getFullAddress(lat, lng, setFullAddress);
+  };
+
+  useEffect(() => {
+    const filterBranch = branchHours?.filter(
+      (rest) => rest.restaurant_id === +id
+    );
+
+    if (fullAddress !== null) {
+      if (branchHours.length && filterBranch?.length) {
+        for (let i = 0; i < filterBranch?.length; i++) {
+          const resLat = +filterBranch[i]?.latitude;
+          const resLng = +filterBranch[i]?.longitude;
+
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            fullAddress.lat,
+            fullAddress.lng
+          );
+
+          if (distance > 50) {
+            setRestaurantName(restaurantDetail?.name_en);
+            setDistanceIsFar(true);
+            setOpenAddressPopup(false);
+          } else {
+            const address = {
+              latitude: fullAddress.lat,
+              longitude: fullAddress.lng,
+              service_type: "dinein",
+            };
+
+            fetchNearbyRestaurant(address);
+
+            setDistanceIsFar(false);
+            setOpenAddressPopup(false);
+
+            break;
+          }
+        }
+      }
+    }
+  }, [fullAddress, branchHours]);
+
+  const fetchNearbyRestaurant = (address) => {
+    if (nearbyRestaurants.length === 0) {
+      getNearByRestaurants(address).then((res) => {
+        if (res.status === "ok") {
+          localStorage.setItem("selected", JSON.stringify(fullAddress));
+
+          dispatch(getNearByRest(res?.data));
+          setOpenAddressPopup(false);
+          checkNearByRest(res?.data);
+        }
+      });
+    } else {
+      localStorage.setItem("selected", JSON.stringify(fullAddress));
+
+      setOpenAddressPopup(false);
+      checkNearByRest(nearbyRestaurants);
+    }
+  };
+
+  const checkNearByRest = (nearby) => {
+    const filterRestaurant = nearby?.filter((nearBy) => {
+      const splitLogo = nearBy?.logo?.split("/");
+      const splitName = splitLogo[splitLogo.length - 1];
+
+      const name = splitName.split("-")[0];
+
+      return name === restaurantDetail?.name_en?.toLowerCase();
+    });
+
+    if (filterRestaurant?.length === 0) {
+      setRestaurantName(restaurantDetail?.name_en);
+      setDistanceIsFar(true);
+      setOpenAddressPopup(false);
+    } else {
+      if (localStorage.getItem("isAsap") === "true") {
+        for (let i = 0; i < filterRestaurant?.length; i++) {
+          if (filterRestaurant[i]?.openingStatus === "Open") {
+            setRestaurantIsOpen(false);
+            navigate(paths?.cart);
+            break;
+          } else {
+            setRestaurantIsOpen(true);
+          }
+        }
+      } else {
+        setRestaurantIsOpen(false);
+        navigate(paths?.cart);
+      }
+    }
+  };
+
+  const navigateUser = () => {
+    navigate(paths.location, {
+      state: {
+        path: "menu/restaurant",
+        restaurant_id: id,
+        restaurantName: restaurantDetail?.name_en,
+        addNew: true,
+      },
+    });
+  };
+
   return (
     <div>
-      <DetailsHeader image={menuItemDetails?.data?.image} />
+      <DetailsHeader
+        image={menuItemDetails?.data?.image}
+        setOpenAddressPopup={setOpenAddressPopup}
+      />
       <div className="container-fluid section">
         <Stack
           spacing={2}
@@ -927,9 +1066,7 @@ export const Details = () => {
               variant="contained"
               fullWidth
               disabled={
-                token === null ||
-                location?.state?.locationDeliver ||
-                farRestaurant
+                location?.state?.locationDeliver || farRestaurant
                   ? false
                   : menuItemDetails?.data.has_variants && !sizeVariant
               }
@@ -1020,6 +1157,39 @@ export const Details = () => {
           </Stack>
         </Stack>
       </div>
+
+      <SelectLocation
+        openAddressPopup={openAddressPopup}
+        handleClose={() => setOpenAddressPopup(false)}
+        chooseAddress={chooseAddress}
+        navigateUser={navigateUser}
+      />
+
+      <DialogComponent
+        notDeliver={distanceIsFar}
+        setNotDeliver={setDistanceIsFar}
+        restaurantName={restaurantName}
+        fromDetail={true}
+        resturantId={id}
+        location={location}
+        home={true}
+        menuCard={true}
+      />
+
+      <SchedulePicker
+        openSchedulePopup={openSchedulePopup}
+        setOpenSchedulePopup={setOpenSchedulePopup}
+        showTimePicker={showTimePicker}
+        setShowTimePicker={setShowTimePicker}
+        menuCard={true}
+      />
+
+      <ScheduleDialog
+        restaurantOpen={restaurantIsOpen}
+        setRestaurantOpen={setRestaurantIsOpen}
+        setOpenSchedulePopup={setOpenSchedulePopup}
+        menuCard={true}
+      />
 
       <DialogComponent
         notDeliver={notDeliver}

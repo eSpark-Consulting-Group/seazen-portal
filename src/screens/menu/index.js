@@ -46,6 +46,11 @@ import "./style.css";
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../api/restaurant/branches/getBranchesAndHours.js";
+import {
+  getDistanceFromLatLonInKm,
+  getFullAddress,
+} from "../../utils/getAddress.js";
+import SelectLocation from "../../components/dialog/selectLocation.js";
 
 const Menu = () => {
   const navigate = useNavigate();
@@ -71,6 +76,11 @@ const Menu = () => {
   const [pickTime, setPickTime] = useState(dayjs(asapTime).format("hh:mm a"));
   const { id: restaurant_id } = useParams();
   const [fromDetail, setFromDetail] = useState(false);
+  const [openAddressPopup, setOpenAddressPopup] = useState(false);
+  const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
+  const [fullAddress, setFullAddress] = useState(null);
+  const [restaurantName, setRestaurantName] = useState("");
+  const [distanceIsFar, setDistanceIsFar] = useState(false);
 
   const {
     data: restaurantDetailResponse,
@@ -109,32 +119,6 @@ const Menu = () => {
     refetch();
   }, [country]);
 
-  useEffect(() => {
-    if (sessionStorage.getItem("popupOpened") === null) {
-      const filterRestaurant = nearbyRestaurants?.filter((nearBy) =>
-        nearBy.branch_name_en?.includes(restaurantDetail?.name_en)
-      );
-      let itemsIsCalled = 0;
-
-      filterRestaurant?.forEach((restaurant, _, filterArr) => {
-        itemsIsCalled++;
-
-        if (restaurant.openingStatus === "Open") {
-          setRestaurantOpen(false);
-          return;
-
-          //
-        } else if (restaurant.openingStatus === "Close") {
-          setRestaurantOpen(true);
-          return;
-          //
-        }
-      });
-    } else {
-      setRestaurantOpen(false);
-    }
-  }, [nearbyRestaurants, restaurantDetail]);
-
   const [userCurrentAddress, setUserCurrentAddress] = useState({
     latitude: 0,
     longitude: 0,
@@ -172,7 +156,7 @@ const Menu = () => {
       });
       //
     }
-  }, []);
+  }, [localStorage]);
 
   const { refetch: recall } = useQuery({
     queryFn: () => getNearByRestaurants(userCurrentAddress),
@@ -190,7 +174,7 @@ const Menu = () => {
     ) {
       recall();
     }
-  }, [userCurrentAddress]);
+  }, [userCurrentAddress, nearbyRestaurants]);
 
   const { data: branchesAndHoursResponse, isSuccess } = useQuery({
     queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, restaurant_id],
@@ -201,14 +185,13 @@ const Menu = () => {
 
   const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
     (val) => {
-      return val.week_day == pickDate.split("-")[1];
+      return val.week_day == localStorage.getItem("pickDate").split("-")[1];
     }
   );
 
   const onDateSelected = () => {
-    if (pickDate) {
+    if (localStorage.getItem("pickDate") !== null) {
       setOpenSchedulePopup(false);
-      setShowTimePicker(true);
     }
   };
 
@@ -222,9 +205,121 @@ const Menu = () => {
     setNotDeliver(false);
   };
 
+  const chooseAddress = (item) => {
+    const lat = +item.latitude;
+    const lng = +item.longitude;
+
+    getFullAddress(lat, lng, setFullAddress);
+  };
+
+  useEffect(() => {
+    const filterBranch = branchesAndHoursResponse?.data?.filter(
+      (rest) => rest.restaurant_id === restaurantDetail?.id
+    );
+
+    if (fullAddress !== null) {
+      if (branchesAndHoursResponse?.data.length && filterBranch?.length) {
+        for (let i = 0; i < filterBranch?.length; i++) {
+          const resLat = +filterBranch[i]?.latitude;
+          const resLng = +filterBranch[i]?.longitude;
+
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            fullAddress.lat,
+            fullAddress.lng
+          );
+
+          if (distance > 50) {
+            setRestaurantName(restaurantDetail?.name_en);
+            setDistanceIsFar(true);
+            setOpenAddressPopup(false);
+          } else {
+            const address = {
+              latitude: fullAddress.lat,
+              longitude: fullAddress.lng,
+              service_type: "dinein",
+            };
+
+            fetchNearbyRestaurant(address);
+
+            setDistanceIsFar(false);
+            setOpenAddressPopup(false);
+
+            break;
+          }
+        }
+      }
+    }
+  }, [fullAddress, branchesAndHoursResponse?.data]);
+
+  const fetchNearbyRestaurant = (address) => {
+    if (nearbyRestaurants.length === 0) {
+      getNearByRestaurants(address).then((res) => {
+        if (res.status === "ok") {
+          localStorage.setItem("selected", JSON.stringify(fullAddress));
+
+          dispatch(getNearByRest(res?.data));
+          setOpenAddressPopup(false);
+          checkNearByRest(res?.data);
+        }
+      });
+    } else {
+      localStorage.setItem("selected", JSON.stringify(fullAddress));
+
+      setOpenAddressPopup(false);
+      checkNearByRest(nearbyRestaurants);
+    }
+  };
+  const navigateUser = () => {
+    navigate(paths.location, {
+      state: {
+        path: "menu/restaurant",
+        restaurant_id: restaurantDetail?.id,
+        restaurantName: restaurantDetail?.name_en,
+        addNew: true,
+      },
+    });
+  };
+
+  const checkNearByRest = (nearby) => {
+    const filterRestaurant = nearby?.filter((nearBy) => {
+      const splitLogo = nearBy?.logo?.split("/");
+      const splitName = splitLogo[splitLogo.length - 1];
+
+      const name = splitName.split("-")[0];
+
+      return name === restaurantDetail?.name_en?.toLowerCase();
+    });
+
+    if (filterRestaurant?.length === 0) {
+      setRestaurantName(restaurantDetail?.name_en);
+      setDistanceIsFar(true);
+      setOpenAddressPopup(false);
+    } else {
+      if (localStorage.getItem("isAsap") === "true") {
+        for (let i = 0; i < filterRestaurant?.length; i++) {
+          if (filterRestaurant[i]?.openingStatus === "Open") {
+            setRestaurantIsOpen(false);
+            navigate(paths?.cart);
+            break;
+          } else {
+            setRestaurantIsOpen(true);
+          }
+        }
+      } else {
+        setRestaurantIsOpen(false);
+        navigate(paths?.cart);
+      }
+    }
+  };
+
   return (
     <div>
-      <Navbar restaurantDetail={restaurantDetail} />
+      <Navbar
+        restaurantDetail={restaurantDetail}
+        setOpenAddressPopup={setOpenAddressPopup}
+      />
       <RestaurantOptionsServicesContainer
         restaurantDetail={restaurantDetail}
         restaurantBranchHours={restaurantBranchHours}
@@ -250,38 +345,55 @@ const Menu = () => {
         <MobileDatePicker
           onChange={(date) => {
             setPickDate(date.format("MMM DD, YYYY-dddd"));
+
             setFromDetail(true);
           }}
           minDate={dayjs(new Date())}
           open={openSchedulePopup}
           defaultValue={dayjs(new Date().toString())}
           onClose={() => {
-            onDateSelected(false);
+            onDateSelected();
+          }}
+          onAccept={(date) => {
+            if (date) {
+              localStorage.setItem(
+                "pickDate",
+                date.format("MMM DD, YYYY-dddd")
+              );
+              setShowTimePicker(true);
+            }
           }}
           sx={{
             display: "none",
           }}
         />
-        {timeByDate && (
+        {showTimePicker && (
           <MobileTimePicker
             minTime={dayjs(
-              new Date().setHours(parseInt(timeByDate.from_time.split(":")[0]))
+              new Date().setHours(
+                parseInt(timeByDate?.from_time?.split(":")[0])
+              )
             )}
             maxTime={dayjs(
               new Date().setHours(
-                parseInt(timeByDate.to_time.split(":")[0]) + 12
+                parseInt(timeByDate?.to_time?.split(":")[0]) + 12
               )
             )}
             defaultValue={dayjs(new Date())}
             open={showTimePicker}
             onChange={(time) => {
               setPickTime(time.format("hh:mm a"));
+
               setIsAsap(false);
               setFromDetail(true);
               setRestaurantOpen(false);
             }}
             onClose={() => {
               setShowTimePicker(false);
+            }}
+            onAccept={(time) => {
+              localStorage.setItem("isAsap", false);
+              localStorage.setItem("pickTime", time.format("hh:mm a"));
             }}
             sx={{
               display: "none",
@@ -295,7 +407,6 @@ const Menu = () => {
         onClose={() => {
           setFromDetail(false);
           setRestaurantOpen(false);
-          sessionStorage.setItem("popupOpened", true);
         }}
         sx={{
           margin: "0",
@@ -397,15 +508,15 @@ const Menu = () => {
                 </Button>
 
                 <Button
-                  onClick={() =>
+                  onClick={() => {
                     navigate(paths.location, {
                       state: {
                         path: "menu/restaurant",
                         restaurantName: restaurantDetail?.name_en,
                         restaurant_id: restaurantDetail?.id,
                       },
-                    })
-                  }
+                    });
+                  }}
                   className="btn change-button"
                 >
                   <span>Change Location</span>
@@ -424,6 +535,24 @@ const Menu = () => {
           </DialogContentText>
         </DialogContent>
       </Dialog>
+
+      <SelectLocation
+        openAddressPopup={openAddressPopup}
+        handleClose={() => setOpenAddressPopup(false)}
+        chooseAddress={chooseAddress}
+        navigateUser={navigateUser}
+      />
+
+      <DialogComponent
+        notDeliver={distanceIsFar}
+        setNotDeliver={setDistanceIsFar}
+        restaurantName={restaurantName}
+        fromDetail={true}
+        resturantId={id}
+        location={location}
+        home={true}
+        menuCard={true}
+      />
     </div>
   );
 };

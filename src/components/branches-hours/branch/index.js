@@ -54,7 +54,7 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours, branchesData }) => {
 
   const redirectLocation = () => {
     const latlng = { lat: branchesData.latitude, lng: branchesData.longitude };
-    navigate("/location", { state: { latlng } });
+    navigate("/location", { state: { latlng, fromBranch: true } });
   };
 
   return (

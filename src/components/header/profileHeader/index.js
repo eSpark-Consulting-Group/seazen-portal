@@ -14,7 +14,7 @@ import {
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const ProfileHeader = (props) => {
-  const { showFlagOption } = props;
+  const { showFlagOption, customIcon } = props;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -85,8 +85,11 @@ const ProfileHeader = (props) => {
         onClick={() => navigate(paths.home)}
       >
         <div className="profileHeaderaccount-icon">
-          <img src="/assets/img/Group 330.svg" alt="Account Icon" />
-        </div>
+        {customIcon ? (
+            customIcon
+          ) : (
+            <img src="/assets/img/Group 330.svg" alt="Account Icon" />
+          )}{" "}        </div>
       </div>
       <div className="profileHeaderlogo">
         <img

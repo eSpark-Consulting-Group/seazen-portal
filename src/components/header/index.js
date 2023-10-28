@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import { paths } from "../../routes/paths";
+
 import "./style.css";
 
 export const NavbarVariants = {
@@ -8,11 +11,19 @@ export const NavbarVariants = {
 };
 
 const Navbar = (props) => {
-  const { variant, previousRoute, guestUser, path } = props;
+  const { variant, previousRoute, guestUser, path, setOpenAddressPopup } =
+    props;
+
   const navigate = useNavigate();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef(null);
+
   const token = localStorage.getItem("token");
+  const currentLocation = JSON.parse(localStorage.getItem("location"));
+
+  const cart = useSelector((state) => state.cart.cart);
+  const addressData = useSelector((state) => state.address.addressData);
+
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -76,12 +87,7 @@ const Navbar = (props) => {
       </div>
 
       {variant === NavbarVariants.backWithProfile && (
-        <div
-          className="arabicicon-btn"
-          onClick={() => {
-            navigate(paths.cart);
-          }}
-        >
+        <div className="arabicicon-btn" onClick={() => navigate(paths.cart)}>
           <img src="/assets/img/Group 256.svg" alt="Option Icon" />
         </div>
       )}
@@ -96,7 +102,25 @@ const Navbar = (props) => {
           <div
             className="icon-btn"
             onClick={() => {
-              navigate(paths.cart);
+              token === null
+                ? navigate(paths.cart)
+                : addressData?.length === 0
+                ? navigate(paths.address, {
+                    state: {
+                      noAddress: true,
+                      latlng: {
+                        lat: currentLocation?.lat,
+                        lng: currentLocation?.lng,
+                      },
+                      name: currentLocation?.address,
+                      path: "menu/restaurant",
+                      restaurant_id: cart[0]?.restaurant_id,
+                    },
+                  })
+                : addressData?.length > 0 &&
+                  localStorage.getItem("selected") === null
+                ? setOpenAddressPopup(true)
+                : navigate(paths.cart);
             }}
           >
             <img src="/assets/img/cart.svg" alt="Shopping Icon" />

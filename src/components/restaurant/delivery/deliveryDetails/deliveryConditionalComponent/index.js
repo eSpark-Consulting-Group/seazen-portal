@@ -31,6 +31,7 @@ const DeliveryConditionalComponent = ({
   setFromDetail,
   setNotDeliver,
   setRestaurantOpen,
+  onDelivery,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const country = useSelector((state) => state.auth.country);
@@ -99,6 +100,7 @@ const DeliveryConditionalComponent = ({
         scheduleForLater={scheduleForLater}
         fromDetail={fromDetail}
         setFromDetail={setFromDetail}
+        onDelivery={onDelivery}
       />
       {locationDeliver && <ErrorInformation errorMessage={errorMessage} />}
       <MenuItems itemDetail={itemDetail} itemCategoryList={itemCategoryList} />

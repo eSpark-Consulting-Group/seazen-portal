@@ -44,7 +44,7 @@ svg {
   margin: auto;
   border-radius: 12px;
   padding: 11px 0px;
-  margin-bottom: 23px;
+  margin-bottom: 15px;
 }
 
 .button-div .location-button {
@@ -54,6 +54,8 @@ svg {
   font-weight: 600;
   line-height: 24px;
   width: 100%;
+  background-color: transparent !important;
+  border: none;
 }
 
 .not-delivered .dialog-title {
@@ -136,5 +138,17 @@ svg {
 
   .content {
     padding: 16.5px 20px 24px !important;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .button-div {
+    width: 80%;
+    padding: 8px 0px;
+  }
+
+  .button-div .location-button {
+    font-size: 18px;
+    line-height: 22px;
   }
 }

@@ -101,7 +101,7 @@ const Card = (props) => {
               Block: {data?.block}, Street:{data?.street}
             </p>
 
-            {data?.address_type === "house" ? (
+            {data?.address_type?.toLowerCase() === "house" ? (
               <p className="addresses-name">House No: {data?.house_no}</p>
             ) : (
               <p className="addresses-name">Building No: {data?.building}</p>
@@ -109,9 +109,9 @@ const Card = (props) => {
 
             <p className="addresses-name">{data?.avenue}</p>
 
-            {data?.address_type.toLowerCase() === "apartment" ? (
+            {data?.address_type?.toLowerCase() === "apartment" ? (
               <p className="addresses-name">{`Floor: ${data?.floor}, Apartment: ${data?.apartment_no}`}</p>
-            ) : data?.address_type.toLowerCase() === "office" ? (
+            ) : data?.address_type?.toLowerCase() === "office" ? (
               <p className="addresses-name">{`Floor: ${data?.floor}, ${data?.company_name}`}</p>
             ) : null}
 

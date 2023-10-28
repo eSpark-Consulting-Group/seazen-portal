@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -38,6 +38,8 @@ import {
 import { paths } from "../../../../routes/paths";
 
 import "./style.css";
+import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant";
+import { getNearByRest } from "../../../../store/reducers/resturantsSlice";
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
@@ -56,8 +58,10 @@ const DeliveryDetails = (props) => {
     scheduleForLater,
     fromDetail,
     setFromDetail,
+    onDelivery,
   } = props;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const addressData = useSelector((state) => state.address.addressData);
   const nearbyRestaurants = useSelector(
@@ -87,9 +91,9 @@ const DeliveryDetails = (props) => {
     let location = "";
     if (currentLocation === null && selected === null) {
       location = "No Address";
-    } else if (currentLocation !== null && selected === null) {
+    } else if (selected === null && currentLocation !== null) {
       location = truncateString(currentLocation?.address, 15);
-    } else if (currentLocation !== null && selected !== null) {
+    } else if (selected !== null && currentLocation !== null) {
       location = truncateString(selected?.address, 15);
     }
 
@@ -115,70 +119,126 @@ const DeliveryDetails = (props) => {
   const { id: restaurant_id } = useParams();
 
   useEffect(() => {
-    if (restaurantBranchHours) {
-      restaurantBranchHours?.data?.forEach((res, _, array) => {
-        const resLat = +res.latitude;
-        const resLng = +res.longitude;
+    if (onDelivery) {
+      if (sessionStorage.getItem("popupOpened") === null) {
+        const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
+          const splitLogo = nearBy?.logo?.split("/");
+          const splitName = splitLogo[splitLogo.length - 1];
 
-        if (selected !== null && latlng === null) {
-          const distance = getDistanceFromLatLonInKm(
-            resLat,
-            resLng,
-            selected.lat,
-            selected.lng
-          );
+          const name = splitName.split("-")[0];
 
-          if (distance > 50) {
-            setLocationDeliver(true);
-          } else {
-            setLocationDeliver(false);
+          return name === restaurantDetail?.name_en?.toLowerCase();
+        });
+
+        for (let i = 0; i < filterRestaurant?.length; i++) {
+          if (filterRestaurant[i]?.openingStatus === "Open") {
+            setRestaurantOpen(false);
+            break;
+
+            //
+          } else if (filterRestaurant[i]?.openingStatus === "Close") {
+            setRestaurantOpen(true);
+            //
           }
         }
-
-        if (selected !== null && latlng !== null) {
-          const distance = getDistanceFromLatLonInKm(
-            resLat,
-            resLng,
-            selected.lat,
-            selected.lng
-          );
-
-          if (distance > 50) {
-            setLocationDeliver(true);
-          } else {
-            setLocationDeliver(false);
-          }
-        }
-      });
+      } else {
+        sessionStorage.setItem("popupOpened", true);
+        setRestaurantOpen(false);
+      }
     }
-  }, [restaurantBranchHours, selected, latlng, fullAddress]);
+  }, [nearbyRestaurants, restaurantDetail]);
+
+  useEffect(() => {
+    if (restaurantBranchHours?.data?.length) {
+      for (let i = 0; i < restaurantBranchHours?.data?.length; i++) {
+        const resLat = +restaurantBranchHours?.data[i]?.latitude;
+        const resLng = +restaurantBranchHours?.data[i]?.longitude;
+
+        let fromLocation;
+        if (selected === null && currentLocation !== null) {
+          fromLocation = currentLocation;
+        } else if (selected !== null && currentLocation !== null) {
+          fromLocation = selected;
+        }
+
+        if (fromLocation !== null && latlng === null) {
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            fromLocation.lat,
+            fromLocation.lng
+          );
+
+          if (distance > 50) {
+            setLocationDeliver(true);
+          } else {
+            setLocationDeliver(false);
+            setUserLocation(truncateString(fromLocation.address, 15));
+
+            break;
+          }
+        }
+
+        if (fromLocation !== null && latlng !== null) {
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            fromLocation.lat,
+            fromLocation.lng
+          );
+
+          if (distance > 50) {
+            setLocationDeliver(true);
+          } else {
+            setLocationDeliver(false);
+            setUserLocation(truncateString(fromLocation.address, 15));
+            break;
+          }
+        }
+      }
+    }
+  }, [restaurantBranchHours, currentLocation, selected, latlng]);
 
   const getUserAddress = (lat, lng) => {
     getFullAddress(lat, lng, setFullAddress);
   };
 
+  const fetchNearbyRestaurant = (lat, lng) => {
+    const address = {
+      latitude: lat,
+      longitude: lng,
+      service_type: "dinein",
+    };
+
+    getNearByRestaurants(address).then((res) => {
+      if (res.status === "ok") {
+        dispatch(getNearByRest(res?.data));
+      }
+    });
+  };
+
   const asapHandler = () => {
     if (nearbyRestaurants?.length !== 0) {
-      const filterRestaurant = nearbyRestaurants?.filter((nearBy) =>
-        nearBy.branch_name_en?.includes(restaurantDetail?.name_en)
-      );
-      let itemsIsCalled = 0;
+      const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
+        const splitLogo = nearBy?.logo?.split("/");
+        const splitName = splitLogo[splitLogo.length - 1];
 
-      filterRestaurant?.forEach((restaurant, _, filterArr) => {
-        itemsIsCalled++;
+        const name = splitName.split("-")[0];
 
-        if (restaurant.openingStatus === "Open") {
+        return name === restaurantDetail?.name_en?.toLowerCase();
+      });
+
+      for (let i = 0; i < filterRestaurant?.length; i++) {
+        if (filterRestaurant[i]?.openingStatus === "Open") {
           asapCall();
-
-          return;
+          break;
 
           //
-        } else if (restaurant.openingStatus === "Close") {
+        } else if (filterRestaurant[i]?.openingStatus === "Close") {
           setRestaurantOpen(true);
-          return;
           //
         }
-      });
+      }
     } else {
       asapCall();
     }
@@ -188,6 +248,14 @@ const DeliveryDetails = (props) => {
     setIsAsap(true);
     setIsDeliveryDropDown(false);
     const currentTime = new Date();
+
+    localStorage.setItem("pickTime", dayjs(currentTime).format("hh:mm a"));
+    localStorage.setItem(
+      "pickDate",
+      dayjs(currentTime).format("MMM DD, YYYY-dddd")
+    );
+    localStorage.setItem("isAsap", true);
+
     currentTime.setMinutes(currentTime.getMinutes() + 30);
     setPickTime(dayjs(currentTime).format("hh:mm a"));
     setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
@@ -202,14 +270,13 @@ const DeliveryDetails = (props) => {
 
   const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
     (val) => {
-      return val.week_day == pickDate.split("-")[1];
+      return val.week_day == localStorage.getItem("pickDate").split("-")[1];
     }
   );
 
   const onDateSelected = () => {
-    if (pickDate) {
+    if (localStorage.getItem("pickDate") !== null) {
       setOpenSchedulePopup(false);
-      setShowTimePicker(true);
     }
   };
 
@@ -306,6 +373,10 @@ const DeliveryDetails = (props) => {
                     <Dropdown.Item
                       onClick={() => {
                         getUserAddress(address.latitude, address.longitude);
+                        fetchNearbyRestaurant(
+                          address.latitude,
+                          address.longitude
+                        );
                       }}
                       style={{
                         textTransform: "capitalize",
@@ -375,14 +446,10 @@ const DeliveryDetails = (props) => {
                 padding: "0",
               }}
             >
-              {fromDetail
-                ? `${scheduleForLater.pickDate.split("-")[0]} ${
-                    scheduleForLater.isAsap
-                      ? "ASAP "
-                      : scheduleForLater.pickTime
-                  }`
-                : `${pickDate.split("-")[0]} ${isAsap ? "ASAP " : pickTime}`}
-
+              {localStorage.getItem("pickDate").split("-")[0]}{" "}
+              {localStorage.getItem("isAsap") === "true"
+                ? "ASAP"
+                : localStorage.getItem("pickTime")}
               <StyledOuterContainerIcon className="dropdown_icon_container">
                 <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
               </StyledOuterContainerIcon>
@@ -450,33 +517,53 @@ const DeliveryDetails = (props) => {
       </div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MobileDatePicker
-          onChange={(date) => setPickDate(date.format("MMM DD, YYYY-dddd"))}
+          // onChange={(date) => setPickDate(date.format("MMM DD, YYYY-dddd"))}
           minDate={dayjs(new Date())}
           open={openSchedulePopup}
           defaultValue={dayjs(new Date().toString())}
-          onClose={() => onDateSelected(false)}
+          onClose={() => {
+            onDateSelected();
+          }}
+          onAccept={(date) => {
+            if (date) {
+              localStorage.setItem(
+                "pickDate",
+                date.format("MMM DD, YYYY-dddd")
+              );
+              setShowTimePicker(true);
+            }
+          }}
           sx={{
             display: "none",
           }}
         />
-        {timeByDate && (
+        {showTimePicker && (
           <MobileTimePicker
             minTime={dayjs(
-              new Date().setHours(parseInt(timeByDate.from_time.split(":")[0]))
+              new Date().setHours(
+                parseInt(timeByDate?.from_time?.split(":")[0])
+              )
             )}
             maxTime={dayjs(
               new Date().setHours(
-                parseInt(timeByDate.to_time.split(":")[0]) + 12
+                parseInt(timeByDate?.to_time?.split(":")[0]) + 12
               )
             )}
             defaultValue={dayjs(new Date())}
             open={showTimePicker}
-            onChange={(time) => {
-              setPickTime(time.format("hh:mm a"));
-              setIsAsap(false);
-              setFromDetail(false);
-            }}
+            // onChange={(time) => {
+            //   setPickTime(time.format("hh:mm a"));
+            //   setIsAsap(false);
+            //   setFromDetail(false);
+            // }}
             onClose={() => setShowTimePicker(false)}
+            onAccept={(time) => {
+              localStorage.setItem("isAsap", false);
+              localStorage.setItem("pickTime", time.format("hh:mm a"));
+
+              // dispatch(addPickTime(time.format("hh:mm a")));
+              // dispatch(toggleIsAsap(false));
+            }}
             sx={{
               display: "none",
             }}
@@ -523,7 +610,10 @@ const DeliveryDetails = (props) => {
 
       <Dialog
         open={restaurantOpen}
-        onClose={() => setRestaurantOpen(false)}
+        onClose={() => {
+          sessionStorage.setItem("popupOpened", true);
+          setRestaurantOpen(false);
+        }}
         sx={{
           margin: "0",
           textAlign: "center",

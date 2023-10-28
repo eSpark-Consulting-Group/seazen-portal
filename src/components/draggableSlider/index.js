@@ -1,14 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import { useQuery } from "@tanstack/react-query";
+
 import getAllPopularItems, {
   GET_ALL_POPULAR_ITEMS_QUERY_KEY,
 } from "../../api/home/getAllPopularItems";
-import "./style.css";
-import { useNavigate } from "react-router-dom";
-import { paths } from "../../routes/paths";
-import { useDispatch, useSelector } from "react-redux";
-import { getBranchHours } from "../../store/reducers/resturantsSlice";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
+
+import { paths } from "../../routes/paths";
+
+import { getBranchHours } from "../../store/reducers/resturantsSlice";
+
+import "./style.css";
 
 export default function App(props) {
   const {
@@ -17,6 +22,8 @@ export default function App(props) {
     setFromPopular,
     setPopularId,
     setRestaurantId,
+    setDistanceIsFar,
+    setRestaurantOpen,
   } = props;
 
   const imageInfo = [
@@ -88,6 +95,8 @@ export default function App(props) {
               setPopularId={setPopularId}
               restaurant_id={info.restaurant_id}
               setRestaurantId={setRestaurantId}
+              setDistanceIsFar={setDistanceIsFar}
+              setRestaurantOpen={setRestaurantOpen}
             />
           );
         })}
@@ -171,6 +180,8 @@ function Box({
   setPopularId,
   restaurant_id,
   setRestaurantId,
+  setDistanceIsFar,
+  setRestaurantOpen,
 }) {
   const captionLines = caption.split("\n");
   const captionImageClass = isFirstCard
@@ -185,6 +196,9 @@ function Box({
 
   const resturantsData = useSelector(
     (state) => state.resturants.resturantsData
+  );
+  const nearbyRestaurants = useSelector(
+    (state) => state.resturants.nearbyRestaurants
   );
 
   const fetchBranchHours = (restaurantId) => {
@@ -210,20 +224,15 @@ function Box({
 
         localStorage.setItem("restaurantName", restName.name_en);
 
-        if (selectedLocation && isToken !== null) {
-          setPopularId(id);
-          setOpenAddressPopup(true);
-          setFromPopular(true);
-          setRestaurantId(restaurant_id);
-        } else {
-          navigate(paths.details + "/" + id, {
-            state: {
-              id: id,
-              loc: "popular",
-              restaurant_id: restaurant_id,
-            },
-          });
-        }
+        setPopularId(id);
+        setRestaurantId(restaurant_id);
+        navigate(paths.details + "/" + id, {
+          state: {
+            id: id,
+            loc: "popular",
+            restaurant_id: restaurant_id,
+          },
+        });
       }}
     >
       <img className="box-image" src={imageUrl} alt="Image" />
