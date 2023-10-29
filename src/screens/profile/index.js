@@ -1,26 +1,14 @@
-import React from 'react'
-import ProfileInformation from '../../components/profileDetails/profileInformation'
-import ProfileHeader from '../../components/header/profileHeader'
-import { BsHouseDoor } from "react-icons/bs"; 
-
+import React from "react";
+import ProfileInformation from "../../components/profileDetails/profileInformation";
+import ProfileHeader from "../../components/header/profileHeader";
 
 export const Profile = () => {
   return (
     <div className="profileSectionContainer">
-        <ProfileHeader  customIcon={
-          <BsHouseDoor
-            size={22}
-            color="black"
-            style={{
-              position:"absolute",
-              top:"8px",
-              left:"9.5px",
-            }}
-          />
-        } />
-        <div className="px-3">
-        <ProfileInformation/>
-        </div>
-        </div>
-  )
-}
+      <ProfileHeader customIcon={true} />
+      <div className="px-3">
+        <ProfileInformation />
+      </div>
+    </div>
+  );
+};

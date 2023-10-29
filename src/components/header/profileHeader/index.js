@@ -81,15 +81,24 @@ const ProfileHeader = (props) => {
   return (
     <nav className="profile-header">
       <div
-        className="profileHeaderaccount"
+        className={customIcon ? "home-icon" : "profileHeaderaccount"}
         onClick={() => navigate(paths.home)}
       >
-        <div className="profileHeaderaccount-icon">
-        {customIcon ? (
-            customIcon
+        <div
+          className={
+            customIcon ? "home-icon-header" : "profileHeaderaccount-icon"
+          }
+        >
+          {customIcon ? (
+            <img
+              style={{ width: "21.47px" }}
+              src="/assets/img/home.png"
+              alt="Home Icon"
+            />
           ) : (
             <img src="/assets/img/Group 330.svg" alt="Account Icon" />
-          )}{" "}        </div>
+          )}{" "}
+        </div>
       </div>
       <div className="profileHeaderlogo">
         <img

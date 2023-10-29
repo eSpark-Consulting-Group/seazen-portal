@@ -4,10 +4,16 @@ import { handleApiError } from "../utils/errorHandling";
 
 const addToCartApiCall = async (cartItem) => {
   try {
+    const token = localStorage.getItem("token");
     // Make the POST request with the provided token and cart item.
     const response = await axiosInstance.post(
       API_ENDPOINTS.CART.ADD_TO_CART,
-      cartItem
+      cartItem,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
 
     // Check the response status code.

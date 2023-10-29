@@ -18,7 +18,8 @@
   margin-top: 20px;
 }
 
-.profileHeaderaccount {
+.profileHeaderaccount,
+.home-icon {
   top: 20px;
   left: 24px;
   width: 41px;
@@ -45,6 +46,14 @@
 .profileHeaderaccount-icon {
   padding-top: 2px;
   padding-left: 6px;
+}
+
+.home-icon-header {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* .shopping-icon {
@@ -371,6 +380,7 @@
 .profile-header {
   height: 100%;
 }
+
 
 @media screen and (max-width: 500px) and (min-width: 360px) {
   .profileHeaderpopup {
