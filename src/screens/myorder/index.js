@@ -10,6 +10,7 @@ import styles from "./style.module.css";
 import FooterSection from "../../components/footer/footerTextBox/footerSection";
 import { useQuery } from "@tanstack/react-query";
 import getOrders, { GET_ORDERS_QUERY_KEY } from "../../api/order/getOrders";
+import Navbar from "../../components/header";
 
 const MyOrderScreen = () => {
   const navigate = useNavigate();
@@ -126,7 +127,9 @@ const MyOrderScreen = () => {
 
   return (
     <>
-      <OrderNavbar />
+      <div style={{ padding: "20px 28px 33px" }}>
+        <Navbar backIcon title={"My Orders"} languageIcon />
+      </div>
       <div className={`${styles.my_orderscreen}`}>
         <div className={`${styles.category_items}`}>
           {category.map((item, index) => {
@@ -191,7 +194,7 @@ const MyOrderScreen = () => {
                           handleRate={handleRate}
                         />
                       );
-                    }else if(item.service_type === state){
+                    } else if (item.service_type === state) {
                       return (
                         <OrderCard
                           item={item}

@@ -605,10 +605,19 @@ const Home = () => {
     selectedText,
     filterSelectedNow,
   ]);
-
+  const token = localStorage.getItem("token");
   return (
     <div className="home-styling container-fluid">
-      <Navbar setOpenAddressPopup={setOpenAddressToChoose} />
+      <div style={{ padding: "8px" }}>
+        <Navbar
+          profile
+          searchIcon
+          setOpenAddressPopup={setOpenAddressToChoose}
+          logo
+          cartIcon
+          profileIconUrl={token ? paths.profile : paths.guest_profile}
+        />
+      </div>
       <div className="card-spacing">
         <Slider />
       </div>

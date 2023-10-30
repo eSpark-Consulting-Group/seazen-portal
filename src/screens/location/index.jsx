@@ -614,9 +614,11 @@ function LocationPage() {
           justifyContent="space-between"
           spacing={2}
         >
-          <div className="Phone-Nav">
+          <div style={{ padding: "8px" }}>
             <Navbar
-              variant={NavbarVariants.backWithProfile}
+              backIcon
+              logo
+              languageIcon
               guestUser={location.state?.guestUser ? true : false}
               path={location?.state?.path}
             />

@@ -78,8 +78,8 @@ function CustomerRegistration() {
       justifyContent="space-between"
       spacing={2}
     >
-      <div className="Register-Nav">
-        <Navbar variant={NavbarVariants.backWithProfile} />
+      <div style={{ padding: "20px 12px 0px 8px" }}>
+        <Navbar backIcon logo languageIcon />
       </div>{" "}
       <Stack
         spacing={5}

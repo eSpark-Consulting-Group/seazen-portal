@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./style.css";
+// import "./style.css";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../../routes/paths";
 import countryList from "../../../api/common/getAllCountries";
@@ -100,13 +100,13 @@ const ProfileHeader = (props) => {
           )}{" "}
         </div>
       </div>
-      <div className="profileHeaderlogo">
+      {/* <div className="profileHeaderlogo">
         <img
           style={{ width: "90px" }}
           src="/assets/img/order seazen logo.svg"
           alt="Logo"
         />
-      </div>
+      </div> */}
       {showFlagOption && (
         <div className="profileHeaderflag-profile">
           <div className="profileHeadercircle-container" onClick={togglePopup}>
