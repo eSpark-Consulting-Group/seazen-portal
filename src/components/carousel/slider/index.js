@@ -40,7 +40,6 @@ const HomeBannerSlider = () => {
         getAllRestaurantsBanner(country?.id)
           .then((res) => {
             dispatch(getRestaurantsBanner(res.data));
-            console.log(res);
           })
           .catch((err) => {
             console.log(err);

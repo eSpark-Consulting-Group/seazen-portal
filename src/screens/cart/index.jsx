@@ -232,7 +232,6 @@ function CartPage() {
         setPromoDiscount(res.data);
       })
       .catch((err) => {
-        console.log(err);
         setDialogOpen(true);
       });
   };

@@ -348,11 +348,6 @@ export const Details = () => {
   };
 
   const getExtraToppingQuantity = (option) => {
-    console.log(
-      "option",
-      toppingVariant.find((item) => item.name_en === option?.name_en)
-        ?.quantity || 0
-    );
     return (
       toppingVariant.find((item) => item.name_en === option?.name_en)
         ?.quantity || 0
@@ -365,7 +360,6 @@ export const Details = () => {
       const index = prevToppingVariant.findIndex(
         (item) => item.name_en === option.name_en
       );
-      console.log(prevToppingVariant, "prevToppingVariant");
       setExtraToppingCount((prev) => prev + 1);
 
       // If the topping with the same name_en exists, update its quantity

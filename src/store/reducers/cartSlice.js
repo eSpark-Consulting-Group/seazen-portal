@@ -24,13 +24,6 @@ const cartSlice = createSlice({
         0
       );
 
-      console.log(
-        "type test",
-        state.total,
-        item.totalPrice,
-        state.total + Number(item.totalPrice)
-      );
-
       var total = state.total + Number(item.totalPrice);
 
       state.total = total;
