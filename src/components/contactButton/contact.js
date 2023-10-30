@@ -13,9 +13,6 @@ const ContactUs = () => {
   const contactInfo = useSelector((state) => state.auth.country);
   const { customer_care, whatsapp_country_code, whatsapp_no } = contactInfo;
 
-  console.log("Customer Care:", customer_care);
-  console.log("WhatsApp Country Code:", whatsapp_country_code);
-  console.log("WhatsApp Number:", whatsapp_no);
   let url = `https://web.whatsapp.com/send?phone=${whatsapp_country_code}${whatsapp_no}`;
 
   const handleButtonClick = () => {

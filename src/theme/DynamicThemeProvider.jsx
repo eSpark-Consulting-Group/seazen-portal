@@ -16,8 +16,6 @@ function DynamicThemeProvider({ children }) {
         themeColor: dynamicColor,
       },
     });
-
-    console.log("dynamicColor", dynamicColor);
   }, [dynamicColor]);
 
   return <ThemeProvider theme={dynamicPalette}>{children}</ThemeProvider>;
