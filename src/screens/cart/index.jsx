@@ -665,7 +665,7 @@ function CartPage() {
                 : (location?.state?.fromMenu !== undefined ||
                     location?.state?.fromDetail !== undefined) &&
                   cart?.length
-                ? `${paths.menu}/restaurant/${cart[0].restaurant_id}`
+                ? `${paths.menu}/restaurant/${cart[0].restaurant_id}/delivery`
                 : -1
             )
           }

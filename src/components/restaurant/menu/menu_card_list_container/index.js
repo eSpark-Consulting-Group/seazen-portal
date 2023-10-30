@@ -64,6 +64,7 @@ const MenuCardListContainer = ({
   const categoryList = useSelector(
     (state) => state?.resturants?.listItemByCategory
   );
+  const cart = useSelector((state) => state.cart.cart);
   const addressData = useSelector((state) => state.address.addressData);
   const resturantsData = useSelector(
     (state) => state.resturants.resturantsData
@@ -451,7 +452,13 @@ const MenuCardListContainer = ({
               : addressData?.length > 0 &&
                 localStorage.getItem("selected") === null
               ? setOpenAddressPopup(true)
-              : navigate(paths.cart);
+              : navigate(paths.cart, {
+                  state: {
+                    fromMenu: true,
+                    path: "menu/restaurant",
+                    restaurant_id: cart[0]?.restaurant_id,
+                  },
+                });
           }}
         >
           <Stack direction="row" alignItems="center" spacing={1.5}>

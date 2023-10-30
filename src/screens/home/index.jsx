@@ -428,12 +428,12 @@ const Home = () => {
 
   // Removing border and background color from icon if Delivers to me is not selected
   const removeClasses = () => {
-    // Add border to restaurant image
+    // Remove border from restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("delivery-true");
     }
 
-    // Add background color to icon on restaurant image
+    // Remove background color from icon on restaurant image
     for (let i = 0; i < parentIcon?.length; i++) {
       const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
@@ -446,12 +446,12 @@ const Home = () => {
 
   // Removing border and background color from icon if Available to deliver is not selected
   const removeBrownClasses = () => {
-    // Add border to restaurant image
+    // Remove border from restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("add-brown-border");
     }
 
-    // Add background color to icon on restaurant image
+    // Remove background color from icon on restaurant image
     for (let i = 0; i < parentIcon?.length; i++) {
       const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
@@ -462,7 +462,7 @@ const Home = () => {
     }
   };
 
-  // Add border and background color from icon if Available to deliver is selected
+  // Add border and background color if Available to deliver is selected
   const addBrownClasses = () => {
     // Add border to restaurant image
     for (let i = 0; i < divs?.length; i++) {
@@ -480,7 +480,7 @@ const Home = () => {
     }
   };
 
-  // Add border and background color from icon if Delivers to me is selected
+  // Add border and background color if Delivers to me is selected
   const addClasses = () => {
     // Add border to restaurant image
     for (let i = 0; i < divs?.length; i++) {

@@ -281,7 +281,12 @@ function LocationPage() {
     const userLocation = localStorage.getItem("location");
 
     // if (token !== null) {
-    if (userSelected === null && userLocation === null) {
+    if (
+      userSelected === null &&
+      userLocation === null &&
+      location?.state?.latlng === undefined &&
+      location?.state?.editLocation === undefined
+    ) {
       //
       const getCountry = address.split(",");
       const lastElem = getCountry[getCountry.length - 1];
@@ -289,7 +294,7 @@ function LocationPage() {
       let forCondition = findCountry[findCountry.length - 1];
 
       if (forCondition === "Arabia") {
-        forCondition = "Saudi Arabia";
+        forCondition = "Saudia Arabia";
       }
 
       if (forCondition == "Emirates") {
@@ -301,7 +306,12 @@ function LocationPage() {
       }
 
       //
-    } else if (userSelected === null && userLocation !== null) {
+    } else if (
+      userSelected === null &&
+      userLocation !== null &&
+      location?.state?.latlng === undefined &&
+      location?.state?.editLocation === undefined
+    ) {
       //
 
       const parsedUserLocation = JSON.parse(userLocation);
@@ -312,7 +322,7 @@ function LocationPage() {
       let forCondition = findCountry[findCountry.length - 1];
 
       if (forCondition === "Arabia") {
-        forCondition = "Saudi Arabia";
+        forCondition = "Saudia Arabia";
       }
 
       if (forCondition == "Emirates") {
@@ -324,7 +334,12 @@ function LocationPage() {
       }
 
       //
-    } else if (userSelected !== null && userLocation !== null) {
+    } else if (
+      userSelected !== null &&
+      userLocation !== null &&
+      location?.state?.latlng === undefined &&
+      location?.state?.editLocation === undefined
+    ) {
       //
 
       const parsedUserLocation = JSON.parse(userSelected);
@@ -335,7 +350,7 @@ function LocationPage() {
       let forCondition = findCountry[findCountry.length - 1];
 
       if (forCondition === "Arabia") {
-        forCondition = "Saudi Arabia";
+        forCondition = "Saudia Arabia";
       }
 
       if (forCondition == "Emirates") {
@@ -347,7 +362,7 @@ function LocationPage() {
       }
     }
     // }
-  }, [localStorage, address, placeChanged]);
+  }, [localStorage, address, placeChanged, location]);
 
   const servicePlaceCheck = (fullAddress) => {
     let countriesName = [];
@@ -361,19 +376,6 @@ function LocationPage() {
     } else {
       setNoRegion(true);
     }
-
-    // if (
-    //   fullAddress === "Kuwait" ||
-    //   fullAddress === "Bahrain" ||
-    //   fullAddress === "Emirates" ||
-    //   fullAddress === "Oman" ||
-    //   fullAddress === "Qatar" ||
-    //   fullAddress === "Arabia"
-    // ) {
-    //   setNoRegion(false);
-    // } else {
-    //   setNoRegion(true);
-    // }
   };
 
   const onLoad = (autocompleteInstance) => {
@@ -395,7 +397,7 @@ function LocationPage() {
       let forCondition = findCountry[findCountry.length - 1];
 
       if (forCondition === "Arabia") {
-        forCondition = "Saudi Arabia";
+        forCondition = "Saudia Arabia";
       }
 
       if (forCondition == "Emirates") {

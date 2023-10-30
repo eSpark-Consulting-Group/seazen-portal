@@ -19,167 +19,6 @@ import {
 
 import "./style.css";
 
-// const OrderTypeButtonExpandable = ({
-//   itemId,
-//   iconSrc,
-//   text,
-//   handleButtonClickIndex,
-//   buttonOneText,
-//   buttonTwoText,
-//   setIsButtonExpanded,
-//   showDinein,
-//   showDelivery,
-//   showPickup,
-//   showCatering,
-//   isButtonExpanded,
-//   clicked,
-//   id,
-//   handleOrderTypeFilter,
-//   customButtonExpandedClass, // New prop to pass the custom class
-//   setOpenAddressPopup,
-//   setToggleFilterClassNear,
-//   filterClassNear,
-//   setFilterSelectedNow,
-//   filterSelectedNow,
-//   setTypesState,
-//   typesState,
-// }) => {
-//   const [expanded, setToggleExpanded] = useState(false);
-//   const [filterClassDelivery, setToggleFilterClassDelivery] = useState(false);
-//   const [selectedId, setSelectedId] = useState(null);
-//   const dispatch = useDispatch();
-
-//   useEffect(() => {
-//     handleOrderTypeFilter(
-//       filterClassDelivery,
-//       filterClassNear,
-//       filterSelectedNow
-//     );
-//   }, [filterClassDelivery, filterClassNear]);
-
-//   const handleFilterClick = (orderType) => {
-//     if (!filterClassDelivery) {
-//       orderType === "delivery" && setFilterSelectedNow(orderType);
-//     }
-//     if (!filterClassNear) {
-//       if (orderType === "near") {
-//         setFilterSelectedNow(orderType);
-//         if (setOpenAddressPopup) {
-//           setOpenAddressPopup(true);
-//         }
-//       }
-//     }
-//     if (orderType === "delivery") {
-//       setToggleFilterClassDelivery(!filterClassDelivery);
-//     } else {
-//       setToggleFilterClassNear(!filterClassNear);
-//     }
-//   };
-
-//   const handleClick = (selectedService, sID) => {
-//     setSelectedId(sID);
-//     dispatch(setSelectedService(selectedService.toLowerCase()));
-
-//     if (selectedService !== "Catering") {
-//       setToggleExpanded(!expanded);
-//       // setIsButtonExpanded({ expanded: !expanded, id: id });
-//       if (selectedService === "Dine In") {
-//         setTypesState({
-//           dinein: !typesState.dinein,
-//           catering: !typesState.catering,
-//           delivery: false,
-//           pickup: false,
-//         });
-//       }
-
-//       if (selectedService === "Delivery") {
-//         setTypesState({
-//           dinein: false,
-//           catering: !typesState.catering,
-//           delivery: !typesState.delivery,
-//           pickup: false,
-//         });
-//       }
-
-//       if (selectedService === "Pickup") {
-//         setTypesState({
-//           dinein: false,
-//           catering: !typesState.catering,
-//           delivery: false,
-//           pickup: !typesState.pickup,
-//         });
-//       }
-
-//       if (!expanded) {
-//         // Set the delivery filter as active by default when expanding the button
-//         setToggleFilterClassDelivery(true);
-//         setToggleFilterClassNear(false);
-//         setFilterSelectedNow("delivery");
-//       }
-//     } else {
-//       setTypesState({
-//         dinein: false,
-//         catering: false,
-//         delivery: false,
-//         pickup: false,
-//       });
-//       // setIsButtonExpanded({ expanded: false });
-//     }
-
-//     handleButtonClickIndex(id);
-//   };
-
-//   return (
-//     <div
-//       className={`custom-button ${
-//         (showDinein || showDelivery || showPickup) && selectedId === id
-//           ? "expanded"
-//           : ""
-//       } ${clicked ? "clicked" : ""} ${customButtonExpandedClass}`}
-//     >
-//       <img
-//         src={iconSrc}
-//         alt="Icon"
-//         className="orderTypebutton-icon"
-//         onClick={() => handleClick(text, itemId)}
-//       />
-//       {(((showDinein || showDelivery || showPickup) && selectedId === id) ||
-//         !showDinein ||
-//         !showDelivery ||
-//         !showPickup) && (
-//         <span
-//           onClick={() => handleClick(text, itemId)}
-//           className={`orderTypebutton-text`}
-//         >
-//           {text}
-//         </span>
-//       )}
-//       <span className="orderTypebutton-content">
-//         {(showDinein || showDelivery || showPickup) && selectedId === id && (
-//           <div className="options">
-//             <button
-//               className={`orderTypebutton-style-one ${
-//                 filterClassDelivery && "orderTypebutton-style-one-active"
-//               }`}
-//               onClick={() => handleFilterClick("delivery")}
-//             >
-//               {buttonOneText}
-//             </button>
-//             <button
-//               className={`orderTypebutton-style-two ${
-//                 filterClassNear && "orderTypebutton-style-two-active"
-//               }`}
-//               onClick={() => handleFilterClick("near")}
-//             >
-//               {buttonTwoText}
-//             </button>
-//           </div>
-//         )}
-//       </span>
-//     </div>
-//   );
-// };
-
 const RestaurantsOrderTypeButton = (props) => {
   const {
     setOpenAddressPopup,
@@ -262,14 +101,14 @@ const RestaurantsOrderTypeButton = (props) => {
   const parentIcon = document?.getElementsByClassName("inner-svg-container");
   const divs = parentDiv?.getElementsByClassName("restaurantCards");
 
-  // Removing border and background color from icon if Delivers to me is not selected
+  // Removing border and background color if Delivers to me is not selected
   const removeClasses = () => {
-    // Add border to restaurant image
+    // Remove border from restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("delivery-true");
     }
 
-    // Add background color to icon on restaurant image
+    // Remove background color from icon on restaurant image
     for (let i = 0; i < parentIcon?.length; i++) {
       const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
@@ -280,14 +119,14 @@ const RestaurantsOrderTypeButton = (props) => {
     }
   };
 
-  // Removing border and background color from icon if Available to deliver is not selected
+  // Removing border and background color if Available to deliver is not selected
   const removeBrownClasses = () => {
-    // Add border to restaurant image
+    // Remove border from restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("add-brown-border");
     }
 
-    // Add background color to icon on restaurant image
+    // Remove background color from icon on restaurant image
     for (let i = 0; i < parentIcon?.length; i++) {
       const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
@@ -360,6 +199,7 @@ const RestaurantsOrderTypeButton = (props) => {
   const handleClick = (selectedService, id) => {
     setSelectedId(id);
     setSelectedText(selectedService);
+
     if (selectedService === "Dine In") {
       const removeSpace = "dinein";
       dispatch(setSelectedService(removeSpace));

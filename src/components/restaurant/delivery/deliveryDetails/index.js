@@ -302,11 +302,16 @@ const DeliveryDetails = (props) => {
           path: "menu/restaurant",
           guestUser: true,
           restaurant_id: restaurant_id,
+          restaurantName: restaurantDetail?.page_title_en,
         },
       });
     } else {
       navigate(paths.location, {
-        state: { path: "menu/restaurant", restaurant_id: restaurant_id },
+        state: {
+          path: "menu/restaurant",
+          restaurant_id: restaurant_id,
+          restaurantName: restaurantDetail?.page_title_en,
+        },
       });
     }
   };
