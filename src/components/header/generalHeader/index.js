@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 
 import { paths } from "../../../routes/paths";
+import MenuNavbar from "../../../components/header";
 
 import "./style.css";
 
@@ -77,6 +78,7 @@ const Navbar = (props) => {
           </div>
         </div>
       </nav>
+      {/* <MenuNavbar backIcon cartIcon /> */}
     </div>
   );
 };

@@ -28,6 +28,7 @@ import deleteAddressApiCall from "../../api/address/deleteAddress";
 import "./style.css";
 import { paths } from "../../routes/paths";
 import { getFullAddress } from "../../utils/getAddress";
+import Navbar from "../../components/header";
 
 const App = () => {
   const isToken = localStorage.getItem("token");

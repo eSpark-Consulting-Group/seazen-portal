@@ -112,8 +112,8 @@ function PhoneNumberVerificationIndex() {
         justifyContent="space-between"
         spacing={2}
       >
-        <div className="Phone-Nav">
-          <Navbar variant={NavbarVariants.backWithProfile} />
+        <div style={{ padding: "8px" }}>
+          <Navbar backIcon logo languageIcon />
         </div>
         <Stack
           spacing={5}

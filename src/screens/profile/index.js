@@ -1,11 +1,22 @@
 import React from "react";
 import ProfileInformation from "../../components/profileDetails/profileInformation";
 import ProfileHeader from "../../components/header/profileHeader";
+import Navbar from "../../components/header";
+import { paths } from "../../routes/paths";
 
 export const Profile = () => {
   return (
     <div className="profileSectionContainer">
-      <ProfileHeader customIcon={true} />
+      <div className="header-wrapper">
+        <Navbar
+          profile
+          logo
+          languageIcon
+          showFlagOption
+          borderedIcon
+          profileIconUrl={paths.home}
+        />
+      </div>
       <div className="px-3">
         <ProfileInformation />
       </div>
