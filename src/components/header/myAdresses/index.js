@@ -1,7 +1,10 @@
 import React from "react";
-import "./style.css";
-import { useNavigate } from "react-router";
+
+import Navbar from "../../../components/header";
+
 import { paths } from "../../../routes/paths";
+
+import "./style.css";
 
 const MyAddresses = (props) => {
   const {
@@ -16,54 +19,73 @@ const MyAddresses = (props) => {
     fromHome,
     fromMenu,
     fromDetail,
+    backToCart,
+    backCart,
   } = props;
-  const navigate = useNavigate();
+
+  const pathToCart = () => {
+    return (
+      (fromAllAddresses && path === "/cart") ||
+      (fromCart !== undefined && path === "/cart") ||
+      (fromAllAddresses && backToCart !== undefined && path !== "/profile")
+    );
+  };
+
+  const pathToAddresses = () => {
+    return (
+      (fromHome !== undefined ||
+        fromMenu !== undefined ||
+        fromDetail !== undefined) &&
+      backToCart === undefined &&
+      backCart === undefined
+    );
+  };
+
+  const pathToAddressWithEdit = () => {
+    return (
+      edit !== undefined ||
+      ((fromHome !== undefined ||
+        fromMenu !== undefined ||
+        fromDetail !== undefined) &&
+        backToCart !== undefined)
+    );
+  };
 
   return (
-    <header className="header container-fluid">
-      <div
-        className="left-icons"
-        onClick={() => {
-          navigate(
-            fromAllAddresses && path === "/profile"
-              ? paths.profile
-              : !fromAllAddresses && path === "/profile"
-              ? paths.addresses
-              : (fromAllAddresses && path === "/cart") ||
-                (fromCart !== undefined && path === "/cart") ||
-                fromHome !== undefined ||
-                fromMenu !== undefined ||
-                fromDetail !== undefined
-              ? paths.cart
-              : edit !== undefined
-              ? paths.addresses
-              : noAddress !== undefined
-              ? -1
-              : addNew !== undefined
-              ? `${paths.menu}/restaurant/${restaurant_id}/delivery`
-              : paths.home,
-            {
-              state: {
-                path:
-                  !fromAllAddresses && path === "/profile" ? "/profile" : "",
-                back: fromAllAddresses && path === "/cart" ? paths.home : null,
-                fromHome: fromHome,
-                fromMenu: fromMenu,
-                fromDetail: fromDetail,
-              },
-            }
-          );
+    <div style={{ padding: "20px 29px 20px 24px" }}>
+      <Navbar
+        backIcon
+        languageIcon
+        backIconURLState={{
+          state: {
+            path: !fromAllAddresses && path === "/profile" ? "/profile" : "",
+            back: fromAllAddresses && path === "/cart" ? paths.home : null,
+            fromHome: fromHome,
+            fromMenu: fromMenu,
+            fromDetail: fromDetail,
+            backToCart: backToCart,
+          },
         }}
-      >
-        <img src="/assets/img/Icon - Arrow.svg" alt="Back"></img>
-      </div>
-      <div className="logo">
-        <h3>{title}</h3>
-      </div>
-      <div className="right-icons">
-        <img src="/assets/img/options icon.svg" alt="Options"></img>
-      </div>
-    </header>
+        title={title}
+        backIconURL={
+          fromAllAddresses && path === "/profile"
+            ? paths.profile
+            : !fromAllAddresses && path === "/profile"
+            ? paths.addresses
+            : pathToAddresses()
+            ? paths.addresses
+            : pathToCart()
+            ? paths.cart
+            : pathToAddressWithEdit()
+            ? paths.addresses
+            : noAddress !== undefined || backCart !== undefined
+            ? -1
+            : addNew !== undefined
+            ? `${paths.menu}/restaurant/${restaurant_id}/delivery`
+            : paths.home
+        }
+      />
+    </div>
   );
 };
 

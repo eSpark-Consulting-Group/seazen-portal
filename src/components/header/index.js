@@ -5,15 +5,31 @@ import { useSelector } from "react-redux";
 import { paths } from "../../routes/paths";
 
 import "./style.css";
+import CountryPicker from "../countryPicker";
+import Typography from "@mui/material/Typography";
 
 export const NavbarVariants = {
   backWithProfile: "backWithProfile",
 };
 
-const Navbar = (props) => {
-  const { variant, previousRoute, guestUser, path, setOpenAddressPopup } =
-    props;
-
+const Navbar = ({
+  profile,
+  logo,
+  languageIcon,
+  profileIconUrl,
+  showFlagOption,
+  cartIcon,
+  searchIcon,
+  backIcon,
+  borderedIcon,
+  path,
+  guestUser,
+  backIconURL,
+  setOpenAddressPopup,
+  title,
+  backIconURLState,
+  fromHome,
+}) => {
   const navigate = useNavigate();
   const searchContainerRef = useRef(null);
 
@@ -47,19 +63,21 @@ const Navbar = (props) => {
   }, []);
 
   return (
-    <nav className={"d-flex align-items-center justify-content-between p-2"}>
-      {variant !== NavbarVariants.backWithProfile && (
+    <nav className={"d-flex align-items-center justify-content-between"}>
+      {/* Profile Icon */}
+      {profile && (
         <div
           className="iconaccount-btn"
-          onClick={() => {
-            token ? navigate(paths.profile) : navigate(paths.guest_profile);
-          }}
+          style={{ border: `${borderedIcon ? "1px solid #c0cdd7" : ""}` }}
+          onClick={() => navigate(profileIconUrl || paths.home)}
         >
           <img src="/assets/img/account.svg" alt="Account Icon" />
         </div>
       )}
-      <div className="d-flex align-items-center">
-        {variant === NavbarVariants.backWithProfile && (
+
+      {/* back icon */}
+      {backIcon && (
+        <div className="d-flex align-items-center">
           <div
             className="arrowicon-btn"
             onClick={() => {
@@ -70,35 +88,73 @@ const Navbar = (props) => {
                   navigate(paths.home);
                 }
               } else {
-                navigate(previousRoute || -1);
+                navigate(backIconURL || -1, backIconURLState);
               }
             }}
           >
             <img src="/assets/img/Icon - Arrow.svg" alt="go back" />
           </div>
-        )}
-      </div>
-      <div className="logo-home">
-        <img
-          style={{ width: "90px" }}
-          src="/assets/img/order seazen logo.svg"
-          alt="Logo"
-        />
-      </div>
-
-      {variant === NavbarVariants.backWithProfile && (
-        <div className="arabicicon-btn" onClick={() => navigate(paths.cart)}>
-          <img src="/assets/img/Group 256.svg" alt="Option Icon" />
         </div>
       )}
-      {variant !== NavbarVariants.backWithProfile && (
+
+      {/* Logo  */}
+      {logo && (
         <div
-          className="d-flex align-items-center"
-          style={{
-            columnGap: "10px",
-            marginRight: "-4px",
+          className={`${
+            (showFlagOption && languageIcon) || (cartIcon && searchIcon)
+              ? "logo-home"
+              : ""
+          }`}
+        >
+          <img
+            style={{ width: "90px" }}
+            src="/assets/img/order seazen logo.svg"
+            alt="Logo"
+          />
+        </div>
+      )}
+      {title && (
+        <Typography
+          variant="h5"
+          component="h2"
+          fontWeight={700}
+          sx={{
+            mb: 0,
+            // ml: "-20px",
+            ml: `${!languageIcon ? "-40px" : "0px"}`,
+            color: "#1f2933",
           }}
         >
+          {title}
+        </Typography>
+      )}
+
+      {/* search and cart icons  */}
+      <div
+        className="d-flex align-items-center"
+        style={{
+          columnGap: "10px",
+          marginRight: "-4px",
+        }}
+      >
+        {/* half profile icon */}
+        {showFlagOption && (
+          <div className="icon-btn-country">
+            <CountryPicker />
+          </div>
+        )}
+        {languageIcon && (
+          <div
+            className="arabicicon-btn"
+            style={{ border: `${borderedIcon ? "1px solid #c0cdd7" : ""}` }}
+            // onClick={() => {
+            //   navigate(paths.cart);
+            // }}
+          >
+            <img src="/assets/img/Group 256.svg" alt="Option Icon" />
+          </div>
+        )}
+        {cartIcon && (
           <div
             className="icon-btn"
             onClick={() => {
@@ -121,13 +177,15 @@ const Navbar = (props) => {
                   localStorage.getItem("selected") === null
                 ? setOpenAddressPopup(true)
                 : navigate(paths.cart, {
-                    state: { fromHome: true, path: "/home" },
+                    state: { fromHome: fromHome, path: "/home" },
                   });
             }}
           >
             <img src="/assets/img/cart.svg" alt="Shopping Icon" />
           </div>
+        )}
 
+        {searchIcon && (
           <div className="icon-btn">
             <img
               src="/assets/img/Icon - Search.svg"
@@ -137,8 +195,8 @@ const Navbar = (props) => {
               }}
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </nav>
   );
 };

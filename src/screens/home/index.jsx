@@ -18,6 +18,7 @@ import Card from "../../components/adressList";
 import { DialogComponent } from "../../components/dialog";
 import ScheduleDialog from "../../components/dialog/scheduleDialog";
 import SchedulePicker from "../../components/shared/schedulePicker";
+import SelectLocation from "../../components/dialog/selectLocation";
 
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
@@ -37,10 +38,11 @@ import {
 import { paths } from "../../routes/paths";
 
 import "./style.css";
-import SelectLocation from "../../components/dialog/selectLocation";
 
 const Home = () => {
   const isToken = localStorage.getItem("token");
+  const userSelected = localStorage.getItem("selected");
+  const userLocation = localStorage.getItem("location");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,8 +65,6 @@ const Home = () => {
   });
 
   useEffect(() => {
-    const userSelected = localStorage.getItem("selected");
-    const userLocation = localStorage.getItem("location");
     const defaultLocation = { lat: 29.3140728, lng: 47.68022 };
 
     if (userSelected === null && userLocation === null) {
@@ -113,7 +113,7 @@ const Home = () => {
   }, [userCurrentAddress]);
 
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("location")) === null) {
+    if (JSON.parse(userLocation) === null) {
       // eslint-disable-next-line no-undef
       setKey(process.env.REACT_APP_GOOGLE_API_KEY);
       if (navigator.geolocation) {
@@ -428,12 +428,12 @@ const Home = () => {
 
   // Removing border and background color from icon if Delivers to me is not selected
   const removeClasses = () => {
-    // Add border to restaurant image
+    // Remove border from restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("delivery-true");
     }
 
-    // Add background color to icon on restaurant image
+    // Remove background color from icon on restaurant image
     for (let i = 0; i < parentIcon?.length; i++) {
       const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
@@ -446,12 +446,12 @@ const Home = () => {
 
   // Removing border and background color from icon if Available to deliver is not selected
   const removeBrownClasses = () => {
-    // Add border to restaurant image
+    // Remove border from restaurant image
     for (let i = 0; i < divs?.length; i++) {
       divs[i].classList.remove("add-brown-border");
     }
 
-    // Add background color to icon on restaurant image
+    // Remove background color from icon on restaurant image
     for (let i = 0; i < parentIcon?.length; i++) {
       const icons = parentIcon[i].querySelectorAll(".icon-row");
       icons.forEach((icon) => {
@@ -462,7 +462,7 @@ const Home = () => {
     }
   };
 
-  // Add border and background color from icon if Available to deliver is selected
+  // Add border and background color if Available to deliver is selected
   const addBrownClasses = () => {
     // Add border to restaurant image
     for (let i = 0; i < divs?.length; i++) {
@@ -480,7 +480,7 @@ const Home = () => {
     }
   };
 
-  // Add border and background color from icon if Delivers to me is selected
+  // Add border and background color if Delivers to me is selected
   const addClasses = () => {
     // Add border to restaurant image
     for (let i = 0; i < divs?.length; i++) {
@@ -542,35 +542,32 @@ const Home = () => {
           const resLat = +res.latitude;
           const resLng = +res.longitude;
 
-          if (
-            fullAddress !== null &&
-            localStorage.getItem("selected") === null
-          ) {
+          if (fullAddress !== null && userSelected === null) {
             distanceCheck(resLat, resLng, fullAddress);
 
             //
           } else if (
             (fullAddress !== null || fullAddress === null) &&
-            localStorage.getItem("selected") !== null
+            userSelected !== null
           ) {
-            const selected = JSON.parse(localStorage.getItem("selected"));
+            const selected = JSON.parse(userSelected);
 
             distanceCheck(resLat, resLng, selected);
             //
           } else if (
             (fullAddress !== null || fullAddress === null) &&
-            localStorage.getItem("selected") === null &&
-            localStorage.getItem("location") !== null &&
+            userSelected === null &&
+            userLocation !== null &&
             isToken === null
           ) {
-            const location = JSON.parse(localStorage.getItem("location"));
+            const location = JSON.parse(userLocation);
 
             distanceCheck(resLat, resLng, location);
             //
           } else if (
             (fullAddress !== null || fullAddress === null) &&
-            localStorage.getItem("selected") === null &&
-            localStorage.getItem("location") === null &&
+            userSelected === null &&
+            userLocation === null &&
             isToken === null &&
             selectedText === "Delivery" &&
             filterSelectedNow === "Delivers to Me"
@@ -608,15 +605,23 @@ const Home = () => {
 
   return (
     <div className="home-styling container-fluid">
-      <Navbar setOpenAddressPopup={setOpenAddressToChoose} />
+      <div style={{ padding: "8px" }}>
+        <Navbar
+          profile
+          searchIcon
+          setOpenAddressPopup={setOpenAddressToChoose}
+          logo
+          cartIcon
+          profileIconUrl={isToken ? paths.profile : paths.guest_profile}
+          fromHome={true}
+        />
+      </div>
       <div className="card-spacing">
         <Slider />
       </div>
       <RestaurantsOrderTypeButton
         setOpenAddressPopup={
-          localStorage.getItem("selected") === null && isToken !== null
-            ? setOpenAddressPopup
-            : null
+          userSelected === null && isToken !== null ? setOpenAddressPopup : null
         }
         setToggleFilterClassNear={setToggleFilterClassNear}
         filterClassNear={filterClassNear}
@@ -632,7 +637,7 @@ const Home = () => {
       />
       {/* <BasicCard /> */}
       <DraggableSlider
-        selectedLocation={localStorage.getItem("selected") === null}
+        selectedLocation={userSelected === null}
         setOpenAddressPopup={setOpenAddressPopup}
         setFromPopular={setFromPopular}
         setPopularId={setPopularId}

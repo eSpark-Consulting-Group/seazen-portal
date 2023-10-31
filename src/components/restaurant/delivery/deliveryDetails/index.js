@@ -29,17 +29,18 @@ import { MobileTimePicker } from "@mui/x-date-pickers";
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../../../api/restaurant/branches/getBranchesAndHours";
+import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant";
 
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../../../utils/getAddress";
 
+import { getNearByRest } from "../../../../store/reducers/resturantsSlice";
+
 import { paths } from "../../../../routes/paths";
 
 import "./style.css";
-import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant";
-import { getNearByRest } from "../../../../store/reducers/resturantsSlice";
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
@@ -52,14 +53,7 @@ const StyledOuterContainerIcon = styled("div")(({ theme }) => ({
 }));
 
 const DeliveryDetails = (props) => {
-  const {
-    setLocationDeliver,
-    restaurantBranchHours,
-    scheduleForLater,
-    fromDetail,
-    setFromDetail,
-    onDelivery,
-  } = props;
+  const { setLocationDeliver, restaurantBranchHours, onDelivery } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -74,6 +68,9 @@ const DeliveryDetails = (props) => {
   const selected = JSON.parse(localStorage.getItem("selected"));
   const currentLocation = JSON.parse(localStorage.getItem("location"));
   const token = localStorage.getItem("token");
+  const pickDate = localStorage.getItem("pickDate");
+  const isAsap = localStorage.getItem("isAsap");
+  const pickTime = localStorage.getItem("pickTime");
 
   const truncateString = (str, len) => {
     if (str) {
@@ -100,20 +97,14 @@ const DeliveryDetails = (props) => {
     return location;
   };
 
-  const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [latlng, setLatlng] = useState(null);
   const [userLocation, setUserLocation] = useState(returnLocation());
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
   const [openDropdown, setOpendropdown] = useState(false);
   const [isDeliveryDropDown, setIsDeliveryDropDown] = useState(false);
   const [fullAddress, setFullAddress] = useState(null);
-  const [isAsap, setIsAsap] = useState(true);
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
-  const [pickDate, setPickDate] = useState(
-    dayjs(new Date()).format("MMM DD, YYYY")
-  );
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [pickTime, setPickTime] = useState(dayjs(asapTime).format("hh:mm a"));
   const [restaurantOpen, setRestaurantOpen] = useState(false);
 
   const { id: restaurant_id } = useParams();
@@ -121,25 +112,30 @@ const DeliveryDetails = (props) => {
   useEffect(() => {
     if (onDelivery) {
       if (sessionStorage.getItem("popupOpened") === null) {
-        const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
-          const splitLogo = nearBy?.logo?.split("/");
-          const splitName = splitLogo[splitLogo.length - 1];
+        if (isAsap === "true") {
+          const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
+            const splitLogo = nearBy?.logo?.split("/");
+            const splitName = splitLogo[splitLogo.length - 1];
 
-          const name = splitName.split("-")[0];
+            const name = splitName.split("-")[0];
 
-          return name === restaurantDetail?.name_en?.toLowerCase();
-        });
+            return name === restaurantDetail?.name_en?.toLowerCase();
+          });
 
-        for (let i = 0; i < filterRestaurant?.length; i++) {
-          if (filterRestaurant[i]?.openingStatus === "Open") {
-            setRestaurantOpen(false);
-            break;
+          for (let i = 0; i < filterRestaurant?.length; i++) {
+            if (filterRestaurant[i]?.openingStatus === "Open") {
+              setRestaurantOpen(false);
+              break;
 
-            //
-          } else if (filterRestaurant[i]?.openingStatus === "Close") {
-            setRestaurantOpen(true);
-            //
+              //
+            } else if (filterRestaurant[i]?.openingStatus === "Close") {
+              setRestaurantOpen(true);
+              //
+            }
           }
+        } else {
+          sessionStorage.setItem("popupOpened", true);
+          setRestaurantOpen(false);
         }
       } else {
         sessionStorage.setItem("popupOpened", true);
@@ -245,9 +241,9 @@ const DeliveryDetails = (props) => {
   };
 
   const asapCall = () => {
-    setIsAsap(true);
     setIsDeliveryDropDown(false);
     const currentTime = new Date();
+    currentTime.setMinutes(currentTime.getMinutes() + 30);
 
     localStorage.setItem("pickTime", dayjs(currentTime).format("hh:mm a"));
     localStorage.setItem(
@@ -255,10 +251,6 @@ const DeliveryDetails = (props) => {
       dayjs(currentTime).format("MMM DD, YYYY-dddd")
     );
     localStorage.setItem("isAsap", true);
-
-    currentTime.setMinutes(currentTime.getMinutes() + 30);
-    setPickTime(dayjs(currentTime).format("hh:mm a"));
-    setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
   };
 
   const { data: branchesAndHoursResponse, isSuccess } = useQuery({
@@ -270,12 +262,12 @@ const DeliveryDetails = (props) => {
 
   const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
     (val) => {
-      return val.week_day == localStorage.getItem("pickDate").split("-")[1];
+      return val.week_day == pickDate?.split("-")[1];
     }
   );
 
   const onDateSelected = () => {
-    if (localStorage.getItem("pickDate") !== null) {
+    if (pickDate !== null) {
       setOpenSchedulePopup(false);
     }
   };
@@ -310,11 +302,16 @@ const DeliveryDetails = (props) => {
           path: "menu/restaurant",
           guestUser: true,
           restaurant_id: restaurant_id,
+          restaurantName: restaurantDetail?.page_title_en,
         },
       });
     } else {
       navigate(paths.location, {
-        state: { path: "menu/restaurant", restaurant_id: restaurant_id },
+        state: {
+          path: "menu/restaurant",
+          restaurant_id: restaurant_id,
+          restaurantName: restaurantDetail?.page_title_en,
+        },
       });
     }
   };
@@ -446,10 +443,7 @@ const DeliveryDetails = (props) => {
                 padding: "0",
               }}
             >
-              {localStorage.getItem("pickDate").split("-")[0]}{" "}
-              {localStorage.getItem("isAsap") === "true"
-                ? "ASAP"
-                : localStorage.getItem("pickTime")}
+              {pickDate?.split("-")[0]} {isAsap === "true" ? "ASAP" : pickTime}
               <StyledOuterContainerIcon className="dropdown_icon_container">
                 <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
               </StyledOuterContainerIcon>
@@ -517,7 +511,7 @@ const DeliveryDetails = (props) => {
       </div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MobileDatePicker
-          // onChange={(date) => setPickDate(date.format("MMM DD, YYYY-dddd"))}
+          // onChange={(date) => localStorage.setItem("pickDate", date.format("MMM DD, YYYY-dddd")))}
           minDate={dayjs(new Date())}
           open={openSchedulePopup}
           defaultValue={dayjs(new Date().toString())}
@@ -552,17 +546,13 @@ const DeliveryDetails = (props) => {
             defaultValue={dayjs(new Date())}
             open={showTimePicker}
             // onChange={(time) => {
-            //   setPickTime(time.format("hh:mm a"));
-            //   setIsAsap(false);
-            //   setFromDetail(false);
+            // localStorage.setItem("isAsap", false);
+            // localStorage.setItem("pickTime", time.format("hh:mm a"));
             // }}
             onClose={() => setShowTimePicker(false)}
             onAccept={(time) => {
               localStorage.setItem("isAsap", false);
               localStorage.setItem("pickTime", time.format("hh:mm a"));
-
-              // dispatch(addPickTime(time.format("hh:mm a")));
-              // dispatch(toggleIsAsap(false));
             }}
             sx={{
               display: "none",

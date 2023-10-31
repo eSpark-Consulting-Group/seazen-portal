@@ -100,8 +100,8 @@ export const UpdateCustomerProfile = () => {
       spacing={2}
     >
       {" "}
-      <div className="EditForm-Nav">
-        <Navbar variant={NavbarVariants.backWithProfile} />
+      <div style={{ padding: "20px 12px 9px 9px" }}>
+        <Navbar backIcon logo languageIcon />
       </div>
       <Stack
         spacing={5}

@@ -24,6 +24,7 @@ import { paths } from "../../routes/paths";
 import addAddressApiCall from "../../api/address/addAddress";
 import updateAddressApiCall from "../../api/address/updateAddress";
 import getAllAddress from "../../api/address/getAddress";
+
 import { getAddress } from "../../store/reducers/addressSlice";
 
 import "./style.css";
@@ -64,9 +65,6 @@ const AddressForm = () => {
       getAdd(location?.state?.latlng.lat, location?.state?.latlng.lng);
     }
   }, [location?.state]);
-
-  // const contactInfo = useSelector((state) => state.auth.country);
-  // const { whatsapp_country_code, whatsapp_no } = contactInfo;
 
   const token = localStorage.getItem("token");
 
@@ -486,6 +484,7 @@ const AddressForm = () => {
         fromHome={location?.state?.fromHome}
         fromMenu={location?.state?.fromMenu}
         fromDetail={location?.state?.fromDetail}
+        backToCart={true}
       />
 
       <div className="button-style">

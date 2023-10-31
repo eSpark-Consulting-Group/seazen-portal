@@ -2,12 +2,15 @@ import React from "react";
 import ProfileHeader from "../../components/header/profileHeader";
 import { Footer } from "../../components/footer/footerContent";
 import "./style.css";
+import Navbar from "../../components/header";
 
 export const Terms = () => {
   return (
-    <div >
-      <div  className="terms-section px-4">
-      <ProfileHeader showFlagOption={false} />
+    <div>
+      <div className="terms-section px-4">
+        <div style={{ padding: "20px 5px 0px 5px" }}>
+          <Navbar logo profile languageIcon />
+        </div>
         <h1>Terms & Conditions</h1>
         <p className="terms-paragraph-title">1. Lorem ipsum </p>
         <p className="terms-paragraphOne">
@@ -42,8 +45,8 @@ export const Terms = () => {
         </p>
       </div>
       <div className="terms-footer px-3">
-          <Footer showCommentOption={false} />
-        </div>
+        <Footer showCommentOption={false} />
       </div>
+    </div>
   );
 };

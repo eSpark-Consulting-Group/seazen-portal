@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 
 import { toast } from "react-toastify";
-
 import { useTheme } from "@mui/material";
 import {
   Box,
@@ -16,7 +15,6 @@ import {
   Typography,
   IconButton,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   CloseIcon,
@@ -87,7 +85,12 @@ function CartPage() {
   const totalPrice = useSelector((state) => state.cart.total);
   const country = useSelector((state) => state.auth.country);
 
-  const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
+  const pickDate = localStorage.getItem("pickDate");
+  const isAsap = localStorage.getItem("isAsap");
+  const pickTime = localStorage.getItem("pickTime");
+  const selectedAdd = JSON.parse(localStorage.getItem("selected"));
+  const currentLocation = JSON.parse(localStorage.getItem("location"));
+
   const [tipValue, setTipValue] = React.useState(0.25);
   const [isLoading, setIsLoading] = React.useState(false);
   const [cartItems, setCartItems] = React.useState();
@@ -101,17 +104,12 @@ function CartPage() {
   const DISCOUNT_AMOUNT = Number(0).toFixed(3);
   const DELIVERY_CHARGE = Number(0).toFixed(3);
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [isAsap, setIsAsap] = useState(true);
-  const [pickDate, setPickDate] = useState(
-    dayjs(new Date()).format("MMM DD, YYYY")
-  );
-  const [pickTime, setPickTime] = useState(dayjs(asapTime).format("hh:mm a"));
+
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [notDeliver, setNotDeliver] = useState(false);
   const [restaurantOpen, setRestaurantOpen] = useState(false);
   const [updateText, setUpdateText] = useState("");
-  const [farLocation, setFarLocation] = useState(true);
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [userTrusted, setUserTrusted] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(
@@ -188,7 +186,7 @@ function CartPage() {
   const checkBranchHours = (array) => {
     if (array?.length) {
       for (let i = 0; i < array?.length; i++) {
-        const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+        const selectedAddress = selectedAdd;
 
         if (selectedAddress !== null) {
           const resLat = +array[i]?.latitude;
@@ -245,7 +243,7 @@ function CartPage() {
 
   const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
     (val) => {
-      return val.week_day == localStorage.getItem("pickDate").split("-")[1];
+      return val.week_day == pickDate?.split("-")[1];
     }
   );
 
@@ -255,9 +253,11 @@ function CartPage() {
 
   const checkoutHandler = (event) => {
     event.preventDefault();
+
     setUserTrusted(true);
     localStorage.setItem("redirectPermission", "allowed");
-    const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+
+    const selectedAddress = selectedAdd;
 
     if (selectedAddress !== null) {
       const selectedLat = selectedAddress?.lat;
@@ -282,16 +282,13 @@ function CartPage() {
           setNotDeliver(true);
         } else {
           if (paymentMethod === "KNET") {
-            const firstWord = restaurantName.split(" ")[0];
-            // const filterRestaurant = nearbyRestaurants?.filter((nearBy) =>
-            //   nearBy.branch_name_en?.includes(firstWord)
-            // );
+            const firstWord = restaurantName?.split(" ")[0];
 
             const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
               const splitLogo = nearBy?.logo?.split("/");
               const splitName = splitLogo[splitLogo.length - 1];
 
-              const name = splitName.split("-")[0];
+              const name = splitName?.split("-")[0];
 
               return name === firstWord?.toLowerCase();
             });
@@ -300,7 +297,7 @@ function CartPage() {
               setNotDeliver(true);
             } else {
               setNotDeliver(false);
-              if (localStorage.getItem("isAsap") === "true") {
+              if (isAsap === "true") {
                 for (let j = 0; j < filterRestaurant?.length; j++) {
                   if (filterRestaurant[j]?.openingStatus === "Open") {
                     setRestaurantOpen(false);
@@ -460,8 +457,6 @@ function CartPage() {
 
     for (let i = 0; i < filterRestaurant?.length; i++) {
       if (filterRestaurant[i]?.openingStatus === "Open") {
-        setRestaurantOpen(false);
-
         const currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes() + 30);
 
@@ -472,10 +467,8 @@ function CartPage() {
         );
         localStorage.setItem("isAsap", true);
 
-        setPickTime(dayjs(currentTime).format("hh:mm a"));
-        setPickDate(dayjs(currentTime).format("MMM DD, YYYY-dddd"));
         setOpenPopup(false);
-        setIsAsap(true);
+        setRestaurantOpen(false);
 
         break;
       } else if (filterRestaurant[i]?.openingStatus === "Close") {
@@ -613,7 +606,7 @@ function CartPage() {
   };
 
   const onDateSelected = () => {
-    if (localStorage.getItem("pickDate") !== null) {
+    if (pickDate !== null) {
       setOpenSchedulePopup(false);
     }
   };
@@ -664,13 +657,16 @@ function CartPage() {
             navigate(
               location?.state?.back
                 ? location?.state?.back
-                : location?.state?.noAddress
+                : location?.state?.noAddress && cart?.length
                 ? `${paths.menu}/restaurant/${cart[0]?.restaurant_id}/delivery`
                 : location?.state?.fromHome !== undefined
                 ? paths.home
-                : location?.state?.fromMenu !== undefined ||
-                  location?.state?.fromDetail !== undefined
-                ? `${paths.menu}/restaurant/${cart[0].restaurant_id}`
+                : (location?.state?.fromMenu !== undefined ||
+                    location?.state?.fromDetail !== undefined) &&
+                  cart?.length
+                ? `${paths.menu}/restaurant/${cart[0].restaurant_id}/delivery`
+                : location?.state?.backToCart !== undefined
+                ? paths.home
                 : -1
             )
           }
@@ -683,7 +679,6 @@ function CartPage() {
               color: "#1F2933",
             }}
           />
-          {/* <ArrowBackRoundedIcon fontSize="medium" sx={{ marginTop: "-18px" }} /> */}
         </IconButton>
         <Typography
           variant="h5"
@@ -760,14 +755,9 @@ function CartPage() {
                 }}
               >
                 <LocationOnIcon fontSize="small" sx={{ mr: 0.5 }} />
-                {localStorage?.getItem("location") !== null &&
-                localStorage.getItem("selected") === null
-                  ? trunct(
-                      JSON.parse(localStorage.getItem("location"))?.address
-                    )
-                  : trunct(
-                      JSON.parse(localStorage.getItem("selected"))?.address
-                    )}
+                {currentLocation !== null && selectedAdd === null
+                  ? trunct(currentLocation?.address)
+                  : trunct(selectedAdd?.address)}
               </Typography>
             </Stack>
 
@@ -792,41 +782,41 @@ function CartPage() {
                 },
               }}
               onClick={() => {
-                if (location?.state?.fromHome !== undefined) {
+                const initialState = {
+                  restaurant_id: cart[0].restaurant_id,
+                  restaurantName,
+                  path: location.pathname,
+                };
+
+                if (location?.state?.fromHome) {
                   navigate(paths.addresses, {
                     state: {
-                      restaurant_id: cartItems[0].restaurant_id,
-                      restaurantName,
-                      path: location.pathname,
+                      ...initialState,
                       fromHome: location?.state?.fromHome,
+                      backCart: true,
                     },
                   });
-                } else if (location?.state?.fromMenu !== undefined) {
+                } else if (location?.state?.fromMenu) {
                   navigate(paths.addresses, {
                     state: {
-                      restaurant_id: cart[0].restaurant_id,
-                      restaurantName,
-                      path: location.pathname,
+                      ...initialState,
                       fromMenu: location?.state?.fromMenu,
+                      backCart: true,
                     },
                   });
-                } else if (location?.state?.fromDetail !== undefined) {
+                } else if (location?.state?.fromDetail) {
                   navigate(paths.addresses, {
                     state: {
-                      restaurant_id: cart[0].restaurant_id,
-                      restaurantName,
-                      path: location.pathname,
+                      ...initialState,
                       fromDetail: location?.state?.fromDetail,
+                      backCart: true,
                     },
                   });
                 } else {
                   navigate(paths.addresses, {
                     state: {
-                      restaurant_id: cartItems[0].restaurant_id,
-                      restaurantName,
-                      path: location.pathname,
+                      ...initialState,
                       fromCart: true,
-                      // latlng: JSON.parse(localStorage.getItem("selected")),
                     },
                   });
                 }
@@ -899,10 +889,8 @@ function CartPage() {
                     lineHeight: "24px", // Set the line height
                   }}
                 >
-                  {localStorage.getItem("pickDate").split("-")[0]}{" "}
-                  {localStorage.getItem("isAsap") === "true"
-                    ? "ASAP"
-                    : localStorage.getItem("pickTime")}
+                  {pickDate?.split("-")[0]}{" "}
+                  {isAsap === "true" ? "ASAP" : pickTime}
                 </Typography>
               </Stack>
             </Stack>
@@ -1002,7 +990,12 @@ function CartPage() {
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <MobileDatePicker
-              onChange={(date) => setPickDate(date.format("MMM DD, YYYY-dddd"))}
+              // onChange={(date) =>
+              //   localStorage.setItem(
+              //     "pickDate",
+              //     date.format("MMM DD, YYYY-dddd")
+              //   )
+              // }
               minDate={dayjs(new Date())}
               open={openSchedulePopup}
               defaultValue={dayjs(new Date().toString())}
@@ -1034,17 +1027,14 @@ function CartPage() {
                 )}
                 defaultValue={dayjs(new Date())}
                 open={showTimePicker}
-                onChange={(time) => {
-                  setPickTime(time.format("hh:mm a"));
-                  setIsAsap(false);
-                }}
+                // onChange={(time) => {
+                //   localStorage.setItem("isAsap", false);
+                //   localStorage.setItem("pickTime", time.format("hh:mm a"));
+                // }}
                 onClose={() => setShowTimePicker(false)}
                 onAccept={(time) => {
                   localStorage.setItem("isAsap", false);
                   localStorage.setItem("pickTime", time.format("hh:mm a"));
-
-                  // dispatch(addPickTime(time.format("hh:mm a")));
-                  // dispatch(toggleIsAsap(false));
                 }}
                 sx={{
                   display: "none",

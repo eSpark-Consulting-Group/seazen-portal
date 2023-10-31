@@ -208,8 +208,8 @@ function PhoneNumberVerificationOTP() {
         justifyContent="space-between"
         spacing={2}
       >
-        <div className="Phone-Nav">
-          <Navbar variant={NavbarVariants.backWithProfile} />
+        <div style={{ padding: 8 }}>
+          <Navbar backIcon logo languageIcon />
         </div>
         <Stack
           spacing={5}

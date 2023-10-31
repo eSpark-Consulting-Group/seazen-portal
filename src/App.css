@@ -109,3 +109,6 @@ iframe#webpack-dev-server-client-overlay {
 .another-specific-page-body-style #fc_frame {
   bottom: 82px !important;
 }
+.header-wrapper {
+  padding: 20px 28px 0px !important;
+}

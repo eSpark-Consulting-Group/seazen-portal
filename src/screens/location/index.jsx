@@ -281,7 +281,12 @@ function LocationPage() {
     const userLocation = localStorage.getItem("location");
 
     // if (token !== null) {
-    if (userSelected === null && userLocation === null) {
+    if (
+      userSelected === null &&
+      userLocation === null &&
+      location?.state?.latlng === undefined &&
+      location?.state?.editLocation === undefined
+    ) {
       //
       const getCountry = address.split(",");
       const lastElem = getCountry[getCountry.length - 1];
@@ -289,7 +294,7 @@ function LocationPage() {
       let forCondition = findCountry[findCountry.length - 1];
 
       if (forCondition === "Arabia") {
-        forCondition = "Saudi Arabia";
+        forCondition = "Saudia Arabia";
       }
 
       if (forCondition == "Emirates") {
@@ -301,7 +306,12 @@ function LocationPage() {
       }
 
       //
-    } else if (userSelected === null && userLocation !== null) {
+    } else if (
+      userSelected === null &&
+      userLocation !== null &&
+      location?.state?.latlng === undefined &&
+      location?.state?.editLocation === undefined
+    ) {
       //
 
       const parsedUserLocation = JSON.parse(userLocation);
@@ -312,7 +322,7 @@ function LocationPage() {
       let forCondition = findCountry[findCountry.length - 1];
 
       if (forCondition === "Arabia") {
-        forCondition = "Saudi Arabia";
+        forCondition = "Saudia Arabia";
       }
 
       if (forCondition == "Emirates") {
@@ -324,7 +334,12 @@ function LocationPage() {
       }
 
       //
-    } else if (userSelected !== null && userLocation !== null) {
+    } else if (
+      userSelected !== null &&
+      userLocation !== null &&
+      location?.state?.latlng === undefined &&
+      location?.state?.editLocation === undefined
+    ) {
       //
 
       const parsedUserLocation = JSON.parse(userSelected);
@@ -335,7 +350,7 @@ function LocationPage() {
       let forCondition = findCountry[findCountry.length - 1];
 
       if (forCondition === "Arabia") {
-        forCondition = "Saudi Arabia";
+        forCondition = "Saudia Arabia";
       }
 
       if (forCondition == "Emirates") {
@@ -347,7 +362,7 @@ function LocationPage() {
       }
     }
     // }
-  }, [localStorage, address, placeChanged]);
+  }, [localStorage, address, placeChanged, location]);
 
   const servicePlaceCheck = (fullAddress) => {
     let countriesName = [];
@@ -361,19 +376,6 @@ function LocationPage() {
     } else {
       setNoRegion(true);
     }
-
-    // if (
-    //   fullAddress === "Kuwait" ||
-    //   fullAddress === "Bahrain" ||
-    //   fullAddress === "Emirates" ||
-    //   fullAddress === "Oman" ||
-    //   fullAddress === "Qatar" ||
-    //   fullAddress === "Arabia"
-    // ) {
-    //   setNoRegion(false);
-    // } else {
-    //   setNoRegion(true);
-    // }
   };
 
   const onLoad = (autocompleteInstance) => {
@@ -395,7 +397,7 @@ function LocationPage() {
       let forCondition = findCountry[findCountry.length - 1];
 
       if (forCondition === "Arabia") {
-        forCondition = "Saudi Arabia";
+        forCondition = "Saudia Arabia";
       }
 
       if (forCondition == "Emirates") {
@@ -481,7 +483,7 @@ function LocationPage() {
         location?.state?.path?.includes("menu-item-details") ||
         location?.state?.path === "menu/restaurant"
       ) {
-        if (location?.state?.addNew) {
+        if (location?.state?.addNew !== undefined) {
           navigate(paths.address, {
             state: {
               name: address,
@@ -491,7 +493,7 @@ function LocationPage() {
               addNew: true,
             },
           });
-        } else if (location?.state?.fromMenu) {
+        } else if (location?.state?.fromMenu !== undefined) {
           navigate(paths.address, {
             state: {
               name: address,
@@ -501,7 +503,7 @@ function LocationPage() {
               fromMenu: location?.state?.fromMenu,
             },
           });
-        } else if (location?.state?.fromDetail) {
+        } else if (location?.state?.fromDetail !== undefined) {
           navigate(paths.address, {
             state: {
               name: address,
@@ -614,9 +616,11 @@ function LocationPage() {
           justifyContent="space-between"
           spacing={2}
         >
-          <div className="Phone-Nav">
+          <div style={{ padding: "8px" }}>
             <Navbar
-              variant={NavbarVariants.backWithProfile}
+              backIcon
+              logo
+              languageIcon
               guestUser={location.state?.guestUser ? true : false}
               path={location?.state?.path}
             />
