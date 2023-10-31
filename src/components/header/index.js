@@ -28,6 +28,7 @@ const Navbar = ({
   setOpenAddressPopup,
   title,
   backIconURLState,
+  fromHome,
 }) => {
   const navigate = useNavigate();
   const searchContainerRef = useRef(null);
@@ -176,7 +177,7 @@ const Navbar = ({
                   localStorage.getItem("selected") === null
                 ? setOpenAddressPopup(true)
                 : navigate(paths.cart, {
-                    state: { fromHome: true, path: "/home" },
+                    state: { fromHome: fromHome, path: "/home" },
                   });
             }}
           >

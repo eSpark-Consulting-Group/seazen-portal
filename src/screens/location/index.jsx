@@ -483,7 +483,7 @@ function LocationPage() {
         location?.state?.path?.includes("menu-item-details") ||
         location?.state?.path === "menu/restaurant"
       ) {
-        if (location?.state?.addNew) {
+        if (location?.state?.addNew !== undefined) {
           navigate(paths.address, {
             state: {
               name: address,
@@ -493,7 +493,7 @@ function LocationPage() {
               addNew: true,
             },
           });
-        } else if (location?.state?.fromMenu) {
+        } else if (location?.state?.fromMenu !== undefined) {
           navigate(paths.address, {
             state: {
               name: address,
@@ -503,7 +503,7 @@ function LocationPage() {
               fromMenu: location?.state?.fromMenu,
             },
           });
-        } else if (location?.state?.fromDetail) {
+        } else if (location?.state?.fromDetail !== undefined) {
           navigate(paths.address, {
             state: {
               name: address,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -18,26 +18,28 @@ import {
 import Card from "../../components/adressList";
 import MyAddresses from "../../components/header/myAdresses";
 import { AddressesButton } from "../../components/adressList/addressesButton";
+import Navbar from "../../components/header";
 
 import getAllAddress from "../../api/address/getAddress";
+import deleteAddressApiCall from "../../api/address/deleteAddress";
 
 import { getAddress } from "../../store/reducers/addressSlice";
 
-import deleteAddressApiCall from "../../api/address/deleteAddress";
+import { getFullAddress } from "../../utils/getAddress";
+
+import { paths } from "../../routes/paths";
 
 import "./style.css";
-import { paths } from "../../routes/paths";
-import { getFullAddress } from "../../utils/getAddress";
-import Navbar from "../../components/header";
 
 const App = () => {
   const isToken = localStorage.getItem("token");
-  const addressData = useSelector((state) => state.address.addressData);
-  // const isLoading = useSelector((state) => state.address.isLoading);
+  const userSelected = localStorage.getItem("selected");
 
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const addressData = useSelector((state) => state.address.addressData);
 
   const [cardData, setCardData] = useState([]);
   const [open, setOpen] = useState(false);
@@ -50,20 +52,6 @@ const App = () => {
   const [deleteAdd, setDeleteAdd] = useState(false);
   const [addressToBeDeleted, setAddressToBeDeleted] = useState({});
   const [isLoading, setIsloading] = useState(false);
-
-  // useLayoutEffect(() => {
-  //   if (addressData.length === 2) {
-  //     const filterAddress = addressData.filter(
-  //       (item) =>
-  //         parseFloat(location?.state?.latlng?.lat) !==
-  //           parseFloat(+item.latitude) &&
-  //         parseFloat(location?.state?.latlng?.lng) !==
-  //           parseFloat(+item.longitude)
-  //     );
-
-  //     setCardData(filterAddress);
-  //   }
-  // }, [addressData]);
 
   const fetchFunction = async () => {
     setIsloading(true);
@@ -131,7 +119,7 @@ const App = () => {
     setDeleteAdd(true);
     deleteAddressApiCall(id, isToken).then((res) => {
       if (res.statusCode === 200) {
-        const selected = JSON.parse(localStorage.getItem("selected"));
+        const selected = JSON.parse(userSelected);
 
         if (addressToBeDeleted && selected !== null) {
           const lat = selected.lat;
@@ -167,13 +155,16 @@ const App = () => {
   };
 
   return (
-    <div className="app ">
+    <div className="app">
       <MyAddresses
         title="Your Addresses"
         path={location?.state?.path}
         fromAllAddresses={true}
         fromMenu={location?.state?.fromMenu}
+        fromHome={location?.state?.fromHome}
         fromDetail={location?.state?.fromDetail}
+        backToCart={location?.state?.backToCart}
+        backCart={location?.state?.backCart}
       />
       {isLoading
         ? Array.from({ length: 3 }).map((_) => (
@@ -268,8 +259,6 @@ const App = () => {
                     selectCurrentAddress={selectCurrentAddress}
                     deselectCurrentAddress={deselectCurrentAddress}
                     isSelected={isSelected}
-                    setIsSelected={setIsSelected}
-                    address={location?.state?.latlng}
                     handleClickOpen={handleClickOpen}
                     setAddressToBeDeleted={setAddressToBeDeleted}
                     location={location}

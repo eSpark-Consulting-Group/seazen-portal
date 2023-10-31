@@ -1,7 +1,8 @@
 import React from "react";
+
 import ProfileInformation from "../../components/profileDetails/profileInformation";
-import ProfileHeader from "../../components/header/profileHeader";
 import Navbar from "../../components/header";
+
 import { paths } from "../../routes/paths";
 
 export const Profile = () => {

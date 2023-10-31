@@ -1,8 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-
-// import { AddressesButton } from "./addressesButton";
-// import { useSelector } from "react-redux";
 
 import { paths } from "../../routes/paths";
 
@@ -16,25 +13,11 @@ const Card = (props) => {
     selectCurrentAddress,
     deselectCurrentAddress,
     isSelected,
-    setIsSelected,
-    address,
     handleClickOpen,
     home,
     chooseAddress,
     location,
   } = props;
-
-  // useEffect(() => {
-
-  //   if (address !== undefined) {
-  //     if (
-  //       parseFloat(address?.lat) === parseFloat(+data.latitude) &&
-  //       parseFloat(address?.lng) === parseFloat(+data.longitude)
-  //     ) {
-  //       setIsSelected(true);
-  //     }
-  //   }
-  // }, [address, data]);
 
   const navigate = useNavigate();
   const latlng = { lat: data.latitude, lng: data.longitude };
@@ -119,6 +102,7 @@ const Card = (props) => {
                 : navigate(paths.address, {
                     state: {
                       ...initialState,
+                      path: location?.state?.path,
                     },
                   });
             }}

@@ -665,6 +665,8 @@ function CartPage() {
                     location?.state?.fromDetail !== undefined) &&
                   cart?.length
                 ? `${paths.menu}/restaurant/${cart[0].restaurant_id}/delivery`
+                : location?.state?.backToCart !== undefined
+                ? paths.home
                 : -1
             )
           }
@@ -785,25 +787,29 @@ function CartPage() {
                   restaurantName,
                   path: location.pathname,
                 };
-                if (location?.state?.fromHome !== undefined) {
+
+                if (location?.state?.fromHome) {
                   navigate(paths.addresses, {
                     state: {
                       ...initialState,
                       fromHome: location?.state?.fromHome,
+                      backCart: true,
                     },
                   });
-                } else if (location?.state?.fromMenu !== undefined) {
+                } else if (location?.state?.fromMenu) {
                   navigate(paths.addresses, {
                     state: {
                       ...initialState,
                       fromMenu: location?.state?.fromMenu,
+                      backCart: true,
                     },
                   });
-                } else if (location?.state?.fromDetail !== undefined) {
+                } else if (location?.state?.fromDetail) {
                   navigate(paths.addresses, {
                     state: {
                       ...initialState,
                       fromDetail: location?.state?.fromDetail,
+                      backCart: true,
                     },
                   });
                 } else {

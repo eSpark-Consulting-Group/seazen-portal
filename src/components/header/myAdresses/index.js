@@ -1,8 +1,10 @@
 import React from "react";
-import "./style.css";
-import { useNavigate } from "react-router";
-import { paths } from "../../../routes/paths";
+
 import Navbar from "../../../components/header";
+
+import { paths } from "../../../routes/paths";
+
+import "./style.css";
 
 const MyAddresses = (props) => {
   const {
@@ -17,7 +19,37 @@ const MyAddresses = (props) => {
     fromHome,
     fromMenu,
     fromDetail,
+    backToCart,
+    backCart,
   } = props;
+
+  const pathToCart = () => {
+    return (
+      (fromAllAddresses && path === "/cart") ||
+      (fromCart !== undefined && path === "/cart") ||
+      (fromAllAddresses && backToCart !== undefined && path !== "/profile")
+    );
+  };
+
+  const pathToAddresses = () => {
+    return (
+      (fromHome !== undefined ||
+        fromMenu !== undefined ||
+        fromDetail !== undefined) &&
+      backToCart === undefined &&
+      backCart === undefined
+    );
+  };
+
+  const pathToAddressWithEdit = () => {
+    return (
+      edit !== undefined ||
+      ((fromHome !== undefined ||
+        fromMenu !== undefined ||
+        fromDetail !== undefined) &&
+        backToCart !== undefined)
+    );
+  };
 
   return (
     <div style={{ padding: "20px 29px 20px 24px" }}>
@@ -31,6 +63,7 @@ const MyAddresses = (props) => {
             fromHome: fromHome,
             fromMenu: fromMenu,
             fromDetail: fromDetail,
+            backToCart: backToCart,
           },
         }}
         title={title}
@@ -39,15 +72,13 @@ const MyAddresses = (props) => {
             ? paths.profile
             : !fromAllAddresses && path === "/profile"
             ? paths.addresses
-            : (fromAllAddresses && path === "/cart") ||
-              (fromCart !== undefined && path === "/cart") ||
-              fromHome !== undefined ||
-              fromMenu !== undefined ||
-              fromDetail !== undefined
-            ? paths.cart
-            : edit !== undefined
+            : pathToAddresses()
             ? paths.addresses
-            : noAddress !== undefined
+            : pathToCart()
+            ? paths.cart
+            : pathToAddressWithEdit()
+            ? paths.addresses
+            : noAddress !== undefined || backCart !== undefined
             ? -1
             : addNew !== undefined
             ? `${paths.menu}/restaurant/${restaurant_id}/delivery`
