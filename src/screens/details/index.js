@@ -83,6 +83,7 @@ export const Details = () => {
   const [restaurantName, setRestaurantName] = useState("");
   const [currentRest, setCurrentRest] = React.useState({});
   const [fromPopBranch, setFromPopBranch] = useState([]);
+  const [errorShow, setErrorShow] = useState(false);
   const [restaurantDetail, setRestaurantDetail] = useState({});
   const [specialInstructions, setSpecialInstructions] = React.useState("");
   const [extraToppingCount, setExtraToppingCount] = React.useState(0);
@@ -344,6 +345,7 @@ export const Details = () => {
         sizeWithVariantId.unit_price = 0;
       }
       setSizeVariant(sizeWithVariantId);
+      setErrorShow(false);
     }
   };
 
@@ -486,6 +488,11 @@ export const Details = () => {
 
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
+
+    if (menuItemDetails?.data.has_variants && !sizeVariant) {
+      setErrorShow(true);
+      return;
+    }
 
     if (cart.length > 0 && data.restaurant_id !== cart[0]?.restaurant_id) {
       clearCartItems();
@@ -822,6 +829,12 @@ export const Details = () => {
                           alpha(theme.palette.themeColor.main, 0.12),
                         height: "40px",
                         borderRadius: "16px",
+                        display: "flex",
+                        alignItems: "center",
+                        border:
+                          errorShow && variant?.name_en == "Choose the Size"
+                            ? "1px solid red"
+                            : "",
                       }}
                     >
                       <Typography variant="h6" component="div" fontWeight="600">
@@ -853,15 +866,26 @@ export const Details = () => {
                         fontWeight={600}
                         sx={{
                           color: (theme) => theme.palette.themeColor.main,
+                          display: "flex",
+                          marginBottom: "1px",
                         }}
                       >
-                        {variant.name_en === "Choose the Size"
-                          ? "(Required)"
-                          : variant.name_en === "Extra Topping"
-                          ? "(Optional)"
-                          : variant.name_en === "Extra Sides"
-                          ? "(Optional)"
-                          : ""}
+                        {errorShow && variant.name_en === "Choose the Size" && (
+                          <img
+                            style={{ marginRight: "5px" }}
+                            src="/assets/img/errorIcon.svg"
+                            alt="error_icon"
+                          />
+                        )}
+                        {variant.name_en === "Choose the Size" ? (
+                          <span style={{ marginBottom: 2 }}>(Required)</span>
+                        ) : variant.name_en === "Extra Topping" ? (
+                          <span style={{ marginBottom: 2 }}>(Optional)</span>
+                        ) : variant.name_en === "Extra Sides" ? (
+                          <span style={{ marginBottom: 2 }}>(Optional)</span>
+                        ) : (
+                          ""
+                        )}
                       </Typography>
                     </Stack>
 
@@ -1060,11 +1084,11 @@ export const Details = () => {
               size="large"
               variant="contained"
               fullWidth
-              disabled={
-                location?.state?.locationDeliver || farRestaurant
-                  ? false
-                  : menuItemDetails?.data.has_variants && !sizeVariant
-              }
+              // disabled={
+              //   location?.state?.locationDeliver || farRestaurant
+              //     ? false
+              //     : menuItemDetails?.data.has_variants && !sizeVariant
+              // }
               sx={{
                 py: 2,
                 display: "flex",

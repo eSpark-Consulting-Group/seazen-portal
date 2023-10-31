@@ -547,17 +547,15 @@ const MenuCard = (props) => {
                   },
                 });
               } else {
-                if (hasVariant) {
-                  navigate(paths.details + "/" + id, {
-                    state: {
-                      id: id,
-                      locationDeliver: locationDeliver,
-                      branchRestaurants: restaurantBranchHours,
-                      resturantId: resturantId,
-                      restaurantDetail,
-                    },
-                  });
-                }
+                navigate(paths.details + "/" + id, {
+                  state: {
+                    id: id,
+                    locationDeliver: locationDeliver,
+                    branchRestaurants: restaurantBranchHours,
+                    resturantId: resturantId,
+                    restaurantDetail,
+                  },
+                });
               }
             }}
           >
