@@ -51,24 +51,33 @@ const HomeBannerSlider = () => {
     <div className="slick-slider-wrapper">
       <Slider {...settings}>
         {restaurantBanner.map((slide, index) => (
-          <div key={index} className="home-banner-images" tabIndex={"0"}>
-            <LazyLoadImage
-              src={slide.banner}
-              alt="restaurant banner"
-              placeholder={
-                <Skeleton
-                  variant="rectangular"
-                  width={"100%"}
-                  height={"100%"}
-                />
-              }
-            />
-            <div className={index === 0 ? "reserve" : "caption"}>
-              <span className={index === 0 ? "reserve-style" : "caption-style"}>
-                {index == 0 ? "Reserve" : "Order Now"}
-              </span>
+          <a
+            key={index}
+            rel="noreferrer"
+            href={slide.redirect_url}
+            target="_blank"
+          >
+            <div className="home-banner-images" tabIndex={"0"}>
+              <LazyLoadImage
+                src={slide.banner}
+                alt="restaurant banner"
+                placeholder={
+                  <Skeleton
+                    variant="rectangular"
+                    width={"100%"}
+                    height={"100%"}
+                  />
+                }
+              />
+              <div className={index === 0 ? "reserve" : "caption"}>
+                <span
+                  className={index === 0 ? "reserve-style" : "caption-style"}
+                >
+                  {index == 0 ? "Reserve" : "Order Now"}
+                </span>
+              </div>
             </div>
-          </div>
+          </a>
         ))}
       </Slider>
     </div>

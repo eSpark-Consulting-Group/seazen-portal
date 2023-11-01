@@ -751,6 +751,7 @@ export const Details = () => {
                 sx={{
                   mr: 0.5,
                   fontWeight: "600",
+                  fontSize: "13px",
                 }}
               >
                 KWD
@@ -758,8 +759,9 @@ export const Details = () => {
               <div
                 style={{
                   fontWeight: "700",
-                  marginTop: "-27px",
+                  marginTop: "-29px",
                   marginLeft: "29px",
+                  fontSize: "18px",
                 }}
               >
                 {menuItemPriceWithoutCurrency()}
