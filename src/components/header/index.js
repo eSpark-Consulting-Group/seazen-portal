@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+import Typography from "@mui/material/Typography";
+
 import { paths } from "../../routes/paths";
 
-import "./style.css";
 import CountryPicker from "../countryPicker";
-import Typography from "@mui/material/Typography";
+
+import "./style.css";
 
 export const NavbarVariants = {
   backWithProfile: "backWithProfile",
@@ -88,7 +90,7 @@ const Navbar = ({
                   navigate(paths.home);
                 }
               } else {
-                navigate(backIconURL || -1, backIconURLState);
+                navigate(backIconURL || paths.profile, backIconURLState);
               }
             }}
           >

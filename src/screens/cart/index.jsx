@@ -499,7 +499,7 @@ function CartPage() {
   };
 
   const cartRefetch = () => {
-    if (cart.length == 0) {
+    if (cart.length == 0 || location?.state?.hitCart !== undefined) {
       setTimeout(() => {
         setIsLoading(true);
         cartList(token)
@@ -534,7 +534,7 @@ function CartPage() {
               };
             });
             setCartItems(resData);
-            // dispatch(addToCart(resData));
+            dispatch(addToCart(resData));
             setIsLoading(false);
           })
           .catch((err) => {
@@ -588,7 +588,7 @@ function CartPage() {
       totalPrice + tipValue - (!isEmpty(promoDiscount) && getDiscountAmount()),
     currency_id: "3",
     country_id: "3",
-    restaurant_id: "2",
+    restaurant_id: cart[0]?.restaurant_id,
     branch_id: "1",
     driver_id: "1",
     address_id: "1",

@@ -1,21 +1,31 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { v4 as uuidv4 } from "uuid";
 import { useDispatch } from "react-redux";
-import Modal from "@mui/material/Modal";
-import Slide from "@mui/material/Slide";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { forEach } from "lodash";
-import { resetCart } from "../../store/reducers/cartSlice";
+
+import { useMutation } from "@tanstack/react-query";
+
+import { v4 as uuidv4 } from "uuid";
+
+import {
+  Modal,
+  Slide,
+  Stack,
+  Button,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
+
+import _ from "lodash";
+
 import addToCartApiCall from "../../api/cart/addToCart";
 import clearCart from "../../api/cart/clearCart";
+
+import { resetCart } from "../../store/reducers/cartSlice";
 import { paths } from "../../routes/paths";
 
-const ReOrderCard = ({ isVisible, handleClose, items, restaurant_id }) => {
+const ReOrderCard = (props) => {
+  let { isVisible, handleClose, items, restaurant_id } = props;
+
   const [selectedItems, setSelectedItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const dispatch = useDispatch();
@@ -25,32 +35,32 @@ const ReOrderCard = ({ isVisible, handleClose, items, restaurant_id }) => {
     let itemUnitPrice = item?.unit_price;
 
     // check which size is selected
-    const itemSize = item?.size_variant.find(
-      (size) => size.option_quantity > 0
-    );
+    // const itemSize = item?.size_variant.find(
+    //   (size) => size.option_quantity > 0
+    // );
 
-    if (itemSize) {
-      itemUnitPrice = parseFloat(itemSize.unit_price);
-    }
+    // if (itemSize) {
+    //   itemUnitPrice = parseFloat(itemSize.unit_price);
+    // }
 
-    // add side price
-    if (item.side_variant && item.side_variant.length > 0) {
-      forEach(item.side_variant, (side) => {
-        if (side.option_quantity > 0) {
-          itemUnitPrice += parseFloat(side.unit_price) * side.option_quantity;
-        }
-      });
-    }
+    // // add side price
+    // if (item.side_variant && item.side_variant.length > 0) {
+    //   forEach(item.side_variant, (side) => {
+    //     if (side.option_quantity > 0) {
+    //       itemUnitPrice += parseFloat(side.unit_price) * side.option_quantity;
+    //     }
+    //   });
+    // }
 
-    // add topping price
-    if (item.topping_variant && item.topping_variant.length > 0) {
-      forEach(item.topping_variant, (topping) => {
-        if (topping.option_quantity > 0) {
-          itemUnitPrice +=
-            parseFloat(topping.unit_price) * topping.option_quantity;
-        }
-      });
-    }
+    // // add topping price
+    // if (item.topping_variant && item.topping_variant.length > 0) {
+    //   forEach(item.topping_variant, (topping) => {
+    //     if (topping.option_quantity > 0) {
+    //       itemUnitPrice +=
+    //         parseFloat(topping.unit_price) * topping.option_quantity;
+    //     }
+    //   });
+    // }
 
     let itemTotalPrice = itemUnitPrice * item.quantity;
 
@@ -78,9 +88,11 @@ const ReOrderCard = ({ isVisible, handleClose, items, restaurant_id }) => {
       .then(() => {
         setIsLoading(false);
         handleClose();
+
         navigate(paths.cart, {
           state: {
             back: paths.myorder,
+            hitCart: true,
           },
         });
       })
@@ -101,6 +113,7 @@ const ReOrderCard = ({ isVisible, handleClose, items, restaurant_id }) => {
       size_variant: item.size_variant,
       topping_variant: item.topping_variant,
       side_variant: item.side_variant,
+      restaurant_id: item.restaurant_id,
     };
 
     addToCart(cartItem);
@@ -118,6 +131,30 @@ const ReOrderCard = ({ isVisible, handleClose, items, restaurant_id }) => {
   useEffect(() => {
     setSelectedItems(items);
   }, [items]);
+
+  // useEffect(() => {
+  //   if (items.length) {
+  //     const ss = _.chain(items)
+  //       .groupBy((item) =>
+  //         JSON.stringify(
+  //           _.pick(item, [
+  //             "side_variant",
+  //             "size_variant",
+  //             "topping_variant",
+  //             "menu_item",
+  //           ])
+  //         )
+  //       )
+  //       .map((groupedItems) => {
+  //         const combinedItem = _.cloneDeep(groupedItems[0]);
+  //         combinedItem.quantity = _.sumBy(groupedItems, "quantity");
+  //         return combinedItem;
+  //       })
+  //       .value();
+
+  //     setSelectedItems(ss);
+  //   }
+  // }, [items]);
 
   const goToMenu = () => {
     handleClose();
