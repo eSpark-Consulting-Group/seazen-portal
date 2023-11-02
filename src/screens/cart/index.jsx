@@ -591,7 +591,7 @@ function CartPage() {
     restaurant_id: "2",
     branch_id: "1",
     driver_id: "1",
-    address_id: "1",
+    address_id: JSON.parse(localStorage.getItem("selected")).addressId,
     service_type: "pickup",
     tip_id: "1",
     pick_from_store: "",

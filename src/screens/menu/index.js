@@ -81,6 +81,7 @@ const Menu = () => {
   const [fullAddress, setFullAddress] = useState(null);
   const [restaurantName, setRestaurantName] = useState("");
   const [distanceIsFar, setDistanceIsFar] = useState(false);
+  const [addressID, setAddressID] = useState();
 
   const {
     data: restaurantDetailResponse,
@@ -209,6 +210,7 @@ const Menu = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
+    setAddressID(item.is);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -257,7 +259,10 @@ const Menu = () => {
     if (nearbyRestaurants.length === 0) {
       getNearByRestaurants(address).then((res) => {
         if (res.status === "ok") {
-          localStorage.setItem("selected", JSON.stringify(fullAddress));
+          localStorage.setItem(
+            "selected",
+            JSON.stringify({ ...fullAddress, addressId: addressID })
+          );
 
           dispatch(getNearByRest(res?.data));
           setOpenAddressPopup(false);
@@ -265,7 +270,10 @@ const Menu = () => {
         }
       });
     } else {
-      localStorage.setItem("selected", JSON.stringify(fullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressId: addressID })
+      );
 
       setOpenAddressPopup(false);
       checkNearByRest(nearbyRestaurants);

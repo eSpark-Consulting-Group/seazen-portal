@@ -14,6 +14,7 @@ import getOrderDetails, {
   GET_ORDER_DETAILS_QUERY_KEY,
 } from "../../api/order/getOrderDetails";
 import "./style.css";
+import _ from "lodash";
 
 const Receipt = () => {
   const navigate = useNavigate();
@@ -49,6 +50,24 @@ const Receipt = () => {
 
     return Number(0);
   };
+
+  const consolidatedData = _.chain(orderDetailsResponse?.data?.order_item)
+    .groupBy((item) =>
+      JSON.stringify(
+        _.pick(item, [
+          "side_variant",
+          "size_variant",
+          "topping_variant",
+          "menu_item",
+        ])
+      )
+    )
+    .map((groupedItems) => {
+      const combinedItem = _.cloneDeep(groupedItems[0]);
+      combinedItem.quantity = _.sumBy(groupedItems, "quantity");
+      return combinedItem;
+    })
+    .value();
 
   return (
     <div>
@@ -118,7 +137,7 @@ const Receipt = () => {
               orderDetailsResponse &&
               orderDetailsResponse.data &&
               orderDetailsResponse.data.order_item &&
-              orderDetailsResponse.data.order_item.map((item, index) => (
+              consolidatedData.map((item, index) => (
                 <ReceiptItem
                   key={index}
                   item={item}

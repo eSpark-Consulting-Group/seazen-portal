@@ -20,7 +20,7 @@ const OrderCard = ({ item }) => {
   const handleRate = (val) => {
     setOpenRate(val);
   };
-  
+
   const handleClose = (value) => {
     handleRate(false);
     setAverage(value);
@@ -52,7 +52,7 @@ const OrderCard = ({ item }) => {
         return "#6236FF";
       case "Delivered":
         return "#4E948A";
-      case "Cancelled":
+      case "Canceled":
         return "#E02020";
       default:
         return "#F7B500";

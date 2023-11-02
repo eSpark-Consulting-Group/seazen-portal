@@ -93,6 +93,7 @@ export const Details = () => {
   const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [addressID, setAddressID] = useState();
 
   const { search } = useLocation();
 
@@ -192,7 +193,7 @@ export const Details = () => {
     queryFn: () => getMenuItemDetails(id, restaurant_id, restaurant_id),
   });
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
-
+  console.log(menuItemDetails, "menuItemDetails");
   const calculateToppingVariantTotal = (toppingVariantData) => {
     const eachToppingTotal = toppingVariantData
       .map((topping, index) => {
@@ -608,6 +609,7 @@ export const Details = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
+    setAddressID(item.is);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -656,7 +658,10 @@ export const Details = () => {
     if (nearbyRestaurants.length === 0) {
       getNearByRestaurants(address).then((res) => {
         if (res.status === "ok") {
-          localStorage.setItem("selected", JSON.stringify(fullAddress));
+          localStorage.setItem(
+            "selected",
+            JSON.stringify({ ...fullAddress, addressId: addressID })
+          );
 
           dispatch(getNearByRest(res?.data));
           setOpenAddressPopup(false);
@@ -664,7 +669,10 @@ export const Details = () => {
         }
       });
     } else {
-      localStorage.setItem("selected", JSON.stringify(fullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressId: addressID })
+      );
 
       setOpenAddressPopup(false);
       checkNearByRest(nearbyRestaurants);

@@ -89,6 +89,7 @@ const MenuCardListContainer = ({
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
+  const [addressID, setAddressID] = useState();
 
   const currentLocation = JSON.parse(localStorage.getItem("location"));
 
@@ -184,6 +185,7 @@ const MenuCardListContainer = ({
   const chooseAddress = (item) => {
     const lat = +item.latitude;
     const lng = +item.longitude;
+    setAddressID(item.is);
 
     getFullAddress(lat, lng, setFullAddress);
   };
@@ -247,7 +249,10 @@ const MenuCardListContainer = ({
     if (nearbyRestaurants.length === 0) {
       getNearByRestaurants(address).then((res) => {
         if (res.status === "ok") {
-          localStorage.setItem("selected", JSON.stringify(fullAddress));
+          localStorage.setItem(
+            "selected",
+            JSON.stringify({ ...fullAddress, addressId: addressID })
+          );
 
           dispatch(getNearByRest(res?.data));
           setOpenAddressPopup(false);
@@ -255,7 +260,10 @@ const MenuCardListContainer = ({
         }
       });
     } else {
-      localStorage.setItem("selected", JSON.stringify(fullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressId: addressID })
+      );
 
       setOpenAddressPopup(false);
       checkNearByRest(nearbyRestaurants);

@@ -189,6 +189,7 @@ const Home = () => {
   const [restaurantOpen, setRestaurantOpen] = useState(false);
   const [chooseFullAddress, setChooseFullAddress] = useState(null);
   const [openAddressToChoose, setOpenAddressToChoose] = useState(null);
+  const [addressID, setAddressID] = useState();
 
   const parentDiv = document?.getElementById("parent-of-all");
   const parentIcon = document?.getElementsByClassName("inner-svg-container");
@@ -231,6 +232,7 @@ const Home = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
+    setAddressID(item.is);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -290,7 +292,10 @@ const Home = () => {
     if (nearbyRestaurants.length === 0) {
       getNearByRestaurants(address).then((res) => {
         if (res.status === "ok") {
-          localStorage.setItem("selected", JSON.stringify(chooseFullAddress));
+          localStorage.setItem(
+            "selected",
+            JSON.stringify({ ...fullAddress, addressId: addressID })
+          );
 
           dispatch(getNearByRest(res?.data));
           setOpenAddressToChoose(false);
@@ -298,7 +303,10 @@ const Home = () => {
         }
       });
     } else {
-      localStorage.setItem("selected", JSON.stringify(chooseFullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressId: addressID })
+      );
 
       setOpenAddressToChoose(false);
       checkNearByRest(nearbyRestaurants);
