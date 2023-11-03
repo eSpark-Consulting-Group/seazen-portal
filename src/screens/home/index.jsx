@@ -429,7 +429,7 @@ const Home = () => {
     navigate(paths.location, {
       state: {
         path: "menu/restaurant",
-        restaurant_id: cart[0].id,
+        restaurant_id: cart[0]?.id,
         restaurantName: restaurant?.name_en,
         addNew: true,
       },
