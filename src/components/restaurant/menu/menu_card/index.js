@@ -235,6 +235,7 @@ const MenuCard = (props) => {
       navigate(paths.details + "/" + id, {
         state: {
           id: id,
+          branch_id: allData.branch_id,
         },
       });
     } else if (restaurantBranchHours?.data?.length) {
@@ -273,6 +274,7 @@ const MenuCard = (props) => {
             navigate(paths.details + "/" + id, {
               state: {
                 id: id,
+                branch_id: allData.branch_id,
               },
             });
 
@@ -291,6 +293,7 @@ const MenuCard = (props) => {
       navigate(paths.details + "/" + id, {
         state: {
           id: id,
+          branch_id: allData.branch_id,
         },
       });
       return;
@@ -544,6 +547,7 @@ const MenuCard = (props) => {
                 navigate(paths.details + "/" + id, {
                   state: {
                     id: id,
+                    branch_id: allData.branch_id,
                   },
                 });
               } else {
@@ -554,6 +558,7 @@ const MenuCard = (props) => {
                     branchRestaurants: restaurantBranchHours,
                     resturantId: resturantId,
                     restaurantDetail,
+                    branch_id: allData.branch_id,
                   },
                 });
               }

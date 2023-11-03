@@ -21,6 +21,7 @@ export default function App(props) {
     setOpenAddressPopup,
     setFromPopular,
     setPopularId,
+    setBranchId,
     setRestaurantId,
     setDistanceIsFar,
     setRestaurantOpen,
@@ -93,10 +94,12 @@ export default function App(props) {
               selectedLocation={selectedLocation}
               setFromPopular={setFromPopular}
               setPopularId={setPopularId}
+              setBranchId={setBranchId}
               restaurant_id={info.restaurant_id}
               setRestaurantId={setRestaurantId}
               setDistanceIsFar={setDistanceIsFar}
               setRestaurantOpen={setRestaurantOpen}
+              branchId={info.branch_id}
             />
           );
         })}
@@ -178,9 +181,11 @@ function Box({
   selectedLocation,
   setFromPopular,
   setPopularId,
+  setBranchId,
   restaurant_id,
   setRestaurantId,
   setDistanceIsFar,
+  branchId,
   setRestaurantOpen,
 }) {
   const captionLines = caption.split("\n");
@@ -225,12 +230,14 @@ function Box({
         localStorage.setItem("restaurantName", restName.name_en);
 
         setPopularId(id);
+        setBranchId(branchId);
         setRestaurantId(restaurant_id);
         navigate(paths.details + "/" + id, {
           state: {
             id: id,
             loc: "popular",
             restaurant_id: restaurant_id,
+            branch_id: branchId,
           },
         });
       }}

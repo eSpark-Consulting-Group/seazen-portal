@@ -182,6 +182,7 @@ const Home = () => {
   const [distanceIsFar, setDistanceIsFar] = useState(false);
   const [fromPopular, setFromPopular] = useState(false);
   const [popularId, setPopularId] = useState(null);
+  const [branchId, setBranchId] = useState(null);
   const [newText, setNewText] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
@@ -392,6 +393,7 @@ const Home = () => {
                     id: popularId,
                     loc: "popular",
                     restaurant_id: restaurantId,
+                    branch_id: branchId,
                   },
                 });
               }
@@ -649,6 +651,7 @@ const Home = () => {
         setOpenAddressPopup={setOpenAddressPopup}
         setFromPopular={setFromPopular}
         setPopularId={setPopularId}
+        setBranchId={setBranchId}
         setRestaurantId={setRestaurantId}
         distanceIsFar={distanceIsFar}
         setDistanceIsFar={setDistanceIsFar}
