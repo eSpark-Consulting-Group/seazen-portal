@@ -177,7 +177,6 @@ const AddressForm = () => {
     } else {
       updateAddress = address;
     }
-
     addAddressApiCall(updateAddress, token).then((res) => {
       if (res.success === "ok") {
         fetchFunction();
@@ -192,8 +191,8 @@ const AddressForm = () => {
             lat: location?.state?.latlng?.lat,
             lng: location?.state?.latlng?.lng,
             address: location?.state?.name,
+            addressId: res?.data?.address_id,
           };
-
           localStorage.setItem("selected", JSON.stringify(addToStorage));
 
           if (
@@ -269,6 +268,7 @@ const AddressForm = () => {
                 lat: location?.state?.latlng?.lat,
                 lng: location?.state?.latlng?.lng,
                 address: addressName,
+                addressId: res?.data?.address_id,
               };
 
               localStorage.setItem("selected", JSON.stringify(addToStorage));
@@ -277,6 +277,7 @@ const AddressForm = () => {
                 lat: location?.state?.latlng?.lat,
                 lng: location?.state?.latlng?.lng,
                 address: location?.state?.name,
+                addressId: res?.data?.address_id,
               };
 
               localStorage.setItem("selected", JSON.stringify(addToStorage));

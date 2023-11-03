@@ -231,6 +231,7 @@ const Home = () => {
   const [distanceIsFar, setDistanceIsFar] = useState(false);
   const [fromPopular, setFromPopular] = useState(false);
   const [popularId, setPopularId] = useState(null);
+  const [branchId, setBranchId] = useState(null);
   const [newText, setNewText] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
@@ -238,6 +239,7 @@ const Home = () => {
   const [restaurantOpen, setRestaurantOpen] = useState(false);
   const [chooseFullAddress, setChooseFullAddress] = useState(null);
   const [openAddressToChoose, setOpenAddressToChoose] = useState(null);
+  const [addressID, setAddressID] = useState();
 
   const parentDiv = document?.getElementById("parent-of-all");
   const parentIcon = document?.getElementsByClassName("inner-svg-container");
@@ -280,6 +282,7 @@ const Home = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
+    setAddressID(item.is);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -339,7 +342,10 @@ const Home = () => {
     if (nearbyRestaurants.length === 0) {
       getNearByRestaurants(address).then((res) => {
         if (res.status === "ok") {
-          localStorage.setItem("selected", JSON.stringify(chooseFullAddress));
+          localStorage.setItem(
+            "selected",
+            JSON.stringify({ ...fullAddress, addressId: addressID })
+          );
 
           dispatch(getNearByRest(res?.data));
           setOpenAddressToChoose(false);
@@ -347,7 +353,10 @@ const Home = () => {
         }
       });
     } else {
-      localStorage.setItem("selected", JSON.stringify(chooseFullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressId: addressID })
+      );
 
       setOpenAddressToChoose(false);
       checkNearByRest(nearbyRestaurants);
@@ -433,6 +442,7 @@ const Home = () => {
                     id: popularId,
                     loc: "popular",
                     restaurant_id: restaurantId,
+                    branch_id: branchId,
                   },
                 });
               }
@@ -468,7 +478,7 @@ const Home = () => {
     navigate(paths.location, {
       state: {
         path: "menu/restaurant",
-        restaurant_id: cart[0].id,
+        restaurant_id: cart[0]?.id,
         restaurantName: restaurant?.name_en,
         addNew: true,
       },
@@ -690,6 +700,7 @@ const Home = () => {
         setOpenAddressPopup={setOpenAddressPopup}
         setFromPopular={setFromPopular}
         setPopularId={setPopularId}
+        setBranchId={setBranchId}
         setRestaurantId={setRestaurantId}
         distanceIsFar={distanceIsFar}
         setDistanceIsFar={setDistanceIsFar}

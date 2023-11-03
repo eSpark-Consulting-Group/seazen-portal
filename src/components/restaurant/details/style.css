@@ -6,7 +6,7 @@
   height: 55px;
   margin-bottom: 12px;
   background-color: white;
-  /* margin-top: 21px; */
+  margin-top: -10px;
   z-index: 999;
   position: relative;
 }
@@ -20,6 +20,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-family: Titillium Web;
   font-style: Regular 400;
   font-weight: 400;

@@ -106,6 +106,7 @@ const DeliveryDetails = (props) => {
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [restaurantOpen, setRestaurantOpen] = useState(false);
+  const [addressID, setAddressID] = useState();
 
   const { id: restaurant_id } = useParams();
 
@@ -274,7 +275,10 @@ const DeliveryDetails = (props) => {
 
   useEffect(() => {
     if (fullAddress !== null) {
-      localStorage.setItem("selected", JSON.stringify(fullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressID })
+      );
 
       setUserLocation(truncateString(fullAddress?.address, 15));
       setLatlng({
@@ -370,6 +374,7 @@ const DeliveryDetails = (props) => {
                     <Dropdown.Item
                       onClick={() => {
                         getUserAddress(address.latitude, address.longitude);
+                        setAddressID(address.id);
                         fetchNearbyRestaurant(
                           address.latitude,
                           address.longitude

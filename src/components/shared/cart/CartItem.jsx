@@ -13,6 +13,7 @@ import { paths } from "../../../routes/paths";
 import updateCartApiCall from "../../../api/cart/updateCart";
 import * as reduxCart from "../../../store/reducers/cartSlice";
 import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
+import clearCart from "../../../api/cart/clearCart";
 
 function CartItem(props) {
   const {
@@ -37,6 +38,7 @@ function CartItem(props) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.cart);
 
   // const updateCartHandler = useQuery({
   //   queryFn: () =>
@@ -83,7 +85,20 @@ function CartItem(props) {
     enabled: false,
   });
 
+  const clearCartHandler = () => {
+    clearCart(token)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const onDelete = () => {
+    if (cart.length < 2 && cart[0].quantity == 1) {
+      clearCartHandler();
+    }
     dispatch(reduxCart.removeFromCart(id));
     refetch();
     setTimeout(() => {

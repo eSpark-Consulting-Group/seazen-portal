@@ -51,7 +51,9 @@ const ReceiptItem = ({ item, currency_code }) => {
         {`${item.menu_item.name_en} x (${item.quantity})`}
       </div>
       <div className="receipt-items-price">
-        {`${currency_code} ${Number(item.unit_price).toFixed(3)}`}
+        {`${currency_code} ${Number(item.unit_price * item.quantity).toFixed(
+          3
+        )}`}
       </div>
     </div>
   );

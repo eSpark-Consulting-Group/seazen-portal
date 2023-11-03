@@ -93,6 +93,7 @@ export const Details = () => {
   const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [addressID, setAddressID] = useState();
 
   const { search } = useLocation();
 
@@ -189,10 +190,11 @@ export const Details = () => {
     isError,
   } = useQuery({
     queryKey: [GET_MENU_ITEM_DETAILS_QUERY_KEY],
-    queryFn: () => getMenuItemDetails(id, restaurant_id, restaurant_id),
+    queryFn: () =>
+      getMenuItemDetails(id, restaurant_id, location.state.branch_id),
   });
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
-
+  console.log(menuItemDetails, "menuItemDetails");
   const calculateToppingVariantTotal = (toppingVariantData) => {
     const eachToppingTotal = toppingVariantData
       .map((topping, index) => {
@@ -512,14 +514,17 @@ export const Details = () => {
       totalPrice: Number(totalPrice).toFixed(3),
       specialInstructions: specialInstructions,
       itemImage: data?.image,
+      has_variants: data?.has_variants,
       restaurant_id: data.restaurant_id,
     };
 
-    const itemExists = cart.find(
-      (item) =>
-        JSON.stringify(item.variants) ===
-        JSON.stringify(ItemDataObject.variants)
-    );
+    const itemExists = ItemDataObject.has_variants
+      ? cart.find(
+          (item) =>
+            JSON.stringify(item.variants) ===
+            JSON.stringify(ItemDataObject.variants)
+        )
+      : false;
 
     if (checkIfItemIsInCart()) {
       const item_code = cartItem?.item_code;
@@ -608,6 +613,7 @@ export const Details = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
+    setAddressID(item.is);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -656,7 +662,10 @@ export const Details = () => {
     if (nearbyRestaurants.length === 0) {
       getNearByRestaurants(address).then((res) => {
         if (res.status === "ok") {
-          localStorage.setItem("selected", JSON.stringify(fullAddress));
+          localStorage.setItem(
+            "selected",
+            JSON.stringify({ ...fullAddress, addressId: addressID })
+          );
 
           dispatch(getNearByRest(res?.data));
           setOpenAddressPopup(false);
@@ -664,7 +673,10 @@ export const Details = () => {
         }
       });
     } else {
-      localStorage.setItem("selected", JSON.stringify(fullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressId: addressID })
+      );
 
       setOpenAddressPopup(false);
       checkNearByRest(nearbyRestaurants);
@@ -751,6 +763,7 @@ export const Details = () => {
                 sx={{
                   mr: 0.5,
                   fontWeight: "600",
+                  fontSize: "13px",
                 }}
               >
                 KWD
@@ -758,8 +771,9 @@ export const Details = () => {
               <div
                 style={{
                   fontWeight: "700",
-                  marginTop: "-27px",
+                  marginTop: "-29px",
                   marginLeft: "29px",
+                  fontSize: "18px",
                 }}
               >
                 {menuItemPriceWithoutCurrency()}

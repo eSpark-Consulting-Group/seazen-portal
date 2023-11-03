@@ -14,6 +14,8 @@ import getOrderDetails, {
   GET_ORDER_DETAILS_QUERY_KEY,
 } from "../../api/order/getOrderDetails";
 import "./style.css";
+import _ from "lodash";
+import { removeDuplicateItem } from "../../utils/removeDuplicateItems";
 
 const Receipt = () => {
   const navigate = useNavigate();
@@ -118,13 +120,15 @@ const Receipt = () => {
               orderDetailsResponse &&
               orderDetailsResponse.data &&
               orderDetailsResponse.data.order_item &&
-              orderDetailsResponse.data.order_item.map((item, index) => (
-                <ReceiptItem
-                  key={index}
-                  item={item}
-                  currency_code={orderDetailsResponse.data.currency_code}
-                />
-              ))}
+              removeDuplicateItem(orderDetailsResponse?.data?.order_item).map(
+                (item, index) => (
+                  <ReceiptItem
+                    key={index}
+                    item={item}
+                    currency_code={orderDetailsResponse.data.currency_code}
+                  />
+                )
+              )}
           </div>
 
           <Stack spacing={2} sx={{ color: "#1F2933", padding: "20px 30px" }}>

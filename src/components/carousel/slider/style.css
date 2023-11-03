@@ -197,8 +197,8 @@
   font-size: 7px !important;
 }
 
-@media screen and (max-width: 500px) and (min-width: 380px) {
+@media (max-width: 500px) {
   .home-banner-images img {
-    height: 150px !important;
+    height: auto !important;
   }
 }
