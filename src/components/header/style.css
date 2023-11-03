@@ -118,10 +118,10 @@
   cursor: pointer;
   box-shadow: 0px 24px 48px #314f7c1f;
 }
-.icon-btn-country img {
+/* .icon-btn-country img {
   width: 20px;
   height: 20px;
-}
+} */
 
 .iconaccount-btn img {
   object-fit: contain;

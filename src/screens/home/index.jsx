@@ -23,8 +23,11 @@ import SelectLocation from "../../components/dialog/selectLocation";
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import countryList from "../../api/common/getAllCountries";
+import cartList from "../../api/cart/cartList";
 
 import { addCountry } from "../../store/reducers/authSlice";
+import { addToCart } from "../../store/reducers/cartSlice";
+
 import {
   getBranchHours,
   getNearByRest,
@@ -40,7 +43,7 @@ import { paths } from "../../routes/paths";
 import "./style.css";
 
 const Home = () => {
-  const isToken = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   const userSelected = localStorage.getItem("selected");
   const userLocation = localStorage.getItem("location");
 
@@ -57,6 +60,52 @@ const Home = () => {
   const nearbyRestaurants = useSelector(
     (state) => state.resturants.nearbyRestaurants
   );
+
+  useEffect(() => {
+    if (sessionStorage.getItem("cartEmpty") === null) {
+      if (token !== null) {
+        if (cart?.length === 0) {
+          cartList(token)
+            .then((res) => {
+              const resData = res.data.map((val) => {
+                return {
+                  id: val?.item_id,
+                  cart_id: val.cart_id,
+                  itemName: val?.menu_item_name_en,
+                  discountedPrice: val?.discounted_price,
+                  price: val?.unit_price,
+                  quantity: val.quantity,
+                  variants: {
+                    sizeVariant: {
+                      ...val.size_variant[0],
+                      variantId: val.size_variant_id,
+                    },
+                    toppingVariant: val.topping_variant.map((value) => ({
+                      ...value,
+                      variantId: val.topping_variant_id,
+                    })),
+                    sideVariant: val.side_variant.map((value) => ({
+                      ...value,
+                      variantId: val.side_variant_id,
+                    })),
+                  },
+                  item_code: val.item_code,
+                  specialInstructions: "",
+                  itemImage: val?.menu_item_image,
+                  restaurant_id: 1,
+                  totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
+                };
+              });
+              dispatch(addToCart(resData));
+              sessionStorage.setItem("cartEmpty", true);
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }
+      }
+    }
+  }, [cart, token]);
 
   const [userCurrentAddress, setUserCurrentAddress] = useState({
     latitude: 0,
@@ -558,7 +607,7 @@ const Home = () => {
             (fullAddress !== null || fullAddress === null) &&
             userSelected === null &&
             userLocation !== null &&
-            isToken === null
+            token === null
           ) {
             const location = JSON.parse(userLocation);
 
@@ -568,7 +617,7 @@ const Home = () => {
             (fullAddress !== null || fullAddress === null) &&
             userSelected === null &&
             userLocation === null &&
-            isToken === null &&
+            token === null &&
             selectedText === "Delivery" &&
             filterSelectedNow === "Delivers to Me"
           ) {
@@ -612,7 +661,7 @@ const Home = () => {
           setOpenAddressPopup={setOpenAddressToChoose}
           logo
           cartIcon
-          profileIconUrl={isToken ? paths.profile : paths.guest_profile}
+          profileIconUrl={token ? paths.profile : paths.guest_profile}
           fromHome={true}
         />
       </div>
@@ -621,7 +670,7 @@ const Home = () => {
       </div>
       <RestaurantsOrderTypeButton
         setOpenAddressPopup={
-          userSelected === null && isToken !== null ? setOpenAddressPopup : null
+          userSelected === null && token !== null ? setOpenAddressPopup : null
         }
         setToggleFilterClassNear={setToggleFilterClassNear}
         filterClassNear={filterClassNear}
