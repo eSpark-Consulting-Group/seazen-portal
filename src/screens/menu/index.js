@@ -22,9 +22,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileTimePicker } from "@mui/x-date-pickers";
 
+import CloseIcon from "@mui/icons-material/Close";
+
 import Navbar from "../../components/header/generalHeader/index.js";
 import RestaurantOptionsServicesContainer from "../../components/restaurant/restaurant_options_services/index.js";
 import { DialogComponent } from "../../components/dialog/index.js";
+import SelectLocation from "../../components/dialog/selectLocation.js";
+import ReOrderCard from "../../components/ReOrderCard/index.jsx";
 
 import getRestaurantDetails, {
   GET_RESTAURANT_DETAILS_QUERY_KEY,
@@ -33,34 +37,38 @@ import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantBranchHours.js";
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant.js";
+import getBranchesAndHours, {
+  GET_BRANCHES_AND_HOURS_QUERY_KEY,
+} from "../../api/restaurant/branches/getBranchesAndHours.js";
 
 import {
   getNearByRest,
   getResturantsDetails,
 } from "../../store/reducers/resturantsSlice.js";
 import { setThemeColor } from "../../store/reducers/themeSlice.js";
+import { closeReorderModal } from "../../store/reducers/orderSlice.js";
 
-import { paths } from "../../routes/paths.jsx";
-
-import "./style.css";
-import getBranchesAndHours, {
-  GET_BRANCHES_AND_HOURS_QUERY_KEY,
-} from "../../api/restaurant/branches/getBranchesAndHours.js";
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../utils/getAddress.js";
-import SelectLocation from "../../components/dialog/selectLocation.js";
+
+import { paths } from "../../routes/paths.jsx";
+
+import "./style.css";
 
 const Menu = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+
   const { id } = useParams();
 
   const country = useSelector((state) => state.auth.country);
   const nearbyRestaurants = useSelector(
     (state) => state.resturants.nearbyRestaurants
   );
+  const reorder = useSelector((state) => state.order.reorder);
 
   const [openModal, setOpenModal] = useState(false);
   const [notDeliver, setNotDeliver] = useState(false);
@@ -444,6 +452,30 @@ const Menu = () => {
           className="dialog-title title-cart"
         >
           <img src="/assets/img/exclaim.svg"></img>
+
+          <div
+            style={{
+              position: "absolute",
+              top: "8px",
+              right: "10px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onClick={() => {
+              setFromDetail(false);
+              setRestaurantOpen(false);
+            }}
+          >
+            <CloseIcon
+              sx={{
+                width: "24px",
+                fontSize: "24px",
+                cursor: "pointer",
+                color: "#707070 !important",
+              }}
+            />
+          </div>
         </DialogTitle>
         <DialogContent className="dialog-content-cart">
           Restaurant is closed. Do you want to schedule for later?
@@ -562,6 +594,15 @@ const Menu = () => {
         home={true}
         menuCard={true}
       />
+
+      {location?.state?.order_item !== undefined ? (
+        <ReOrderCard
+          isVisible={reorder}
+          handleClose={() => dispatch(closeReorderModal())}
+          items={location?.state?.order_item}
+          restaurant_id={id}
+        />
+      ) : null}
     </div>
   );
 };

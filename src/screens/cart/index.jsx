@@ -297,6 +297,7 @@ function CartPage() {
               setNotDeliver(true);
             } else {
               setNotDeliver(false);
+
               if (isAsap === "true") {
                 for (let j = 0; j < filterRestaurant?.length; j++) {
                   if (filterRestaurant[j]?.openingStatus === "Open") {
@@ -304,6 +305,7 @@ function CartPage() {
 
                     const data = {
                       ...checkoutData,
+                      branch_id: forCurrent[i].id,
                       discount_price: getDiscountAmount(),
                     };
 
@@ -338,6 +340,7 @@ function CartPage() {
               } else {
                 const data = {
                   ...checkoutData,
+                  branch_id: forCurrent[i].id,
                   discount_price: getDiscountAmount(),
                 };
 
@@ -362,10 +365,10 @@ function CartPage() {
                     console.log(err);
                   });
               }
-
-              break;
             }
           }
+
+          break;
         }
       }
     }
@@ -499,7 +502,7 @@ function CartPage() {
   };
 
   const cartRefetch = () => {
-    if (cart.length == 0 || location?.state?.hitCart !== undefined) {
+    if (cart.length == 0) {
       setTimeout(() => {
         setIsLoading(true);
         cartList(token)
@@ -534,7 +537,7 @@ function CartPage() {
               };
             });
             setCartItems(resData);
-            dispatch(addToCart(resData));
+            // dispatch(addToCart(resData));
             setIsLoading(false);
           })
           .catch((err) => {
@@ -582,6 +585,7 @@ function CartPage() {
       Number(getDeliveryCharge())
     ).toFixed(3);
   };
+
   const checkoutData = {
     payment_method_id: "1",
     order_total_price:
@@ -589,10 +593,9 @@ function CartPage() {
     currency_id: "3",
     country_id: "3",
     restaurant_id: cart[0]?.restaurant_id,
-    branch_id: "1",
     driver_id: "1",
     address_id: JSON.parse(localStorage.getItem("selected"))?.addressId,
-    service_type: "pickup",
+    service_type: "delivery", // it will be dynamic later
     tip_id: "1",
     pick_from_store: "",
     pickup_from_car: "",
