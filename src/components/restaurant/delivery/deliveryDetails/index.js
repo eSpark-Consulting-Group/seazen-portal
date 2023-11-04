@@ -18,6 +18,7 @@ import {
 
 import { styled } from "@mui/material/styles"; // Import styled from MUI
 import { lighten } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
 
 import dayjs from "dayjs";
 
@@ -636,6 +637,29 @@ const DeliveryDetails = (props) => {
           className="dialog-title title-cart"
         >
           <img src="/assets/img/exclaim.svg"></img>
+
+          <div
+            style={{
+              position: "absolute",
+              top: "8px",
+              right: "10px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onClick={() => {
+              setRestaurantOpen(false);
+            }}
+          >
+            <CloseIcon
+              sx={{
+                width: "24px",
+                fontSize: "24px",
+                cursor: "pointer",
+                color: "#707070 !important",
+              }}
+            />
+          </div>
         </DialogTitle>
         <DialogContent className="dialog-content-cart">
           Restaurant is closed. Do you want to schedule for later?

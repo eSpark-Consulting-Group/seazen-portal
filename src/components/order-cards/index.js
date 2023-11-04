@@ -1,15 +1,26 @@
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Card, Rating, Box } from "@mui/material";
-import styles from "../../screens/myorder/style.module.css";
-import RateCard from "../rate-card";
 import { useNavigate } from "react-router-dom";
-import { paths } from "../../routes/paths";
-import addOrderRating from "../../api/order/addOrderRating";
-import { GET_ORDERS_QUERY_KEY } from "../../api/order/getOrders";
+import { useDispatch } from "react-redux";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { Button, Card, Rating, Box } from "@mui/material";
+
+import RateCard from "../rate-card";
 import ReOrderCard from "../ReOrderCard";
 
+import addOrderRating from "../../api/order/addOrderRating";
+import { GET_ORDERS_QUERY_KEY } from "../../api/order/getOrders";
+
+import { openReorderModal } from "../../store/reducers/orderSlice";
+
+import { paths } from "../../routes/paths";
+
+import styles from "../../screens/myorder/style.module.css";
+
 const OrderCard = ({ item }) => {
+  const dispatch = useDispatch();
+
   const queryClient = useQueryClient();
 
   const [openRate, setOpenRate] = useState(false);
@@ -31,9 +42,13 @@ const OrderCard = ({ item }) => {
     navigate(paths.receipt + item.order_id);
   };
 
-  const handleReorder = () => {
-    // navigate(paths.menu + paths.branches + item.restaurant_id);
-    setOpenReorder(true);
+  const handleReorder = (orderItem) => {
+    dispatch(openReorderModal());
+
+    navigate(`${paths.menu}/restaurant/${1}/delivery`, {
+      state: { order_item: orderItem.order_item },
+    });
+    // setOpenReorder(true);
   };
 
   const handleReorderClose = () => {
@@ -171,7 +186,7 @@ const OrderCard = ({ item }) => {
             }}
             size="small"
             variant="outlined"
-            onClick={handleReorder}
+            onClick={() => handleReorder(item)}
           >
             Reorder
           </Button>
