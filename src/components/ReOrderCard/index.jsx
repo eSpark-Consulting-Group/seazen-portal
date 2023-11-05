@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
-import { useMutation } from "@tanstack/react-query";
+// import { useMutation } from "@tanstack/react-query";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -32,7 +32,8 @@ const ReOrderCard = (props) => {
   const token = localStorage.getItem("token");
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
+  const cart = useSelector((state) => state.cart.cart);
 
   const [selectedItems, setSelectedItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -83,105 +84,114 @@ const ReOrderCard = (props) => {
     }
   };
 
-  const clearCartItems = async () => {
-    dispatch(resetCart());
-    await emptyCart();
-  };
+  // const clearCartItems = async () => {
+  //   dispatch(resetCart());
+  //   // await emptyCart();
+  // };
 
   const handleAddItemsToCart = async () => {
     setIsLoading(true);
-    await clearCartItems();
+    dispatch(resetCart());
 
-    let promises = [];
+    clearCart().then((res) => {
+      if (res.status === "ok") {
+        let promises = [];
 
-    selectedItems.map((item) => {
-      const cartItem = {
-        item_code: uuidv4(),
-        item_id: item.item_id,
-        quantity: item.quantity,
-        totalPrice: Number(item.quantity * item.unit_price).toFixed(3),
-        side_variant: item.side_variant,
-        side_variant_id: item.side_variant_id,
-        size_variant: item?.size_variant,
-        size_variant_id: item.size_variant_id,
-        topping_variant: item.topping_variant,
-        topping_variant_id: item.topping_variant_id,
-      };
+        selectedItems.map((item) => {
+          const cartItem = {
+            item_code: uuidv4(),
+            item_id: item.item_id,
+            quantity: item.quantity,
+            totalPrice: Number(item.quantity * item.unit_price).toFixed(3),
+            side_variant: item.side_variant,
+            side_variant_id: item.side_variant_id,
+            size_variant: item?.size_variant,
+            size_variant_id: item.size_variant_id,
+            topping_variant: item.topping_variant,
+            topping_variant_id: item.topping_variant_id,
+          };
 
-      promises.push(addToCartApiCall(cartItem));
-    });
+          promises.push(addToCartApiCall(cartItem));
+        });
 
-    // wait for all items to be added to cart Promise to finish - then close modal
-    Promise.all(promises)
-      .then((res) => {
-        cartList(token)
-          .then((res) => {
-            let obj;
-            setIsLoading(false);
-            res.data.map((val) => {
-              const has_variants =
-                val?.size_variant_id !== "" ||
-                val.side_variant_id !== "" ||
-                val.topping_variant_id !== ""
-                  ? true
-                  : false;
+        // wait for all items to be added to cart Promise to finish - then close modal
+        Promise.all(promises)
+          .then(() => {
+            cartList(token)
+              .then((res) => {
+                setIsLoading(false);
 
-              const variants =
-                val?.size_variant_id !== "" ||
-                val.side_variant_id !== "" ||
-                val.topping_variant_id !== ""
-                  ? {
-                      sizeVariant: {
-                        ...val.size_variant[0],
-                        variantId: val.size_variant_id,
-                      },
-                      toppingVariant: val.topping_variant.map((value) => ({
-                        ...value,
-                        variantId: val.topping_variant_id,
-                      })),
-                      sideVariant: val.side_variant.map((value) => ({
-                        ...value,
-                        variantId: val.side_variant_id,
-                      })),
-                    }
-                  : null;
+                res.data.map((val) => {
+                  const has_variants =
+                    val?.size_variant_id === "" &&
+                    val.side_variant_id === "" &&
+                    val.topping_variant_id === ""
+                      ? false
+                      : true;
 
-              obj = {
-                id: val?.item_id,
-                cart_id: val.cart_id,
-                itemName: val?.menu_item_name_en,
-                discountedPrice: val?.discounted_price,
-                price: val?.unit_price,
-                quantity: val.quantity,
-                variants,
-                item_code: val.item_code,
-                specialInstructions: "",
-                itemImage: val?.menu_item_image,
-                restaurant_id: 1,
-                totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
-                has_variants,
-              };
+                  const variants =
+                    val?.size_variant_id === "" &&
+                    val.side_variant_id === "" &&
+                    val.topping_variant_id === ""
+                      ? null
+                      : {
+                          sizeVariant: {
+                            ...val.size_variant[0],
+                            variantId: val.size_variant_id,
+                          },
+                          toppingVariant: val.topping_variant.map((value) => ({
+                            ...value,
+                            variantId: val.topping_variant_id,
+                          })),
+                          sideVariant: val.side_variant.map((value) => ({
+                            ...value,
+                            variantId: val.side_variant_id,
+                          })),
+                        };
 
-              dispatch(addToCart(obj));
-            });
+                  const obj = {
+                    id: val?.item_id,
+                    cart_id: val.cart_id,
+                    itemName: val?.menu_item_name_en,
+                    discountedPrice: val?.discounted_price,
+                    price: val?.unit_price,
+                    quantity: val.quantity,
+                    variants,
+                    item_code: val.item_code,
+                    specialInstructions: "",
+                    itemImage: val?.menu_item_image,
+                    restaurant_id: 1,
+                    totalPrice: Number(val.quantity * val.unit_price).toFixed(
+                      3
+                    ),
+                    has_variants,
+                  };
 
-            handleClose();
+                  obj.has_variants === false && delete obj.has_variants;
+                  obj.variants === null && delete obj.variants;
+
+                  dispatch(addToCart(obj));
+                });
+
+                handleClose();
+              })
+              .catch((err) => {
+                console.error(err);
+              });
+
+            // navigate(paths.cart, {
+            //   state: {
+            //     back: paths.myorder,
+            //     hitCart: true,
+            //   },
+            // });
           })
-          .catch((err) => {
-            console.error(err);
+          .catch(() => {
+            setIsLoading(false);
+            handleClose();
           });
-
-        // navigate(paths.cart, {
-        //   state: {
-        //     back: paths.myorder,
-        //     hitCart: true,
-        //   },
-        // });
-      })
-      .catch(() => {
-        setIsLoading(false);
-        handleClose();
-      });
+      }
+    });
   };
 
   // const addItemToCart = (item) => {
@@ -203,8 +213,7 @@ const ReOrderCard = (props) => {
   // };
 
   // const { mutate: apiCall } = useMutation(addToCartApiCall);
-
-  const { mutate: emptyCart } = useMutation(clearCart);
+  // const { mutate: emptyCart } = useMutation(clearCart);
 
   useEffect(() => {
     const incQuantity = removeDuplicateItem(items);
