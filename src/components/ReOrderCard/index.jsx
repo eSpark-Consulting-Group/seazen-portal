@@ -24,7 +24,6 @@ import { addToCart, resetCart } from "../../store/reducers/cartSlice";
 
 import { removeDuplicateItem } from "../../utils/removeDuplicateItems";
 
-import { paths } from "../../routes/paths";
 import cartList from "../../api/cart/cartList";
 
 const ReOrderCard = (props) => {
@@ -89,31 +88,6 @@ const ReOrderCard = (props) => {
     await emptyCart();
   };
 
-  // useEffect(() => {
-  //   items?.map((item) => {
-  //     return {
-  //       ...item,
-  //       size_variant: item?.size_variant?.map((size) => {
-  //         return {
-  //           ...size,
-  //           name_en:
-  //             size.option_id === 1
-  //               ? "Small"
-  //               : size.option_id === 2
-  //               ? "Medium"
-  //               : "Large",
-  //         };
-  //       }),
-  //       has_variants:
-  //         item?.size_variant?.length === 0 &&
-  //         item.side_variant?.length === 0 &&
-  //         item.topping_variant?.length === 0
-  //           ? false
-  //           : true,
-  //     };
-  //   });
-  // }, [items]);
-
   const handleAddItemsToCart = async () => {
     setIsLoading(true);
     await clearCartItems();
@@ -124,51 +98,14 @@ const ReOrderCard = (props) => {
       const cartItem = {
         item_code: uuidv4(),
         item_id: item.item_id,
-        // itemName: item?.menu_item?.name_en,
-        // price: item?.unit_price,
         quantity: item.quantity,
-        // variants: {
-        //   sizeVariant: item?.size_variant?.map((size) => {
-        //     return {
-        //       ...size,
-        //       name_en:
-        //         size.option_id === 1
-        //           ? "Small"
-        //           : size.option_id === 2
-        //           ? "Medium"
-        //           : "Large",
-        //     };
-        //   }),
-        //   toppingVariant: item.topping_variant,
-        //   sideVariant: item.side_variant,
-        // },
-        // itemImage: item?.menu_item?.image,
+        totalPrice: Number(item.quantity * item.unit_price).toFixed(3),
         side_variant: item.side_variant,
         side_variant_id: item.side_variant_id,
         size_variant: item?.size_variant,
         size_variant_id: item.size_variant_id,
         topping_variant: item.topping_variant,
         topping_variant_id: item.topping_variant_id,
-        // has_variants:
-        //   item?.size_variant?.length === 0 &&
-        //   item.side_variant?.length === 0 &&
-        //   item.topping_variant?.length === 0
-        //     ? false
-        //     : true,
-        // restaurant_id: item.restaurant_id,
-        // size_variant: item?.size_variant?.map((size) => {
-        //   return {
-        //     ...size,
-        //     name_en:
-        //       size.option_id === 1
-        //         ? "Small"
-        //         : size.option_id === 2
-        //         ? "Medium"
-        //         : "Large",
-        //   };
-        // }),
-        // topping_variant: item.topping_variant,
-        // side_variant: item.side_variant,
       };
 
       promises.push(addToCartApiCall(cartItem));
@@ -179,21 +116,21 @@ const ReOrderCard = (props) => {
       .then((res) => {
         cartList(token)
           .then((res) => {
+            let obj;
             setIsLoading(false);
-            const resData = res.data.map((val) => {
+            res.data.map((val) => {
               const has_variants =
-                val?.size_variant_id === "" &&
-                val.side_variant_id === "" &&
-                val.topping_variant_id === ""
-                  ? null
-                  : true;
+                val?.size_variant_id !== "" ||
+                val.side_variant_id !== "" ||
+                val.topping_variant_id !== ""
+                  ? true
+                  : false;
 
               const variants =
-                val?.size_variant_id === "" &&
-                val.side_variant_id === "" &&
-                val.topping_variant_id === ""
-                  ? null
-                  : {
+                val?.size_variant_id !== "" ||
+                val.side_variant_id !== "" ||
+                val.topping_variant_id !== ""
+                  ? {
                       sizeVariant: {
                         ...val.size_variant[0],
                         variantId: val.size_variant_id,
@@ -206,9 +143,10 @@ const ReOrderCard = (props) => {
                         ...value,
                         variantId: val.side_variant_id,
                       })),
-                    };
+                    }
+                  : null;
 
-              return {
+              obj = {
                 id: val?.item_id,
                 cart_id: val.cart_id,
                 itemName: val?.menu_item_name_en,
@@ -223,9 +161,10 @@ const ReOrderCard = (props) => {
                 totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
                 has_variants,
               };
+
+              dispatch(addToCart(obj));
             });
 
-            dispatch(addToCart(resData));
             handleClose();
           })
           .catch((err) => {
@@ -261,8 +200,6 @@ const ReOrderCard = (props) => {
 
   //   dispatch(addToCart(cartItem));
   //   promises.push(addToCartApiCall(cartItem));
-
-  //   console.log(promises);
   // };
 
   // const { mutate: apiCall } = useMutation(addToCartApiCall);
@@ -270,13 +207,10 @@ const ReOrderCard = (props) => {
   const { mutate: emptyCart } = useMutation(clearCart);
 
   useEffect(() => {
-    setSelectedItems(items);
-  }, [items]);
+    const incQuantity = removeDuplicateItem(items);
 
-  const goToMenu = () => {
-    handleClose();
-    // navigate(`${paths.menu}/restaurant/${restaurant_id}/delivery`);
-  };
+    setSelectedItems(incQuantity);
+  }, [items]);
 
   return (
     <div>

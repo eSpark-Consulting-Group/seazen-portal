@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Card, Rating, Box } from "@mui/material";
 
 import RateCard from "../rate-card";
-import ReOrderCard from "../ReOrderCard";
+// import ReOrderCard from "../ReOrderCard";
 
 import addOrderRating from "../../api/order/addOrderRating";
 import { GET_ORDERS_QUERY_KEY } from "../../api/order/getOrders";
@@ -193,12 +193,12 @@ const OrderCard = ({ item }) => {
         </Box>
       )}
       <RateCard isVisible={openRate} handleClose={(val) => handleClose(val)} />
-      <ReOrderCard
+      {/* <ReOrderCard
         isVisible={openReorder}
         handleClose={handleReorderClose}
         items={item.order_item}
         restaurant_id={item.restaurant_id}
-      />
+      /> */}
     </Card>
   );
 };
