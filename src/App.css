@@ -114,3 +114,6 @@ iframe#webpack-dev-server-client-overlay {
 .header-wrapper {
   padding: 20px 28px 0px !important;
 }
+.remove-chat-icon {
+  display: none;
+}
