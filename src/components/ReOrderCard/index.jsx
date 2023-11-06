@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 // import { useMutation } from "@tanstack/react-query";
 
@@ -19,21 +19,31 @@ import _ from "lodash";
 
 import addToCartApiCall from "../../api/cart/addToCart";
 import clearCart from "../../api/cart/clearCart";
+import cartList from "../../api/cart/cartList";
 
 import { addToCart, resetCart } from "../../store/reducers/cartSlice";
 
 import { removeDuplicateItem } from "../../utils/removeDuplicateItems";
-
-import cartList from "../../api/cart/cartList";
+import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
 
 const ReOrderCard = (props) => {
-  let { isVisible, handleClose, items } = props;
+  let {
+    isVisible,
+    handleClose,
+    items,
+    branchesAndHours,
+    setDistanceIsFar,
+    setRestaurantName,
+    restaurantDetail,
+  } = props;
 
   const token = localStorage.getItem("token");
+  const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+  const currentAddress = JSON.parse(localStorage.getItem("location"));
 
   const dispatch = useDispatch();
 
-  const cart = useSelector((state) => state.cart.cart);
+  // const cart = useSelector((state) => state.cart.cart);
 
   const [selectedItems, setSelectedItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -91,6 +101,59 @@ const ReOrderCard = (props) => {
 
   const handleAddItemsToCart = async () => {
     setIsLoading(true);
+
+    for (let i = 0; i < branchesAndHours?.length; i++) {
+      const resLat = +branchesAndHours[i]?.latitude;
+      const resLng = +branchesAndHours[i]?.longitude;
+
+      if (selectedAddress === null && currentAddress !== null) {
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          currentAddress.lat,
+          currentAddress.lng
+        );
+
+        if (distance > 50) {
+          sameFunctionCall();
+        } else {
+          setDistanceIsFar(false);
+
+          reorderItems();
+
+          break;
+        }
+      }
+
+      if (selectedAddress !== null && currentAddress !== null) {
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          selectedAddress.lat,
+          selectedAddress.lng
+        );
+
+        if (distance > 50) {
+          sameFunctionCall();
+        } else {
+          setDistanceIsFar(false);
+
+          reorderItems();
+
+          break;
+        }
+      }
+    }
+  };
+
+  const sameFunctionCall = () => {
+    setRestaurantName(restaurantDetail?.name_en);
+    setDistanceIsFar(true);
+    setIsLoading(false);
+    handleClose();
+  };
+
+  const reorderItems = () => {
     dispatch(resetCart());
 
     clearCart().then((res) => {

@@ -649,6 +649,7 @@ const DeliveryDetails = (props) => {
             }}
             onClick={() => {
               setRestaurantOpen(false);
+              sessionStorage.setItem("popupOpened", true);
             }}
           >
             <CloseIcon
@@ -668,7 +669,10 @@ const DeliveryDetails = (props) => {
         <div className="btn-navigate">
           <Button
             className="common-st add-btn"
-            onClick={() => navigate(paths.home)}
+            onClick={() => {
+              sessionStorage.setItem("popupOpened", true);
+              navigate(paths.home);
+            }}
           >
             Home Page
           </Button>
@@ -678,6 +682,7 @@ const DeliveryDetails = (props) => {
             onClick={() => {
               setRestaurantOpen(false);
               setOpenSchedulePopup(true);
+              sessionStorage.setItem("popupOpened", true);
             }}
           >
             Schedule for later

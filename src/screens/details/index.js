@@ -194,7 +194,7 @@ export const Details = () => {
       getMenuItemDetails(id, restaurant_id, location.state.branch_id),
   });
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
-  console.log(menuItemDetails, "menuItemDetails");
+
   const calculateToppingVariantTotal = (toppingVariantData) => {
     const eachToppingTotal = toppingVariantData
       .map((topping, index) => {
@@ -562,6 +562,11 @@ export const Details = () => {
   const moveToLocation = () => {
     const { data } = menuItemDetails;
 
+    if (menuItemDetails?.data.has_variants && !sizeVariant) {
+      setErrorShow(true);
+      return;
+    }
+
     var ItemDataObject = {
       id: data?.id,
       itemName: data?.name_en,
@@ -905,7 +910,7 @@ export const Details = () => {
 
                     {variant?.options?.map((option, index) => {
                       const isLastItem = variant?.options?.length - 1 === index;
-                      console.log(variant.name_en, "variant.name_en");
+
                       return (
                         <Fragment key={option?.id}>
                           <Stack

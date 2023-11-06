@@ -44,10 +44,17 @@ const OrderCard = ({ item }) => {
 
   const handleReorder = (orderItem) => {
     dispatch(openReorderModal());
+    localStorage.setItem(
+      "restaurantID",
+      orderItem.order_item[0]?.restaurant_id
+    );
 
-    navigate(`${paths.menu}/restaurant/${1}/delivery`, {
-      state: { order_item: orderItem.order_item },
-    });
+    navigate(
+      `${paths.menu}/restaurant/${orderItem.order_item[0]?.restaurant_id}/delivery`,
+      {
+        state: { order_item: orderItem.order_item },
+      }
+    );
     // setOpenReorder(true);
   };
 

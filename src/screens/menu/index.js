@@ -62,7 +62,7 @@ const Menu = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { id } = useParams();
+  const { id: restaurant_id } = useParams();
 
   const country = useSelector((state) => state.auth.country);
   const nearbyRestaurants = useSelector(
@@ -70,25 +70,25 @@ const Menu = () => {
   );
   const reorder = useSelector((state) => state.order.reorder);
 
-  const [openModal, setOpenModal] = useState(false);
-  const [notDeliver, setNotDeliver] = useState(false);
-  const [selectedItemToDeliver, setSelectedItemToDeliver] = useState({});
-  const [restaurantOpen, setRestaurantOpen] = useState(false);
+  const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [pickDate, setPickDate] = useState(
     dayjs(new Date()).format("MMM DD, YYYY")
   );
-  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
-  const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
-  const [isAsap, setIsAsap] = useState(true);
-  const [showTimePicker, setShowTimePicker] = useState(false);
   const [pickTime, setPickTime] = useState(dayjs(asapTime).format("hh:mm a"));
-  const { id: restaurant_id } = useParams();
+  const [isAsap, setIsAsap] = useState(true);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [notDeliver, setNotDeliver] = useState(false);
+  const [distanceIsFar, setDistanceIsFar] = useState(false);
+  const [selectedItemToDeliver, setSelectedItemToDeliver] = useState({});
+  const [restaurantOpen, setRestaurantOpen] = useState(false);
+  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [fromDetail, setFromDetail] = useState(false);
   const [openAddressPopup, setOpenAddressPopup] = useState(false);
   const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
   const [fullAddress, setFullAddress] = useState(null);
   const [restaurantName, setRestaurantName] = useState("");
-  const [distanceIsFar, setDistanceIsFar] = useState(false);
   const [addressID, setAddressID] = useState();
 
   const {
@@ -99,7 +99,7 @@ const Menu = () => {
     refetch,
   } = useQuery({
     queryKey: [GET_RESTAURANT_DETAILS_QUERY_KEY],
-    queryFn: () => getRestaurantDetails(id, country?.id),
+    queryFn: () => getRestaurantDetails(restaurant_id, country?.id),
     onSuccess: (data) => {
       dispatch(getResturantsDetails(data.data));
     },
@@ -120,7 +120,7 @@ const Menu = () => {
     isError: restaurantBranchHoursIsError,
   } = useQuery({
     queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY],
-    queryFn: () => getRestaurantBranchHours(id),
+    queryFn: () => getRestaurantBranchHours(restaurant_id),
     onSuccess: (data) => {},
   });
 
@@ -340,7 +340,7 @@ const Menu = () => {
       <RestaurantOptionsServicesContainer
         restaurantDetail={restaurantDetail}
         restaurantBranchHours={restaurantBranchHours}
-        resturantId={id}
+        resturantId={restaurant_id}
         setOpenModal={setOpenModal}
         setSelectedItemToDeliver={setSelectedItemToDeliver}
         scheduleForLater={scheduleForLater}
@@ -465,6 +465,7 @@ const Menu = () => {
             onClick={() => {
               setFromDetail(false);
               setRestaurantOpen(false);
+              sessionStorage.setItem("popupOpened", true);
             }}
           >
             <CloseIcon
@@ -484,7 +485,10 @@ const Menu = () => {
         <div className="btn-navigate">
           <Button
             className="common-st add-btn"
-            onClick={() => navigate(paths.home)}
+            onClick={() => {
+              sessionStorage.setItem("popupOpened", true);
+              navigate(paths.home);
+            }}
           >
             Home Page
           </Button>
@@ -492,6 +496,7 @@ const Menu = () => {
           <Button
             className="common-st go-to-btn"
             onClick={() => {
+              sessionStorage.setItem("popupOpened", true);
               setFromDetail(true);
               setOpenSchedulePopup(true);
             }}
@@ -589,7 +594,7 @@ const Menu = () => {
         setNotDeliver={setDistanceIsFar}
         restaurantName={restaurantName}
         fromDetail={true}
-        resturantId={id}
+        resturantId={restaurant_id}
         location={location}
         home={true}
         menuCard={true}
@@ -600,7 +605,11 @@ const Menu = () => {
           isVisible={reorder}
           handleClose={() => dispatch(closeReorderModal())}
           items={location?.state?.order_item}
-          restaurant_id={id}
+          restaurant_id={restaurant_id}
+          setDistanceIsFar={setNotDeliver}
+          branchesAndHours={branchesAndHoursResponse?.data}
+          setRestaurantName={setRestaurantName}
+          restaurantDetail={restaurantDetail}
         />
       ) : null}
     </div>
