@@ -299,6 +299,16 @@ const Home = () => {
     );
 
     if (chooseFullAddress !== null) {
+      if (cart?.length === 0) {
+        localStorage.setItem(
+          "selected",
+          JSON.stringify({ ...chooseFullAddress, addressId: addressID })
+        );
+
+        navigate(paths.cart);
+        return;
+      }
+
       if (branchHours.length && filterBranch?.length) {
         for (let i = 0; i < filterBranch?.length; i++) {
           const resLat = +filterBranch[i]?.latitude;
@@ -386,7 +396,10 @@ const Home = () => {
         for (let i = 0; i < filterRestaurant?.length; i++) {
           if (filterRestaurant[i]?.openingStatus === "Open") {
             setRestaurantOpen(false);
-            navigate(paths?.cart);
+            navigate(paths?.cart, {
+              state: { fromHome: true, path: "/home" },
+            });
+
             break;
           } else {
             setRestaurantOpen(true);
@@ -394,7 +407,9 @@ const Home = () => {
         }
       } else {
         setRestaurantOpen(false);
-        navigate(paths?.cart);
+        navigate(paths?.cart, {
+          state: { fromHome: true, path: "/home" },
+        });
       }
     }
   };

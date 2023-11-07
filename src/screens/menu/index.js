@@ -69,6 +69,7 @@ const Menu = () => {
     (state) => state.resturants.nearbyRestaurants
   );
   const reorder = useSelector((state) => state.order.reorder);
+  const cart = useSelector((state) => state.cart.cart);
 
   const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [pickDate, setPickDate] = useState(
@@ -218,7 +219,7 @@ const Menu = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
-    setAddressID(item.is);
+    setAddressID(item.id);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -228,6 +229,16 @@ const Menu = () => {
     );
 
     if (fullAddress !== null) {
+      if (cart?.length === 0) {
+        localStorage.setItem(
+          "selected",
+          JSON.stringify({ ...fullAddress, addressId: addressID })
+        );
+
+        navigate(paths.cart);
+        return;
+      }
+
       if (branchesAndHoursResponse?.data.length && filterBranch?.length) {
         for (let i = 0; i < filterBranch?.length; i++) {
           const resLat = +filterBranch[i]?.latitude;
@@ -316,16 +327,21 @@ const Menu = () => {
       if (localStorage.getItem("isAsap") === "true") {
         for (let i = 0; i < filterRestaurant?.length; i++) {
           if (filterRestaurant[i]?.openingStatus === "Open") {
-            setRestaurantIsOpen(false);
-            navigate(paths?.cart);
+            setRestaurantOpen(false);
+            navigate(paths?.cart, {
+              state: { fromMenu: true, path: "/home" },
+            });
+
             break;
-          } else {
-            setRestaurantIsOpen(true);
+          } else if (filterRestaurant[i]?.openingStatus === "Close") {
+            setRestaurantOpen(true);
           }
         }
       } else {
-        setRestaurantIsOpen(false);
-        navigate(paths?.cart);
+        setRestaurantOpen(false);
+        navigate(paths?.cart, {
+          state: { fromMenu: true, path: "/home" },
+        });
       }
     }
   };
