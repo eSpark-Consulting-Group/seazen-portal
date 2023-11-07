@@ -113,7 +113,14 @@ function PhoneNumberVerificationIndex() {
         spacing={2}
       >
         <div style={{ padding: "8px" }}>
-          <Navbar backIcon logo languageIcon />
+          <Navbar
+            backIcon
+            logo
+            languageIcon
+            location={location?.state}
+            path={location?.state?.path}
+            autoRedirect={location?.state?.autoRedirect}
+          />
         </div>
         <Stack
           spacing={5}

@@ -23,8 +23,11 @@ import SelectLocation from "../../components/dialog/selectLocation";
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import countryList from "../../api/common/getAllCountries";
+import cartList from "../../api/cart/cartList";
 
 import { addCountry } from "../../store/reducers/authSlice";
+import { addToCart } from "../../store/reducers/cartSlice";
+
 import {
   getBranchHours,
   getNearByRest,
@@ -40,7 +43,7 @@ import { paths } from "../../routes/paths";
 import "./style.css";
 
 const Home = () => {
-  const isToken = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   const userSelected = localStorage.getItem("selected");
   const userLocation = localStorage.getItem("location");
 
@@ -57,6 +60,71 @@ const Home = () => {
   const nearbyRestaurants = useSelector(
     (state) => state.resturants.nearbyRestaurants
   );
+
+  useEffect(() => {
+    if (sessionStorage.getItem("cartEmpty") === null) {
+      if (token !== null) {
+        if (cart?.length === 0) {
+          cartList(token)
+            .then((res) => {
+              res.data.map((val) => {
+                const has_variants =
+                  val?.size_variant_id === "" &&
+                  val.side_variant_id === "" &&
+                  val.topping_variant_id === ""
+                    ? false
+                    : true;
+
+                const variants =
+                  val?.size_variant_id === "" &&
+                  val.side_variant_id === "" &&
+                  val.topping_variant_id === ""
+                    ? null
+                    : {
+                        sizeVariant: {
+                          ...val.size_variant[0],
+                          variantId: val.size_variant_id,
+                        },
+                        toppingVariant: val.topping_variant.map((value) => ({
+                          ...value,
+                          variantId: val.topping_variant_id,
+                        })),
+                        sideVariant: val.side_variant.map((value) => ({
+                          ...value,
+                          variantId: val.side_variant_id,
+                        })),
+                      };
+
+                const obj = {
+                  id: val?.item_id,
+                  cart_id: val.cart_id,
+                  itemName: val?.menu_item_name_en,
+                  discountedPrice: val?.discounted_price,
+                  price: val?.unit_price,
+                  quantity: val.quantity,
+                  variants,
+                  item_code: val.item_code,
+                  specialInstructions: "",
+                  itemImage: val?.menu_item_image,
+                  restaurant_id: 1,
+                  totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
+                  has_variants,
+                };
+
+                obj.has_variants === false && delete obj.has_variants;
+                obj.variants === null && delete obj.variants;
+
+                dispatch(addToCart(obj));
+                sessionStorage.setItem("cartEmpty", true);
+              });
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }
+      }
+    }
+  }, [cart, token]);
 
   const [userCurrentAddress, setUserCurrentAddress] = useState({
     latitude: 0,
@@ -141,6 +209,7 @@ const Home = () => {
                   lng: lng,
                   address: address,
                 };
+
                 localStorage.setItem("location", JSON.stringify(addToRedux));
               })
               .catch((err) => {
@@ -152,6 +221,44 @@ const Home = () => {
       }
     }
   }, []);
+
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [addressId, setAddressID] = useState();
+
+  useEffect(() => {
+    if (userLocation !== null && userSelected === null) {
+      const parsedLocation = JSON.parse(userLocation);
+
+      for (let i = 0; i < addressData?.length; i++) {
+        if (
+          parseFloat(+addressData[i].latitude) ===
+            parseFloat(parsedLocation.lat) &&
+          parseFloat(+addressData[i].longitude) ===
+            parseFloat(parsedLocation.lng)
+        ) {
+          setAddressID(addressData[i].id);
+          getFullAddress(
+            +addressData[i].latitude,
+            +addressData[i].longitude,
+            setSelectedAddress
+          );
+        }
+      }
+    }
+  }, [localStorage]);
+
+  useEffect(() => {
+    if (selectedAddress !== null) {
+      const address = {
+        lat: selectedAddress.lat,
+        lng: selectedAddress.lng,
+        address: selectedAddress.address,
+        addressId,
+      };
+
+      localStorage?.setItem("selected", address);
+    }
+  }, [selectedAddress]);
 
   const isCountry = localStorage.getItem("country");
   useEffect(() => {
@@ -182,6 +289,7 @@ const Home = () => {
   const [distanceIsFar, setDistanceIsFar] = useState(false);
   const [fromPopular, setFromPopular] = useState(false);
   const [popularId, setPopularId] = useState(null);
+  const [branchId, setBranchId] = useState(null);
   const [newText, setNewText] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
@@ -200,10 +308,10 @@ const Home = () => {
       let promises = [];
 
       resturantsData?.forEach((restaurant, index) => {
-        if (index === 0 || index === 1) {
-          const idToCheck = restaurant.id;
-          promises.push(getRestaurantBranchHours(idToCheck));
-        }
+        // if (index === 0 || index === 1) {
+        const idToCheck = restaurant.id;
+        promises.push(getRestaurantBranchHours(idToCheck));
+        // }
       });
 
       Promise.all(promises)
@@ -231,6 +339,7 @@ const Home = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
+    setAddressID(item.id);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -238,6 +347,7 @@ const Home = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
+    setAddressID(item.id);
     getFullAddress(lat, lng, setChooseFullAddress);
   };
 
@@ -247,6 +357,16 @@ const Home = () => {
     );
 
     if (chooseFullAddress !== null) {
+      if (cart?.length === 0) {
+        localStorage.setItem(
+          "selected",
+          JSON.stringify({ ...chooseFullAddress, addressId })
+        );
+
+        navigate(paths.cart);
+        return;
+      }
+
       if (branchHours.length && filterBranch?.length) {
         for (let i = 0; i < filterBranch?.length; i++) {
           const resLat = +filterBranch[i]?.latitude;
@@ -290,7 +410,10 @@ const Home = () => {
     if (nearbyRestaurants.length === 0) {
       getNearByRestaurants(address).then((res) => {
         if (res.status === "ok") {
-          localStorage.setItem("selected", JSON.stringify(chooseFullAddress));
+          localStorage.setItem(
+            "selected",
+            JSON.stringify({ ...chooseFullAddress, addressId })
+          );
 
           dispatch(getNearByRest(res?.data));
           setOpenAddressToChoose(false);
@@ -298,7 +421,10 @@ const Home = () => {
         }
       });
     } else {
-      localStorage.setItem("selected", JSON.stringify(chooseFullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...chooseFullAddress, addressId })
+      );
 
       setOpenAddressToChoose(false);
       checkNearByRest(nearbyRestaurants);
@@ -328,7 +454,10 @@ const Home = () => {
         for (let i = 0; i < filterRestaurant?.length; i++) {
           if (filterRestaurant[i]?.openingStatus === "Open") {
             setRestaurantOpen(false);
-            navigate(paths?.cart);
+            navigate(paths?.cart, {
+              state: { fromHome: true, path: "/home" },
+            });
+
             break;
           } else {
             setRestaurantOpen(true);
@@ -336,10 +465,13 @@ const Home = () => {
         }
       } else {
         setRestaurantOpen(false);
-        navigate(paths?.cart);
+        navigate(paths?.cart, {
+          state: { fromHome: true, path: "/home" },
+        });
       }
     }
   };
+
   useEffect(() => {
     if (fullAddress !== null) {
       if (filterSelectedNow === "") {
@@ -368,7 +500,10 @@ const Home = () => {
               setNewText("");
               setDistanceIsFar(false);
               setOpenAddressPopup(false);
-              localStorage.setItem("selected", JSON.stringify(fullAddress));
+              localStorage.setItem(
+                "selected",
+                JSON.stringify({ ...fullAddress, addressId })
+              );
 
               if (restaurantId === null) {
                 setOpenAddressPopup(false);
@@ -384,6 +519,7 @@ const Home = () => {
                     id: popularId,
                     loc: "popular",
                     restaurant_id: restaurantId,
+                    branch_id: branchId,
                   },
                 });
               }
@@ -393,7 +529,10 @@ const Home = () => {
           }
         }
       } else {
-        localStorage.setItem("selected", JSON.stringify(fullAddress));
+        localStorage.setItem(
+          "selected",
+          JSON.stringify({ ...fullAddress, addressId })
+        );
         setOpenAddressPopup(false);
       }
     }
@@ -419,7 +558,7 @@ const Home = () => {
     navigate(paths.location, {
       state: {
         path: "menu/restaurant",
-        restaurant_id: cart[0].id,
+        restaurant_id: cart[0]?.id,
         restaurantName: restaurant?.name_en,
         addNew: true,
       },
@@ -558,7 +697,7 @@ const Home = () => {
             (fullAddress !== null || fullAddress === null) &&
             userSelected === null &&
             userLocation !== null &&
-            isToken === null
+            token === null
           ) {
             const location = JSON.parse(userLocation);
 
@@ -568,7 +707,7 @@ const Home = () => {
             (fullAddress !== null || fullAddress === null) &&
             userSelected === null &&
             userLocation === null &&
-            isToken === null &&
+            token === null &&
             selectedText === "Delivery" &&
             filterSelectedNow === "Delivers to Me"
           ) {
@@ -612,7 +751,7 @@ const Home = () => {
           setOpenAddressPopup={setOpenAddressToChoose}
           logo
           cartIcon
-          profileIconUrl={isToken ? paths.profile : paths.guest_profile}
+          profileIconUrl={token ? paths.profile : paths.guest_profile}
           fromHome={true}
         />
       </div>
@@ -621,7 +760,7 @@ const Home = () => {
       </div>
       <RestaurantsOrderTypeButton
         setOpenAddressPopup={
-          userSelected === null && isToken !== null ? setOpenAddressPopup : null
+          userSelected === null && token !== null ? setOpenAddressPopup : null
         }
         setToggleFilterClassNear={setToggleFilterClassNear}
         filterClassNear={filterClassNear}
@@ -641,6 +780,7 @@ const Home = () => {
         setOpenAddressPopup={setOpenAddressPopup}
         setFromPopular={setFromPopular}
         setPopularId={setPopularId}
+        setBranchId={setBranchId}
         setRestaurantId={setRestaurantId}
         distanceIsFar={distanceIsFar}
         setDistanceIsFar={setDistanceIsFar}

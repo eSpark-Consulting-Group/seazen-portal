@@ -177,7 +177,6 @@ const AddressForm = () => {
     } else {
       updateAddress = address;
     }
-
     addAddressApiCall(updateAddress, token).then((res) => {
       if (res.success === "ok") {
         fetchFunction();
@@ -192,6 +191,7 @@ const AddressForm = () => {
             lat: location?.state?.latlng?.lat,
             lng: location?.state?.latlng?.lng,
             address: location?.state?.name,
+            addressId: res?.data?.address_id,
           };
 
           localStorage.setItem("selected", JSON.stringify(addToStorage));
@@ -222,6 +222,14 @@ const AddressForm = () => {
           } else if (location?.state?.fromHome !== undefined) {
             navigate(paths.cart, {
               state: { fromHome: location?.state?.fromHome },
+            });
+          } else if (location?.state?.notSelected !== undefined) {
+            navigate(paths.cart, {
+              state: {
+                fromMenu: true,
+                path: "menu/restaurant",
+                restaurant_id: location?.state?.restaurant_id,
+              },
             });
           } else {
             navigate(paths.cart);
@@ -269,6 +277,7 @@ const AddressForm = () => {
                 lat: location?.state?.latlng?.lat,
                 lng: location?.state?.latlng?.lng,
                 address: addressName,
+                addressId: res?.data?.address_id,
               };
 
               localStorage.setItem("selected", JSON.stringify(addToStorage));
@@ -277,6 +286,7 @@ const AddressForm = () => {
                 lat: location?.state?.latlng?.lat,
                 lng: location?.state?.latlng?.lng,
                 address: location?.state?.name,
+                addressId: res?.data?.address_id,
               };
 
               localStorage.setItem("selected", JSON.stringify(addToStorage));
@@ -485,6 +495,7 @@ const AddressForm = () => {
         fromMenu={location?.state?.fromMenu}
         fromDetail={location?.state?.fromDetail}
         backToCart={true}
+        notSelected={location?.state?.notSelected}
       />
 
       <div className="button-style">

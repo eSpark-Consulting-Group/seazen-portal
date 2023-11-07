@@ -1,10 +1,8 @@
-// src/Navbar.js
 import React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { paths } from "../../../routes/paths";
-import MenuNavbar from "../../../components/header";
 
 import "./style.css";
 
@@ -15,6 +13,7 @@ const Navbar = (props) => {
 
   const cart = useSelector((state) => state.cart.cart);
   const addressData = useSelector((state) => state.address.addressData);
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 
   const token = localStorage.getItem("token");
   const currentLocation = JSON.parse(localStorage.getItem("location"));
@@ -75,6 +74,9 @@ const Navbar = (props) => {
         >
           <div className="shopping_icon">
             <img alt="Bag_Icon" src="/assets/img/Icon - Bag.svg" />
+            {totalQuantity > 0 && (
+              <div className="items-count">{totalQuantity}</div>
+            )}
           </div>
         </div>
       </nav>

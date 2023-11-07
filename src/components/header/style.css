@@ -80,6 +80,7 @@
 
 .icon-btn {
   border-radius: 50%;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,10 +119,10 @@
   cursor: pointer;
   box-shadow: 0px 24px 48px #314f7c1f;
 }
-.icon-btn-country img {
+/* .icon-btn-country img {
   width: 20px;
   height: 20px;
-}
+} */
 
 .iconaccount-btn img {
   object-fit: contain;
@@ -143,4 +144,16 @@
   box-shadow: 0px 24px 48px #314f7c1f;
   margin-left: -5px;
   margin-top: -3px;
+}
+
+.items-count {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: #b69280;
+  border-radius: 4px;
+  top: -3px;
+  right: -3px;
+  font-size: 10px;
+  text-align: center;
 }

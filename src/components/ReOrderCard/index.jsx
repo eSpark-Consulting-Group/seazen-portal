@@ -1,56 +1,83 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { v4 as uuidv4 } from "uuid";
+// import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import Modal from "@mui/material/Modal";
-import Slide from "@mui/material/Slide";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { forEach } from "lodash";
-import { resetCart } from "../../store/reducers/cartSlice";
+
+// import { useMutation } from "@tanstack/react-query";
+
+import { v4 as uuidv4 } from "uuid";
+
+import {
+  Modal,
+  Slide,
+  Stack,
+  Button,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
+
+import _ from "lodash";
+
 import addToCartApiCall from "../../api/cart/addToCart";
 import clearCart from "../../api/cart/clearCart";
-import { paths } from "../../routes/paths";
+import cartList from "../../api/cart/cartList";
 
-const ReOrderCard = ({ isVisible, handleClose, items, restaurant_id }) => {
+import { addToCart, resetCart } from "../../store/reducers/cartSlice";
+
+import { removeDuplicateItem } from "../../utils/removeDuplicateItems";
+import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
+
+const ReOrderCard = (props) => {
+  let {
+    isVisible,
+    handleClose,
+    items,
+    branchesAndHours,
+    setDistanceIsFar,
+    setRestaurantName,
+    restaurantDetail,
+  } = props;
+
+  const token = localStorage.getItem("token");
+  const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+  const currentAddress = JSON.parse(localStorage.getItem("location"));
+
+  const dispatch = useDispatch();
+
+  // const cart = useSelector((state) => state.cart.cart);
+
   const [selectedItems, setSelectedItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const getOrderItemPrice = (item) => {
     let itemUnitPrice = item?.unit_price;
 
     // check which size is selected
-    const itemSize = item?.size_variant.find(
-      (size) => size.option_quantity > 0
-    );
+    // const itemSize = item?.size_variant.find(
+    //   (size) => size.option_quantity > 0
+    // );
 
-    if (itemSize) {
-      itemUnitPrice = parseFloat(itemSize.unit_price);
-    }
+    // if (itemSize) {
+    //   itemUnitPrice = parseFloat(itemSize.unit_price);
+    // }
 
-    // add side price
-    if (item.side_variant && item.side_variant.length > 0) {
-      forEach(item.side_variant, (side) => {
-        if (side.option_quantity > 0) {
-          itemUnitPrice += parseFloat(side.unit_price) * side.option_quantity;
-        }
-      });
-    }
+    // // add side price
+    // if (item.side_variant && item.side_variant.length > 0) {
+    //   forEach(item.side_variant, (side) => {
+    //     if (side.option_quantity > 0) {
+    //       itemUnitPrice += parseFloat(side.unit_price) * side.option_quantity;
+    //     }
+    //   });
+    // }
 
-    // add topping price
-    if (item.topping_variant && item.topping_variant.length > 0) {
-      forEach(item.topping_variant, (topping) => {
-        if (topping.option_quantity > 0) {
-          itemUnitPrice +=
-            parseFloat(topping.unit_price) * topping.option_quantity;
-        }
-      });
-    }
+    // // add topping price
+    // if (item.topping_variant && item.topping_variant.length > 0) {
+    //   forEach(item.topping_variant, (topping) => {
+    //     if (topping.option_quantity > 0) {
+    //       itemUnitPrice +=
+    //         parseFloat(topping.unit_price) * topping.option_quantity;
+    //     }
+    //   });
+    // }
 
     let itemTotalPrice = itemUnitPrice * item.quantity;
 
@@ -61,72 +88,205 @@ const ReOrderCard = ({ isVisible, handleClose, items, restaurant_id }) => {
     if (event.target.checked) {
       setSelectedItems([...selectedItems, item]);
     } else {
-      setSelectedItems(selectedItems.filter((i) => i.item_id !== item.item_id));
+      setSelectedItems(
+        selectedItems.filter((i) => i.order_item_id !== item.order_item_id)
+      );
     }
   };
 
-  const handleAddItemsToCart = () => {
+  // const clearCartItems = async () => {
+  //   dispatch(resetCart());
+  //   // await emptyCart();
+  // };
+
+  const handleAddItemsToCart = async () => {
     setIsLoading(true);
-    clearCartItems();
 
-    // wait for all items to be added to cart Promise to finish - then close modal
-    Promise.all(
-      selectedItems.map((item) => {
-        addItemToCart(item);
-      })
-    )
-      .then(() => {
-        setIsLoading(false);
-        handleClose();
-        navigate(paths.cart, {
-          state: {
-            back: paths.myorder,
-          },
-        });
-      })
-      .catch(() => {
-        setIsLoading(false);
-        handleClose();
-      });
+    for (let i = 0; i < branchesAndHours?.length; i++) {
+      const resLat = +branchesAndHours[i]?.latitude;
+      const resLng = +branchesAndHours[i]?.longitude;
+
+      if (selectedAddress === null && currentAddress !== null) {
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          currentAddress.lat,
+          currentAddress.lng
+        );
+
+        if (distance > 50) {
+          sameFunctionCall();
+        } else {
+          setDistanceIsFar(false);
+
+          reorderItems();
+
+          break;
+        }
+      }
+
+      if (selectedAddress !== null && currentAddress !== null) {
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          selectedAddress.lat,
+          selectedAddress.lng
+        );
+
+        if (distance > 50) {
+          sameFunctionCall();
+        } else {
+          setDistanceIsFar(false);
+
+          reorderItems();
+
+          break;
+        }
+      }
+    }
   };
 
-  const addItemToCart = (item) => {
-    const cartItem = {
-      item_code: uuidv4(),
-      item_id: item.item_id,
-      quantity: item.quantity,
-      topping_variant_id: item.topping_variant_id,
-      side_variant_id: item.side_variant_id,
-      size_variant_id: item.size_variant_id,
-      size_variant: item.size_variant,
-      topping_variant: item.topping_variant,
-      side_variant: item.side_variant,
-    };
-
-    addToCart(cartItem);
+  const sameFunctionCall = () => {
+    setRestaurantName(restaurantDetail?.name_en);
+    setDistanceIsFar(true);
+    setIsLoading(false);
+    handleClose();
   };
 
-  const clearCartItems = () => {
+  const reorderItems = () => {
     dispatch(resetCart());
-    emptyCart();
+
+    clearCart().then((res) => {
+      if (res.status === "ok") {
+        let promises = [];
+
+        selectedItems.map((item) => {
+          const cartItem = {
+            item_code: uuidv4(),
+            item_id: item.item_id,
+            quantity: item.quantity,
+            totalPrice: Number(item.quantity * item.unit_price).toFixed(3),
+            side_variant: item.side_variant,
+            side_variant_id: item.side_variant_id,
+            size_variant: item?.size_variant,
+            size_variant_id: item.size_variant_id,
+            topping_variant: item.topping_variant,
+            topping_variant_id: item.topping_variant_id,
+          };
+
+          promises.push(addToCartApiCall(cartItem));
+        });
+
+        // wait for all items to be added to cart Promise to finish - then close modal
+        Promise.all(promises)
+          .then(() => {
+            cartList(token)
+              .then((res) => {
+                setIsLoading(false);
+
+                res.data.map((val) => {
+                  const has_variants =
+                    val?.size_variant_id === "" &&
+                    val.side_variant_id === "" &&
+                    val.topping_variant_id === ""
+                      ? false
+                      : true;
+
+                  const variants =
+                    val?.size_variant_id === "" &&
+                    val.side_variant_id === "" &&
+                    val.topping_variant_id === ""
+                      ? null
+                      : {
+                          sizeVariant: {
+                            ...val.size_variant[0],
+                            variantId: val.size_variant_id,
+                          },
+                          toppingVariant: val.topping_variant.map((value) => ({
+                            ...value,
+                            variantId: val.topping_variant_id,
+                          })),
+                          sideVariant: val.side_variant.map((value) => ({
+                            ...value,
+                            variantId: val.side_variant_id,
+                          })),
+                        };
+
+                  const obj = {
+                    id: val?.item_id,
+                    cart_id: val.cart_id,
+                    itemName: val?.menu_item_name_en,
+                    discountedPrice: val?.discounted_price,
+                    price: val?.unit_price,
+                    quantity: val.quantity,
+                    variants,
+                    item_code: val.item_code,
+                    specialInstructions: "",
+                    itemImage: val?.menu_item_image,
+                    restaurant_id: 1,
+                    totalPrice: Number(val.quantity * val.unit_price).toFixed(
+                      3
+                    ),
+                    has_variants,
+                  };
+
+                  obj.has_variants === false && delete obj.has_variants;
+                  obj.variants === null && delete obj.variants;
+
+                  dispatch(addToCart(obj));
+                });
+
+                handleClose();
+              })
+              .catch((err) => {
+                console.error(err);
+              });
+
+            // navigate(paths.cart, {
+            //   state: {
+            //     back: paths.myorder,
+            //     hitCart: true,
+            //   },
+            // });
+          })
+          .catch(() => {
+            setIsLoading(false);
+            handleClose();
+          });
+      }
+    });
   };
 
-  const { mutate: addToCart } = useMutation(addToCartApiCall);
+  // const addItemToCart = (item) => {
+  //   const cartItem = {
+  //     item_code: uuidv4(),
+  //     item_id: item.item_id,
+  //     quantity: item.quantity,
+  //     topping_variant_id: item.topping_variant_id,
+  //     side_variant_id: item.side_variant_id,
+  //     size_variant_id: item.size_variant_id,
+  //     size_variant: item.size_variant,
+  //     topping_variant: item.topping_variant,
+  //     side_variant: item.side_variant,
+  //     restaurant_id: item.restaurant_id,
+  //   };
 
-  const { mutate: emptyCart } = useMutation(clearCart);
+  //   dispatch(addToCart(cartItem));
+  //   promises.push(addToCartApiCall(cartItem));
+  // };
+
+  // const { mutate: apiCall } = useMutation(addToCartApiCall);
+  // const { mutate: emptyCart } = useMutation(clearCart);
 
   useEffect(() => {
-    setSelectedItems(items);
-  }, [items]);
+    const incQuantity = removeDuplicateItem(items);
 
-  const goToMenu = () => {
-    handleClose();
-    navigate(`${paths.menu}/restaurant/${restaurant_id}/delivery`);
-  };
+    setSelectedItems(incQuantity);
+  }, [items]);
 
   return (
     <div>
-      <Modal open={isVisible} onClose={() => handleClose()}>
+      <Modal open={isVisible} onClose={handleClose}>
         <Slide direction="up" in={isVisible}>
           <Stack
             spacing={2}
@@ -142,46 +302,65 @@ const ReOrderCard = ({ isVisible, handleClose, items, restaurant_id }) => {
             }}
           >
             <Stack spacing={0}>
-              {items.map((item) => (
-                <FormControlLabel
-                  sx={{
-                    ".MuiFormControlLabel-label": {
-                      fontWeight: 400,
-                      width: "100%",
-                    },
-                    ".MuiCheckbox-root": {
-                      py: 0.5,
-                    },
-                  }}
-                  key={`item-${item.id}`}
-                  control={
-                    <Checkbox
-                      checked={selectedItems.some(
-                        (i) => i.item_id === item.item_id
-                      )}
-                      onChange={(e) => handleCheckboxChange(e, item)}
-                    />
-                  }
-                  label={
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      sx={{
+              {removeDuplicateItem(
+                items?.map((item) => {
+                  return {
+                    ...item,
+                    size_variant: item?.size_variant?.map((size) => {
+                      return {
+                        ...size,
+                        name_en:
+                          size.option_id === 1
+                            ? "Small"
+                            : size.option_id === 2
+                            ? "Medium"
+                            : "Large",
+                      };
+                    }),
+                  };
+                })
+              ).map((item, index) => {
+                return (
+                  <FormControlLabel
+                    sx={{
+                      ".MuiFormControlLabel-label": {
+                        fontWeight: 400,
                         width: "100%",
-                      }}
-                    >
-                      <span>
-                        {item.quantity}x {item.menu_item?.name_en}
-                      </span>
-                      <span>{getOrderItemPrice(item)}</span>
-                    </Stack>
-                  }
-                />
-              ))}
+                      },
+                      ".MuiCheckbox-root": {
+                        py: 0.5,
+                      },
+                    }}
+                    key={`item-${items[index]?.order_item_id}`}
+                    control={
+                      <Checkbox
+                        checked={selectedItems.some(
+                          (i) => i.order_item_id === item.order_item_id
+                        )}
+                        onChange={(e) => handleCheckboxChange(e, item)}
+                      />
+                    }
+                    label={
+                      <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        sx={{
+                          width: "100%",
+                        }}
+                      >
+                        <span>
+                          {item.quantity}x {item.menu_item?.name_en}
+                        </span>
+                        <span>{getOrderItemPrice(item)}</span>
+                      </Stack>
+                    }
+                  />
+                );
+              })}
             </Stack>
 
-            <Button variant="outlined" onClick={() => goToMenu()}>
+            <Button variant="outlined" onClick={handleClose}>
               Go to Menu
             </Button>
             <Button

@@ -18,6 +18,7 @@ import {
 
 import { styled } from "@mui/material/styles"; // Import styled from MUI
 import { lighten } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
 
 import dayjs from "dayjs";
 
@@ -106,6 +107,7 @@ const DeliveryDetails = (props) => {
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [restaurantOpen, setRestaurantOpen] = useState(false);
+  const [addressID, setAddressID] = useState();
 
   const { id: restaurant_id } = useParams();
 
@@ -144,6 +146,14 @@ const DeliveryDetails = (props) => {
     }
   }, [nearbyRestaurants, restaurantDetail]);
 
+  const locationLabelName = () => {
+    let text = "Add Address";
+    if (addressData?.length > 0 && token) {
+      return (text = "Select Address");
+    }
+    return text;
+  };
+
   useEffect(() => {
     if (restaurantBranchHours?.data?.length) {
       for (let i = 0; i < restaurantBranchHours?.data?.length; i++) {
@@ -161,15 +171,19 @@ const DeliveryDetails = (props) => {
           const distance = getDistanceFromLatLonInKm(
             resLat,
             resLng,
-            fromLocation.lat,
-            fromLocation.lng
+            fromLocation?.lat || 29.3140728,
+            fromLocation?.lng || 47.68022
           );
 
           if (distance > 50) {
             setLocationDeliver(true);
           } else {
             setLocationDeliver(false);
-            setUserLocation(truncateString(fromLocation.address, 15));
+            if (fromLocation && fromLocation.address) {
+              setUserLocation(truncateString(fromLocation?.address, 15));
+            } else {
+              setUserLocation(locationLabelName());
+            }
 
             break;
           }
@@ -179,15 +193,19 @@ const DeliveryDetails = (props) => {
           const distance = getDistanceFromLatLonInKm(
             resLat,
             resLng,
-            fromLocation.lat,
-            fromLocation.lng
+            fromLocation?.lat || 29.3140728,
+            fromLocation?.lng || 47.68022
           );
 
           if (distance > 50) {
             setLocationDeliver(true);
           } else {
             setLocationDeliver(false);
-            setUserLocation(truncateString(fromLocation.address, 15));
+            if (fromLocation && fromLocation.address) {
+              setUserLocation(truncateString(fromLocation?.address, 15));
+            } else {
+              setUserLocation(locationLabelName());
+            }
             break;
           }
         }
@@ -274,7 +292,10 @@ const DeliveryDetails = (props) => {
 
   useEffect(() => {
     if (fullAddress !== null) {
-      localStorage.setItem("selected", JSON.stringify(fullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressId: addressID })
+      );
 
       setUserLocation(truncateString(fullAddress?.address, 15));
       setLatlng({
@@ -370,6 +391,7 @@ const DeliveryDetails = (props) => {
                     <Dropdown.Item
                       onClick={() => {
                         getUserAddress(address.latitude, address.longitude);
+                        setAddressID(address.id);
                         fetchNearbyRestaurant(
                           address.latitude,
                           address.longitude
@@ -543,7 +565,7 @@ const DeliveryDetails = (props) => {
                 parseInt(timeByDate?.to_time?.split(":")[0]) + 12
               )
             )}
-            defaultValue={dayjs(new Date())}
+            // defaultValue={dayjs(new Date())}
             open={showTimePicker}
             // onChange={(time) => {
             // localStorage.setItem("isAsap", false);
@@ -631,6 +653,30 @@ const DeliveryDetails = (props) => {
           className="dialog-title title-cart"
         >
           <img src="/assets/img/exclaim.svg"></img>
+
+          <div
+            style={{
+              position: "absolute",
+              top: "8px",
+              right: "10px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onClick={() => {
+              setRestaurantOpen(false);
+              sessionStorage.setItem("popupOpened", true);
+            }}
+          >
+            <CloseIcon
+              sx={{
+                width: "24px",
+                fontSize: "24px",
+                cursor: "pointer",
+                color: "#707070 !important",
+              }}
+            />
+          </div>
         </DialogTitle>
         <DialogContent className="dialog-content-cart">
           Restaurant is closed. Do you want to schedule for later?
@@ -639,7 +685,10 @@ const DeliveryDetails = (props) => {
         <div className="btn-navigate">
           <Button
             className="common-st add-btn"
-            onClick={() => navigate(paths.home)}
+            onClick={() => {
+              sessionStorage.setItem("popupOpened", true);
+              navigate(paths.home);
+            }}
           >
             Home Page
           </Button>
@@ -649,6 +698,7 @@ const DeliveryDetails = (props) => {
             onClick={() => {
               setRestaurantOpen(false);
               setOpenSchedulePopup(true);
+              sessionStorage.setItem("popupOpened", true);
             }}
           >
             Schedule for later

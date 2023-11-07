@@ -22,9 +22,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileTimePicker } from "@mui/x-date-pickers";
 
+import CloseIcon from "@mui/icons-material/Close";
+
 import Navbar from "../../components/header/generalHeader/index.js";
 import RestaurantOptionsServicesContainer from "../../components/restaurant/restaurant_options_services/index.js";
 import { DialogComponent } from "../../components/dialog/index.js";
+import SelectLocation from "../../components/dialog/selectLocation.js";
+import ReOrderCard from "../../components/ReOrderCard/index.jsx";
 
 import getRestaurantDetails, {
   GET_RESTAURANT_DETAILS_QUERY_KEY,
@@ -33,54 +37,60 @@ import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantBranchHours.js";
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant.js";
+import getBranchesAndHours, {
+  GET_BRANCHES_AND_HOURS_QUERY_KEY,
+} from "../../api/restaurant/branches/getBranchesAndHours.js";
 
 import {
   getNearByRest,
   getResturantsDetails,
 } from "../../store/reducers/resturantsSlice.js";
 import { setThemeColor } from "../../store/reducers/themeSlice.js";
+import { closeReorderModal } from "../../store/reducers/orderSlice.js";
 
-import { paths } from "../../routes/paths.jsx";
-
-import "./style.css";
-import getBranchesAndHours, {
-  GET_BRANCHES_AND_HOURS_QUERY_KEY,
-} from "../../api/restaurant/branches/getBranchesAndHours.js";
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../utils/getAddress.js";
-import SelectLocation from "../../components/dialog/selectLocation.js";
+
+import { paths } from "../../routes/paths.jsx";
+
+import "./style.css";
 
 const Menu = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const location = useLocation();
+
+  const { id: restaurant_id } = useParams();
 
   const country = useSelector((state) => state.auth.country);
   const nearbyRestaurants = useSelector(
     (state) => state.resturants.nearbyRestaurants
   );
+  const reorder = useSelector((state) => state.order.reorder);
+  const cart = useSelector((state) => state.cart.cart);
 
-  const [openModal, setOpenModal] = useState(false);
-  const [notDeliver, setNotDeliver] = useState(false);
-  const [selectedItemToDeliver, setSelectedItemToDeliver] = useState({});
-  const [restaurantOpen, setRestaurantOpen] = useState(false);
+  const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [pickDate, setPickDate] = useState(
     dayjs(new Date()).format("MMM DD, YYYY")
   );
-  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
-  const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
-  const [isAsap, setIsAsap] = useState(true);
-  const [showTimePicker, setShowTimePicker] = useState(false);
   const [pickTime, setPickTime] = useState(dayjs(asapTime).format("hh:mm a"));
-  const { id: restaurant_id } = useParams();
+  const [isAsap, setIsAsap] = useState(true);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [notDeliver, setNotDeliver] = useState(false);
+  const [distanceIsFar, setDistanceIsFar] = useState(false);
+  const [selectedItemToDeliver, setSelectedItemToDeliver] = useState({});
+  const [restaurantOpen, setRestaurantOpen] = useState(false);
+  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [fromDetail, setFromDetail] = useState(false);
   const [openAddressPopup, setOpenAddressPopup] = useState(false);
   const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
   const [fullAddress, setFullAddress] = useState(null);
   const [restaurantName, setRestaurantName] = useState("");
-  const [distanceIsFar, setDistanceIsFar] = useState(false);
+  const [addressID, setAddressID] = useState();
 
   const {
     data: restaurantDetailResponse,
@@ -90,7 +100,7 @@ const Menu = () => {
     refetch,
   } = useQuery({
     queryKey: [GET_RESTAURANT_DETAILS_QUERY_KEY],
-    queryFn: () => getRestaurantDetails(id, country?.id),
+    queryFn: () => getRestaurantDetails(restaurant_id, country?.id),
     onSuccess: (data) => {
       dispatch(getResturantsDetails(data.data));
     },
@@ -111,7 +121,7 @@ const Menu = () => {
     isError: restaurantBranchHoursIsError,
   } = useQuery({
     queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY],
-    queryFn: () => getRestaurantBranchHours(id),
+    queryFn: () => getRestaurantBranchHours(restaurant_id),
     onSuccess: (data) => {},
   });
 
@@ -209,6 +219,7 @@ const Menu = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
+    setAddressID(item.id);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -218,6 +229,16 @@ const Menu = () => {
     );
 
     if (fullAddress !== null) {
+      if (cart?.length === 0) {
+        localStorage.setItem(
+          "selected",
+          JSON.stringify({ ...fullAddress, addressId: addressID })
+        );
+
+        navigate(paths.cart);
+        return;
+      }
+
       if (branchesAndHoursResponse?.data.length && filterBranch?.length) {
         for (let i = 0; i < filterBranch?.length; i++) {
           const resLat = +filterBranch[i]?.latitude;
@@ -257,7 +278,10 @@ const Menu = () => {
     if (nearbyRestaurants.length === 0) {
       getNearByRestaurants(address).then((res) => {
         if (res.status === "ok") {
-          localStorage.setItem("selected", JSON.stringify(fullAddress));
+          localStorage.setItem(
+            "selected",
+            JSON.stringify({ ...fullAddress, addressId: addressID })
+          );
 
           dispatch(getNearByRest(res?.data));
           setOpenAddressPopup(false);
@@ -265,7 +289,10 @@ const Menu = () => {
         }
       });
     } else {
-      localStorage.setItem("selected", JSON.stringify(fullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressId: addressID })
+      );
 
       setOpenAddressPopup(false);
       checkNearByRest(nearbyRestaurants);
@@ -300,16 +327,21 @@ const Menu = () => {
       if (localStorage.getItem("isAsap") === "true") {
         for (let i = 0; i < filterRestaurant?.length; i++) {
           if (filterRestaurant[i]?.openingStatus === "Open") {
-            setRestaurantIsOpen(false);
-            navigate(paths?.cart);
+            setRestaurantOpen(false);
+            navigate(paths?.cart, {
+              state: { fromMenu: true, path: "/home" },
+            });
+
             break;
-          } else {
-            setRestaurantIsOpen(true);
+          } else if (filterRestaurant[i]?.openingStatus === "Close") {
+            setRestaurantOpen(true);
           }
         }
       } else {
-        setRestaurantIsOpen(false);
-        navigate(paths?.cart);
+        setRestaurantOpen(false);
+        navigate(paths?.cart, {
+          state: { fromMenu: true, path: "/home" },
+        });
       }
     }
   };
@@ -324,7 +356,7 @@ const Menu = () => {
       <RestaurantOptionsServicesContainer
         restaurantDetail={restaurantDetail}
         restaurantBranchHours={restaurantBranchHours}
-        resturantId={id}
+        resturantId={restaurant_id}
         setOpenModal={setOpenModal}
         setSelectedItemToDeliver={setSelectedItemToDeliver}
         scheduleForLater={scheduleForLater}
@@ -436,6 +468,31 @@ const Menu = () => {
           className="dialog-title title-cart"
         >
           <img src="/assets/img/exclaim.svg"></img>
+
+          <div
+            style={{
+              position: "absolute",
+              top: "8px",
+              right: "10px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onClick={() => {
+              setFromDetail(false);
+              setRestaurantOpen(false);
+              sessionStorage.setItem("popupOpened", true);
+            }}
+          >
+            <CloseIcon
+              sx={{
+                width: "24px",
+                fontSize: "24px",
+                cursor: "pointer",
+                color: "#707070 !important",
+              }}
+            />
+          </div>
         </DialogTitle>
         <DialogContent className="dialog-content-cart">
           Restaurant is closed. Do you want to schedule for later?
@@ -444,7 +501,10 @@ const Menu = () => {
         <div className="btn-navigate">
           <Button
             className="common-st add-btn"
-            onClick={() => navigate(paths.home)}
+            onClick={() => {
+              sessionStorage.setItem("popupOpened", true);
+              navigate(paths.home);
+            }}
           >
             Home Page
           </Button>
@@ -452,6 +512,7 @@ const Menu = () => {
           <Button
             className="common-st go-to-btn"
             onClick={() => {
+              sessionStorage.setItem("popupOpened", true);
               setFromDetail(true);
               setOpenSchedulePopup(true);
             }}
@@ -549,11 +610,24 @@ const Menu = () => {
         setNotDeliver={setDistanceIsFar}
         restaurantName={restaurantName}
         fromDetail={true}
-        resturantId={id}
+        resturantId={restaurant_id}
         location={location}
         home={true}
         menuCard={true}
       />
+
+      {location?.state?.order_item !== undefined ? (
+        <ReOrderCard
+          isVisible={reorder}
+          handleClose={() => dispatch(closeReorderModal())}
+          items={location?.state?.order_item}
+          restaurant_id={restaurant_id}
+          setDistanceIsFar={setNotDeliver}
+          branchesAndHours={branchesAndHoursResponse?.data}
+          setRestaurantName={setRestaurantName}
+          restaurantDetail={restaurantDetail}
+        />
+      ) : null}
     </div>
   );
 };

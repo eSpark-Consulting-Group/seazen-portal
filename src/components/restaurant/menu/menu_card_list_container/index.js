@@ -59,7 +59,6 @@ const MenuCardListContainer = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const originalCartTotal = useSelector((state) => state.cart.total);
   const cartTotalItems = useSelector((state) => state.cart.totalQuantity);
   const categoryList = useSelector(
     (state) => state?.resturants?.listItemByCategory
@@ -74,7 +73,10 @@ const MenuCardListContainer = ({
     (state) => state.resturants.nearbyRestaurants
   );
 
-  const cartTotal = originalCartTotal < 0 ? 0 : originalCartTotal;
+  const cartTotal = cart.reduce(
+    (total, item) => total + Number(item.totalPrice),
+    0
+  );
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -89,6 +91,7 @@ const MenuCardListContainer = ({
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
+  const [addressID, setAddressID] = useState();
 
   const currentLocation = JSON.parse(localStorage.getItem("location"));
 
@@ -184,6 +187,7 @@ const MenuCardListContainer = ({
   const chooseAddress = (item) => {
     const lat = +item.latitude;
     const lng = +item.longitude;
+    setAddressID(item.id);
 
     getFullAddress(lat, lng, setFullAddress);
   };
@@ -247,7 +251,10 @@ const MenuCardListContainer = ({
     if (nearbyRestaurants.length === 0) {
       getNearByRestaurants(address).then((res) => {
         if (res.status === "ok") {
-          localStorage.setItem("selected", JSON.stringify(fullAddress));
+          localStorage.setItem(
+            "selected",
+            JSON.stringify({ ...fullAddress, addressId: addressID })
+          );
 
           dispatch(getNearByRest(res?.data));
           setOpenAddressPopup(false);
@@ -255,7 +262,10 @@ const MenuCardListContainer = ({
         }
       });
     } else {
-      localStorage.setItem("selected", JSON.stringify(fullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressId: addressID })
+      );
 
       setOpenAddressPopup(false);
       checkNearByRest(nearbyRestaurants);
@@ -447,6 +457,17 @@ const MenuCardListContainer = ({
                     name: currentLocation?.address,
                     path: "menu/restaurant",
                     restaurant_id: id,
+                  },
+                })
+              : localStorage.getItem("selected") === null &&
+                cart?.length > 0 &&
+                !locationDeliver
+              ? navigate(paths.location, {
+                  state: {
+                    path: "/cart",
+                    restaurant_id: restaurantDetail.id,
+                    restaurantName: restaurantDetail?.page_title_en,
+                    notSelected: true,
                   },
                 })
               : addressData?.length > 0 &&

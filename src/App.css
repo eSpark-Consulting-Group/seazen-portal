@@ -22,6 +22,7 @@
   overflow-y: scroll;
   overflow-x: hidden;
   background: #ffffff 0% 0% no-repeat padding-box;
+  height: 100vh;
 }
 
 .design-section::-webkit-scrollbar {
@@ -30,6 +31,7 @@
 
 .content-section {
   flex: 2;
+  height: 100vh;
   padding: 20px;
   background-image: url("/public/assets/img/images.jpeg");
   background-size: cover;
@@ -111,4 +113,7 @@ iframe#webpack-dev-server-client-overlay {
 }
 .header-wrapper {
   padding: 20px 28px 0px !important;
+}
+.remove-chat-icon {
+  display: none;
 }

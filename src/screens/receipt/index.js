@@ -14,6 +14,8 @@ import getOrderDetails, {
   GET_ORDER_DETAILS_QUERY_KEY,
 } from "../../api/order/getOrderDetails";
 import "./style.css";
+import _ from "lodash";
+import { removeDuplicateItem } from "../../utils/removeDuplicateItems";
 
 const Receipt = () => {
   const navigate = useNavigate();
@@ -36,13 +38,39 @@ const Receipt = () => {
     queryKey: [GET_ORDER_DETAILS_QUERY_KEY, id],
   });
 
+  const demo = removeDuplicateItem(orderDetailsResponse?.data?.order_item);
+  const calculateTotalVariantPrice = (variantArray) => {
+    let total_price = 0;
+    for (const variant of variantArray) {
+      if (variant.option_quantity === 1) {
+        total_price += parseFloat(variant.unit_price);
+      }
+    }
+    return total_price;
+  };
+
+  demo.forEach((item) => {
+    const totalSidePrice = calculateTotalVariantPrice(item.side_variant);
+    const totalToppingPrice = calculateTotalVariantPrice(item.topping_variant);
+    const totalSizePrice = calculateTotalVariantPrice(item.size_variant);
+
+    item.totalOfVariants = totalSidePrice + totalToppingPrice + totalSizePrice;
+  });
+
+  const sumWithVariantsPrice = demo.map((val) => {
+    return {
+      ...val,
+      unit_price: val.unit_price + val.totalOfVariants,
+    };
+  });
+
   const getItemsTotal = () => {
     if (
       orderDetailsResponse &&
       orderDetailsResponse.data &&
       orderDetailsResponse.data.order_item
     ) {
-      return orderDetailsResponse.data.order_item.reduce((acc, item) => {
+      return sumWithVariantsPrice.reduce((acc, item) => {
         return acc + Number(item.unit_price) * Number(item.quantity);
       }, 0);
     }
@@ -118,7 +146,7 @@ const Receipt = () => {
               orderDetailsResponse &&
               orderDetailsResponse.data &&
               orderDetailsResponse.data.order_item &&
-              orderDetailsResponse.data.order_item.map((item, index) => (
+              sumWithVariantsPrice.map((item, index) => (
                 <ReceiptItem
                   key={index}
                   item={item}

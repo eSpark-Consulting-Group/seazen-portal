@@ -1,15 +1,26 @@
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Card, Rating, Box } from "@mui/material";
-import styles from "../../screens/myorder/style.module.css";
-import RateCard from "../rate-card";
 import { useNavigate } from "react-router-dom";
-import { paths } from "../../routes/paths";
+import { useDispatch } from "react-redux";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { Button, Card, Rating, Box } from "@mui/material";
+
+import RateCard from "../rate-card";
+// import ReOrderCard from "../ReOrderCard";
+
 import addOrderRating from "../../api/order/addOrderRating";
 import { GET_ORDERS_QUERY_KEY } from "../../api/order/getOrders";
-import ReOrderCard from "../ReOrderCard";
+
+import { openReorderModal } from "../../store/reducers/orderSlice";
+
+import { paths } from "../../routes/paths";
+
+import styles from "../../screens/myorder/style.module.css";
 
 const OrderCard = ({ item }) => {
+  const dispatch = useDispatch();
+
   const queryClient = useQueryClient();
 
   const [openRate, setOpenRate] = useState(false);
@@ -20,7 +31,7 @@ const OrderCard = ({ item }) => {
   const handleRate = (val) => {
     setOpenRate(val);
   };
-  
+
   const handleClose = (value) => {
     handleRate(false);
     setAverage(value);
@@ -31,9 +42,20 @@ const OrderCard = ({ item }) => {
     navigate(paths.receipt + item.order_id);
   };
 
-  const handleReorder = () => {
-    // navigate(paths.menu + paths.branches + item.restaurant_id);
-    setOpenReorder(true);
+  const handleReorder = (orderItem) => {
+    dispatch(openReorderModal());
+    localStorage.setItem(
+      "restaurantID",
+      orderItem.order_item[0]?.restaurant_id
+    );
+
+    navigate(
+      `${paths.menu}/restaurant/${orderItem.order_item[0]?.restaurant_id}/delivery`,
+      {
+        state: { order_item: orderItem.order_item },
+      }
+    );
+    // setOpenReorder(true);
   };
 
   const handleReorderClose = () => {
@@ -52,8 +74,10 @@ const OrderCard = ({ item }) => {
         return "#6236FF";
       case "Delivered":
         return "#4E948A";
-      case "Cancelled":
+      case "Canceled":
         return "#E02020";
+      case "Accepted":
+        return "#02BBD5";
       default:
         return "#F7B500";
     }
@@ -171,19 +195,19 @@ const OrderCard = ({ item }) => {
             }}
             size="small"
             variant="outlined"
-            onClick={handleReorder}
+            onClick={() => handleReorder(item)}
           >
             Reorder
           </Button>
         </Box>
       )}
       <RateCard isVisible={openRate} handleClose={(val) => handleClose(val)} />
-      <ReOrderCard
+      {/* <ReOrderCard
         isVisible={openReorder}
         handleClose={handleReorderClose}
         items={item.order_item}
         restaurant_id={item.restaurant_id}
-      />
+      /> */}
     </Card>
   );
 };

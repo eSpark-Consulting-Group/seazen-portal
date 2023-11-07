@@ -297,6 +297,7 @@ function CartPage() {
               setNotDeliver(true);
             } else {
               setNotDeliver(false);
+
               if (isAsap === "true") {
                 for (let j = 0; j < filterRestaurant?.length; j++) {
                   if (filterRestaurant[j]?.openingStatus === "Open") {
@@ -304,6 +305,7 @@ function CartPage() {
 
                     const data = {
                       ...checkoutData,
+                      branch_id: forCurrent[i].id,
                       discount_price: getDiscountAmount(),
                     };
 
@@ -338,6 +340,7 @@ function CartPage() {
               } else {
                 const data = {
                   ...checkoutData,
+                  branch_id: forCurrent[i].id,
                   discount_price: getDiscountAmount(),
                 };
 
@@ -355,17 +358,17 @@ function CartPage() {
                     } else {
                       const checkoutRedirectUrl =
                         res.data?.payment_methods[0].redirect_url;
-                      window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
+                      window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
                     }
                   })
                   .catch((err) => {
                     console.log(err);
                   });
               }
-
-              break;
             }
           }
+
+          break;
         }
       }
     }
@@ -582,17 +585,17 @@ function CartPage() {
       Number(getDeliveryCharge())
     ).toFixed(3);
   };
+
   const checkoutData = {
     payment_method_id: "1",
     order_total_price:
       totalPrice + tipValue - (!isEmpty(promoDiscount) && getDiscountAmount()),
     currency_id: "3",
     country_id: "3",
-    restaurant_id: "2",
-    branch_id: "1",
+    restaurant_id: cart[0]?.restaurant_id,
     driver_id: "1",
-    address_id: "1",
-    service_type: "pickup",
+    address_id: JSON.parse(localStorage.getItem("selected"))?.addressId,
+    service_type: "delivery", // it will be dynamic later
     tip_id: "1",
     pick_from_store: "",
     pickup_from_car: "",
@@ -655,15 +658,18 @@ function CartPage() {
           edge="start"
           onClick={() =>
             navigate(
-              location?.state?.back
+              location?.state?.back &&
+                location?.state?.fromHome === undefined &&
+                location?.state?.fromMenu === undefined &&
+                location?.state?.fromDetail === undefined
                 ? location?.state?.back
-                : location?.state?.noAddress && cart?.length
+                : location?.state?.noAddress && cart?.length !== 0
                 ? `${paths.menu}/restaurant/${cart[0]?.restaurant_id}/delivery`
                 : location?.state?.fromHome !== undefined
                 ? paths.home
                 : (location?.state?.fromMenu !== undefined ||
                     location?.state?.fromDetail !== undefined) &&
-                  cart?.length
+                  cart?.length !== 0
                 ? `${paths.menu}/restaurant/${cart[0].restaurant_id}/delivery`
                 : location?.state?.backToCart !== undefined
                 ? paths.home

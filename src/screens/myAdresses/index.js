@@ -95,7 +95,10 @@ const App = () => {
 
   useEffect(() => {
     if (fullAddress !== null) {
-      localStorage.setItem("selected", JSON.stringify(fullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressId: selectedId })
+      );
 
       if (location?.state?.path === "/cart") {
         navigate(paths.cart, { state: { back: "back-to-cart" } });
@@ -150,6 +153,7 @@ const App = () => {
   const handleClickOpen = (item) => {
     setAddressType(item.address_type);
     setAddressId(item.id);
+    setSelectedId(item.id);
     setOpen(true);
     setAddressToBeDeleted(item);
   };

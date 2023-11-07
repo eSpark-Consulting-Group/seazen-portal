@@ -523,6 +523,16 @@ function LocationPage() {
             },
           });
         }
+      } else if (location?.state?.notSelected !== undefined) {
+        navigate(paths.address, {
+          state: {
+            name: address,
+            latlng: center,
+            path: "/cart",
+            restaurant_id: +location?.state?.restaurant_id,
+            notSelected: location?.state?.notSelected,
+          },
+        });
       } else if (location?.state?.fromHome !== undefined) {
         navigate(paths.address, {
           state: {
@@ -622,7 +632,9 @@ function LocationPage() {
               logo
               languageIcon
               guestUser={location.state?.guestUser ? true : false}
+              autoRedirect={location?.state?.autoRedirect}
               path={location?.state?.path}
+              location={location?.state}
             />
           </div>
         </Stack>

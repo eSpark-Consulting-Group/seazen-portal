@@ -2,35 +2,42 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+import Typography from "@mui/material/Typography";
+
 import { paths } from "../../routes/paths";
 
-import "./style.css";
 import CountryPicker from "../countryPicker";
-import Typography from "@mui/material/Typography";
+
+import "./style.css";
 
 export const NavbarVariants = {
   backWithProfile: "backWithProfile",
 };
 
-const Navbar = ({
-  profile,
-  logo,
-  languageIcon,
-  profileIconUrl,
-  showFlagOption,
-  cartIcon,
-  searchIcon,
-  backIcon,
-  borderedIcon,
-  path,
-  guestUser,
-  backIconURL,
-  setOpenAddressPopup,
-  title,
-  backIconURLState,
-  fromHome,
-}) => {
+const Navbar = (props) => {
+  const {
+    profile,
+    logo,
+    languageIcon,
+    profileIconUrl,
+    showFlagOption,
+    cartIcon,
+    searchIcon,
+    backIcon,
+    borderedIcon,
+    path,
+    guestUser,
+    backIconURL,
+    setOpenAddressPopup,
+    title,
+    backIconURLState,
+    fromHome,
+    location,
+    autoRedirect,
+  } = props;
+
   const navigate = useNavigate();
+
   const searchContainerRef = useRef(null);
 
   const token = localStorage.getItem("token");
@@ -38,6 +45,7 @@ const Navbar = ({
 
   const cart = useSelector((state) => state.cart.cart);
   const addressData = useSelector((state) => state.address.addressData);
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -62,6 +70,25 @@ const Navbar = ({
     };
   }, []);
 
+  const passState = {
+    fromMenu: location?.fromMenu,
+    fromDetail: location?.fromDetail,
+    fromHome: location?.fromHome,
+    backCart: location?.backCart,
+    path: path,
+  };
+
+  const stateNoAddress = {
+    noAddress: true,
+    latlng: {
+      lat: currentLocation?.lat,
+      lng: currentLocation?.lng,
+    },
+    name: currentLocation?.address,
+    path: "menu/restaurant",
+    restaurant_id: cart[0]?.restaurant_id,
+  };
+
   return (
     <nav className={"d-flex align-items-center justify-content-between"}>
       {/* Profile Icon */}
@@ -71,7 +98,15 @@ const Navbar = ({
           style={{ border: `${borderedIcon ? "1px solid #c0cdd7" : ""}` }}
           onClick={() => navigate(profileIconUrl || paths.home)}
         >
-          <img src="/assets/img/account.svg" alt="Account Icon" />
+          {borderedIcon ? (
+            <img
+              src="/assets/img/Group 506.png"
+              alt="Account Icon"
+              style={{ width: "21.47px", height: "20px" }}
+            />
+          ) : (
+            <img src="/assets/img/account.svg" alt="Account Icon" />
+          )}
         </div>
       )}
 
@@ -81,14 +116,59 @@ const Navbar = ({
           <div
             className="arrowicon-btn"
             onClick={() => {
-              if (guestUser) {
-                if (path === "menu/restaurant") {
+              if (token === null) {
+                if (guestUser || location?.guest !== undefined) {
+                  if (
+                    path === "menu/restaurant" ||
+                    path?.includes("menu-item-details")
+                  ) {
+                    navigate(-1);
+                  } else {
+                    navigate(paths.home);
+                  }
+                } else if (
+                  autoRedirect !== undefined &&
+                  path.includes("/menu/restaurant")
+                ) {
                   navigate(-1);
-                } else {
-                  navigate(paths.home);
+                } else if (autoRedirect !== undefined) {
+                  navigate(
+                    `${
+                      paths.menu
+                    }/restaurant/${+location?.restaurant_id}/delivery`
+                  );
                 }
               } else {
-                navigate(backIconURL || -1, backIconURLState);
+                if (path === "/profile") {
+                  navigate(paths.addresses, { state: { path: "/profile" } });
+                  //
+                } else if (location?.addNew !== undefined) {
+                  navigate(paths?.home);
+                  //
+                } else if (
+                  (path === "menu/restaurant" ||
+                    path?.includes("menu-item-details")) &&
+                  location?.backCart === undefined
+                ) {
+                  navigate(
+                    `${
+                      paths.menu
+                    }/restaurant/${+location?.restaurant_id}/delivery`
+                  );
+                } else if (
+                  (location?.fromMenu !== undefined &&
+                    location?.notSelected === undefined) ||
+                  location?.fromDetail !== undefined ||
+                  location?.fromHome !== undefined
+                ) {
+                  navigate(paths.addresses, {
+                    state: passState,
+                  });
+                } else if (location?.notSelected !== undefined) {
+                  navigate(-1);
+                } else {
+                  navigate(backIconURL || paths.profile, backIconURLState);
+                }
               }
             }}
           >
@@ -162,16 +242,7 @@ const Navbar = ({
                 ? navigate(paths.cart)
                 : addressData?.length === 0
                 ? navigate(paths.address, {
-                    state: {
-                      noAddress: true,
-                      latlng: {
-                        lat: currentLocation?.lat,
-                        lng: currentLocation?.lng,
-                      },
-                      name: currentLocation?.address,
-                      path: "menu/restaurant",
-                      restaurant_id: cart[0]?.restaurant_id,
-                    },
+                    state: stateNoAddress,
                   })
                 : addressData?.length > 0 &&
                   localStorage.getItem("selected") === null
@@ -182,6 +253,9 @@ const Navbar = ({
             }}
           >
             <img src="/assets/img/cart.svg" alt="Shopping Icon" />
+            {totalQuantity > 0 && (
+              <div className="items-count">{totalQuantity}</div>
+            )}
           </div>
         )}
 

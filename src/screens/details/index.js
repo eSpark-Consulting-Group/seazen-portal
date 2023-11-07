@@ -93,6 +93,7 @@ export const Details = () => {
   const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [addressId, setAddressID] = useState();
 
   const { search } = useLocation();
 
@@ -168,8 +169,8 @@ export const Details = () => {
         const distance = getDistanceFromLatLonInKm(
           resLat,
           resLng,
-          fromLocation.lat,
-          fromLocation.lng
+          fromLocation?.lat || 29.3140728,
+          fromLocation?.lng || 47.68022
         );
 
         if (distance > 50) {
@@ -189,7 +190,8 @@ export const Details = () => {
     isError,
   } = useQuery({
     queryKey: [GET_MENU_ITEM_DETAILS_QUERY_KEY],
-    queryFn: () => getMenuItemDetails(id, restaurant_id, restaurant_id),
+    queryFn: () =>
+      getMenuItemDetails(id, restaurant_id, location.state.branch_id),
   });
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
 
@@ -512,14 +514,17 @@ export const Details = () => {
       totalPrice: Number(totalPrice).toFixed(3),
       specialInstructions: specialInstructions,
       itemImage: data?.image,
+      has_variants: data?.has_variants,
       restaurant_id: data.restaurant_id,
     };
 
-    const itemExists = cart.find(
-      (item) =>
-        JSON.stringify(item.variants) ===
-        JSON.stringify(ItemDataObject.variants)
-    );
+    const itemExists = ItemDataObject.has_variants
+      ? cart.find(
+          (item) =>
+            JSON.stringify(item.variants) ===
+            JSON.stringify(ItemDataObject.variants)
+        )
+      : false;
 
     if (checkIfItemIsInCart()) {
       const item_code = cartItem?.item_code;
@@ -556,6 +561,11 @@ export const Details = () => {
 
   const moveToLocation = () => {
     const { data } = menuItemDetails;
+
+    if (menuItemDetails?.data.has_variants && !sizeVariant) {
+      setErrorShow(true);
+      return;
+    }
 
     var ItemDataObject = {
       id: data?.id,
@@ -608,6 +618,7 @@ export const Details = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
+    setAddressID(item.id);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -617,6 +628,16 @@ export const Details = () => {
     );
 
     if (fullAddress !== null) {
+      if (cart?.length === 0) {
+        localStorage.setItem(
+          "selected",
+          JSON.stringify({ ...fullAddress, addressId })
+        );
+
+        navigate(paths.cart);
+        return;
+      }
+
       if (branchHours.length && filterBranch?.length) {
         for (let i = 0; i < filterBranch?.length; i++) {
           const resLat = +filterBranch[i]?.latitude;
@@ -656,7 +677,10 @@ export const Details = () => {
     if (nearbyRestaurants.length === 0) {
       getNearByRestaurants(address).then((res) => {
         if (res.status === "ok") {
-          localStorage.setItem("selected", JSON.stringify(fullAddress));
+          localStorage.setItem(
+            "selected",
+            JSON.stringify({ ...fullAddress, addressId })
+          );
 
           dispatch(getNearByRest(res?.data));
           setOpenAddressPopup(false);
@@ -664,7 +688,10 @@ export const Details = () => {
         }
       });
     } else {
-      localStorage.setItem("selected", JSON.stringify(fullAddress));
+      localStorage.setItem(
+        "selected",
+        JSON.stringify({ ...fullAddress, addressId })
+      );
 
       setOpenAddressPopup(false);
       checkNearByRest(nearbyRestaurants);
@@ -690,7 +717,10 @@ export const Details = () => {
         for (let i = 0; i < filterRestaurant?.length; i++) {
           if (filterRestaurant[i]?.openingStatus === "Open") {
             setRestaurantIsOpen(false);
-            navigate(paths?.cart);
+            navigate(paths?.cart, {
+              state: { fromDetail: true, path: "/home" },
+            });
+
             break;
           } else {
             setRestaurantIsOpen(true);
@@ -698,7 +728,9 @@ export const Details = () => {
         }
       } else {
         setRestaurantIsOpen(false);
-        navigate(paths?.cart);
+        navigate(paths?.cart, {
+          state: { fromDetail: true, path: "/home" },
+        });
       }
     }
   };
@@ -893,7 +925,7 @@ export const Details = () => {
 
                     {variant?.options?.map((option, index) => {
                       const isLastItem = variant?.options?.length - 1 === index;
-                      console.log(variant.name_en, "variant.name_en");
+
                       return (
                         <Fragment key={option?.id}>
                           <Stack
