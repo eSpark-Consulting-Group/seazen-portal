@@ -76,6 +76,8 @@ const OrderCard = ({ item }) => {
         return "#4E948A";
       case "Canceled":
         return "#E02020";
+      case "Accepted":
+        return "#02BBD5";
       default:
         return "#F7B500";
     }
