@@ -23,6 +23,7 @@ export const AddressesButton = ({
           state: {
             path: "/home",
             fromHome: location?.state?.fromHome,
+            backCart: location?.state?.backCart,
             ...initialState,
           },
         });
@@ -32,6 +33,7 @@ export const AddressesButton = ({
           state: {
             path: "menu/restaurant",
             fromMenu: location?.state?.fromMenu,
+            backCart: location?.state?.backCart,
             ...initialState,
           },
         });
@@ -41,6 +43,7 @@ export const AddressesButton = ({
           state: {
             path: "menu/restaurant",
             fromDetail: location?.state?.fromDetail,
+            backCart: location?.state?.backCart,
             ...initialState,
           },
         });

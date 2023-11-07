@@ -344,7 +344,7 @@ const Home = () => {
         if (res.status === "ok") {
           localStorage.setItem(
             "selected",
-            JSON.stringify({ ...fullAddress, addressId: addressID })
+            JSON.stringify({ ...chooseFullAddress, addressId: addressID })
           );
 
           dispatch(getNearByRest(res?.data));
@@ -355,7 +355,7 @@ const Home = () => {
     } else {
       localStorage.setItem(
         "selected",
-        JSON.stringify({ ...fullAddress, addressId: addressID })
+        JSON.stringify({ ...chooseFullAddress, addressId: addressID })
       );
 
       setOpenAddressToChoose(false);
@@ -398,6 +398,7 @@ const Home = () => {
       }
     }
   };
+
   useEffect(() => {
     if (fullAddress !== null) {
       if (filterSelectedNow === "") {

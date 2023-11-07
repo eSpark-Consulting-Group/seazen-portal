@@ -658,15 +658,18 @@ function CartPage() {
           edge="start"
           onClick={() =>
             navigate(
-              location?.state?.back
+              location?.state?.back &&
+                location?.state?.fromHome === undefined &&
+                location?.state?.fromMenu === undefined &&
+                location?.state?.fromDetail === undefined
                 ? location?.state?.back
-                : location?.state?.noAddress && cart?.length
+                : location?.state?.noAddress && cart?.length !== 0
                 ? `${paths.menu}/restaurant/${cart[0]?.restaurant_id}/delivery`
                 : location?.state?.fromHome !== undefined
                 ? paths.home
                 : (location?.state?.fromMenu !== undefined ||
                     location?.state?.fromDetail !== undefined) &&
-                  cart?.length
+                  cart?.length !== 0
                 ? `${paths.menu}/restaurant/${cart[0].restaurant_id}/delivery`
                 : location?.state?.backToCart !== undefined
                 ? paths.home

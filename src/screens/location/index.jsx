@@ -623,6 +623,7 @@ function LocationPage() {
               languageIcon
               guestUser={location.state?.guestUser ? true : false}
               path={location?.state?.path}
+              location={location?.state}
             />
           </div>
         </Stack>

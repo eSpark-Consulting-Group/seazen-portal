@@ -27,7 +27,10 @@ const MyAddresses = (props) => {
     return (
       (fromAllAddresses && path === "/cart") ||
       (fromCart !== undefined && path === "/cart") ||
-      (fromAllAddresses && backToCart !== undefined && path !== "/profile")
+      (fromAllAddresses && backToCart !== undefined && path !== "/profile") ||
+      (fromAllAddresses &&
+        backCart !== undefined &&
+        (path === "/home" || path === "menu/restaurant"))
     );
   };
 
@@ -59,7 +62,13 @@ const MyAddresses = (props) => {
         backIconURLState={{
           state: {
             path: !fromAllAddresses && path === "/profile" ? "/profile" : "",
-            back: fromAllAddresses && path === "/cart" ? paths.home : null,
+            back:
+              fromAllAddresses &&
+              path === "/cart" &&
+              fromMenu === undefined &&
+              fromDetail === undefined
+                ? paths.home
+                : null,
             fromHome: fromHome,
             fromMenu: fromMenu,
             fromDetail: fromDetail,
@@ -78,7 +87,8 @@ const MyAddresses = (props) => {
             ? paths.cart
             : pathToAddressWithEdit()
             ? paths.addresses
-            : noAddress !== undefined || backCart !== undefined
+            : noAddress !== undefined ||
+              (backCart !== undefined && path !== "/home")
             ? -1
             : addNew !== undefined
             ? `${paths.menu}/restaurant/${restaurant_id}/delivery`

@@ -1,10 +1,8 @@
-// src/Navbar.js
 import React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { paths } from "../../../routes/paths";
-import MenuNavbar from "../../../components/header";
 
 import "./style.css";
 

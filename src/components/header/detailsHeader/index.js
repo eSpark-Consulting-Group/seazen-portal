@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import { useNavigate, useLocation } from "react-router-dom";
+
+import { Box, Typography } from "@mui/material";
 import ImageNotSupportedRounded from "@mui/icons-material/ImageNotSupportedRounded";
+
 import { paths } from "../../../routes/paths";
+
 import "./style.css";
 
 export const DetailsHeader = (props) => {
@@ -13,11 +15,11 @@ export const DetailsHeader = (props) => {
   const navigate = useNavigate();
   const currentURL = useLocation();
 
-  const cart = useSelector((state) => state.cart.cart);
-  const addressData = useSelector((state) => state.address.addressData);
-
   const token = localStorage.getItem("token");
   const currentLocation = JSON.parse(localStorage.getItem("location"));
+
+  const cart = useSelector((state) => state.cart.cart);
+  const addressData = useSelector((state) => state.address.addressData);
 
   const [imageNotFound, setImageNotFound] = useState(false);
 
@@ -92,7 +94,11 @@ export const DetailsHeader = (props) => {
               localStorage.getItem("selected") === null
             ? setOpenAddressPopup(true)
             : navigate(paths.cart, {
-                state: { fromDetail, restaurant_id: cart[0]?.restaurant_id },
+                state: {
+                  fromDetail,
+                  path: "menu/restaurant",
+                  restaurant_id: cart[0]?.restaurant_id,
+                },
               });
         }}
       >

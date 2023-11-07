@@ -14,25 +14,29 @@ export const NavbarVariants = {
   backWithProfile: "backWithProfile",
 };
 
-const Navbar = ({
-  profile,
-  logo,
-  languageIcon,
-  profileIconUrl,
-  showFlagOption,
-  cartIcon,
-  searchIcon,
-  backIcon,
-  borderedIcon,
-  path,
-  guestUser,
-  backIconURL,
-  setOpenAddressPopup,
-  title,
-  backIconURLState,
-  fromHome,
-}) => {
+const Navbar = (props) => {
+  const {
+    profile,
+    logo,
+    languageIcon,
+    profileIconUrl,
+    showFlagOption,
+    cartIcon,
+    searchIcon,
+    backIcon,
+    borderedIcon,
+    path,
+    guestUser,
+    backIconURL,
+    setOpenAddressPopup,
+    title,
+    backIconURLState,
+    fromHome,
+    location,
+  } = props;
+
   const navigate = useNavigate();
+
   const searchContainerRef = useRef(null);
 
   const token = localStorage.getItem("token");
@@ -64,6 +68,25 @@ const Navbar = ({
     };
   }, []);
 
+  const passState = {
+    fromMenu: location?.fromMenu,
+    fromDetail: location?.fromDetail,
+    fromHome: location?.fromHome,
+    backCart: location?.backCart,
+    path: path,
+  };
+
+  const stateNoAddress = {
+    noAddress: true,
+    latlng: {
+      lat: currentLocation?.lat,
+      lng: currentLocation?.lng,
+    },
+    name: currentLocation?.address,
+    path: "menu/restaurant",
+    restaurant_id: cart[0]?.restaurant_id,
+  };
+
   return (
     <nav className={"d-flex align-items-center justify-content-between"}>
       {/* Profile Icon */}
@@ -83,12 +106,39 @@ const Navbar = ({
           <div
             className="arrowicon-btn"
             onClick={() => {
-              if (guestUser) {
-                if (path === "menu/restaurant") {
+              if (guestUser || location?.guest !== undefined) {
+                if (
+                  path === "menu/restaurant" ||
+                  path?.includes("menu-item-details")
+                ) {
                   navigate(-1);
                 } else {
                   navigate(paths.home);
                 }
+              } else if (path === "/profile") {
+                navigate(paths.addresses, { state: { path: "/profile" } });
+                //
+              } else if (location?.addNew !== undefined) {
+                navigate(paths?.home);
+                //
+              } else if (
+                (path === "menu/restaurant" ||
+                  path?.includes("menu-item-details")) &&
+                location?.backCart === undefined
+              ) {
+                navigate(
+                  `${
+                    paths.menu
+                  }/restaurant/${+location?.restaurant_id}/delivery`
+                );
+              } else if (
+                location?.fromMenu !== undefined ||
+                location?.fromDetail !== undefined ||
+                location?.fromHome !== undefined
+              ) {
+                navigate(paths.addresses, {
+                  state: passState,
+                });
               } else {
                 navigate(backIconURL || paths.profile, backIconURLState);
               }
@@ -164,16 +214,7 @@ const Navbar = ({
                 ? navigate(paths.cart)
                 : addressData?.length === 0
                 ? navigate(paths.address, {
-                    state: {
-                      noAddress: true,
-                      latlng: {
-                        lat: currentLocation?.lat,
-                        lng: currentLocation?.lng,
-                      },
-                      name: currentLocation?.address,
-                      path: "menu/restaurant",
-                      restaurant_id: cart[0]?.restaurant_id,
-                    },
+                    state: stateNoAddress,
                   })
                 : addressData?.length > 0 &&
                   localStorage.getItem("selected") === null
