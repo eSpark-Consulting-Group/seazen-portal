@@ -358,7 +358,7 @@ function CartPage() {
                     } else {
                       const checkoutRedirectUrl =
                         res.data?.payment_methods[0].redirect_url;
-                      window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
+                      window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
                     }
                   })
                   .catch((err) => {

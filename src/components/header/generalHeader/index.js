@@ -13,6 +13,7 @@ const Navbar = (props) => {
 
   const cart = useSelector((state) => state.cart.cart);
   const addressData = useSelector((state) => state.address.addressData);
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 
   const token = localStorage.getItem("token");
   const currentLocation = JSON.parse(localStorage.getItem("location"));
@@ -73,6 +74,7 @@ const Navbar = (props) => {
         >
           <div className="shopping_icon">
             <img alt="Bag_Icon" src="/assets/img/Icon - Bag.svg" />
+            <div className="items-count">{totalQuantity}</div>
           </div>
         </div>
       </nav>

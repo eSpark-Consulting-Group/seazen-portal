@@ -44,6 +44,7 @@ const Navbar = (props) => {
 
   const cart = useSelector((state) => state.cart.cart);
   const addressData = useSelector((state) => state.address.addressData);
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -96,7 +97,15 @@ const Navbar = (props) => {
           style={{ border: `${borderedIcon ? "1px solid #c0cdd7" : ""}` }}
           onClick={() => navigate(profileIconUrl || paths.home)}
         >
-          <img src="/assets/img/account.svg" alt="Account Icon" />
+          {borderedIcon ? (
+            <img
+              src="/assets/img/Group 506.png"
+              alt="Account Icon"
+              style={{ width: "21.47px", height: "20px" }}
+            />
+          ) : (
+            <img src="/assets/img/account.svg" alt="Account Icon" />
+          )}
         </div>
       )}
 
@@ -225,6 +234,7 @@ const Navbar = (props) => {
             }}
           >
             <img src="/assets/img/cart.svg" alt="Shopping Icon" />
+            <div className="items-count">{totalQuantity}</div>
           </div>
         )}
 

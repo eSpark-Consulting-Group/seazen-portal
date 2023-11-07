@@ -146,6 +146,14 @@ const DeliveryDetails = (props) => {
     }
   }, [nearbyRestaurants, restaurantDetail]);
 
+  const locationLabelName = () => {
+    let text = "Add Address";
+    if (addressData?.length > 0 && token) {
+      return (text = "Select Address");
+    }
+    return text;
+  };
+
   useEffect(() => {
     if (restaurantBranchHours?.data?.length) {
       for (let i = 0; i < restaurantBranchHours?.data?.length; i++) {
@@ -163,15 +171,19 @@ const DeliveryDetails = (props) => {
           const distance = getDistanceFromLatLonInKm(
             resLat,
             resLng,
-            fromLocation.lat,
-            fromLocation.lng
+            fromLocation?.lat || 29.3140728,
+            fromLocation?.lng || 47.68022
           );
 
           if (distance > 50) {
             setLocationDeliver(true);
           } else {
             setLocationDeliver(false);
-            setUserLocation(truncateString(fromLocation.address, 15));
+            if (fromLocation && fromLocation.address) {
+              setUserLocation(truncateString(fromLocation?.address, 15));
+            } else {
+              setUserLocation(locationLabelName());
+            }
 
             break;
           }
@@ -181,15 +193,19 @@ const DeliveryDetails = (props) => {
           const distance = getDistanceFromLatLonInKm(
             resLat,
             resLng,
-            fromLocation.lat,
-            fromLocation.lng
+            fromLocation?.lat || 29.3140728,
+            fromLocation?.lng || 47.68022
           );
 
           if (distance > 50) {
             setLocationDeliver(true);
           } else {
             setLocationDeliver(false);
-            setUserLocation(truncateString(fromLocation.address, 15));
+            if (fromLocation && fromLocation.address) {
+              setUserLocation(truncateString(fromLocation?.address, 15));
+            } else {
+              setUserLocation(locationLabelName());
+            }
             break;
           }
         }
@@ -549,7 +565,7 @@ const DeliveryDetails = (props) => {
                 parseInt(timeByDate?.to_time?.split(":")[0]) + 12
               )
             )}
-            defaultValue={dayjs(new Date())}
+            // defaultValue={dayjs(new Date())}
             open={showTimePicker}
             // onChange={(time) => {
             // localStorage.setItem("isAsap", false);

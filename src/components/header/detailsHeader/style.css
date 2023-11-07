@@ -32,6 +32,7 @@
 .detailsheadericon-style {
   top: 20px;
   right: 24px;
+  position: relative;
   width: 42px;
   height: 42px;
   background: #ffffff 0% 0% no-repeat padding-box;

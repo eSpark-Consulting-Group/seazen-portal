@@ -59,7 +59,6 @@ const MenuCardListContainer = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const originalCartTotal = useSelector((state) => state.cart.total);
   const cartTotalItems = useSelector((state) => state.cart.totalQuantity);
   const categoryList = useSelector(
     (state) => state?.resturants?.listItemByCategory
@@ -74,7 +73,10 @@ const MenuCardListContainer = ({
     (state) => state.resturants.nearbyRestaurants
   );
 
-  const cartTotal = originalCartTotal < 0 ? 0 : originalCartTotal;
+  const cartTotal = cart.reduce(
+    (total, item) => total + Number(item.totalPrice),
+    0
+  );
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();

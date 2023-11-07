@@ -20,6 +20,7 @@ export const DetailsHeader = (props) => {
 
   const cart = useSelector((state) => state.cart.cart);
   const addressData = useSelector((state) => state.address.addressData);
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 
   const [imageNotFound, setImageNotFound] = useState(false);
 
@@ -106,6 +107,7 @@ export const DetailsHeader = (props) => {
           className="detailsheaderright-icons"
           src="/assets/img/Icon - Bag.svg"
         ></img>
+        <div className="items-count">{totalQuantity}</div>
       </div>
     </header>
   );
