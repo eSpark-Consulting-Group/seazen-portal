@@ -67,37 +67,56 @@ const Home = () => {
         if (cart?.length === 0) {
           cartList(token)
             .then((res) => {
-              const resData = res.data.map((val) => {
-                return {
+              res.data.map((val) => {
+                const has_variants =
+                  val?.size_variant_id === "" &&
+                  val.side_variant_id === "" &&
+                  val.topping_variant_id === ""
+                    ? false
+                    : true;
+
+                const variants =
+                  val?.size_variant_id === "" &&
+                  val.side_variant_id === "" &&
+                  val.topping_variant_id === ""
+                    ? null
+                    : {
+                        sizeVariant: {
+                          ...val.size_variant[0],
+                          variantId: val.size_variant_id,
+                        },
+                        toppingVariant: val.topping_variant.map((value) => ({
+                          ...value,
+                          variantId: val.topping_variant_id,
+                        })),
+                        sideVariant: val.side_variant.map((value) => ({
+                          ...value,
+                          variantId: val.side_variant_id,
+                        })),
+                      };
+
+                const obj = {
                   id: val?.item_id,
                   cart_id: val.cart_id,
                   itemName: val?.menu_item_name_en,
                   discountedPrice: val?.discounted_price,
                   price: val?.unit_price,
                   quantity: val.quantity,
-                  variants: {
-                    sizeVariant: {
-                      ...val.size_variant[0],
-                      variantId: val.size_variant_id,
-                    },
-                    toppingVariant: val.topping_variant.map((value) => ({
-                      ...value,
-                      variantId: val.topping_variant_id,
-                    })),
-                    sideVariant: val.side_variant.map((value) => ({
-                      ...value,
-                      variantId: val.side_variant_id,
-                    })),
-                  },
+                  variants,
                   item_code: val.item_code,
                   specialInstructions: "",
                   itemImage: val?.menu_item_image,
                   restaurant_id: 1,
                   totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
+                  has_variants,
                 };
+
+                obj.has_variants === false && delete obj.has_variants;
+                obj.variants === null && delete obj.variants;
+
+                dispatch(addToCart(obj));
+                sessionStorage.setItem("cartEmpty", true);
               });
-              dispatch(addToCart(resData));
-              sessionStorage.setItem("cartEmpty", true);
             })
             .catch((err) => {
               console.error(err);
@@ -190,6 +209,7 @@ const Home = () => {
                   lng: lng,
                   address: address,
                 };
+
                 localStorage.setItem("location", JSON.stringify(addToRedux));
               })
               .catch((err) => {
@@ -201,6 +221,41 @@ const Home = () => {
       }
     }
   }, []);
+
+  const [selectedAddress, setSelectedAddress] = useState(null);
+
+  useEffect(() => {
+    if (userLocation !== null && userSelected === null) {
+      const parsedLocation = JSON.parse(userLocation);
+
+      for (let i = 0; i < addressData?.length; i++) {
+        if (
+          parseFloat(+addressData[i].latitude) ===
+            parseFloat(parsedLocation.lat) &&
+          parseFloat(+addressData[i].longitude) ===
+            parseFloat(parsedLocation.lng)
+        ) {
+          getFullAddress(
+            +addressData[i].latitude,
+            +addressData[i].longitude,
+            setSelectedAddress
+          );
+        }
+      }
+    }
+  }, [localStorage]);
+
+  useEffect(() => {
+    if (selectedAddress !== null) {
+      const address = {
+        lat: selectedAddress.lat,
+        lng: selectedAddress.lng,
+        address: selectedAddress.address,
+      };
+
+      localStorage?.setItem("selected", address);
+    }
+  }, [selectedAddress]);
 
   const isCountry = localStorage.getItem("country");
   useEffect(() => {

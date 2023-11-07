@@ -141,13 +141,16 @@ const Navbar = (props) => {
                   }/restaurant/${+location?.restaurant_id}/delivery`
                 );
               } else if (
-                location?.fromMenu !== undefined ||
+                (location?.fromMenu !== undefined &&
+                  location?.notSelected === undefined) ||
                 location?.fromDetail !== undefined ||
                 location?.fromHome !== undefined
               ) {
                 navigate(paths.addresses, {
                   state: passState,
                 });
+              } else if (location?.notSelected !== undefined) {
+                navigate(-1);
               } else {
                 navigate(backIconURL || paths.profile, backIconURLState);
               }
@@ -234,7 +237,9 @@ const Navbar = (props) => {
             }}
           >
             <img src="/assets/img/cart.svg" alt="Shopping Icon" />
-            <div className="items-count">{totalQuantity}</div>
+            {totalQuantity > 0 && (
+              <div className="items-count">{totalQuantity}</div>
+            )}
           </div>
         )}
 

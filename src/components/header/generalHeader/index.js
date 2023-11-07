@@ -74,7 +74,9 @@ const Navbar = (props) => {
         >
           <div className="shopping_icon">
             <img alt="Bag_Icon" src="/assets/img/Icon - Bag.svg" />
-            <div className="items-count">{totalQuantity}</div>
+            {totalQuantity > 0 && (
+              <div className="items-count">{totalQuantity}</div>
+            )}
           </div>
         </div>
       </nav>

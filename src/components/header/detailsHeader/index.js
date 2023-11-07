@@ -107,7 +107,9 @@ export const DetailsHeader = (props) => {
           className="detailsheaderright-icons"
           src="/assets/img/Icon - Bag.svg"
         ></img>
-        <div className="items-count">{totalQuantity}</div>
+        {totalQuantity > 0 && (
+          <div className="items-count">{totalQuantity}</div>
+        )}
       </div>
     </header>
   );

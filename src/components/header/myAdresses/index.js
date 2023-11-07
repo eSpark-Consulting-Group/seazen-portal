@@ -21,6 +21,7 @@ const MyAddresses = (props) => {
     fromDetail,
     backToCart,
     backCart,
+    notSelected,
   } = props;
 
   const pathToCart = () => {
@@ -90,7 +91,7 @@ const MyAddresses = (props) => {
             : noAddress !== undefined ||
               (backCart !== undefined && path !== "/home")
             ? -1
-            : addNew !== undefined
+            : addNew !== undefined || notSelected !== undefined
             ? `${paths.menu}/restaurant/${restaurant_id}/delivery`
             : paths.home
         }

@@ -459,6 +459,17 @@ const MenuCardListContainer = ({
                     restaurant_id: id,
                   },
                 })
+              : localStorage.getItem("selected") === null &&
+                cart?.length > 0 &&
+                !locationDeliver
+              ? navigate(paths.location, {
+                  state: {
+                    path: "/cart",
+                    restaurant_id: restaurantDetail.id,
+                    restaurantName: restaurantDetail?.page_title_en,
+                    notSelected: true,
+                  },
+                })
               : addressData?.length > 0 &&
                 localStorage.getItem("selected") === null
               ? setOpenAddressPopup(true)
