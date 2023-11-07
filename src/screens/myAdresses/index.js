@@ -153,6 +153,7 @@ const App = () => {
   const handleClickOpen = (item) => {
     setAddressType(item.address_type);
     setAddressId(item.id);
+    setSelectedId(item.id);
     setOpen(true);
     setAddressToBeDeleted(item);
   };

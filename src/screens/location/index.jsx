@@ -632,6 +632,7 @@ function LocationPage() {
               logo
               languageIcon
               guestUser={location.state?.guestUser ? true : false}
+              autoRedirect={location?.state?.autoRedirect}
               path={location?.state?.path}
               location={location?.state}
             />

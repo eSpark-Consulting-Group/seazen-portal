@@ -187,7 +187,7 @@ const MenuCardListContainer = ({
   const chooseAddress = (item) => {
     const lat = +item.latitude;
     const lng = +item.longitude;
-    setAddressID(item.is);
+    setAddressID(item.id);
 
     getFullAddress(lat, lng, setFullAddress);
   };

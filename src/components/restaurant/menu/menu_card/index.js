@@ -154,8 +154,8 @@ const MenuCard = (props) => {
       const distance = getDistanceFromLatLonInKm(
         resLat,
         resLng,
-        fromLocation.lat,
-        fromLocation.lng
+        fromLocation?.lat || 29.3140728,
+        fromLocation?.lng || 47.68022
       );
 
       if (distance > 50) {

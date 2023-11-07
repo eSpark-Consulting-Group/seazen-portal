@@ -223,6 +223,7 @@ const Home = () => {
   }, []);
 
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [addressId, setAddressID] = useState();
 
   useEffect(() => {
     if (userLocation !== null && userSelected === null) {
@@ -235,6 +236,7 @@ const Home = () => {
           parseFloat(+addressData[i].longitude) ===
             parseFloat(parsedLocation.lng)
         ) {
+          setAddressID(addressData[i].id);
           getFullAddress(
             +addressData[i].latitude,
             +addressData[i].longitude,
@@ -251,6 +253,7 @@ const Home = () => {
         lat: selectedAddress.lat,
         lng: selectedAddress.lng,
         address: selectedAddress.address,
+        addressId,
       };
 
       localStorage?.setItem("selected", address);
@@ -294,7 +297,6 @@ const Home = () => {
   const [restaurantOpen, setRestaurantOpen] = useState(false);
   const [chooseFullAddress, setChooseFullAddress] = useState(null);
   const [openAddressToChoose, setOpenAddressToChoose] = useState(null);
-  const [addressID, setAddressID] = useState();
 
   const parentDiv = document?.getElementById("parent-of-all");
   const parentIcon = document?.getElementsByClassName("inner-svg-container");
@@ -306,10 +308,10 @@ const Home = () => {
       let promises = [];
 
       resturantsData?.forEach((restaurant, index) => {
-        if (index === 0 || index === 1) {
-          const idToCheck = restaurant.id;
-          promises.push(getRestaurantBranchHours(idToCheck));
-        }
+        // if (index === 0 || index === 1) {
+        const idToCheck = restaurant.id;
+        promises.push(getRestaurantBranchHours(idToCheck));
+        // }
       });
 
       Promise.all(promises)
@@ -337,7 +339,7 @@ const Home = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
-    setAddressID(item.is);
+    setAddressID(item.id);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -345,6 +347,7 @@ const Home = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
+    setAddressID(item.id);
     getFullAddress(lat, lng, setChooseFullAddress);
   };
 
@@ -357,7 +360,7 @@ const Home = () => {
       if (cart?.length === 0) {
         localStorage.setItem(
           "selected",
-          JSON.stringify({ ...chooseFullAddress, addressId: addressID })
+          JSON.stringify({ ...chooseFullAddress, addressId })
         );
 
         navigate(paths.cart);
@@ -409,7 +412,7 @@ const Home = () => {
         if (res.status === "ok") {
           localStorage.setItem(
             "selected",
-            JSON.stringify({ ...chooseFullAddress, addressId: addressID })
+            JSON.stringify({ ...chooseFullAddress, addressId })
           );
 
           dispatch(getNearByRest(res?.data));
@@ -420,7 +423,7 @@ const Home = () => {
     } else {
       localStorage.setItem(
         "selected",
-        JSON.stringify({ ...chooseFullAddress, addressId: addressID })
+        JSON.stringify({ ...chooseFullAddress, addressId })
       );
 
       setOpenAddressToChoose(false);
@@ -497,7 +500,10 @@ const Home = () => {
               setNewText("");
               setDistanceIsFar(false);
               setOpenAddressPopup(false);
-              localStorage.setItem("selected", JSON.stringify(fullAddress));
+              localStorage.setItem(
+                "selected",
+                JSON.stringify({ ...fullAddress, addressId })
+              );
 
               if (restaurantId === null) {
                 setOpenAddressPopup(false);
@@ -523,7 +529,10 @@ const Home = () => {
           }
         }
       } else {
-        localStorage.setItem("selected", JSON.stringify(fullAddress));
+        localStorage.setItem(
+          "selected",
+          JSON.stringify({ ...fullAddress, addressId })
+        );
         setOpenAddressPopup(false);
       }
     }

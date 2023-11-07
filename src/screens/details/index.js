@@ -93,7 +93,7 @@ export const Details = () => {
   const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [addressID, setAddressID] = useState();
+  const [addressId, setAddressID] = useState();
 
   const { search } = useLocation();
 
@@ -169,8 +169,8 @@ export const Details = () => {
         const distance = getDistanceFromLatLonInKm(
           resLat,
           resLng,
-          fromLocation.lat,
-          fromLocation.lng
+          fromLocation?.lat || 29.3140728,
+          fromLocation?.lng || 47.68022
         );
 
         if (distance > 50) {
@@ -618,7 +618,7 @@ export const Details = () => {
     const lat = +item.latitude;
     const lng = +item.longitude;
 
-    setAddressID(item.is);
+    setAddressID(item.id);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -631,7 +631,7 @@ export const Details = () => {
       if (cart?.length === 0) {
         localStorage.setItem(
           "selected",
-          JSON.stringify({ ...fullAddress, addressId: addressID })
+          JSON.stringify({ ...fullAddress, addressId })
         );
 
         navigate(paths.cart);
@@ -679,7 +679,7 @@ export const Details = () => {
         if (res.status === "ok") {
           localStorage.setItem(
             "selected",
-            JSON.stringify({ ...fullAddress, addressId: addressID })
+            JSON.stringify({ ...fullAddress, addressId })
           );
 
           dispatch(getNearByRest(res?.data));
@@ -690,7 +690,7 @@ export const Details = () => {
     } else {
       localStorage.setItem(
         "selected",
-        JSON.stringify({ ...fullAddress, addressId: addressID })
+        JSON.stringify({ ...fullAddress, addressId })
       );
 
       setOpenAddressPopup(false);

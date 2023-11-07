@@ -294,7 +294,7 @@ const DeliveryDetails = (props) => {
     if (fullAddress !== null) {
       localStorage.setItem(
         "selected",
-        JSON.stringify({ ...fullAddress, addressID })
+        JSON.stringify({ ...fullAddress, addressId: addressID })
       );
 
       setUserLocation(truncateString(fullAddress?.address, 15));

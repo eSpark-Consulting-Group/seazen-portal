@@ -33,6 +33,7 @@ const Navbar = (props) => {
     backIconURLState,
     fromHome,
     location,
+    autoRedirect,
   } = props;
 
   const navigate = useNavigate();
@@ -115,44 +116,59 @@ const Navbar = (props) => {
           <div
             className="arrowicon-btn"
             onClick={() => {
-              if (guestUser || location?.guest !== undefined) {
-                if (
-                  path === "menu/restaurant" ||
-                  path?.includes("menu-item-details")
+              if (token === null) {
+                if (guestUser || location?.guest !== undefined) {
+                  if (
+                    path === "menu/restaurant" ||
+                    path?.includes("menu-item-details")
+                  ) {
+                    navigate(-1);
+                  } else {
+                    navigate(paths.home);
+                  }
+                } else if (
+                  autoRedirect !== undefined &&
+                  path.includes("/menu/restaurant")
                 ) {
                   navigate(-1);
-                } else {
-                  navigate(paths.home);
+                } else if (autoRedirect !== undefined) {
+                  navigate(
+                    `${
+                      paths.menu
+                    }/restaurant/${+location?.restaurant_id}/delivery`
+                  );
                 }
-              } else if (path === "/profile") {
-                navigate(paths.addresses, { state: { path: "/profile" } });
-                //
-              } else if (location?.addNew !== undefined) {
-                navigate(paths?.home);
-                //
-              } else if (
-                (path === "menu/restaurant" ||
-                  path?.includes("menu-item-details")) &&
-                location?.backCart === undefined
-              ) {
-                navigate(
-                  `${
-                    paths.menu
-                  }/restaurant/${+location?.restaurant_id}/delivery`
-                );
-              } else if (
-                (location?.fromMenu !== undefined &&
-                  location?.notSelected === undefined) ||
-                location?.fromDetail !== undefined ||
-                location?.fromHome !== undefined
-              ) {
-                navigate(paths.addresses, {
-                  state: passState,
-                });
-              } else if (location?.notSelected !== undefined) {
-                navigate(-1);
               } else {
-                navigate(backIconURL || paths.profile, backIconURLState);
+                if (path === "/profile") {
+                  navigate(paths.addresses, { state: { path: "/profile" } });
+                  //
+                } else if (location?.addNew !== undefined) {
+                  navigate(paths?.home);
+                  //
+                } else if (
+                  (path === "menu/restaurant" ||
+                    path?.includes("menu-item-details")) &&
+                  location?.backCart === undefined
+                ) {
+                  navigate(
+                    `${
+                      paths.menu
+                    }/restaurant/${+location?.restaurant_id}/delivery`
+                  );
+                } else if (
+                  (location?.fromMenu !== undefined &&
+                    location?.notSelected === undefined) ||
+                  location?.fromDetail !== undefined ||
+                  location?.fromHome !== undefined
+                ) {
+                  navigate(paths.addresses, {
+                    state: passState,
+                  });
+                } else if (location?.notSelected !== undefined) {
+                  navigate(-1);
+                } else {
+                  navigate(backIconURL || paths.profile, backIconURLState);
+                }
               }
             }}
           >
