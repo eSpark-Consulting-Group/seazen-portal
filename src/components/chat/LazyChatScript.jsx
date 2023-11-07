@@ -18,7 +18,12 @@ const LazyChatScript = () => {
       script.onload = () => {
         setTimeout(() => {
           const element = document.getElementById("fc_frame");
-          if (element && currentURL.pathname.includes("order/receipt/")) {
+          if (
+            element &&
+            (currentURL.pathname.includes("order/receipt/") ||
+              currentURL.pathname.includes("menu/restaurant/") ||
+              currentURL.pathname.includes("menu-item-details/"))
+          ) {
             element?.classList.add("remove-chat-icon");
           } else {
             element?.classList.remove("remove-chat-icon");
