@@ -47,7 +47,7 @@
 }
 
 .restaurantCard-border-near:hover {
-  border-color: rgba(79, 148, 138, 1) !important;
+  border-color: rgba(79, 148, 138, 1);
   border-radius: 12px;
   /* You can adjust the border color and width */
   transform: scale(1.08) !important;

@@ -123,12 +123,19 @@ const Receipt = () => {
                 <img src="/assets/img/location.svg" alt="" />
               </div>
               <div id="heading-cont">
-                {orderDetailsResponse?.data?.address?.house_no
+                {/* {orderDetailsResponse?.data?.address?.house_no
                   ? orderDetailsResponse?.data?.address?.house_no + ", "
                   : orderDetailsResponse?.data?.address?.apartment_no
                   ? orderDetailsResponse?.data?.address?.apartment_no + ", "
                   : ""}
-                {orderDetailsResponse?.data?.address?.street}
+                {orderDetailsResponse?.data?.address?.street} */}
+
+                {orderDetailsResponse?.data?.address?.address_type === "house"
+                  ? `House: ${orderDetailsResponse?.data?.address?.house_no}, Block: ${orderDetailsResponse?.data?.address?.block}, Street: ${orderDetailsResponse?.data?.address?.street}`
+                  : orderDetailsResponse?.data?.address?.address_type ===
+                    "office"
+                  ? `Company: ${orderDetailsResponse?.data?.address?.company_name}, Block: ${orderDetailsResponse?.data?.address?.block}, Floor: ${orderDetailsResponse?.data?.address?.floor}`
+                  : `Apartment: ${orderDetailsResponse?.data?.address?.apartment_no}, Block: ${orderDetailsResponse?.data?.address?.block}, Street: ${orderDetailsResponse?.data?.address?.street}`}
               </div>
             </div>
             <div>

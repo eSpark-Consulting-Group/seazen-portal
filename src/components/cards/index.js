@@ -262,7 +262,8 @@ const BasicCard = (props) => {
             <div
               key={index}
               className={`restaurantCards restaurantCard-large ${
-                selectedText !== "Delivery"
+                selectedText !== "Delivery" &&
+                (restaurant?.dinein_status || restaurant?.pickup_status)
                   ? getCardClassName(images[index].service)
                   : null
               } ${
