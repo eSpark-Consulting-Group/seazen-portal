@@ -549,7 +549,15 @@ function LocationPage() {
       }
     } else {
       navigate(paths.address, {
-        state: { name: address, latlng: center, path: location?.state?.path },
+        state: {
+          name: address,
+          latlng: center,
+          path: location?.state?.path,
+          fromHome: location?.state?.fromHome,
+          fromMenu: location?.state?.fromMenu,
+          fromDetail: location?.state?.fromDetail,
+          editLocation: location?.state?.editLocation,
+        },
       });
     }
   };

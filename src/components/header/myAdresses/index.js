@@ -22,12 +22,17 @@ const MyAddresses = (props) => {
     backToCart,
     backCart,
     notSelected,
+    editLocation,
   } = props;
 
   const pathToCart = () => {
     return (
       (fromAllAddresses && path === "/cart") ||
       (fromCart !== undefined && path === "/cart") ||
+      (editLocation !== undefined &&
+        (fromHome !== undefined ||
+          fromDetail !== undefined ||
+          fromMenu !== undefined)) ||
       (fromAllAddresses && backToCart !== undefined && path !== "/profile") ||
       (fromAllAddresses &&
         backCart !== undefined &&
@@ -41,7 +46,8 @@ const MyAddresses = (props) => {
         fromMenu !== undefined ||
         fromDetail !== undefined) &&
       backToCart === undefined &&
-      backCart === undefined
+      backCart === undefined &&
+      editLocation === undefined
     );
   };
 

@@ -34,6 +34,7 @@ const Navbar = (props) => {
     fromHome,
     location,
     autoRedirect,
+    register,
   } = props;
 
   const navigate = useNavigate();
@@ -76,6 +77,7 @@ const Navbar = (props) => {
     fromHome: location?.fromHome,
     backCart: location?.backCart,
     path: path,
+    editLocation: location?.editLocation,
   };
 
   const stateNoAddress = {
@@ -126,6 +128,8 @@ const Navbar = (props) => {
                   } else {
                     navigate(paths.home);
                   }
+                } else if (register !== undefined) {
+                  navigate(-1);
                 } else if (
                   autoRedirect !== undefined &&
                   path.includes("/menu/restaurant")
@@ -148,7 +152,8 @@ const Navbar = (props) => {
                 } else if (
                   (path === "menu/restaurant" ||
                     path?.includes("menu-item-details")) &&
-                  location?.backCart === undefined
+                  location?.backCart === undefined &&
+                  location?.editLocation === undefined
                 ) {
                   navigate(
                     `${

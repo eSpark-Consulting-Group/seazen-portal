@@ -216,6 +216,7 @@ function PhoneNumberVerificationOTP() {
             location={location?.state}
             path={location?.state?.path}
             autoRedirect={location?.state?.autoRedirect}
+            register={location?.state?.register}
           />
         </div>
         <Stack

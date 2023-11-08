@@ -520,6 +520,10 @@ const AddressForm = () => {
                     name: location?.state?.name,
                     latlng: location?.state?.latlng,
                     editLocation: true,
+                    path: location?.state?.path,
+                    fromHome: location?.state?.fromHome,
+                    fromMenu: location?.state?.fromMenu,
+                    fromDetail: location?.state?.fromDetail,
                   },
                 })
               }

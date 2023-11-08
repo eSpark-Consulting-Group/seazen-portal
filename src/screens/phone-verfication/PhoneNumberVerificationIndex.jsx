@@ -59,7 +59,7 @@ function PhoneNumberVerificationIndex() {
           mobile: mobileNumber,
           mobile_country_code: mobileCountryCodeWithoutPlus,
         }),
-      { state: location?.state }
+      { state: location?.state, register: true }
     );
   };
 
@@ -120,6 +120,7 @@ function PhoneNumberVerificationIndex() {
             location={location?.state}
             path={location?.state?.path}
             autoRedirect={location?.state?.autoRedirect}
+            register={location?.state?.register}
           />
         </div>
         <Stack
