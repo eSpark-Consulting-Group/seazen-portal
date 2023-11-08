@@ -1,6 +1,7 @@
 .home-styling {
   padding: 20px !important;
   margin-top: -8px;
+  position: relative !important;
 }
 
 img,

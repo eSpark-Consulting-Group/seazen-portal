@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setKey, geocode, RequestType } from "react-geocode";
 
-import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -786,7 +786,13 @@ const Home = () => {
         setDistanceIsFar={setDistanceIsFar}
         setRestaurantOpen={setRestaurantOpen}
       />
-      <Footer showFooterSection={true} />
+      <Box
+        sx={{
+          marginTop: "60px",
+        }}
+      >
+        <Footer showFooterSection={true} />
+      </Box>
 
       <Dialog
         open={openAddressPopup}
