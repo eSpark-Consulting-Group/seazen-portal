@@ -602,7 +602,7 @@ function CartPage() {
     delivery_charges: "0",
     promo_code: "Test1",
     comments: specialIns,
-    schedule: {
+    delivery_schedule: {
       date: pickDate.split("-")[0],
       time: pickTime,
     },
