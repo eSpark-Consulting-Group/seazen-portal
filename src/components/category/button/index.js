@@ -445,12 +445,8 @@ const RestaurantsOrderTypeButton = (props) => {
           clickedButtonIndex={clickedButtonIndex}
           orderTypeFilter={orderTypeFilter}
           restaurantsData={restaurantsData}
-          setOpenAddressPopup={setOpenAddressPopup}
           goToRestaurantMenuPage={goToRestaurantMenuPage}
-          setRestaurantId={setRestaurantId}
-          setRestaurantName={setRestaurantName}
           selectedText={selectedText}
-          filterSelectedNow={filterSelectedNow}
           typesState={typesState}
         />
       )}
