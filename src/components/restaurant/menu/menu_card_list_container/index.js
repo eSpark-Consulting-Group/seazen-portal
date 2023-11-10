@@ -2,23 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  Box,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Stack,
-  Typography,
-  Modal,
-  CircularProgress,
-} from "@mui/material";
+import { Box, Stack, Typography, Modal, CircularProgress } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { Button } from "react-bootstrap";
 
-import InfiniteScroll from "react-infinite-scroll-component";
-
-import Card from "../../../adressList/index.js";
 import MenuCard from "../menu_card/index.js";
 import { DialogComponent } from "../../../dialog/index.js";
 import SelectLocation from "../../../dialog/selectLocation.js";
@@ -45,7 +33,6 @@ import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant
 import "./style.css";
 
 const MenuCardListContainer = ({
-  itemDetail,
   itemCategoryList,
   locationDeliver,
   restaurantBranchHours,
@@ -55,6 +42,7 @@ const MenuCardListContainer = ({
   setSelectedItemToDeliver,
   setNotDeliver,
   setRestaurantOpen,
+  itemsByCategoryLoading,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -65,9 +53,7 @@ const MenuCardListContainer = ({
   );
   const cart = useSelector((state) => state.cart.cart);
   const addressData = useSelector((state) => state.address.addressData);
-  const resturantsData = useSelector(
-    (state) => state.resturants.resturantsData
-  );
+
   const branchHours = useSelector((state) => state.resturants.branchHours);
   const nearbyRestaurants = useSelector(
     (state) => state.resturants.nearbyRestaurants
@@ -79,7 +65,6 @@ const MenuCardListContainer = ({
   );
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showList, setShowList] = useState([]);
@@ -97,7 +82,6 @@ const MenuCardListContainer = ({
 
   const { id } = useParams();
 
-  // const itemQuantity= useSelector((state) => state.)
   useEffect(() => {
     if (cartTotalItems === 0) {
       dispatch(resetCart());
@@ -105,7 +89,6 @@ const MenuCardListContainer = ({
   }, [cartTotalItems]);
 
   useEffect(() => {
-    // console.log(categoryList?.slice(0, 10), "categoryList?.slice(0, 10)")
     setShowList(categoryList?.slice(0, 10));
   }, [categoryList]);
 
@@ -351,7 +334,7 @@ const MenuCardListContainer = ({
               </div>
             </div> */}
             <>
-              {!categoryList && (
+              {itemsByCategoryLoading && (
                 <Box
                   sx={{
                     display: "flex",
@@ -363,7 +346,7 @@ const MenuCardListContainer = ({
                 </Box>
               )}
               <Stack spacing={1.5}>
-                {categoryList && (
+                {categoryList && categoryList?.length > 0 && (
                   <div className="searchwrapper">
                     <img
                       src="/assets/img/Icon - Search.svg"

@@ -10,7 +10,7 @@ import { paths } from "../../../routes/paths";
 import "./style.css";
 
 export const DetailsHeader = (props) => {
-  const { image, setOpenAddressPopup, fromDetail } = props;
+  const { image, setOpenAddressPopup, fromDetail, editItem } = props;
 
   const navigate = useNavigate();
   const currentURL = useLocation();
@@ -29,9 +29,9 @@ export const DetailsHeader = (props) => {
   };
 
   const backHandler = () => {
-    if (currentURL.search.includes("item_code")) {
-      return navigate(`/menu/restaurant/${cart[0]?.restaurant_id}/delivery?`);
-    }
+    // if (currentURL.search.includes("item_code")) {
+    //   return navigate(`/menu/restaurant/${cart[0]?.restaurant_id}/delivery?`);
+    // }
     navigate(-1);
   };
 

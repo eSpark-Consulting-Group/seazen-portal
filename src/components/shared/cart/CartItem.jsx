@@ -1,19 +1,22 @@
 import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import IncDec from "../../Input/InputWithIncDec";
-import deleteCart from "../../../api/cart/deleteCartItem";
-import { useQuery } from "@tanstack/react-query";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { paths } from "../../../routes/paths";
-import updateCartApiCall from "../../../api/cart/updateCart";
-import * as reduxCart from "../../../store/reducers/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { Box, Stack, Button, Typography } from "@mui/material";
+import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
+
+import IncDec from "../../Input/InputWithIncDec";
+
+import deleteCart from "../../../api/cart/deleteCartItem";
 import clearCart from "../../../api/cart/clearCart";
+import updateCartApiCall from "../../../api/cart/updateCart";
+
+import * as reduxCart from "../../../store/reducers/cartSlice";
+
+import { paths } from "../../../routes/paths";
 
 function CartItem(props) {
   const {
@@ -29,16 +32,20 @@ function CartItem(props) {
     cartRefetch,
     item_code,
     item_id,
+    branch_id,
   } = props;
 
   // const variant = "450g";
 
+  const token = localStorage.getItem("token");
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const cart = useSelector((state) => state.cart.cart);
+
   const [updatedQuantity, setUpdatedQuantity] = React.useState(quantity);
   const [imageNotFound, setImageNotFound] = useState(false);
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const dispatch = useDispatch();
-  const cart = useSelector((state) => state.cart.cart);
 
   // const updateCartHandler = useQuery({
   //   queryFn: () =>
@@ -182,35 +189,37 @@ function CartItem(props) {
         >
           <Typography fontWeight={600}>{getItemName()}</Typography>
 
-          {!variants ? null : (
-            <Button
-              variant="text"
-              color="inherit"
-              size="small"
-              disableRipple
-              disableElevation
-              endIcon={<EditTwoToneIcon />}
-              onClick={() => {
-                navigate(`${paths.details}/${id}?item_code=${item_code}`);
-              }}
-              sx={{
-                p: 0,
-                minHeight: "auto",
-                minWidth: "auto",
-                textTransform: "none",
+          <Button
+            variant="text"
+            color="inherit"
+            size="small"
+            disableRipple
+            disableElevation
+            endIcon={<EditTwoToneIcon />}
+            onClick={() => {
+              localStorage.setItem("restaurantID", cart[0]?.restaurant_id);
+
+              navigate(`${paths.details}/${id}?item_code=${item_code}`, {
+                state: { branch_id },
+              });
+            }}
+            sx={{
+              p: 0,
+              minHeight: "auto",
+              minWidth: "auto",
+              textTransform: "none",
+              textDecoration: "underline",
+              "&:hover": {
+                backgroundColor: "inherit",
                 textDecoration: "underline",
-                "&:hover": {
-                  backgroundColor: "inherit",
-                  textDecoration: "underline",
-                },
-                "& .MuiButton-endIcon > *:nth-of-type(1)": {
-                  fontSize: "16px",
-                },
-              }}
-            >
-              Edit
-            </Button>
-          )}
+              },
+              "& .MuiButton-endIcon > *:nth-of-type(1)": {
+                fontSize: "16px",
+              },
+            }}
+          >
+            Edit
+          </Button>
         </Stack>
       </Stack>
 

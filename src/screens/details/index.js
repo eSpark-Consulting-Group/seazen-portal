@@ -516,6 +516,7 @@ export const Details = () => {
       itemImage: data?.image,
       has_variants: data?.has_variants,
       restaurant_id: data.restaurant_id,
+      branch_id: data?.branch_id,
     };
 
     const itemExists = ItemDataObject.has_variants
@@ -582,6 +583,7 @@ export const Details = () => {
       specialInstructions: specialInstructions,
       itemImage: data?.image,
       restaurant_id: data.restaurant_id,
+      branch_id: data?.branch_id,
     };
 
     const item_code = uuidv4();
@@ -752,6 +754,7 @@ export const Details = () => {
         image={menuItemDetails?.data?.image}
         setOpenAddressPopup={setOpenAddressPopup}
         fromDetail={true}
+        editItem={location?.state?.editItem}
       />
       <div className="container-fluid section">
         <Stack

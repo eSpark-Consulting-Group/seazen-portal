@@ -172,6 +172,7 @@ const ReOrderCard = (props) => {
             size_variant_id: item.size_variant_id,
             topping_variant: item.topping_variant,
             topping_variant_id: item.topping_variant_id,
+            branch_id: item?.branch_id,
           };
 
           promises.push(addToCartApiCall(cartItem));

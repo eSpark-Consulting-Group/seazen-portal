@@ -1,28 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Skeleton from "@mui/material/Skeleton";
-import { styled } from "@mui/material/styles";
-import ExtraItems from "../extraItems";
+
 import { v4 as uuidv4 } from "uuid";
-import { paths } from "../../../../routes/paths";
-import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
+
 import { LazyLoadImage } from "react-lazy-load-image-component";
+
+import { Box, Stack, Paper, Typography, Skeleton } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
+
+import ExtraItems from "../extraItems";
+import { DialogComponent } from "../../../dialog";
+
+import clearCart from "../../../../api/cart/clearCart";
+import addToCartApiCall from "../../../../api/cart/addToCart";
+
+import { getDistanceFromLatLonInKm } from "../../../../utils/getAddress";
+
 import {
   addToCart,
   removeFromCart,
   resetCart,
   updateCartMenuItemQuantity,
 } from "../../../../store/reducers/cartSlice";
+
+import { paths } from "../../../../routes/paths";
+
 import "./style.css";
-import clearCart from "../../../../api/cart/clearCart";
-import addToCartApiCall from "../../../../api/cart/addToCart";
-import { getDistanceFromLatLonInKm } from "../../../../utils/getAddress";
-import { DialogComponent } from "../../../dialog";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
@@ -259,8 +264,8 @@ const MenuCard = (props) => {
           const distance = getDistanceFromLatLonInKm(
             resLat,
             resLng,
-            fromLocation.lat,
-            fromLocation.lng
+            fromLocation?.lat || 29.3140728,
+            fromLocation?.lng || 47.68022
           );
 
           if (distance > 50) {
@@ -309,6 +314,7 @@ const MenuCard = (props) => {
         quantity: foodItemQuantity + 1,
         itemImage: foodImage,
         item_code: itemCode,
+        branch_id: allData.branch_id,
       };
 
       const cartItemDataForApi = {
@@ -321,6 +327,7 @@ const MenuCard = (props) => {
         size_variant: [],
         topping_variant: [],
         side_variant: [],
+        branch_id: allData.branch_id,
       };
 
       navigate(paths.location, {
@@ -355,6 +362,7 @@ const MenuCard = (props) => {
             quantity: foodItemQuantity + 1,
             itemImage: foodImage,
             item_code: itemCode,
+            branch_id: allData.branch_id,
           })
         );
         const cartItemDataForApi = {
@@ -367,6 +375,7 @@ const MenuCard = (props) => {
           size_variant: [],
           topping_variant: [],
           side_variant: [],
+          branch_id: allData.branch_id,
         };
 
         addToCartApiCall(cartItemDataForApi)
