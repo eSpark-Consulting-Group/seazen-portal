@@ -114,6 +114,7 @@ svg {
 
 .delivery-false {
   border: none;
+  border-color: transparent !important;
 }
 
 .delivery-true {

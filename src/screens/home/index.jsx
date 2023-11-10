@@ -23,10 +23,10 @@ import SelectLocation from "../../components/dialog/selectLocation";
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import countryList from "../../api/common/getAllCountries";
-import cartList from "../../api/cart/cartList";
+// import cartList from "../../api/cart/cartList";
 
 import { addCountry } from "../../store/reducers/authSlice";
-import { addToCart } from "../../store/reducers/cartSlice";
+// import { addToCart } from "../../store/reducers/cartSlice";
 
 import {
   getBranchHours,
@@ -61,70 +61,70 @@ const Home = () => {
     (state) => state.resturants.nearbyRestaurants
   );
 
-  useEffect(() => {
-    if (sessionStorage.getItem("cartEmpty") === null) {
-      if (token !== null) {
-        if (cart?.length === 0) {
-          cartList(token)
-            .then((res) => {
-              res.data.map((val) => {
-                const has_variants =
-                  val?.size_variant_id === "" &&
-                  val.side_variant_id === "" &&
-                  val.topping_variant_id === ""
-                    ? false
-                    : true;
+  // useEffect(() => {
+  //   if (sessionStorage.getItem("cartEmpty") === null) {
+  //     if (token !== null) {
+  //       if (cart?.length === 0) {
+  //         cartList(token)
+  //           .then((res) => {
+  //             res.data.map((val) => {
+  //               const has_variants =
+  //                 val?.size_variant_id === "" &&
+  //                 val.side_variant_id === "" &&
+  //                 val.topping_variant_id === ""
+  //                   ? false
+  //                   : true;
 
-                const variants =
-                  val?.size_variant_id === "" &&
-                  val.side_variant_id === "" &&
-                  val.topping_variant_id === ""
-                    ? null
-                    : {
-                        sizeVariant: {
-                          ...val.size_variant[0],
-                          variantId: val.size_variant_id,
-                        },
-                        toppingVariant: val.topping_variant.map((value) => ({
-                          ...value,
-                          variantId: val.topping_variant_id,
-                        })),
-                        sideVariant: val.side_variant.map((value) => ({
-                          ...value,
-                          variantId: val.side_variant_id,
-                        })),
-                      };
+  //               const variants =
+  //                 val?.size_variant_id === "" &&
+  //                 val.side_variant_id === "" &&
+  //                 val.topping_variant_id === ""
+  //                   ? null
+  //                   : {
+  //                       sizeVariant: {
+  //                         ...val.size_variant[0],
+  //                         variantId: val.size_variant_id,
+  //                       },
+  //                       toppingVariant: val.topping_variant.map((value) => ({
+  //                         ...value,
+  //                         variantId: val.topping_variant_id,
+  //                       })),
+  //                       sideVariant: val.side_variant.map((value) => ({
+  //                         ...value,
+  //                         variantId: val.side_variant_id,
+  //                       })),
+  //                     };
 
-                const obj = {
-                  id: val?.item_id,
-                  cart_id: val.cart_id,
-                  itemName: val?.menu_item_name_en,
-                  discountedPrice: val?.discounted_price,
-                  price: val?.unit_price,
-                  quantity: val.quantity,
-                  variants,
-                  item_code: val.item_code,
-                  specialInstructions: "",
-                  itemImage: val?.menu_item_image,
-                  restaurant_id: 1,
-                  totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
-                  has_variants,
-                };
+  //               const obj = {
+  //                 id: val?.item_id,
+  //                 cart_id: val.cart_id,
+  //                 itemName: val?.menu_item_name_en,
+  //                 discountedPrice: val?.discounted_price,
+  //                 price: val?.unit_price,
+  //                 quantity: val.quantity,
+  //                 variants,
+  //                 item_code: val.item_code,
+  //                 specialInstructions: "",
+  //                 itemImage: val?.menu_item_image,
+  //                 restaurant_id: 1,
+  //                 totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
+  //                 has_variants,
+  //               };
 
-                obj.has_variants === false && delete obj.has_variants;
-                obj.variants === null && delete obj.variants;
+  //               obj.has_variants === false && delete obj.has_variants;
+  //               obj.variants === null && delete obj.variants;
 
-                dispatch(addToCart(obj));
-                sessionStorage.setItem("cartEmpty", true);
-              });
-            })
-            .catch((err) => {
-              console.error(err);
-            });
-        }
-      }
-    }
-  }, [cart, token]);
+  //               dispatch(addToCart(obj));
+  //               sessionStorage.setItem("cartEmpty", true);
+  //             });
+  //           })
+  //           .catch((err) => {
+  //             console.error(err);
+  //           });
+  //       }
+  //     }
+  //   }
+  // }, [cart, token]);
 
   const [userCurrentAddress, setUserCurrentAddress] = useState({
     latitude: 0,
@@ -677,12 +677,25 @@ const Home = () => {
       removeBrownClasses();
 
       if (branchHours.length) {
-        branchHours?.forEach((res) => {
-          const resLat = +res.latitude;
-          const resLng = +res.longitude;
+        for (let i = 0; i < branchHours.length; i++) {
+          const resLat = +branchHours[i].latitude;
+          const resLng = +branchHours[i].longitude;
 
           if (fullAddress !== null && userSelected === null) {
-            distanceCheck(resLat, resLng, fullAddress);
+            // distanceCheck(resLat, resLng, fullAddress);
+            const distance = getDistanceFromLatLonInKm(
+              resLat,
+              resLng,
+              fullAddress.lat,
+              fullAddress.lng
+            );
+
+            if (distance > 50) {
+              removeClasses();
+            } else {
+              addClasses();
+              break;
+            }
 
             //
           } else if (
@@ -691,7 +704,21 @@ const Home = () => {
           ) {
             const selected = JSON.parse(userSelected);
 
-            distanceCheck(resLat, resLng, selected);
+            const distance = getDistanceFromLatLonInKm(
+              resLat,
+              resLng,
+              selected.lat,
+              selected.lng
+            );
+
+            if (distance > 50) {
+              removeClasses();
+            } else {
+              addClasses();
+              break;
+            }
+
+            // distanceCheck(resLat, resLng, selected);
             //
           } else if (
             (fullAddress !== null || fullAddress === null) &&
@@ -701,7 +728,21 @@ const Home = () => {
           ) {
             const location = JSON.parse(userLocation);
 
-            distanceCheck(resLat, resLng, location);
+            const distance = getDistanceFromLatLonInKm(
+              resLat,
+              resLng,
+              location.lat,
+              location.lng
+            );
+
+            if (distance > 50) {
+              removeClasses();
+            } else {
+              addClasses();
+              break;
+            }
+
+            // distanceCheck(resLat, resLng, location);
             //
           } else if (
             (fullAddress !== null || fullAddress === null) &&
@@ -713,7 +754,7 @@ const Home = () => {
           ) {
             navigate(paths.location, { state: { guestUser: true } });
           }
-        });
+        }
       }
     }
 
