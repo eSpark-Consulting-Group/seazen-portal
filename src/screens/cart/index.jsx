@@ -91,7 +91,8 @@ function CartPage() {
   const selectedAdd = JSON.parse(localStorage.getItem("selected"));
   const currentLocation = JSON.parse(localStorage.getItem("location"));
 
-  const [tipValue, setTipValue] = React.useState(0.25);
+  const [tipValue, setTipValue] = React.useState(0);
+  const [tipID, setTipID] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [cartItems, setCartItems] = React.useState();
   const [specialIns, setSpecialIns] = React.useState("");
@@ -596,7 +597,8 @@ function CartPage() {
     driver_id: "1",
     address_id: JSON.parse(localStorage.getItem("selected"))?.addressId,
     service_type: "delivery", // it will be dynamic later
-    tip_id: "1",
+    tip_id: tipID,
+    tip_amount: tipValue,
     pick_from_store: "",
     pickup_from_car: "",
     delivery_charges: "0",
@@ -618,12 +620,14 @@ function CartPage() {
     return truncateString(str, 100);
   };
 
-  const tipHandler = (tip) => {
+  const tipHandler = (tip, tipID) => {
     if (tip == tipValue) {
       setTipValue(0);
+      setTipID(null);
       return;
     }
     setTipValue(tip);
+    setTipID(tipID);
   };
 
   return (
@@ -1210,7 +1214,7 @@ function CartPage() {
             </Typography>
 
             <Stack direction="row" justifyContent="space-between" spacing={1}>
-              {[0.25, 0.5, 1.0].map((tip) => (
+              {[0.25, 0.5, 1.0].map((tip, index) => (
                 <Box
                   key={tip + "tip"}
                   sx={{
@@ -1233,7 +1237,7 @@ function CartPage() {
                     }),
                     boxShadow: (theme) => theme.shadows[7],
                   }}
-                  onClick={() => tipHandler(tip)}
+                  onClick={() => tipHandler(tip, index + 1)}
                 >
                   <SvgIcon
                     fontSize="large"
