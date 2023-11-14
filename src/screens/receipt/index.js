@@ -194,6 +194,13 @@ const Receipt = () => {
                   ).toFixed(3)}`}
               </Typography>
             </Stack>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body1">Tip Amount</Typography>
+              <Typography variant="body1">
+                {`KWD 
+                  ${Number(orderDetailsResponse?.data?.tip_amount).toFixed(3)}`}
+              </Typography>
+            </Stack>
 
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="body1">Total Payment</Typography>
