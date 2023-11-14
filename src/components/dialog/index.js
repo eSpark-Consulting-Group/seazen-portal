@@ -31,7 +31,11 @@ export const DialogComponent = (props) => {
     home,
     updateText,
     menuCard,
+    locationDeliver,
+    sharedItemForCart,
   } = props;
+
+  const token = localStorage?.getItem("token");
 
   const navigate = useNavigate();
 
@@ -107,27 +111,31 @@ export const DialogComponent = (props) => {
                 </Button>
 
                 <Button
-                  onClick={() =>
-                    navigate(paths.location, {
-                      state: {
-                        path: menuCard
-                          ? "menu/restaurant"
-                          : home && !menuCard
-                          ? "/home"
-                          : location.pathname,
-                        restaurantName: home
-                          ? restaurantName
-                          : localStorage.getItem("restaurantName") !== null
-                          ? localStorage.getItem("restaurantName")
-                          : location?.state?.restaurantDetail?.page_title_en,
-                        restaurant_id: home
-                          ? resturantId
-                          : location?.state?.restaurant_id !== undefined
-                          ? location?.state?.restaurant_id
-                          : +location?.state?.resturantId,
-                      },
-                    })
-                  }
+                  onClick={() => {
+                    if (locationDeliver !== undefined && token === null) {
+                      navigate(paths.location, { state: sharedItemForCart });
+                    } else {
+                      navigate(paths.location, {
+                        state: {
+                          path: menuCard
+                            ? "menu/restaurant"
+                            : home && !menuCard
+                            ? "/home"
+                            : location.pathname,
+                          restaurantName: home
+                            ? restaurantName
+                            : localStorage.getItem("restaurantName") !== null
+                            ? localStorage.getItem("restaurantName")
+                            : location?.state?.restaurantDetail?.page_title_en,
+                          restaurant_id: home
+                            ? resturantId
+                            : location?.state?.restaurant_id !== undefined
+                            ? location?.state?.restaurant_id
+                            : +location?.state?.resturantId,
+                        },
+                      });
+                    }
+                  }}
                   className={!home ? "btn change-button" : "btn back-button"}
                 >
                   <span>Change Location</span>

@@ -155,11 +155,15 @@ const Navbar = (props) => {
                   location?.backCart === undefined &&
                   location?.editLocation === undefined
                 ) {
-                  navigate(
-                    `${
-                      paths.menu
-                    }/restaurant/${+location?.restaurant_id}/delivery`
-                  );
+                  if (location?.noAddress !== undefined) {
+                    navigate(-1);
+                  } else {
+                    navigate(
+                      `${
+                        paths.menu
+                      }/restaurant/${+location?.restaurant_id}/delivery`
+                    );
+                  }
                 } else if (
                   (location?.fromMenu !== undefined &&
                     location?.notSelected === undefined) ||
@@ -245,8 +249,8 @@ const Navbar = (props) => {
             onClick={() => {
               token === null
                 ? navigate(paths.cart)
-                : addressData?.length === 0
-                ? navigate(paths.address, {
+                : addressData?.length === 0 && cart.length
+                ? navigate(paths.location, {
                     state: stateNoAddress,
                   })
                 : addressData?.length > 0 &&

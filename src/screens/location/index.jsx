@@ -313,7 +313,33 @@ function LocationPage() {
       location?.state?.editLocation === undefined
     ) {
       //
+      const parsedUserLocation = JSON.parse(userLocation);
 
+      const getCountry = parsedUserLocation.address.split(",");
+      const lastElem = getCountry[getCountry.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudia Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
+
+      if (!placeChanged) {
+        servicePlaceCheck(forCondition.trim());
+      }
+
+      //
+    } else if (
+      userSelected === null &&
+      userLocation !== null &&
+      location?.state?.latlng !== undefined &&
+      location?.state?.editLocation === undefined
+    ) {
+      //
       const parsedUserLocation = JSON.parse(userLocation);
 
       const getCountry = parsedUserLocation.address.split(",");
@@ -513,6 +539,10 @@ function LocationPage() {
               fromDetail: location?.state?.fromDetail,
             },
           });
+        } else if (location?.state?.noAddress !== undefined) {
+          navigate(paths.address, {
+            state: location?.state,
+          });
         } else {
           navigate(paths.address, {
             state: {
@@ -520,6 +550,7 @@ function LocationPage() {
               latlng: center,
               path: location?.state?.path,
               restaurant_id: +location?.state?.restaurant_id,
+              addFromDropdown: location?.state?.addFromDropdown,
             },
           });
         }

@@ -23,6 +23,7 @@ const MyAddresses = (props) => {
     backCart,
     notSelected,
     editLocation,
+    addFromDropdown,
   } = props;
 
   const pathToCart = () => {
@@ -99,6 +100,8 @@ const MyAddresses = (props) => {
             ? -1
             : addNew !== undefined || notSelected !== undefined
             ? `${paths.menu}/restaurant/${restaurant_id}/delivery`
+            : addFromDropdown !== undefined
+            ? -1
             : paths.home
         }
       />

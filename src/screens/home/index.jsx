@@ -256,7 +256,7 @@ const Home = () => {
         addressId,
       };
 
-      localStorage?.setItem("selected", address);
+      localStorage?.setItem("selected", JSON.stringify(address));
     }
   }, [selectedAddress]);
 

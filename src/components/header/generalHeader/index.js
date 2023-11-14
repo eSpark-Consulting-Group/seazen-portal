@@ -47,8 +47,8 @@ const Navbar = (props) => {
           onClick={() => {
             token === null
               ? navigate(paths.cart)
-              : addressData?.length === 0
-              ? navigate(paths.address, {
+              : addressData?.length === 0 && cart.length
+              ? navigate(paths.location, {
                   state: {
                     noAddress: true,
                     latlng: {

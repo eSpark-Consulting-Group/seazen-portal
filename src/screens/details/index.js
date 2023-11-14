@@ -25,6 +25,9 @@ import { AddShoppingCartRounded, Label } from "@mui/icons-material";
 import { DetailsHeader } from "../../components/header/detailsHeader";
 import IncDec from "../../components/Input/InputWithIncDec";
 import { DialogComponent } from "../../components/dialog";
+import SelectLocation from "../../components/dialog/selectLocation";
+import SchedulePicker from "../../components/shared/schedulePicker";
+import ScheduleDialog from "../../components/dialog/scheduleDialog";
 
 import getMenuItemDetails, {
   GET_MENU_ITEM_DETAILS_QUERY_KEY,
@@ -33,6 +36,13 @@ import addToCartApiCall from "../../api/cart/addToCart";
 import updateCartApiCall from "../../api/cart/updateCart";
 import clearCart from "../../api/cart/clearCart";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
+import {
+  getNearByRest,
+  getResturants,
+} from "../../store/reducers/resturantsSlice";
+import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
+import getAllRestaurants from "../../api/home/getAllRestaurants";
+import { GET_ALL_RESTAURANTS_QUERY_KEY } from "../../api/home/getAllRestaurantsBanner";
 
 import {
   updateCartItem,
@@ -40,19 +50,14 @@ import {
   resetCart,
 } from "../../store/reducers/cartSlice";
 
-import { paths } from "../../routes/paths";
-
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../utils/getAddress";
 
+import { paths } from "../../routes/paths";
+
 import "./style.css";
-import SelectLocation from "../../components/dialog/selectLocation";
-import { getNearByRest } from "../../store/reducers/resturantsSlice";
-import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
-import SchedulePicker from "../../components/shared/schedulePicker";
-import ScheduleDialog from "../../components/dialog/scheduleDialog";
 
 export const Details = () => {
   const { id } = useParams();
@@ -69,6 +74,7 @@ export const Details = () => {
     (state) => state.resturants.nearbyRestaurants
   );
   const branchHours = useSelector((state) => state.resturants.branchHours);
+  const country = useSelector((state) => state.auth.country);
 
   const token = localStorage.getItem("token");
   const restaurant_id = localStorage.getItem("restaurantID");
@@ -96,8 +102,33 @@ export const Details = () => {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [addressId, setAddressID] = useState();
   const [isLoader, setIsLoader] = useState(true);
+  const [sharedItemForCart, setSharedItemForCart] = useState({});
 
   const { search } = useLocation();
+
+  const {
+    data: getAllResturantsResponse,
+    isLoading: resturantsDataLoading,
+    error: resturantsDataError,
+    isError: resturantsDataIsError,
+    refetch,
+  } = useQuery({
+    queryKey: [GET_ALL_RESTAURANTS_QUERY_KEY],
+    queryFn: () => getAllRestaurants(country.id),
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (resturantsData?.length === 0) {
+      refetch();
+    }
+  }, [resturantsData]);
+
+  useEffect(() => {
+    if (getAllResturantsResponse?.data?.length !== 0) {
+      dispatch(getResturants(getAllResturantsResponse?.data));
+    }
+  }, [getAllResturantsResponse]);
 
   useLayoutEffect(() => {
     if (
@@ -124,9 +155,9 @@ export const Details = () => {
   }, [resturantsData]);
 
   useLayoutEffect(() => {
-    if (token !== null) {
-      fetchBranchHours();
-    }
+    // if (token !== null) {
+    fetchBranchHours();
+    // }
   }, []);
 
   const fetchBranchHours = () => {
@@ -527,13 +558,17 @@ export const Details = () => {
       branch_id: data?.branch_id,
     };
 
-    const itemExists = ItemDataObject.has_variants
-      ? cart.find(
-          (item) =>
-            JSON.stringify(item.variants) ===
-            JSON.stringify(ItemDataObject.variants)
-        )
-      : false;
+    const itemExists =
+      ItemDataObject.has_variants &&
+      (ItemDataObject?.variants?.sizeVariant ||
+        ItemDataObject?.variants?.toppingVariant ||
+        ItemDataObject.variants?.sideVariant)
+        ? cart.find(
+            (item) =>
+              JSON.stringify(item.variants) ===
+              JSON.stringify(ItemDataObject.variants)
+          )
+        : false;
 
     if (checkIfItemIsInCart()) {
       const item_code = cartItem?.item_code;
@@ -565,6 +600,54 @@ export const Details = () => {
   };
 
   const openNotDelivered = () => {
+    const { data } = menuItemDetails;
+
+    if (menuItemDetails?.data.has_variants && !sizeVariant) {
+      setErrorShow(true);
+      return;
+    }
+
+    var ItemDataObject = {
+      id: data?.id,
+      itemName: data?.name_en,
+      discountedPrice: data?.discounted_price,
+      price: data?.price,
+      quantity: quantity,
+      variants: {
+        sizeVariant: sizeVariant,
+        toppingVariant: toppingVariant,
+        sideVariant: sideVariant,
+      },
+      totalPrice: Number(totalPrice).toFixed(3),
+      specialInstructions: specialInstructions,
+      itemImage: data?.image,
+      restaurant_id: data.restaurant_id,
+      branch_id: data?.branch_id,
+    };
+
+    const item_code = uuidv4();
+
+    ItemDataObject = {
+      ...ItemDataObject,
+      item_code,
+    };
+
+    const restaurantIdForRedirect = localStorage?.getItem("restaurantID");
+    const findName = resturantsData?.find(
+      (restaurant) => restaurant.id === +restaurantIdForRedirect
+    );
+
+    const sharedState = {
+      restaurant_id: +restaurant_id,
+      path: location.pathname,
+      restaurantName: findName?.name_en,
+      ItemDataObject,
+      menuItemDetails,
+      guest: true,
+    };
+
+    setSharedItemForCart(sharedState);
+
     setNotDeliver(true);
   };
 
@@ -601,23 +684,29 @@ export const Details = () => {
       item_code,
     };
 
-    const restaurantIdForRedirect = localStorage?.getItem(
-      "restaurantIdForRedirect"
-    );
+    const restaurantIdForRedirect = localStorage?.getItem("restaurantID");
     const findName = resturantsData?.find(
       (restaurant) => restaurant.id === +restaurantIdForRedirect
     );
 
-    navigate(paths.location, {
-      state: {
-        restaurant_id: +restaurant_id,
-        path: location.pathname,
-        restaurantName: findName?.name_en,
-        ItemDataObject,
-        menuItemDetails,
-        guest: true,
-      },
-    });
+    const sharedState = {
+      restaurant_id: +restaurant_id,
+      path: location.pathname,
+      restaurantName: findName?.name_en,
+      ItemDataObject,
+      menuItemDetails,
+      guest: true,
+    };
+
+    if (!location?.state?.locationDeliver) {
+      navigate(paths.phone_verification_index, {
+        state: sharedState,
+      });
+    } else {
+      navigate(paths.location, {
+        state: sharedState,
+      });
+    }
   };
 
   const handleClose = () => {
@@ -713,7 +802,10 @@ export const Details = () => {
       const splitLogo = nearBy?.logo?.split("/");
       const splitName = splitLogo[splitLogo.length - 1];
 
-      const name = splitName.split("-")[0];
+      let name = splitName.split("-")[0];
+      if (name === "groove") {
+        name = "grove";
+      }
 
       return name === restaurantDetail?.name_en?.toLowerCase();
     });
@@ -1275,6 +1367,8 @@ export const Details = () => {
             setNotDeliver={setNotDeliver}
             location={location}
             fromDetail={true}
+            locationDeliver={location?.state?.locationDeliver}
+            sharedItemForCart={sharedItemForCart}
           />
         </div>
       ) : (

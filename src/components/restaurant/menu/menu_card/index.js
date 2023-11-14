@@ -241,6 +241,7 @@ const MenuCard = (props) => {
         state: {
           id: id,
           branch_id: allData.branch_id,
+          locationDeliver: locationDeliver,
         },
       });
     } else if (restaurantBranchHours?.data?.length) {
@@ -280,6 +281,7 @@ const MenuCard = (props) => {
               state: {
                 id: id,
                 branch_id: allData.branch_id,
+                locationDeliver: locationDeliver,
               },
             });
 
@@ -299,6 +301,7 @@ const MenuCard = (props) => {
         state: {
           id: id,
           branch_id: allData.branch_id,
+          locationDeliver: locationDeliver,
         },
       });
       return;
@@ -330,16 +333,35 @@ const MenuCard = (props) => {
         branch_id: allData.branch_id,
       };
 
-      navigate(paths.location, {
-        state: {
-          restaurant_id: restaurantDetail.id,
-          restaurantName: restaurantDetail.page_title_en,
-          path: location.pathname,
-          cartItemDataForApi,
-          addtoCart,
-          autoRedirect: true,
-        },
-      });
+      const sharedState = {
+        restaurant_id: restaurantDetail.id,
+        restaurantName: restaurantDetail.page_title_en,
+        path: location.pathname,
+        cartItemDataForApi,
+        addtoCart,
+        autoRedirect: true,
+      };
+
+      if (!locationDeliver) {
+        navigate(paths.phone_verification_index, {
+          state: sharedState,
+        });
+      } else {
+        navigate(paths.location, {
+          state: sharedState,
+        });
+      }
+
+      // navigate(paths.location, {
+      //   state: {
+      //     restaurant_id: restaurantDetail.id,
+      //     restaurantName: restaurantDetail.page_title_en,
+      //     path: location.pathname,
+      //     cartItemDataForApi,
+      //     addtoCart,
+      //     autoRedirect: true,
+      //   },
+      // });
     } else {
       setFoodItemQuantity(foodItemQuantity + 1);
       if (checkIfItemIsInCart()) {
@@ -557,6 +579,7 @@ const MenuCard = (props) => {
                   state: {
                     id: id,
                     branch_id: allData.branch_id,
+                    locationDeliver: locationDeliver,
                   },
                 });
               } else {

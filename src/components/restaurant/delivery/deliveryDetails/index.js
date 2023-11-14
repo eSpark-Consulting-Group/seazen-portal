@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 
+import { v4 as uuidv4 } from "uuid";
+
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -335,6 +337,7 @@ const DeliveryDetails = (props) => {
           path: "menu/restaurant",
           restaurant_id: restaurant_id,
           restaurantName: restaurantDetail?.page_title_en,
+          addFromDropdown: true,
         },
       });
     }
@@ -369,6 +372,7 @@ const DeliveryDetails = (props) => {
               }}
             >
               {userLocation}
+
               <StyledOuterContainerIcon className="dropdown_icon_container">
                 <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
               </StyledOuterContainerIcon>
@@ -388,6 +392,11 @@ const DeliveryDetails = (props) => {
               <Dropdown.Item defaultChecked onClick={addLocation}>
                 Add location
               </Dropdown.Item>
+
+              <Dropdown.Item defaultChecked onClick={addLocation}>
+                Select current location
+              </Dropdown.Item>
+
               {addressData?.length ? (
                 addressData.map((address) => {
                   return (
@@ -399,6 +408,7 @@ const DeliveryDetails = (props) => {
                           address.latitude,
                           address.longitude
                         );
+                        localStorage.setItem("selectCurrent", false);
                       }}
                       style={{
                         textTransform: "capitalize",
@@ -422,6 +432,19 @@ const DeliveryDetails = (props) => {
                             `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
                             18
                           )}
+                      <span
+                        style={{
+                          fontSize: 13,
+                        }}
+                      >
+                        {selected !== null &&
+                          currentLocation !== null &&
+                          parseFloat(selected?.lat) ===
+                            parseFloat(currentLocation?.lat) &&
+                          parseFloat(selected?.lng) ===
+                            parseFloat(currentLocation?.lng) &&
+                          "(current location)"}
+                      </span>
                     </Dropdown.Item>
                   );
                 })

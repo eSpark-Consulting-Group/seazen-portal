@@ -79,7 +79,7 @@ export const DetailsHeader = (props) => {
           token === null
             ? navigate(paths.cart)
             : addressData?.length === 0
-            ? navigate(paths.address, {
+            ? navigate(paths.location, {
                 state: {
                   noAddress: true,
                   latlng: {

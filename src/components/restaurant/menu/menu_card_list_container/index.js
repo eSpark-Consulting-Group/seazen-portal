@@ -432,8 +432,8 @@ const MenuCardListContainer = ({
           onClick={() => {
             localStorage.getItem("token") === null
               ? navigate(paths.cart)
-              : addressData?.length === 0
-              ? navigate(paths.address, {
+              : addressData?.length === 0 && cart.length
+              ? navigate(paths.location, {
                   state: {
                     noAddress: true,
                     latlng: {
@@ -445,18 +445,18 @@ const MenuCardListContainer = ({
                     restaurant_id: id,
                   },
                 })
-              : localStorage.getItem("selected") === null &&
-                cart?.length > 0 &&
-                !locationDeliver
-              ? navigate(paths.location, {
-                  state: {
-                    path: "/cart",
-                    restaurant_id: restaurantDetail.id,
-                    restaurantName: restaurantDetail?.page_title_en,
-                    notSelected: true,
-                  },
-                })
-              : addressData?.length > 0 &&
+              : // : localStorage.getItem("selected") === null &&
+              //   cart?.length > 0 &&
+              //   !locationDeliver
+              // ? navigate(paths.location, {
+              //     state: {
+              //       path: "/cart",
+              //       restaurant_id: restaurantDetail.id,
+              //       restaurantName: restaurantDetail?.page_title_en,
+              //       notSelected: true,
+              //     },
+              //   })
+              addressData?.length > 0 &&
                 localStorage.getItem("selected") === null
               ? setOpenAddressPopup(true)
               : navigate(paths.cart, {

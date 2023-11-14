@@ -496,6 +496,7 @@ const AddressForm = () => {
         fromDetail={location?.state?.fromDetail}
         backToCart={true}
         notSelected={location?.state?.notSelected}
+        addFromDropdown={location?.state?.addFromDropdown}
       />
 
       <div className="button-style">
