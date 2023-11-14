@@ -314,7 +314,10 @@ const Menu = () => {
       const splitLogo = nearBy?.logo?.split("/");
       const splitName = splitLogo[splitLogo.length - 1];
 
-      const name = splitName.split("-")[0];
+      let name = splitName.split("-")[0];
+      if (name === "groove") {
+        name = "grove";
+      }
 
       return name === restaurantDetail?.name_en?.toLowerCase();
     });
