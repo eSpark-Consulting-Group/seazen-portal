@@ -42,7 +42,7 @@ const MenuCardListContainer = ({
   setSelectedItemToDeliver,
   setNotDeliver,
   setRestaurantOpen,
-  itemsByCategoryLoading,
+  ItemsCategoryLoading,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -334,7 +334,7 @@ const MenuCardListContainer = ({
               </div>
             </div> */}
             <>
-              {itemsByCategoryLoading && (
+              {ItemsCategoryLoading && (
                 <Box
                   sx={{
                     display: "flex",

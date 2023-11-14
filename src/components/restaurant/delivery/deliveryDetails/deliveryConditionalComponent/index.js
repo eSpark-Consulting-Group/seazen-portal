@@ -115,7 +115,7 @@ const DeliveryConditionalComponent = ({
         setSelectedItemToDeliver={setSelectedItemToDeliver}
         setNotDeliver={setNotDeliver}
         setRestaurantOpen={setRestaurantOpen}
-        itemsByCategoryLoading={itemsByCategoryLoading}
+        ItemsCategoryLoading={ItemsCategoryLoading}
       />
     </>
   );

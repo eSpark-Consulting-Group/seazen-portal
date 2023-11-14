@@ -1,17 +1,21 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import "./style.css";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+
 import DetailsButton from "../../socialButtonTabs/detailsButtons";
 import { Footer } from "../../footer/footerContent";
-import { useNavigate } from "react-router";
+
 import { paths } from "../../../routes/paths";
+
+import "./style.css";
 
 const ProfileStructure = ({
   name,
@@ -22,6 +26,7 @@ const ProfileStructure = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
   const handleLogoutClick = () => {
@@ -29,9 +34,8 @@ const ProfileStructure = ({
   };
 
   const handleLogoutConfirm = () => {
-    
-    localStorage.removeItem('loginHistory');
-    navigate("/guest-profile"); 
+    localStorage.removeItem("token");
+    navigate("/");
 
     setOpenLogoutDialog(false);
   };
@@ -60,7 +64,11 @@ const ProfileStructure = ({
             navigate(paths.addresses, { state: { path: location.pathname } });
           }}
         >
-          <img className="map-style" src="/assets/img/map.svg" alt="My Addresses" />
+          <img
+            className="map-style"
+            src="/assets/img/map.svg"
+            alt="My Addresses"
+          />
           <p>My Addresses</p>
         </div>
         <div
@@ -69,7 +77,11 @@ const ProfileStructure = ({
             navigate(paths.myorder);
           }}
         >
-          <img className="box-style" src="/assets/img/box.svg" alt="My Orders" />
+          <img
+            className="box-style"
+            src="/assets/img/box.svg"
+            alt="My Orders"
+          />
           <p>My Orders</p>
         </div>
         <div className="inline-container3" onClick={handleLogoutClick}>
