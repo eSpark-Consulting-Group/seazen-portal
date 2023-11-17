@@ -105,8 +105,8 @@ const MenuCardListContainer = ({
   useEffect(() => {
     const options = {
       root: null, // Use the viewport as the root
-      rootMargin: "-100px",
-      threshold: 0.5, // Trigger when 50% of the element is visible
+      rootMargin: "-300px",
+      threshold: [0, 0.25, 0.5, 0.75, 1],
     };
 
     const observer = new IntersectionObserver((entries, observer) => {
