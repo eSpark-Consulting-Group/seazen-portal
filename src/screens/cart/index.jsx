@@ -67,6 +67,7 @@ import {
 import { paths } from "../../routes/paths";
 
 import "./style.css";
+import deliveryPriceApi from "../../api/common/getDeliveryCharges";
 
 const toastList = new Set();
 const MAX_TOAST = 1;
@@ -98,6 +99,7 @@ function CartPage() {
   const [specialIns, setSpecialIns] = React.useState("");
   const [restaurantLogo, setRestaurantLogo] = React.useState("");
   const [restaurantName, setRestaurantName] = React.useState("");
+  const [deliveryPrice, setDeliveryPrice] = React.useState("0");
   const [promoCode, setPromoCode] = React.useState("");
   const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
@@ -134,7 +136,7 @@ function CartPage() {
 
     // Add a beforeunload event listener to prevent the prompt
     window.addEventListener("beforeunload", handleBeforeUnload);
-
+    fetchAllDeliveryPrice();
     return () => {
       // Clean up the event listener when the component unmounts
       window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -565,7 +567,7 @@ function CartPage() {
   };
 
   const getDeliveryCharge = () => {
-    return DELIVERY_CHARGE;
+    return Number(deliveryPrice).toFixed(3);
   };
 
   const getPromoDiscount = () => {
@@ -590,6 +592,16 @@ function CartPage() {
     ).toFixed(3);
   };
 
+  const fetchAllDeliveryPrice = () => {
+    deliveryPriceApi()
+      .then((res) => {
+        setDeliveryPrice(res.data[0].price);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const checkoutData = {
     payment_method_id: "1",
     order_total_price:
@@ -604,7 +616,7 @@ function CartPage() {
     tip_amount: tipValue,
     pick_from_store: "",
     pickup_from_car: "",
-    delivery_charges: "0",
+    delivery_charges: deliveryPrice,
     promo_code: "Test1",
     comments: specialIns,
     delivery_schedule: {

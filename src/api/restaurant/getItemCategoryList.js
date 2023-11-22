@@ -10,7 +10,7 @@ const getItemCategoryList = async (restaurantId) => {
     const { data } = await axiosInstance.get(
       API_ENDPOINTS.RESTAURANT.GET_RESTAURANT_DETAIL +
         `${restaurantId}` +
-        `/branch/${restaurantId}/categories?language=en`
+        `/branch/${localStorage.getItem("branchId")}/categories?language=en`
     );
     return data;
   } catch (error) {

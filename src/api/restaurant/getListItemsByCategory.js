@@ -10,7 +10,9 @@ const getListItemByCategory = async (restaurantId, category, country_id) => {
     const { data } = await axiosInstance.get(
       API_ENDPOINTS.RESTAURANT.GET_RESTAURANT_DETAIL +
         `${restaurantId}` +
-        `/branch/${restaurantId}/items?country_id=${country_id}&language=en${
+        `/branch/${localStorage.getItem(
+          "branchId"
+        )}/items?country_id=${country_id}&language=en${
           category ? `&category_id=${category}` : ""
         }`
     );

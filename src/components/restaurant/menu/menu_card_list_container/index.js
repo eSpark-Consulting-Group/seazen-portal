@@ -369,33 +369,37 @@ const MenuCardListContainer = ({
                         }
                       </div>{" "}
                       {categoriesWiseList[val].map((item, index) => {
-                        return (
-                          <MenuCard
-                            allData={item}
-                            key={index}
-                            locationDeliver={locationDeliver}
-                            resturantId={resturantId}
-                            restaurantBranchHours={restaurantBranchHours}
-                            restaurantDetail={restaurantDetail}
-                            foodItem={item.name_en}
-                            foodIngredients={item.description_en}
-                            foodPrice={item.price}
-                            foodImage={item.image}
-                            id={item.id}
-                            restaurant_id={item.restaurant_id}
-                            showSubTractButton={
-                              item.has_extras === false &&
-                              item.has_variants === false &&
-                              item.has_options === false
-                            }
-                            setOpenModal={setOpenModal}
-                            setSelectedItemToDeliver={setSelectedItemToDeliver}
-                            setNotDeliver={setNotDeliver}
-                            setRestaurantOpen={setRestaurantOpen}
-                            setOpenAddressPopup={setOpenAddressPopup}
-                            setRestaurantIsOpen={setRestaurantIsOpen}
-                          />
-                        );
+                        if (item.branch_status) {
+                          return (
+                            <MenuCard
+                              allData={item}
+                              key={index}
+                              locationDeliver={locationDeliver}
+                              resturantId={resturantId}
+                              restaurantBranchHours={restaurantBranchHours}
+                              restaurantDetail={restaurantDetail}
+                              foodItem={item.name_en}
+                              foodIngredients={item.description_en}
+                              foodPrice={item.price}
+                              foodImage={item.image}
+                              id={item.id}
+                              restaurant_id={item.restaurant_id}
+                              showSubTractButton={
+                                item.has_extras === false &&
+                                item.has_variants === false &&
+                                item.has_options === false
+                              }
+                              setOpenModal={setOpenModal}
+                              setSelectedItemToDeliver={
+                                setSelectedItemToDeliver
+                              }
+                              setNotDeliver={setNotDeliver}
+                              setRestaurantOpen={setRestaurantOpen}
+                              setOpenAddressPopup={setOpenAddressPopup}
+                              setRestaurantIsOpen={setRestaurantIsOpen}
+                            />
+                          );
+                        }
                       })}
                     </>
                   );

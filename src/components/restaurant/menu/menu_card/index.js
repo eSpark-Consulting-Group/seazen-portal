@@ -6,7 +6,17 @@ import { v4 as uuidv4 } from "uuid";
 
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
-import { Box, Stack, Paper, Typography, Skeleton } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Paper,
+  Typography,
+  Skeleton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Button,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
 
@@ -26,7 +36,7 @@ import {
 } from "../../../../store/reducers/cartSlice";
 
 import { paths } from "../../../../routes/paths";
-
+import CloseIcon from "@mui/icons-material/Close";
 import "./style.css";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
@@ -74,6 +84,7 @@ const MenuCard = (props) => {
 
   const [foodItemQuantity, setFoodItemQuantity] = useState(0);
   const [menuCardDropdownOpen, setMenuCardDropdownOpen] = useState(false);
+  const [clearCartModal, setClearCartModal] = useState(false);
   const [extraItemCount_1, setExtraItemCount_1] = useState(0);
   const [extraItemCount_2, setExtraItemCount_2] = useState(0);
   const [menuItemsVariances, setMenuItemsVariances] = useState([]);
@@ -91,6 +102,9 @@ const MenuCard = (props) => {
     (state) => state.resturants.nearbyRestaurants
   );
   const addressData = useSelector((state) => state.address.addressData);
+  const restaurantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
 
   useEffect(() => {
     const quantity = getItemQuantity();
@@ -292,9 +306,13 @@ const MenuCard = (props) => {
     }
   }
 
+  const previousRestaurant = restaurantsData.find((val) => {
+    return val.id == cart[0]?.restaurant_id;
+  });
+
   const cartFunction = (id) => {
     if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
-      clearCartItems();
+      setClearCartModal(true);
     }
     if (hasVariant) {
       navigate(paths.details + "/" + id, {
@@ -502,144 +520,243 @@ const MenuCard = (props) => {
   });
 
   return (
-    <Stack
-      spacing={0}
-      alignItems="center"
-      sx={{
-        width: "100%",
-        marginTop: "10px",
-      }}
-    >
-      <Stack
+    <>
+      <Dialog
+        open={clearCartModal}
+        onClose={() => {}}
         sx={{
-          p: 1.5,
-          width: "100%",
-          position: "relative",
-          borderRadius: "8px",
-
-          ...(checkIfItemIsInCart() && {
-            borderLeft: (theme) => `8px solid ${theme.palette.themeColor.main}`,
-          }),
+          margin: "0",
+          textAlign: "center",
         }}
-        direction="row"
-        justifyContent="space-between"
-        component={PaperCard}
-      >
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            minWidth: "75%",
-          }}
-        >
-          <div
-            className="menu_card_image_container pointer"
-            // onClick={() => setMenuCardDropdownOpen(!menuCardDropdownOpen)}
-          >
-            {imageNotFound ? (
-              <Box
-                sx={{
-                  width: 100,
-                  height: 100,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "common.white",
-                  borderRadius: "8px",
-                }}
-              >
-                <ImageNotSupportedIcon fontSize="large"></ImageNotSupportedIcon>
+        className="cart-dialog"
+        PaperProps={{
+          sx: {
+            overflow: "visible",
+            margin: "0px 0px 0px 27px",
+            width: "327px",
 
-                <Typography variant="caption">No Image Found</Typography>
-              </Box>
-            ) : (
-              <LazyLoadImage
-                className="food-image"
-                src={foodImage}
-                alt="menu_card_image"
-                onError={onImageError}
-                effect="blur"
-                placeholder={
-                  <Skeleton
-                    variant="rectangular"
-                    sx={{ bgcolor: "grey.100" }}
-                    width={100}
-                    height={100}
-                  />
-                }
-              />
-            )}
-          </div>
+            "@media (max-width: 500px)": {
+              width: "375px",
+              margin: "0px 0px 0px 0px",
+            },
+
+            "@media (max-width: 400px)": {
+              width: "90%",
+            },
+          },
+        }}
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          className="dialog-title title-cart"
+        >
+          <img src="/assets/img/exclaim.svg"></img>
+
           <div
-            className="menu_card_price_text_container pointer"
+            style={{
+              position: "absolute",
+              top: "8px",
+              right: "10px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
             onClick={() => {
-              if (token === null) {
-                navigate(paths.details + "/" + id, {
-                  state: {
-                    id: id,
-                    branch_id: allData.branch_id,
-                    locationDeliver: locationDeliver,
-                  },
-                });
-              } else {
-                navigate(paths.details + "/" + id, {
-                  state: {
-                    id: id,
-                    locationDeliver: locationDeliver,
-                    branchRestaurants: restaurantBranchHours,
-                    resturantId: resturantId,
-                    restaurantDetail,
-                    branch_id: allData.branch_id,
-                  },
-                });
-              }
+              setRestaurantOpen(false);
+              sessionStorage.setItem("popupOpened", true);
             }}
           >
-            <div>
-              <div className="menu_card_heading_text">{foodItem}</div>
-              <div className="menu_card_sub_text">{foodIngredients}</div>
+            <CloseIcon
+              sx={{
+                width: "24px",
+                fontSize: "24px",
+                cursor: "pointer",
+                color: "#707070 !important",
+              }}
+            />
+          </div>
+        </DialogTitle>
+        <DialogContent className="dialog-content-cart">
+          {`Warning: You are about to change your original order from ${previousRestaurant?.name_en} to ${restaurantDetail.name_en}. All items currently in your cart from ${previousRestaurant?.name_en} will be removed. Continue?.`}
+        </DialogContent>
+        <div className="btn-navigate">
+          <Button
+            className="common-st add-btn"
+            onClick={() => setClearCartModal(false)}
+          >
+            No
+          </Button>
+
+          <Button
+            className="common-st go-to-btn"
+            onClick={() => {
+              setClearCartModal(false);
+              clearCartItems();
+            }}
+          >
+            Yes
+          </Button>
+        </div>
+      </Dialog>
+      <Stack
+        spacing={0}
+        alignItems="center"
+        sx={{
+          width: "100%",
+          marginTop: "10px",
+        }}
+      >
+        <Stack
+          sx={{
+            p: 1.5,
+            width: "100%",
+            position: "relative",
+            borderRadius: "8px",
+
+            ...(checkIfItemIsInCart() && {
+              borderLeft: (theme) =>
+                `8px solid ${theme.palette.themeColor.main}`,
+            }),
+          }}
+          direction="row"
+          justifyContent="space-between"
+          component={PaperCard}
+        >
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              minWidth: "75%",
+            }}
+          >
+            <div
+              className="menu_card_image_container pointer"
+              // onClick={() => setMenuCardDropdownOpen(!menuCardDropdownOpen)}
+            >
+              {imageNotFound ? (
+                <Box
+                  sx={{
+                    width: 100,
+                    height: 100,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "common.white",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <ImageNotSupportedIcon fontSize="large"></ImageNotSupportedIcon>
+
+                  <Typography variant="caption">No Image Found</Typography>
+                </Box>
+              ) : (
+                <LazyLoadImage
+                  className="food-image"
+                  src={foodImage}
+                  alt="menu_card_image"
+                  onError={onImageError}
+                  effect="blur"
+                  placeholder={
+                    <Skeleton
+                      variant="rectangular"
+                      sx={{ bgcolor: "grey.100" }}
+                      width={100}
+                      height={100}
+                    />
+                  }
+                />
+              )}
             </div>
-            <div className="menu_card_price_add_to_cart_container">
-              <div className="menu_card_price_container">
-                {/* <div className="menu_card_currency">{foodCurrency}</div> */}
-                <StyledItemPrice className="menu_card_item_price">
-                  <Typography
-                    // variant="subtitle2"
-                    color="GrayText"
-                    component="sup"
-                    sx={{
-                      mr: 0.5,
-                      position: "relative",
-                      top: "-4.5px",
-                      fontSize: "10px",
-                      fontWeight: "700",
-                    }}
-                  >
-                    KWD
-                  </Typography>
-                  {foodPriceWithoutCurrency()}
-                </StyledItemPrice>
+            <div
+              className="menu_card_price_text_container pointer"
+              onClick={() => {
+                if (token === null) {
+                  navigate(paths.details + "/" + id, {
+                    state: {
+                      id: id,
+                      branch_id: allData.branch_id,
+                      locationDeliver: locationDeliver,
+                    },
+                  });
+                } else {
+                  navigate(paths.details + "/" + id, {
+                    state: {
+                      id: id,
+                      locationDeliver: locationDeliver,
+                      branchRestaurants: restaurantBranchHours,
+                      resturantId: resturantId,
+                      restaurantDetail,
+                      branch_id: allData.branch_id,
+                    },
+                  });
+                }
+              }}
+            >
+              <div>
+                <div className="menu_card_heading_text">{foodItem}</div>
+                <div className="menu_card_sub_text">{foodIngredients}</div>
+              </div>
+              <div className="menu_card_price_add_to_cart_container">
+                <div className="menu_card_price_container">
+                  {/* <div className="menu_card_currency">{foodCurrency}</div> */}
+                  <StyledItemPrice className="menu_card_item_price">
+                    <Typography
+                      // variant="subtitle2"
+                      color="GrayText"
+                      component="sup"
+                      sx={{
+                        mr: 0.5,
+                        position: "relative",
+                        top: "-4.5px",
+                        fontSize: "10px",
+                        fontWeight: "700",
+                      }}
+                    >
+                      KWD
+                    </Typography>
+                    {foodPriceWithoutCurrency()}
+                  </StyledItemPrice>
+                </div>
               </div>
             </div>
-          </div>
-        </Stack>
+          </Stack>
 
-        <div
-          className={`menu_card_buttons_quantity_container ${
-            getItemQuantity() > 0
-              ? "justify-content-between"
-              : "justify-content-end"
-          }`}
-        >
-          {getItemQuantity() > 0 && (
-            <StyledItemPrice className="menu_card_qunatity_label">{`${getItemQuantity()}x`}</StyledItemPrice>
-          )}
-          <div className="menu_card_add_to_cart_button_container">
-            {showSubTractButton ? (
-              <>
+          <div
+            className={`menu_card_buttons_quantity_container ${
+              getItemQuantity() > 0
+                ? "justify-content-between"
+                : "justify-content-end"
+            }`}
+          >
+            {getItemQuantity() > 0 && (
+              <StyledItemPrice className="menu_card_qunatity_label">{`${getItemQuantity()}x`}</StyledItemPrice>
+            )}
+            <div className="menu_card_add_to_cart_button_container">
+              {showSubTractButton ? (
+                <>
+                  <AddToCartButton
+                    onClick={() => handleClickAdd(id)}
+                    className="menu_card_add_to_cart_button pointer"
+                  >
+                    <img
+                      src={plusIcon}
+                      alt="button_icon"
+                      style={{ width: 16, height: 16 }}
+                    />
+                  </AddToCartButton>
+                  {foodItemQuantity > 0 && (
+                    <AddToCartButton
+                      onClick={handleClickSubtract}
+                      className="menu_card_add_to_cart_button pointer"
+                    >
+                      <img src={conditionalIcon} alt="button_icon" />
+                    </AddToCartButton>
+                  )}
+                </>
+              ) : (
                 <AddToCartButton
-                  onClick={() => handleClickAdd(id)}
+                  onClick={() => autoRedirect(id)}
                   className="menu_card_add_to_cart_button pointer"
                 >
                   <img
@@ -648,63 +765,44 @@ const MenuCard = (props) => {
                     style={{ width: 16, height: 16 }}
                   />
                 </AddToCartButton>
-                {foodItemQuantity > 0 && (
-                  <AddToCartButton
-                    onClick={handleClickSubtract}
-                    className="menu_card_add_to_cart_button pointer"
-                  >
-                    <img src={conditionalIcon} alt="button_icon" />
-                  </AddToCartButton>
-                )}
-              </>
-            ) : (
-              <AddToCartButton
-                onClick={() => autoRedirect(id)}
-                className="menu_card_add_to_cart_button pointer"
-              >
-                <img
-                  src={plusIcon}
-                  alt="button_icon"
-                  style={{ width: 16, height: 16 }}
-                />
-              </AddToCartButton>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </Stack>
-      {menuCardDropdownOpen && (
-        <Stack
-          spacing={0.5}
-          sx={{
-            width: "85%",
-            backgroundColor: "common.white",
-            maxHeight: "220px",
-            overflowY: "scroll",
-            overflowX: "hidden",
-            scrollbarWidth: "none",
-            // p: 1,
-            paddingTop: "1px",
-            paddingLeft: "10px",
-            paddingRight: "10px",
-            borderBottomLeftRadius: (theme) => theme.shape.borderRadius,
-            borderBottomRightRadius: (theme) => theme.shape.borderRadius,
-          }}
-        >
-          <Stack>
-            {resultArray?.map((variance, index) => {
-              return (
-                <ExtraItems
-                  key={index}
-                  item={variance}
-                  extraItemName={getExtraItemNames(variance)}
-                  extraItemCount={variance.quantity}
-                />
-              );
-            })}
-          </Stack>
         </Stack>
-      )}
-    </Stack>
+        {menuCardDropdownOpen && (
+          <Stack
+            spacing={0.5}
+            sx={{
+              width: "85%",
+              backgroundColor: "common.white",
+              maxHeight: "220px",
+              overflowY: "scroll",
+              overflowX: "hidden",
+              scrollbarWidth: "none",
+              // p: 1,
+              paddingTop: "1px",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+              borderBottomLeftRadius: (theme) => theme.shape.borderRadius,
+              borderBottomRightRadius: (theme) => theme.shape.borderRadius,
+            }}
+          >
+            <Stack>
+              {resultArray?.map((variance, index) => {
+                return (
+                  <ExtraItems
+                    key={index}
+                    item={variance}
+                    extraItemName={getExtraItemNames(variance)}
+                    extraItemCount={variance.quantity}
+                  />
+                );
+              })}
+            </Stack>
+          </Stack>
+        )}
+      </Stack>
+    </>
   );
 };
 

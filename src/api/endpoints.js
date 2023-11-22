@@ -40,6 +40,7 @@ const API_ENDPOINTS = {
   },
   COMMON: {
     GET_ALL_COUNTRIES: "/common/countries",
+    GET_DELIVERY_CHARGES: "/delivery-charges",
   },
   ORDER: {
     GET_ORDERS: "/order",
