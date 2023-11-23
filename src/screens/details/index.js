@@ -1257,6 +1257,15 @@ export const Details = () => {
                       : handleAddToCart
                   }
                 >
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "absolute",
+                      background: "#ffffff24",
+                      left: "0px",
+                    }}
+                  ></div>
                   {location?.state?.locationDeliver || farRestaurant ? (
                     <Typography
                       variant="h6"

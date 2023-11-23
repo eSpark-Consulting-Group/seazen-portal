@@ -209,6 +209,7 @@ const MenuCard = (props) => {
           id: element.id,
           item_code: element.item_code,
           quantity: element.quantity,
+          has_variants: element.has_variants,
           sideVariants: sideVariant.map((variant) => {
             return {
               name_en: variant.name_en,
@@ -789,14 +790,16 @@ const MenuCard = (props) => {
           >
             <Stack>
               {resultArray?.map((variance, index) => {
-                return (
-                  <ExtraItems
-                    key={index}
-                    item={variance}
-                    extraItemName={getExtraItemNames(variance)}
-                    extraItemCount={variance.quantity}
-                  />
-                );
+                if (variance.has_variants) {
+                  return (
+                    <ExtraItems
+                      key={index}
+                      item={variance}
+                      extraItemName={getExtraItemNames(variance)}
+                      extraItemCount={variance.quantity}
+                    />
+                  );
+                }
               })}
             </Stack>
           </Stack>

@@ -181,6 +181,15 @@ const Home = () => {
   }, [userCurrentAddress]);
 
   useEffect(() => {
+    navigator.permissions &&
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then(function (PermissionStatus) {
+          localStorage.setItem("locatPermission", PermissionStatus.state);
+        });
+  }, []);
+
+  useEffect(() => {
     if (JSON.parse(userLocation) === null) {
       // eslint-disable-next-line no-undef
       setKey(process.env.REACT_APP_GOOGLE_API_KEY);

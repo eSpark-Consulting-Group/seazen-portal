@@ -25,7 +25,7 @@ import dayjs from "dayjs";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { MobileTimePicker } from "@mui/x-date-pickers";
+import { DateTimePicker, MobileTimePicker } from "@mui/x-date-pickers";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
@@ -118,6 +118,10 @@ function CartPage() {
   const [selectedSchedule, setSelectedSchedule] = useState(
     "14 August 2023, ASAP"
   );
+
+  const [pickDay, setPickDay] = useState("");
+  const [minTime, setMinTime] = useState(dayjs());
+  const [maxTime, setMaxTime] = useState(dayjs());
 
   const token = localStorage.getItem("token");
   // const restaurantId = localStorage.getItem("restaurantID");
@@ -244,15 +248,32 @@ function CartPage() {
     },
   });
 
-  const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
-    (val) => {
-      return val.week_day == pickDate?.split("-")[1];
-    }
-  );
+  const branchId = localStorage.getItem("branchId");
+
+  const timeByDate = branchesAndHoursResponse?.data
+    ?.find((val) => (val.id = branchId))
+    ?.branch_hours?.find((val) => {
+      return val.week_day == pickDay;
+    });
 
   useEffect(() => {
     setCartItems(cart);
   }, [cart]);
+
+  const getSingleDigitHour = (fullTime) => {
+    let Hour;
+    Hour =
+      fullTime?.split(":")[0][0] == "0"
+        ? fullTime?.split(":")[0][1]
+        : fullTime?.split(":")[0];
+
+    if (fullTime?.includes("AM")) {
+      return parseInt(Hour);
+    }
+    if (fullTime?.includes("PM")) {
+      return parseInt(Hour) + 12;
+    }
+  };
 
   const checkoutHandler = (event) => {
     event.preventDefault();
@@ -620,9 +641,41 @@ function CartPage() {
     promo_code: "Test1",
     comments: specialIns,
     delivery_schedule: {
-      date: pickDate.split("-")[0],
+      date: pickDate?.split("-")[0],
       time: pickTime,
     },
+  };
+
+  const handlerFunc = (ampm, date) => {
+    const selectedTime = dayjs(date);
+    if (ampm == "pm") {
+      setMinTime(
+        selectedTime
+          .set("hour", getSingleDigitHour(timeByDate?.from_time))
+          .set("minute", 0)
+      );
+      setMaxTime(
+        selectedTime
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
+    }
+    if (ampm == "am") {
+      setMinTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.from_time))
+          .set("minute", 0)
+      );
+      setMaxTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
+    }
   };
 
   const onDateSelected = () => {
@@ -1014,58 +1067,35 @@ function CartPage() {
           </IconButton> */}
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <MobileDatePicker
-              // onChange={(date) =>
-              //   localStorage.setItem(
-              //     "pickDate",
-              //     date.format("MMM DD, YYYY-dddd")
-              //   )
-              // }
-              minDate={dayjs(new Date())}
+            <DateTimePicker
               open={openSchedulePopup}
-              defaultValue={dayjs(new Date().toString())}
-              onClose={() => onDateSelected()}
+              sx={{
+                display: "none",
+              }}
+              minTime={minTime}
+              maxTime={maxTime}
+              disablePast
+              ampm={true}
+              onChange={(date, e, ew) => {
+                handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
+                setPickDay(date.format("dddd"));
+                date.preventDefault();
+              }}
+              onClose={() => {
+                onDateSelected();
+              }}
               onAccept={(date) => {
+                setOpenSchedulePopup(false);
                 if (date) {
                   localStorage.setItem(
                     "pickDate",
                     date.format("MMM DD, YYYY-dddd")
                   );
-                  setShowTimePicker(true);
+                  localStorage.setItem("isAsap", false);
+                  localStorage.setItem("pickTime", date.format("hh:mm a"));
                 }
               }}
-              sx={{
-                display: "none",
-              }}
             />
-            {showTimePicker && (
-              <MobileTimePicker
-                minTime={dayjs(
-                  new Date().setHours(
-                    parseInt(timeByDate?.from_time?.split(":")[0])
-                  )
-                )}
-                maxTime={dayjs(
-                  new Date().setHours(
-                    parseInt(timeByDate?.to_time?.split(":")[0]) + 12
-                  )
-                )}
-                defaultValue={dayjs(new Date())}
-                open={showTimePicker}
-                // onChange={(time) => {
-                //   localStorage.setItem("isAsap", false);
-                //   localStorage.setItem("pickTime", time.format("hh:mm a"));
-                // }}
-                onClose={() => setShowTimePicker(false)}
-                onAccept={(time) => {
-                  localStorage.setItem("isAsap", false);
-                  localStorage.setItem("pickTime", time.format("hh:mm a"));
-                }}
-                sx={{
-                  display: "none",
-                }}
-              />
-            )}
           </LocalizationProvider>
           <div className="scrollableContainerWrapper">
             <div className="scrollableContainer" id="scrollableContainer">

@@ -174,7 +174,10 @@ const Navbar = (props) => {
                   navigate(paths.addresses, {
                     state: passState,
                   });
-                } else if (location?.notSelected !== undefined || location?.fromBranch !== undefined) {
+                } else if (
+                  location?.notSelected !== undefined ||
+                  location?.fromBranch !== undefined
+                ) {
                   navigate(-1);
                 } else {
                   navigate(backIconURL || paths.profile, backIconURLState);

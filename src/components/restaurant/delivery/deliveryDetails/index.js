@@ -109,7 +109,10 @@ const DeliveryDetails = (props) => {
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [restaurantOpen, setRestaurantOpen] = useState(false);
+  const [pickDay, setPickDay] = useState("");
   const [addressID, setAddressID] = useState();
+  const [minTime, setMinTime] = useState(dayjs());
+  const [maxTime, setMaxTime] = useState(dayjs());
 
   const { id: restaurant_id } = useParams();
 
@@ -152,10 +155,36 @@ const DeliveryDetails = (props) => {
   }, [nearbyRestaurants, restaurantDetail]);
 
   const locationLabelName = () => {
-    let text = "Add Address";
-    if (addressData?.length > 0 && token) {
-      return (text = "Select Address");
+    let text = "";
+    const truncLoc = truncateString(currentLocation?.address, 15);
+
+    if (
+      localStorage.getItem("locatPermission") === "denied" ||
+      localStorage.getItem("locatPermission") === "granted"
+    ) {
+      if (token !== null) {
+        if (currentLocation !== null) {
+          text = truncLoc;
+        }
+        if (selected !== null) {
+          text = truncateString(selected?.address, 15);
+        }
+        if (selected === null && currentLocation === null) {
+          if (addressData.length) {
+            text = "Select Address";
+          } else {
+            text = "Add Address";
+          }
+        }
+      } else {
+        if (currentLocation === null) {
+          text = truncLoc;
+        } else {
+          text = "Add Address";
+        }
+      }
     }
+
     return text;
   };
 
@@ -284,11 +313,28 @@ const DeliveryDetails = (props) => {
     },
   });
 
-  const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
-    (val) => {
-      return val.week_day == pickDate?.split("-")[1];
+  const branchId = localStorage.getItem("branchId");
+
+  const timeByDate = branchesAndHoursResponse?.data
+    ?.find((val) => (val.id = branchId))
+    ?.branch_hours?.find((val) => {
+      return val.week_day == pickDay;
+    });
+
+  const getSingleDigitHour = (fullTime) => {
+    let Hour;
+    Hour =
+      fullTime?.split(":")[0][0] == "0"
+        ? fullTime?.split(":")[0][1]
+        : fullTime?.split(":")[0];
+
+    if (fullTime?.includes("AM")) {
+      return parseInt(Hour);
     }
-  );
+    if (fullTime?.includes("PM")) {
+      return parseInt(Hour) + 12;
+    }
+  };
 
   const onDateSelected = () => {
     if (pickDate !== null) {
@@ -346,6 +392,38 @@ const DeliveryDetails = (props) => {
 
   const Overlay = () => {
     return <div className="overlay"></div>;
+  };
+
+  const handlerFunc = (ampm, date) => {
+    const selectedTime = dayjs(date);
+    if (ampm == "pm") {
+      setMinTime(
+        selectedTime
+          .set("hour", getSingleDigitHour(timeByDate?.from_time))
+          .set("minute", 0)
+      );
+      setMaxTime(
+        selectedTime
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
+    }
+    if (ampm == "am") {
+      setMinTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.from_time))
+          .set("minute", 0)
+      );
+      setMaxTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
+    }
   };
 
   return (
@@ -574,25 +652,18 @@ const DeliveryDetails = (props) => {
         </div>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateTimePicker
-            defaultValue={dayjs(new Date().toString())}
-            // componentsProps={{ actionBar: { actions: ["OK"] } }}
             open={openSchedulePopup}
             sx={{
               display: "none",
             }}
-            minDate={dayjs(new Date())}
-            minTime={dayjs(new Date().setHours(parseInt(timeByDate?.to_time)))}
-            maxTime={dayjs(
-              new Date().setHours(parseInt(timeByDate?.from_time) + 12)
-            )}
+            minTime={minTime}
+            maxTime={maxTime}
+            disablePast
+            ampm={true}
             onChange={(date, e, ew) => {
-              ew.preventDefault();
-              if (date) {
-                localStorage.setItem(
-                  "pickDate",
-                  date.format("MMM DD, YYYY-dddd")
-                );
-              }
+              handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
+              setPickDay(date.format("dddd"));
+              date.preventDefault();
             }}
             onClose={() => {
               onDateSelected();
