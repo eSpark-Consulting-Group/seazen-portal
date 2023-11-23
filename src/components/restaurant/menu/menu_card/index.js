@@ -306,7 +306,7 @@ const MenuCard = (props) => {
     }
   }
 
-  const previousRestaurant = restaurantsData.find((val) => {
+  const previousRestaurant = restaurantsData?.find((val) => {
     return val.id == cart[0]?.restaurant_id;
   });
 
@@ -577,7 +577,7 @@ const MenuCard = (props) => {
           </div>
         </DialogTitle>
         <DialogContent className="dialog-content-cart">
-          {`Warning: You are about to change your original order from ${previousRestaurant?.name_en} to ${restaurantDetail.name_en}. All items currently in your cart from ${previousRestaurant?.name_en} will be removed. Continue?.`}
+          {`Warning: You are about to change your original order from ${previousRestaurant?.name_en} to ${restaurantDetail?.name_en}. All items currently in your cart from ${previousRestaurant?.name_en} will be removed. Continue?.`}
         </DialogContent>
         <div className="btn-navigate">
           <Button

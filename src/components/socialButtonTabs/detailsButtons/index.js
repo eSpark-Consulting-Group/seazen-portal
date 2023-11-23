@@ -3,7 +3,7 @@ import ContactButton from "../../contact_button/index";
 import "./style.css";
 import { useSelector } from "react-redux";
 
-const DetailsButton = () => {
+const DetailsButton = ({calledFrom}) => {
   const contactInfo = useSelector((state) => state.auth.country);
   const { customer_care, whatsapp_country_code, whatsapp_no } = contactInfo;
 
@@ -25,7 +25,7 @@ const DetailsButton = () => {
   
 
   return (
-    <div className="button-section">
+    <div className={calledFrom !== "catering" && "button-section"}>
       <div className="catering_inner_container">
         <div className="catering_button_container">
           <ContactButton

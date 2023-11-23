@@ -101,7 +101,6 @@ export const Details = () => {
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [addressId, setAddressID] = useState();
-  const [isLoader, setIsLoader] = useState(true);
   const [sharedItemForCart, setSharedItemForCart] = useState({});
 
   const { search } = useLocation();
@@ -250,12 +249,6 @@ export const Details = () => {
 
     return totalUnitPrice;
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoader(false);
-    }, 1000);
-  }, []);
 
   useEffect(() => {
     const calculateTotal = () => {
@@ -850,7 +843,7 @@ export const Details = () => {
 
   return (
     <>
-      {!isLoader ? (
+      {!isLoading ? (
         <div>
           <DetailsHeader
             image={menuItemDetails?.data?.image}

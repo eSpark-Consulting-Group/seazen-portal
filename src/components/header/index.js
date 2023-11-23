@@ -73,6 +73,7 @@ const Navbar = (props) => {
 
   const passState = {
     fromMenu: location?.fromMenu,
+    fromBranch: location?.fromBranch,
     fromDetail: location?.fromDetail,
     fromHome: location?.fromHome,
     backCart: location?.backCart,
@@ -173,7 +174,7 @@ const Navbar = (props) => {
                   navigate(paths.addresses, {
                     state: passState,
                   });
-                } else if (location?.notSelected !== undefined) {
+                } else if (location?.notSelected !== undefined || location?.fromBranch !== undefined) {
                   navigate(-1);
                 } else {
                   navigate(backIconURL || paths.profile, backIconURLState);

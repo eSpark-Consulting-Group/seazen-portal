@@ -195,7 +195,7 @@ const Menu = () => {
 
   const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
     (val) => {
-      return val.week_day == localStorage.getItem("pickDate").split("-")[1];
+      return val.week_day == localStorage.getItem("pickDate")?.split("-")[1];
     }
   );
 

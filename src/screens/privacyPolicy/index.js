@@ -1,5 +1,4 @@
 import React from "react";
-import ProfileHeader from "../../components/header/profileHeader";
 import { Footer } from "../../components/footer/footerContent";
 import "./style.css";
 import Navbar from "../../components/header";
@@ -10,7 +9,7 @@ export const PrivacyPolicy = () => {
       <div className="privacy-policy-section px-4">
         {/* <ProfileHeader showFlagOption={false} /> */}
         <div style={{ paddingTop: 20 }}>
-          <Navbar logo profile languageIcon />
+          <Navbar logo backIcon languageIcon />
         </div>
         <h1>Privacy Policy</h1>
         <p className="privacy-paragraph-title">1. Lorem ipsum </p>
