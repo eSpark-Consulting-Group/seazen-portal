@@ -119,6 +119,9 @@ const Navbar = (props) => {
           <div
             className="arrowicon-btn"
             onClick={() => {
+              if (location?.fromBranch !== undefined) {
+                navigate(-1);
+              }
               if (token === null) {
                 if (guestUser || location?.guest !== undefined) {
                   if (
@@ -174,10 +177,7 @@ const Navbar = (props) => {
                   navigate(paths.addresses, {
                     state: passState,
                   });
-                } else if (
-                  location?.notSelected !== undefined ||
-                  location?.fromBranch !== undefined
-                ) {
+                } else if (location?.notSelected !== undefined) {
                   navigate(-1);
                 } else {
                   navigate(backIconURL || paths.profile, backIconURLState);
