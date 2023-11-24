@@ -67,6 +67,7 @@ const DeliveryDetails = (props) => {
   const restaurantDetail = useSelector(
     (state) => state.resturants.restaurantDetail
   );
+  const branchHours = useSelector((state) => state.resturants.branchHours);
 
   const selected = JSON.parse(localStorage.getItem("selected"));
   const currentLocation = JSON.parse(localStorage.getItem("location"));
@@ -107,7 +108,7 @@ const DeliveryDetails = (props) => {
   const [isDeliveryDropDown, setIsDeliveryDropDown] = useState(false);
   const [fullAddress, setFullAddress] = useState(null);
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  // const [showTimePicker, setShowTimePicker] = useState(false);
   const [restaurantOpen, setRestaurantOpen] = useState(false);
   const [pickDay, setPickDay] = useState("");
   const [addressID, setAddressID] = useState();
@@ -120,25 +121,21 @@ const DeliveryDetails = (props) => {
     if (onDelivery) {
       if (sessionStorage.getItem("popupOpened") === null) {
         if (isAsap === "true") {
-          const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
-            const splitLogo = nearBy?.logo?.split("/");
-            const splitName = splitLogo[splitLogo.length - 1];
-
-            let name = splitName.split("-")[0];
-            if (name === "groove") {
-              name = "grove";
-            }
-
-            return name === restaurantDetail?.name_en?.toLowerCase();
-          });
+          const filterRestaurant = branchHours?.filter(
+            (branch) => branch.restaurant_id === restaurantDetail.id
+          );
 
           for (let i = 0; i < filterRestaurant?.length; i++) {
-            if (filterRestaurant[i]?.openingStatus === "Open") {
+            if (
+              filterRestaurant[i]?.branch_hours[0]?.openingStatus === "Open"
+            ) {
               setRestaurantOpen(false);
               break;
 
               //
-            } else if (filterRestaurant[i]?.openingStatus === "Close") {
+            } else if (
+              filterRestaurant[i]?.branch_hours[0]?.openingStatus === "Close"
+            ) {
               setRestaurantOpen(true);
               //
             }
@@ -152,7 +149,7 @@ const DeliveryDetails = (props) => {
         setRestaurantOpen(false);
       }
     }
-  }, [nearbyRestaurants, restaurantDetail]);
+  }, [branchHours, restaurantDetail]);
 
   const locationLabelName = () => {
     let text = "";
@@ -266,23 +263,20 @@ const DeliveryDetails = (props) => {
   };
 
   const asapHandler = () => {
-    if (nearbyRestaurants?.length !== 0) {
-      const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
-        const splitLogo = nearBy?.logo?.split("/");
-        const splitName = splitLogo[splitLogo.length - 1];
-
-        const name = splitName.split("-")[0];
-
-        return name === restaurantDetail?.name_en?.toLowerCase();
-      });
+    if (branchHours?.length !== 0) {
+      const filterRestaurant = branchHours?.filter(
+        (branch) => branch.restaurant_id === restaurantDetail.id
+      );
 
       for (let i = 0; i < filterRestaurant?.length; i++) {
-        if (filterRestaurant[i]?.openingStatus === "Open") {
+        if (filterRestaurant[i]?.branch_hours[0].openingStatus === "Open") {
           asapCall();
           break;
 
           //
-        } else if (filterRestaurant[i]?.openingStatus === "Close") {
+        } else if (
+          filterRestaurant[i]?.branch_hours[0].openingStatus === "Close"
+        ) {
           setRestaurantOpen(true);
           //
         }

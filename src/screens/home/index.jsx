@@ -406,16 +406,10 @@ const Home = () => {
             setDistanceIsFar(true);
             setOpenAddressToChoose(false);
           } else {
-            const address = {
-              latitude: chooseFullAddress.lat,
-              longitude: chooseFullAddress.lng,
-              service_type: "dinein",
-            };
-
-            fetchNearbyRestaurant(address);
-
             setDistanceIsFar(false);
             setOpenAddressToChoose(false);
+
+            checkNearByRest();
 
             break;
           }
@@ -424,47 +418,19 @@ const Home = () => {
     }
   }, [chooseFullAddress, branchHours]);
 
-  const fetchNearbyRestaurant = (address) => {
-    if (nearbyRestaurants.length === 0) {
-      getNearByRestaurants(address).then((res) => {
-        if (res.status === "ok") {
-          localStorage.setItem(
-            "selected",
-            JSON.stringify({ ...chooseFullAddress, addressId })
-          );
+  const checkNearByRest = () => {
+    localStorage.setItem(
+      "selected",
+      JSON.stringify({ ...chooseFullAddress, addressId })
+    );
 
-          dispatch(getNearByRest(res?.data));
-          setOpenAddressToChoose(false);
-          checkNearByRest(res?.data);
-        }
-      });
-    } else {
-      localStorage.setItem(
-        "selected",
-        JSON.stringify({ ...chooseFullAddress, addressId })
-      );
-
-      setOpenAddressToChoose(false);
-      checkNearByRest(nearbyRestaurants);
-    }
-  };
-
-  const checkNearByRest = (nearby) => {
     const restaurant = resturantsData.find(
       (res) => res.id === cart[0]?.restaurant_id
     );
 
-    const filterRestaurant = nearby?.filter((nearBy) => {
-      const splitLogo = nearBy?.logo?.split("/");
-      const splitName = splitLogo[splitLogo.length - 1];
-
-      let name = splitName.split("-")[0];
-      if (name === "groove") {
-        name = "grove";
-      }
-
-      return name === restaurant?.name_en?.toLowerCase();
-    });
+    const filterRestaurant = branchHours.filter(
+      (branch) => branch.restaurant_id === restaurant.id
+    );
 
     if (filterRestaurant?.length === 0) {
       setRestaurantName(restaurant?.name_en);
@@ -473,7 +439,7 @@ const Home = () => {
     } else {
       if (localStorage.getItem("isAsap") === "true") {
         for (let i = 0; i < filterRestaurant?.length; i++) {
-          if (filterRestaurant[i]?.openingStatus === "Open") {
+          if (filterRestaurant[i]?.branch_hours[0].openingStatus === "Open") {
             setRestaurantOpen(false);
             navigate(paths?.cart, {
               state: { fromHome: true, path: "/home" },

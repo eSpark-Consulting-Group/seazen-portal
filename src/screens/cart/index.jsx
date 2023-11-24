@@ -306,16 +306,9 @@ function CartPage() {
           setNotDeliver(true);
         } else {
           if (paymentMethod === "KNET") {
-            const firstWord = restaurantName?.split(" ")[0];
-
-            const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
-              const splitLogo = nearBy?.logo?.split("/");
-              const splitName = splitLogo[splitLogo.length - 1];
-
-              const name = splitName?.split("-")[0];
-
-              return name === firstWord?.toLowerCase();
-            });
+            const filterRestaurant = branchHours.filter(
+              (branch) => branch.restaurant_id === cart[0].restaurant_id
+            );
 
             if (filterRestaurant?.length === 0) {
               setNotDeliver(true);
@@ -324,7 +317,10 @@ function CartPage() {
 
               if (isAsap === "true") {
                 for (let j = 0; j < filterRestaurant?.length; j++) {
-                  if (filterRestaurant[j]?.openingStatus === "Open") {
+                  if (
+                    filterRestaurant[j]?.branch_hours[0].openingStatus ===
+                    "Open"
+                  ) {
                     setRestaurantOpen(false);
 
                     const data = {
@@ -357,7 +353,10 @@ function CartPage() {
                       });
 
                     break;
-                  } else if (filterRestaurant[j]?.openingStatus === "Close") {
+                  } else if (
+                    filterRestaurant[j]?.branch_hours[0].openingStatus ===
+                    "Close"
+                  ) {
                     setRestaurantOpen(true);
                   }
                 }
@@ -471,22 +470,12 @@ function CartPage() {
   }, []);
 
   const asapHandler = () => {
-    const firstWord = restaurantName.split(" ")[0];
-
-    const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
-      const splitLogo = nearBy?.logo?.split("/");
-      const splitName = splitLogo[splitLogo.length - 1];
-
-      let name = splitName.split("-")[0];
-      if (name === "groove") {
-        name = "grove";
-      }
-
-      return name === firstWord?.toLowerCase();
-    });
+    const filterRestaurant = branchHours.filter(
+      (branch) => branch.restaurant_id === cart[0].restaurant_id
+    );
 
     for (let i = 0; i < filterRestaurant?.length; i++) {
-      if (filterRestaurant[i]?.openingStatus === "Open") {
+      if (filterRestaurant[i]?.branch_hours[0].openingStatus === "Open") {
         const currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes() + 30);
 
@@ -501,7 +490,9 @@ function CartPage() {
         setRestaurantOpen(false);
 
         break;
-      } else if (filterRestaurant[i]?.openingStatus === "Close") {
+      } else if (
+        filterRestaurant[i]?.branch_hours[0].openingStatus === "Close"
+      ) {
         setRestaurantOpen(true);
         setOpenPopup(false);
       }

@@ -65,6 +65,7 @@ import "./style.css";
 
 export const Details = () => {
   const { id } = useParams();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -730,7 +731,7 @@ export const Details = () => {
 
   useEffect(() => {
     const filterBranch = branchHours?.filter(
-      (rest) => rest.restaurant_id === +id
+      (rest) => rest.restaurant_id === +restaurant_id
     );
 
     if (fullAddress !== null) {
@@ -761,16 +762,10 @@ export const Details = () => {
             setDistanceIsFar(true);
             setOpenAddressPopup(false);
           } else {
-            const address = {
-              latitude: fullAddress.lat,
-              longitude: fullAddress.lng,
-              service_type: "dinein",
-            };
-
-            fetchNearbyRestaurant(address);
-
             setDistanceIsFar(false);
             setOpenAddressPopup(false);
+
+            checkNearByRest(filterBranch);
 
             break;
           }
@@ -779,52 +774,20 @@ export const Details = () => {
     }
   }, [fullAddress, branchHours]);
 
-  const fetchNearbyRestaurant = (address) => {
-    if (nearbyRestaurants.length === 0) {
-      getNearByRestaurants(address).then((res) => {
-        if (res.status === "ok") {
-          localStorage.setItem(
-            "selected",
-            JSON.stringify({ ...fullAddress, addressId })
-          );
+  const checkNearByRest = (branch) => {
+    localStorage.setItem(
+      "selected",
+      JSON.stringify({ ...fullAddress, addressId })
+    );
 
-          dispatch(getNearByRest(res?.data));
-          setOpenAddressPopup(false);
-          checkNearByRest(res?.data);
-        }
-      });
-    } else {
-      localStorage.setItem(
-        "selected",
-        JSON.stringify({ ...fullAddress, addressId })
-      );
-
-      setOpenAddressPopup(false);
-      checkNearByRest(nearbyRestaurants);
-    }
-  };
-
-  const checkNearByRest = (nearby) => {
-    const filterRestaurant = nearby?.filter((nearBy) => {
-      const splitLogo = nearBy?.logo?.split("/");
-      const splitName = splitLogo[splitLogo.length - 1];
-
-      let name = splitName.split("-")[0];
-      if (name === "groove") {
-        name = "grove";
-      }
-
-      return name === restaurantDetail?.name_en?.toLowerCase();
-    });
-
-    if (filterRestaurant?.length === 0) {
+    if (branch?.length === 0) {
       setRestaurantName(restaurantDetail?.name_en);
       setDistanceIsFar(true);
       setOpenAddressPopup(false);
     } else {
       if (localStorage.getItem("isAsap") === "true") {
-        for (let i = 0; i < filterRestaurant?.length; i++) {
-          if (filterRestaurant[i]?.openingStatus === "Open") {
+        for (let i = 0; i < branch?.length; i++) {
+          if (branch[i]?.branch_hours[0].openingStatus === "Open") {
             setRestaurantIsOpen(false);
             navigate(paths?.cart, {
               state: { fromDetail: true, path: "/home" },
@@ -848,7 +811,7 @@ export const Details = () => {
     navigate(paths.location, {
       state: {
         path: "menu/restaurant",
-        restaurant_id: id,
+        restaurant_id: restaurant_id,
         restaurantName: restaurantDetail?.name_en,
         addNew: true,
       },
@@ -1441,7 +1404,7 @@ export const Details = () => {
             setNotDeliver={setDistanceIsFar}
             restaurantName={restaurantName}
             fromDetail={true}
-            resturantId={id}
+            resturantId={restaurant_id}
             location={location}
             home={true}
             menuCard={true}

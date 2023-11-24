@@ -29,8 +29,8 @@ const SchedulePicker = (props) => {
 
   // const dispatch = useDispatch();
 
-  const { id: restaurant_id } = useParams();
   const popularDishRestId = localStorage.getItem("restaurantIdForRedirect");
+  const restaurant_id = localStorage.getItem("restaurantID");
 
   const [pickDate, setPickDate] = useState(
     dayjs(new Date()).format("MMM DD, YYYY")

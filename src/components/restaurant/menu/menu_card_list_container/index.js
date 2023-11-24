@@ -212,16 +212,10 @@ const MenuCardListContainer = ({
             setDistanceIsFar(true);
             setOpenAddressPopup(false);
           } else {
-            const address = {
-              latitude: fullAddress.lat,
-              longitude: fullAddress.lng,
-              service_type: "dinein",
-            };
-
-            fetchNearbyRestaurant(address);
-
             setDistanceIsFar(false);
             setOpenAddressPopup(false);
+
+            checkNearByRest(filterBranch);
 
             break;
           }
@@ -229,31 +223,6 @@ const MenuCardListContainer = ({
       }
     }
   }, [fullAddress, branchHours]);
-
-  const fetchNearbyRestaurant = (address) => {
-    if (nearbyRestaurants.length === 0) {
-      getNearByRestaurants(address).then((res) => {
-        if (res.status === "ok") {
-          localStorage.setItem(
-            "selected",
-            JSON.stringify({ ...fullAddress, addressId: addressID })
-          );
-
-          dispatch(getNearByRest(res?.data));
-          setOpenAddressPopup(false);
-          checkNearByRest(res?.data);
-        }
-      });
-    } else {
-      localStorage.setItem(
-        "selected",
-        JSON.stringify({ ...fullAddress, addressId: addressID })
-      );
-
-      setOpenAddressPopup(false);
-      checkNearByRest(nearbyRestaurants);
-    }
-  };
 
   const navigateUser = () => {
     navigate(paths.location, {
@@ -266,27 +235,20 @@ const MenuCardListContainer = ({
     });
   };
 
-  const checkNearByRest = (nearby) => {
-    const filterRestaurant = nearby?.filter((nearBy) => {
-      const splitLogo = nearBy?.logo?.split("/");
-      const splitName = splitLogo[splitLogo.length - 1];
+  const checkNearByRest = (branch) => {
+    localStorage.setItem(
+      "selected",
+      JSON.stringify({ ...fullAddress, addressId: addressID })
+    );
 
-      let name = splitName.split("-")[0];
-      if (name === "groove") {
-        name = "grove";
-      }
-
-      return name === restaurantDetail?.name_en?.toLowerCase();
-    });
-
-    if (filterRestaurant?.length === 0) {
+    if (branch?.length === 0) {
       setRestaurantName(restaurantDetail?.name_en);
       setDistanceIsFar(true);
       setOpenAddressPopup(false);
     } else {
       if (localStorage.getItem("isAsap") === "true") {
-        for (let i = 0; i < filterRestaurant?.length; i++) {
-          if (filterRestaurant[i]?.openingStatus === "Open") {
+        for (let i = 0; i < branch?.length; i++) {
+          if (branch[i]?.branch_hours[0].openingStatus === "Open") {
             setRestaurantIsOpen(false);
             navigate(paths?.cart);
             break;
