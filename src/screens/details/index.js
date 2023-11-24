@@ -17,8 +17,11 @@ import {
   Skeleton,
   Typography,
   Divider,
+  DialogContent,
   alpha,
   CircularProgress,
+  Dialog,
+  DialogTitle,
 } from "@mui/material";
 import { AddShoppingCartRounded, Label } from "@mui/icons-material";
 
@@ -43,6 +46,7 @@ import {
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import getAllRestaurants from "../../api/home/getAllRestaurants";
 import { GET_ALL_RESTAURANTS_QUERY_KEY } from "../../api/home/getAllRestaurantsBanner";
+import CloseIcon from "@mui/icons-material/Close";
 
 import {
   updateCartItem,
@@ -102,6 +106,11 @@ export const Details = () => {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [addressId, setAddressID] = useState();
   const [sharedItemForCart, setSharedItemForCart] = useState({});
+  const [clearCartModal, setClearCartModal] = useState(false);
+
+  const restaurantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
 
   const { search } = useLocation();
 
@@ -523,13 +532,18 @@ export const Details = () => {
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
 
-    if (menuItemDetails?.data.has_variants && !sizeVariant) {
-      setErrorShow(true);
+    if (
+      cart.length > 0 &&
+      data.restaurant_id !== cart[0]?.restaurant_id &&
+      !clearCartModal
+    ) {
+      setClearCartModal(true);
       return;
     }
 
-    if (cart.length > 0 && data.restaurant_id !== cart[0]?.restaurant_id) {
-      clearCartItems();
+    if (menuItemDetails?.data.has_variants && !sizeVariant) {
+      setErrorShow(true);
+      return;
     }
 
     var ItemDataObject = {
@@ -841,8 +855,92 @@ export const Details = () => {
     });
   };
 
+  const previousRestaurant = restaurantsData?.find((val) => {
+    return val.id == cart[0]?.restaurant_id;
+  });
+  const currentRestaurant = restaurantsData?.find((val) => {
+    return val.id == restaurant_id;
+  });
+
   return (
     <>
+      <Dialog
+        open={clearCartModal}
+        onClose={() => {}}
+        sx={{
+          margin: "0",
+          textAlign: "center",
+        }}
+        className="cart-dialog"
+        PaperProps={{
+          sx: {
+            overflow: "visible",
+            margin: "0px 0px 0px 27px",
+            width: "327px",
+
+            "@media (max-width: 500px)": {
+              width: "375px",
+              margin: "0px 0px 0px 0px",
+            },
+
+            "@media (max-width: 400px)": {
+              width: "90%",
+            },
+          },
+        }}
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          className="dialog-title title-cart"
+        >
+          <img src="/assets/img/exclaim.svg"></img>
+
+          <div
+            style={{
+              position: "absolute",
+              top: "8px",
+              right: "10px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onClick={() => {
+              setClearCartModal(false);
+              sessionStorage.setItem("popupOpened", true);
+            }}
+          >
+            <CloseIcon
+              sx={{
+                width: "24px",
+                fontSize: "24px",
+                cursor: "pointer",
+                color: "#707070 !important",
+              }}
+            />
+          </div>
+        </DialogTitle>
+        <DialogContent className="dialog-content-cart">
+          {`Warning: You are about to change your original order from ${previousRestaurant?.name_en} to ${currentRestaurant?.name_en}. All items currently in your cart from ${previousRestaurant?.name_en} will be removed. Continue?.`}
+        </DialogContent>
+        <div className="btn-navigate">
+          <Button
+            className="common-st add-btn"
+            onClick={() => setClearCartModal(false)}
+          >
+            No
+          </Button>
+
+          <Button
+            className="common-st go-to-btn"
+            onClick={() => {
+              clearCartItems();
+              handleAddToCart();
+            }}
+          >
+            Yes
+          </Button>
+        </div>
+      </Dialog>
       {!isLoading ? (
         <div>
           <DetailsHeader

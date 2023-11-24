@@ -109,7 +109,8 @@ const MenuCard = (props) => {
   useEffect(() => {
     const quantity = getItemQuantity();
     setFoodItemQuantity(quantity);
-  }, []);
+    return () => setFoodItemQuantity(0);
+  }, [id]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -312,9 +313,15 @@ const MenuCard = (props) => {
   });
 
   const cartFunction = (id) => {
-    if (cart.length > 0 && restaurant_id !== cart[0]?.restaurant_id) {
+    if (
+      cart.length > 0 &&
+      restaurant_id !== cart[0]?.restaurant_id &&
+      !clearCartModal
+    ) {
       setClearCartModal(true);
+      return;
     }
+    setClearCartModal(false);
     if (hasVariant) {
       navigate(paths.details + "/" + id, {
         state: {
@@ -451,7 +458,6 @@ const MenuCard = (props) => {
   const getItemQuantity = () => {
     // there can be multiple items with same id but different sideVariant
     // so we need count of all items with same id
-
     const quantity = cart.reduce((acc, cartItem) => {
       if (cartItem.id === id) {
         return acc + cartItem.quantity;
@@ -563,7 +569,7 @@ const MenuCard = (props) => {
               justifyContent: "center",
             }}
             onClick={() => {
-              setRestaurantOpen(false);
+              setClearCartModal(false);
               sessionStorage.setItem("popupOpened", true);
             }}
           >
@@ -591,8 +597,8 @@ const MenuCard = (props) => {
           <Button
             className="common-st go-to-btn"
             onClick={() => {
-              setClearCartModal(false);
               clearCartItems();
+              cartFunction(id);
             }}
           >
             Yes

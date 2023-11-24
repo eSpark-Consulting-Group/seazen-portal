@@ -124,7 +124,7 @@ function CartPage() {
   const [maxTime, setMaxTime] = useState(dayjs());
 
   const token = localStorage.getItem("token");
-  // const restaurantId = localStorage.getItem("restaurantID");
+  const restaurantId = localStorage.getItem("restaurantID");
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
@@ -736,13 +736,13 @@ function CartPage() {
                 location?.state?.fromDetail === undefined
                 ? location?.state?.back
                 : location?.state?.noAddress && cart?.length !== 0
-                ? `${paths.menu}/restaurant/${cart[0]?.restaurant_id}/delivery`
+                ? `${paths.menu}/restaurant/${restaurantId}/delivery`
                 : location?.state?.fromHome !== undefined
                 ? paths.home
                 : (location?.state?.fromMenu !== undefined ||
                     location?.state?.fromDetail !== undefined) &&
                   cart?.length !== 0
-                ? `${paths.menu}/restaurant/${cart[0].restaurant_id}/delivery`
+                ? `${paths.menu}/restaurant/${restaurantId}/delivery`
                 : location?.state?.backToCart !== undefined
                 ? paths.home
                 : -1
