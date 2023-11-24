@@ -51,6 +51,7 @@ import getBranchesAndHours, {
 } from "../../api/restaurant/branches/getBranchesAndHours";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
+import deliveryPriceApi from "../../api/common/getDeliveryCharges";
 
 import { addToCart } from "../../store/reducers/cartSlice";
 import { setThemeColor } from "../../store/reducers/themeSlice";
@@ -67,7 +68,6 @@ import {
 import { paths } from "../../routes/paths";
 
 import "./style.css";
-import deliveryPriceApi from "../../api/common/getDeliveryCharges";
 
 const toastList = new Set();
 const MAX_TOAST = 1;
@@ -535,7 +535,11 @@ function CartPage() {
         cartList(token)
           .then((res) => {
             const resData = res.data.map((val) => {
-              return {
+              const findRestaurant = branchHours?.find(
+                (branch) => branch.id === val?.branch_id
+              );
+
+              const obj = {
                 id: val?.item_id,
                 cart_id: val.cart_id,
                 itemName: val?.menu_item_name_en,
@@ -559,12 +563,15 @@ function CartPage() {
                 item_code: val.item_code,
                 specialInstructions: "",
                 itemImage: val?.menu_item_image,
-                restaurant_id: 1,
+                restaurant_id: findRestaurant.restaurant_id,
                 totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
               };
+
+              dispatch(addToCart(obj));
+
+              return obj;
             });
             setCartItems(resData);
-            // dispatch(addToCart(resData));
             setIsLoading(false);
           })
           .catch((err) => {
@@ -736,7 +743,7 @@ function CartPage() {
                 location?.state?.fromDetail === undefined
                 ? location?.state?.back
                 : location?.state?.noAddress && cart?.length !== 0
-                ? `${paths.menu}/restaurant/${restaurantId}/delivery`
+                ? `${paths.menu}/restaurant/${cart[0]?.restaurant_id}/delivery`
                 : location?.state?.fromHome !== undefined
                 ? paths.home
                 : (location?.state?.fromMenu !== undefined ||

@@ -1,31 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+// import { useDispatch } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 
 import dayjs from "dayjs";
 
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+// import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateTimePicker, MobileTimePicker } from "@mui/x-date-pickers";
+import {
+  DateTimePicker,
+  // , MobileTimePicker
+} from "@mui/x-date-pickers";
 
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../../api/restaurant/branches/getBranchesAndHours";
 
-import { useDispatch } from "react-redux";
-
 const SchedulePicker = (props) => {
   const {
     openSchedulePopup,
     setOpenSchedulePopup,
-    showTimePicker,
-    setShowTimePicker,
-    menuCard,
+    // showTimePicker,
+    // setShowTimePicker,
+    // menuCard,
   } = props;
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const { id: restaurant_id } = useParams();
   const popularDishRestId = localStorage.getItem("restaurantIdForRedirect");
@@ -36,21 +38,24 @@ const SchedulePicker = (props) => {
   const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [isAsap, setIsAsap] = useState(true);
   const [pickTime, setPickTime] = useState(dayjs(asapTime).format("hh:mm a"));
-  const [fromDetail, setFromDetail] = useState(false);
+  // const [fromDetail, setFromDetail] = useState(false);
   const [pickDay, setPickDay] = useState("");
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
 
   useEffect(() => {
-    if (localStorage.getItem("isAsap", isAsap) === null) {
+    if (localStorage.getItem("isAsap") === null) {
       localStorage.setItem("isAsap", isAsap);
     }
 
-    if (localStorage.getItem("pickTime", pickTime) === null) {
+    if (localStorage.getItem("pickTime") === null) {
       localStorage.setItem("pickTime", pickTime);
     }
 
-    if (localStorage.getItem("pickDate", pickDate) === null) {
+    if (
+      localStorage.getItem("pickDate") === null ||
+      new Date(localStorage.getItem("pickDate", pickDate)) < new Date()
+    ) {
       localStorage.setItem("pickDate", pickDate);
     }
   }, [localStorage]);

@@ -23,10 +23,10 @@ import SelectLocation from "../../components/dialog/selectLocation";
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import countryList from "../../api/common/getAllCountries";
-// import cartList from "../../api/cart/cartList";
+import cartList from "../../api/cart/cartList";
 
 import { addCountry } from "../../store/reducers/authSlice";
-// import { addToCart } from "../../store/reducers/cartSlice";
+import { addToCart } from "../../store/reducers/cartSlice";
 
 import {
   getBranchHours,
@@ -61,70 +61,79 @@ const Home = () => {
     (state) => state.resturants.nearbyRestaurants
   );
 
-  // useEffect(() => {
-  //   if (sessionStorage.getItem("cartEmpty") === null) {
-  //     if (token !== null) {
-  //       if (cart?.length === 0) {
-  //         cartList(token)
-  //           .then((res) => {
-  //             res.data.map((val) => {
-  //               const has_variants =
-  //                 val?.size_variant_id === "" &&
-  //                 val.side_variant_id === "" &&
-  //                 val.topping_variant_id === ""
-  //                   ? false
-  //                   : true;
+  useEffect(() => {
+    if (sessionStorage.getItem("cartEmpty") === null) {
+      if (token !== null) {
+        if (cart?.length === 0 && branchHours?.length) {
+          cartList(token)
+            .then((res) => {
+              res.data.map((val) => {
+                if (branchHours?.length) {
+                  const findRestaurant = branchHours?.find(
+                    (branch) => branch.id === val?.branch_id
+                  );
 
-  //               const variants =
-  //                 val?.size_variant_id === "" &&
-  //                 val.side_variant_id === "" &&
-  //                 val.topping_variant_id === ""
-  //                   ? null
-  //                   : {
-  //                       sizeVariant: {
-  //                         ...val.size_variant[0],
-  //                         variantId: val.size_variant_id,
-  //                       },
-  //                       toppingVariant: val.topping_variant.map((value) => ({
-  //                         ...value,
-  //                         variantId: val.topping_variant_id,
-  //                       })),
-  //                       sideVariant: val.side_variant.map((value) => ({
-  //                         ...value,
-  //                         variantId: val.side_variant_id,
-  //                       })),
-  //                     };
+                  const has_variants =
+                    val?.size_variant_id === "" &&
+                    val.side_variant_id === "" &&
+                    val.topping_variant_id === ""
+                      ? false
+                      : true;
 
-  //               const obj = {
-  //                 id: val?.item_id,
-  //                 cart_id: val.cart_id,
-  //                 itemName: val?.menu_item_name_en,
-  //                 discountedPrice: val?.discounted_price,
-  //                 price: val?.unit_price,
-  //                 quantity: val.quantity,
-  //                 variants,
-  //                 item_code: val.item_code,
-  //                 specialInstructions: "",
-  //                 itemImage: val?.menu_item_image,
-  //                 restaurant_id: 1,
-  //                 totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
-  //                 has_variants,
-  //               };
+                  const variants =
+                    val?.size_variant_id === "" &&
+                    val.side_variant_id === "" &&
+                    val.topping_variant_id === ""
+                      ? null
+                      : {
+                          sizeVariant: {
+                            ...val.size_variant[0],
+                            variantId: val.size_variant_id,
+                          },
+                          toppingVariant: val.topping_variant.map((value) => ({
+                            ...value,
+                            variantId: val.topping_variant_id,
+                          })),
+                          sideVariant: val.side_variant.map((value) => ({
+                            ...value,
+                            variantId: val.side_variant_id,
+                          })),
+                        };
 
-  //               obj.has_variants === false && delete obj.has_variants;
-  //               obj.variants === null && delete obj.variants;
+                  const obj = {
+                    id: val?.item_id,
+                    cart_id: val.cart_id,
+                    itemName: val?.menu_item_name_en,
+                    discountedPrice: val?.discounted_price,
+                    price: val?.unit_price,
+                    quantity: val.quantity,
+                    variants,
+                    item_code: val.item_code,
+                    specialInstructions: "",
+                    itemImage: val?.menu_item_image,
+                    restaurant_id: findRestaurant.restaurant_id,
+                    totalPrice: Number(val.quantity * val.unit_price).toFixed(
+                      3
+                    ),
+                    has_variants,
+                    branch_id: val?.branch_id,
+                  };
 
-  //               dispatch(addToCart(obj));
-  //               sessionStorage.setItem("cartEmpty", true);
-  //             });
-  //           })
-  //           .catch((err) => {
-  //             console.error(err);
-  //           });
-  //       }
-  //     }
-  //   }
-  // }, [cart, token]);
+                  obj.has_variants === false && delete obj.has_variants;
+                  obj.variants === null && delete obj.variants;
+
+                  dispatch(addToCart(obj));
+                  sessionStorage.setItem("cartEmpty", true);
+                }
+              });
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }
+      }
+    }
+  }, [cart, token, branchHours]);
 
   const [userCurrentAddress, setUserCurrentAddress] = useState({
     latitude: 0,
@@ -664,20 +673,20 @@ const Home = () => {
     navigate(paths.menu + `/restaurant/${id}`);
   };
 
-  const distanceCheck = (resLat, resLng, location) => {
-    const distance = getDistanceFromLatLonInKm(
-      resLat,
-      resLng,
-      location.lat,
-      location.lng
-    );
+  // const distanceCheck = (resLat, resLng, location) => {
+  //   const distance = getDistanceFromLatLonInKm(
+  //     resLat,
+  //     resLng,
+  //     location.lat,
+  //     location.lng
+  //   );
 
-    if (distance > 50) {
-      removeClasses();
-    } else {
-      addClasses();
-    }
-  };
+  //   if (distance > 50) {
+  //     removeClasses();
+  //   } else {
+  //     addClasses();
+  //   }
+  // };
 
   useEffect(() => {
     if (

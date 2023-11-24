@@ -68,6 +68,9 @@ const Menu = () => {
   const nearbyRestaurants = useSelector(
     (state) => state.resturants.nearbyRestaurants
   );
+  const currentRestaurantDetail = useSelector(
+    (state) => state.resturants.restaurantDetail
+  );
   const reorder = useSelector((state) => state.order.reorder);
   const cart = useSelector((state) => state.cart.cart);
 
@@ -345,6 +348,52 @@ const Menu = () => {
         navigate(paths?.cart, {
           state: { fromMenu: true, path: "/home" },
         });
+      }
+    }
+  };
+
+  useEffect(() => {
+    getBranchIdNearToLocation();
+  }, [branchesAndHoursResponse?.data, restaurantDetail]);
+
+  const getBranchIdNearToLocation = () => {
+    const filterBranch = branchesAndHoursResponse?.data?.filter(
+      (rest) => rest.restaurant_id === restaurantDetail?.id
+    );
+
+    if (branchesAndHoursResponse?.data.length && filterBranch?.length) {
+      for (let i = 0; i < filterBranch?.length; i++) {
+        // const resLat = +filterBranch[i]?.latitude;
+        // const resLng = +filterBranch[i]?.longitude;
+
+        // const selected = JSON.parse(localStorage.getItem("selected"));
+        // const currentLocation = JSON.parse(localStorage.getItem("location"));
+
+        // let fromLocation;
+        // if (selected === null && currentLocation !== null) {
+        //   fromLocation = currentLocation;
+        // } else if (selected !== null && currentLocation !== null) {
+        //   fromLocation = selected;
+        // }
+
+        // const distance = getDistanceFromLatLonInKm(
+        //   resLat,
+        //   resLng,
+        //   fromLocation?.lat || 29.3140728,
+        //   fromLocation?.lng || 47.68022
+        // );
+
+        localStorage.setItem("branchId", branchesAndHoursResponse.data[i].id);
+
+        break;
+
+        // if (distance > 50) {
+
+        // } else {
+        //   localStorage.setItem("branchId", branchesAndHoursResponse.data[i].id);
+
+        //   break;
+        // }
       }
     }
   };

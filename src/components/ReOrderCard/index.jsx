@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // import { useMutation } from "@tanstack/react-query";
 
@@ -44,6 +44,7 @@ const ReOrderCard = (props) => {
   const dispatch = useDispatch();
 
   // const cart = useSelector((state) => state.cart.cart);
+  const branchHours = useSelector((state) => state.resturants.branchHours);
 
   const [selectedItems, setSelectedItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -186,6 +187,10 @@ const ReOrderCard = (props) => {
                 setIsLoading(false);
 
                 res.data.map((val) => {
+                  const findRestaurant = branchHours?.find(
+                    (branch) => branch.id === val?.branch_id
+                  );
+
                   const has_variants =
                     val?.size_variant_id === "" &&
                     val.side_variant_id === "" &&
@@ -224,7 +229,7 @@ const ReOrderCard = (props) => {
                     item_code: val.item_code,
                     specialInstructions: "",
                     itemImage: val?.menu_item_image,
-                    restaurant_id: 1,
+                    restaurant_id: findRestaurant.restaurant_id,
                     totalPrice: Number(val.quantity * val.unit_price).toFixed(
                       3
                     ),

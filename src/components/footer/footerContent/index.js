@@ -18,7 +18,7 @@ export const Footer = (props) => {
         <p className="terms-style">
           <span
             onClick={() => {
-              navigate(paths.terms, { replace: true });
+              navigate(paths.terms);
             }}
           >
             Terms & Conditions
@@ -26,7 +26,7 @@ export const Footer = (props) => {
           |{" "}
           <span
             onClick={() => {
-              navigate(paths.privacy_policy, { replace: true });
+              navigate(paths.privacy_policy);
             }}
           >
             Privacy Policy

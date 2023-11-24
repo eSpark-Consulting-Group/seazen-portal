@@ -213,7 +213,6 @@ const DeliveryDetails = (props) => {
             setLocationDeliver(true);
           } else {
             setLocationDeliver(false);
-            localStorage.setItem("branchId", restaurantBranchHours.data[i].id);
             if (fromLocation && fromLocation.address) {
               setUserLocation(truncateString(fromLocation?.address, 15));
             } else {

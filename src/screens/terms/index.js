@@ -1,14 +1,16 @@
 import React from "react";
+
 import { Footer } from "../../components/footer/footerContent";
-import "./style.css";
 import Navbar from "../../components/header";
+
+import "./style.css";
 
 export const Terms = () => {
   return (
     <div>
       <div className="terms-section px-4">
         <div style={{ padding: "20px 5px 0px 5px" }}>
-          <Navbar logo backIcon languageIcon />
+          <Navbar logo backIcon languageIcon backIconURL={-1} />
         </div>
         <h1>Terms & Conditions</h1>
         <p className="terms-paragraph-title">1. Lorem ipsum </p>
