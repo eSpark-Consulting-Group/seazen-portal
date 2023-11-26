@@ -63,7 +63,6 @@ const Menu = () => {
   const location = useLocation();
 
   const { id: restaurant_id } = useParams();
-  console.log(restaurant_id);
 
   const country = useSelector((state) => state.auth.country);
   const nearbyRestaurants = useSelector(

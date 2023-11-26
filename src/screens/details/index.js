@@ -292,7 +292,8 @@ export const Details = () => {
 
   React.useEffect(() => {
     const cartItem = cart.find(
-      (item) => item.item_code === searchParams.get("item_code")
+      (item) =>
+        item.item_code === searchParams.get("item_code") || item.id === +id
     );
 
     setCartItem(cartItem);
@@ -305,7 +306,8 @@ export const Details = () => {
 
   const checkIfItemIsInCart = () => {
     return cart.find(
-      (item) => item.item_code === searchParams.get("item_code")
+      (item) =>
+        item.item_code === searchParams.get("item_code") || item.id === +id
     );
   };
 
@@ -481,11 +483,10 @@ export const Details = () => {
     const sizeVariant = cartItem.variants?.sizeVariant?.variantId;
     const toppingVariant = cartItem.variants?.toppingVariant[0]?.variantId;
 
-    const cartItemDataForApi = {
+    let cartItemDataForApi = {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
       quantity: cartItem.quantity,
-      // cart_id: cartItem.cart_id || "5",
       topping_variant_id: toppingVariant || 0,
       side_variant_id: sideVariant || 0,
       size_variant_id: sizeVariant || 0,
@@ -505,6 +506,11 @@ export const Details = () => {
     };
 
     if (checkIfItemIsInCart()) {
+      cartItemDataForApi = {
+        ...cartItemDataForApi,
+        cart_id: cartItem.cart_id,
+      };
+
       updateCartApiCall(cartItemDataForApi, token)
         .then((res) => {})
         .catch((err) => {
@@ -580,14 +586,17 @@ export const Details = () => {
 
     if (checkIfItemIsInCart()) {
       const item_code = cartItem?.item_code;
+      const cart_id = `${cartItem?.id}`;
 
       ItemDataObject = {
         ...ItemDataObject,
         item_code,
+        cart_id,
       };
 
       dispatch(updateCartItem(ItemDataObject));
       addToCartApiHandler(ItemDataObject);
+
       navigate(paths.cart);
     } else {
       const item_code = uuidv4();
