@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setKey, geocode, RequestType } from "react-geocode";
-
 import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 import { useQuery } from "@tanstack/react-query";
@@ -188,57 +186,6 @@ const Home = () => {
       recall();
     }
   }, [userCurrentAddress]);
-
-  useEffect(() => {
-    navigator.permissions &&
-      navigator.permissions
-        .query({ name: "geolocation" })
-        .then(function (PermissionStatus) {
-          localStorage.setItem("locatPermission", PermissionStatus.state);
-        });
-  }, []);
-
-  useEffect(() => {
-    if (JSON.parse(userLocation) === null) {
-      // eslint-disable-next-line no-undef
-      setKey(process.env.REACT_APP_GOOGLE_API_KEY);
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            let addToRedux = {
-              lat: "",
-              lng: "",
-              address: "",
-            };
-            geocode(
-              RequestType.LATLNG,
-              `${position.coords.latitude},${position.coords.longitude}`,
-              {
-                enable_address_descriptor: true,
-              }
-            )
-              .then(({ results }) => {
-                const address = results[0].formatted_address;
-                const lat = results[0].geometry.location.lat;
-                const lng = results[0].geometry.location.lng;
-
-                addToRedux = {
-                  lat: lat,
-                  lng: lng,
-                  address: address,
-                };
-
-                localStorage.setItem("location", JSON.stringify(addToRedux));
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          },
-          () => {}
-        );
-      }
-    }
-  }, []);
 
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [addressId, setAddressID] = useState();

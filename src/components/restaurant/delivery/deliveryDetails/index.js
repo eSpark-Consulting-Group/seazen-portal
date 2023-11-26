@@ -157,7 +157,8 @@ const DeliveryDetails = (props) => {
 
     if (
       localStorage.getItem("locatPermission") === "denied" ||
-      localStorage.getItem("locatPermission") === "granted"
+      localStorage.getItem("locatPermission") === "granted" ||
+      localStorage.getItem("locatPermission") === "prompt"
     ) {
       if (token !== null) {
         if (currentLocation !== null) {
@@ -174,7 +175,7 @@ const DeliveryDetails = (props) => {
           }
         }
       } else {
-        if (currentLocation === null) {
+        if (currentLocation !== null) {
           text = truncLoc;
         } else {
           text = "Add Address";
@@ -449,8 +450,7 @@ const DeliveryDetails = (props) => {
                   padding: "0",
                 }}
               >
-                {userLocation}
-
+                {userLocation}{" "}
                 <StyledOuterContainerIcon className="dropdown_icon_container">
                   <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
                 </StyledOuterContainerIcon>

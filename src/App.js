@@ -1,12 +1,19 @@
 import React, { useEffect, Suspense } from "react";
-import RouteProvider from "./routes/routes";
-import "./App.css";
-import { useLocation } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import countryList from "./api/common/getAllCountries";
-import { addCountry, allCountries } from "./store/reducers/authSlice";
+import { useLocation } from "react-router";
+
+import { setKey, geocode, RequestType } from "react-geocode";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import RouteProvider from "./routes/routes";
+
+import { addCountry, allCountries } from "./store/reducers/authSlice";
+
+import countryList from "./api/common/getAllCountries";
+
+import "./App.css";
 
 const LazyChatScript = React.lazy(() =>
   import("./components/chat/LazyChatScript")
@@ -14,16 +21,21 @@ const LazyChatScript = React.lazy(() =>
 
 function App() {
   const currentURL = useLocation();
-  const getChatURLs = (URL) => {
-    return URL.includes("/delivery");
-  };
+  const userLocation = localStorage.getItem("location");
+
+  // const getChatURLs = (URL) => {
+  //   return URL.includes("/delivery");
+  // };
+
   const countryCode = useSelector(
     (state) => state.auth.user.mobile_country_code
   );
   const restaurantData = useSelector(
     (state) => state.resturants.resturantsData
   );
+
   const dispatch = useDispatch();
+
   const fetchAllCountries = () => {
     countryList()
       .then((res) => {
@@ -72,6 +84,57 @@ function App() {
       document.body.classList.remove("chat-icon");
     }
   }, [currentURL]);
+
+  useEffect(() => {
+    navigator.permissions &&
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then(function (PermissionStatus) {
+          localStorage.setItem("locatPermission", PermissionStatus.state);
+        });
+  }, []);
+
+  useEffect(() => {
+    if (JSON.parse(userLocation) === null) {
+      // eslint-disable-next-line no-undef
+      setKey(process.env.REACT_APP_GOOGLE_API_KEY);
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            let addToStorage = {
+              lat: "",
+              lng: "",
+              address: "",
+            };
+            geocode(
+              RequestType.LATLNG,
+              `${position.coords.latitude},${position.coords.longitude}`,
+              {
+                enable_address_descriptor: true,
+              }
+            )
+              .then(({ results }) => {
+                const address = results[0].formatted_address;
+                const lat = results[0].geometry.location.lat;
+                const lng = results[0].geometry.location.lng;
+
+                addToStorage = {
+                  lat: lat,
+                  lng: lng,
+                  address: address,
+                };
+
+                localStorage.setItem("location", JSON.stringify(addToStorage));
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          },
+          () => {}
+        );
+      }
+    }
+  }, []);
 
   return (
     <div className="container_main">
