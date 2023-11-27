@@ -44,6 +44,7 @@ import getBranchesAndHours, {
 import {
   getNearByRest,
   getResturantsDetails,
+  setBranchID,
 } from "../../store/reducers/resturantsSlice.js";
 import { setThemeColor } from "../../store/reducers/themeSlice.js";
 import { closeReorderModal } from "../../store/reducers/orderSlice.js";
@@ -94,6 +95,7 @@ const Menu = () => {
   const [fullAddress, setFullAddress] = useState(null);
   const [restaurantName, setRestaurantName] = useState("");
   const [addressID, setAddressID] = useState();
+  const [branchesAndHoursResponse, setBranchesAndHoursResponse] = useState();
 
   const {
     data: restaurantDetailResponse,
@@ -189,12 +191,17 @@ const Menu = () => {
     }
   }, [userCurrentAddress, nearbyRestaurants]);
 
-  const { data: branchesAndHoursResponse, isSuccess } = useQuery({
-    queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, restaurant_id],
-    queryFn: () => {
-      return getBranchesAndHours(restaurant_id);
-    },
-  });
+  const fetchBranches = () => {
+    getBranchesAndHours(restaurant_id)
+      .then((res) => {
+        setBranchesAndHoursResponse(res);
+      })
+      .catch((e) => console.log(e));
+  };
+
+  useEffect(() => {
+    fetchBranches();
+  }, []);
 
   const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
     (val) => {
@@ -317,7 +324,7 @@ const Menu = () => {
 
   useEffect(() => {
     getBranchIdNearToLocation();
-  }, [branchesAndHoursResponse?.data, restaurantDetail]);
+  }, [branchesAndHoursResponse, restaurantDetail]);
 
   const getBranchIdNearToLocation = () => {
     const filterBranch = branchesAndHoursResponse?.data?.filter(
@@ -347,6 +354,7 @@ const Menu = () => {
         // );
 
         localStorage.setItem("branchId", branchesAndHoursResponse.data[i].id);
+        dispatch(setBranchID(branchesAndHoursResponse.data[i].id));
 
         break;
 

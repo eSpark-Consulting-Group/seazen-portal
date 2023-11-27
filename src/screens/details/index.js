@@ -108,6 +108,8 @@ export const Details = () => {
   const [addressId, setAddressID] = useState();
   const [sharedItemForCart, setSharedItemForCart] = useState({});
   const [clearCartModal, setClearCartModal] = useState(false);
+  const [menuItemDetails, setMenuItemDetails] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const restaurantsData = useSelector(
     (state) => state.resturants.resturantsData
@@ -225,17 +227,21 @@ export const Details = () => {
     }
   };
 
-  const {
-    data: menuItemDetails,
-    isLoading,
-    error,
-    isError,
-  } = useQuery({
-    queryKey: [GET_MENU_ITEM_DETAILS_QUERY_KEY],
-    queryFn: () =>
-      getMenuItemDetails(id, restaurant_id, location.state.branch_id),
-  });
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
+
+  const getItemDetails = () => {
+    setIsLoading(true);
+    getMenuItemDetails(id, restaurant_id, location.state.branch_id)
+      .then((res) => {
+        setIsLoading(false);
+        setMenuItemDetails(res);
+      })
+      .catch((err) => console.error(err));
+  };
+
+  useEffect(() => {
+    getItemDetails();
+  }, []);
 
   const calculateToppingVariantTotal = (toppingVariantData) => {
     const eachToppingTotal = toppingVariantData

@@ -8,6 +8,7 @@ const initialState = {
   details: [],
   nearbyRestaurants: [],
   branchHours: [],
+  branchId: null,
   visibleCategoryElementID: 0,
   selectedService: null,
   restaurantDetail: {},
@@ -65,6 +66,9 @@ const resturantsSlice = createSlice({
     setCategoryElementID: (state, action) => {
       state.visibleCategoryElementID = action.payload;
     },
+    setBranchID: (state, action) => {
+      state.branchId = action.payload;
+    },
     setSlidesCount: (state, action) => {
       state.details.slides = state.details.slides.map((item, index) =>
         index !== action.payload.index
@@ -105,6 +109,7 @@ export const {
   setSlidesCount,
   changeItemQuantity,
   setCategoryElementID,
+  setBranchID,
   getNearByRest,
   getBranchHours,
   setSelectedService,

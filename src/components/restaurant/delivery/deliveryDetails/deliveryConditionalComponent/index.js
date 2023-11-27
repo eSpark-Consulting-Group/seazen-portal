@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import DeliveryDetails from "..";
 import ErrorInformation from "../../../../errorInformation";
 import MenuCardListContainer from "../../../menu/menu_card_list_container";
@@ -39,28 +39,22 @@ const DeliveryConditionalComponent = ({
     (state) => state?.resturants?.listItemByCategory
   );
   const dispatch = useDispatch();
+  const branchId = useSelector((state) => state.resturants.branchId);
 
-  const {
-    data: getAllItemsByCategoryResponse,
-    isLoading: itemsByCategoryLoading,
-    error: itemsByCategoryError,
-    isError: itemsByCategoryIsError,
-    refetch,
-  } = useQuery({
-    queryKey: [
-      GET_CATEGORY_LIST_ITEM,
-      resturantId,
-      searchParams.get("category"),
-    ],
-    queryFn: () =>
+  const [itemsData, setItemsData] = useState();
+
+  const fetchAllItems = () => {
+    if (branchId != null) {
       getListItemByCategory(
         resturantId,
+        branchId,
         searchParams.get("category"),
         country?.id
-      ),
-    onSuccess: (data) => {},
-    enabled: false,
-  });
+      )
+        .then((res) => setItemsData(res))
+        .catch((e) => console.error(e));
+    }
+  };
 
   useEffect(() => {
     const restaurantId = localStorage.getItem("restaurantID");
@@ -69,9 +63,9 @@ const DeliveryConditionalComponent = ({
       categoryList?.length == 0 ||
       restaurantId != categoryList[0]?.restaurant_id
     ) {
-      refetch();
+      fetchAllItems();
     }
-  }, [country]);
+  }, [country, branchId]);
 
   const {
     data: getItemsCategoryResponse,
@@ -85,12 +79,14 @@ const DeliveryConditionalComponent = ({
     onSuccess: (data) => {},
   });
 
-  const { data: itemDetail } = getAllItemsByCategoryResponse || {};
+  const { data: itemDetail } = itemsData || {};
   const { data: itemCategoryList } = getItemsCategoryResponse || {};
 
   useEffect(() => {
-    dispatch(getCategoryItemList(getAllItemsByCategoryResponse?.data));
-  }, [getAllItemsByCategoryResponse]);
+    if (itemsData?.data) {
+      dispatch(getCategoryItemList(itemsData?.data));
+    }
+  }, [itemsData]);
 
   return (
     <>
