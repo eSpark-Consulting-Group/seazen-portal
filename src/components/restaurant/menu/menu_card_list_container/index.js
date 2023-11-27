@@ -310,7 +310,7 @@ const MenuCardListContainer = ({
                   <CircularProgress />
                 </Box>
               )}
-              <Stack spacing={1.5}>
+              <Stack>
                 {categoryList && categoryList?.length > 0 && (
                   <div className="searchwrapper">
                     <img
@@ -324,7 +324,13 @@ const MenuCardListContainer = ({
                 {Object.keys(categoriesWiseList).map((val, index) => {
                   return (
                     <>
-                      <div id={index + 1} className="card_list_title">
+                      <div
+                        id={index + 1}
+                        className="card_list_title"
+                        style={{
+                          marginTop: index == 0 ? "-3px" : "16px",
+                        }}
+                      >
                         {
                           itemCategoryList?.find((item) => item.id == val)
                             ?.name_en

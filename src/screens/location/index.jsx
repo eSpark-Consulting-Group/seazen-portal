@@ -665,7 +665,7 @@ function LocationPage() {
           justifyContent="space-between"
           spacing={2}
         >
-          <div style={{ padding: "8px" }}>
+          <div style={{ padding: "8px", marginTop: "12px" }}>
             <Navbar
               backIcon
               logo

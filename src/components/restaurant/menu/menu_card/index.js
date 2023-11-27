@@ -635,6 +635,28 @@ const MenuCard = (props) => {
             sx={{
               minWidth: "75%",
             }}
+            onClick={() => {
+              if (token === null) {
+                navigate(paths.details + "/" + id, {
+                  state: {
+                    id: id,
+                    branch_id: allData.branch_id,
+                    locationDeliver: locationDeliver,
+                  },
+                });
+              } else {
+                navigate(paths.details + "/" + id, {
+                  state: {
+                    id: id,
+                    locationDeliver: locationDeliver,
+                    branchRestaurants: restaurantBranchHours,
+                    resturantId: resturantId,
+                    restaurantDetail,
+                    branch_id: allData.branch_id,
+                  },
+                });
+              }
+            }}
           >
             <div
               className="menu_card_image_container pointer"
@@ -675,31 +697,7 @@ const MenuCard = (props) => {
                 />
               )}
             </div>
-            <div
-              className="menu_card_price_text_container pointer"
-              onClick={() => {
-                if (token === null) {
-                  navigate(paths.details + "/" + id, {
-                    state: {
-                      id: id,
-                      branch_id: allData.branch_id,
-                      locationDeliver: locationDeliver,
-                    },
-                  });
-                } else {
-                  navigate(paths.details + "/" + id, {
-                    state: {
-                      id: id,
-                      locationDeliver: locationDeliver,
-                      branchRestaurants: restaurantBranchHours,
-                      resturantId: resturantId,
-                      restaurantDetail,
-                      branch_id: allData.branch_id,
-                    },
-                  });
-                }
-              }}
-            >
+            <div className="menu_card_price_text_container pointer">
               <div>
                 <div className="menu_card_heading_text">{foodItem}</div>
                 <div className="menu_card_sub_text">{foodIngredients}</div>
