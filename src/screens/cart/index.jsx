@@ -22,52 +22,36 @@ import {
 } from "@mui/material";
 
 import dayjs from "dayjs";
-
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker, MobileTimePicker } from "@mui/x-date-pickers";
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-
 import { isEmpty } from "lodash";
-
 import { ReactComponent as DollarIcon } from "../../assets/icons/dollar.svg";
 import { ReactComponent as KNETIcon } from "../../assets/icons/knet.svg";
-
 import CartItem from "../../components/shared/cart/CartItem";
 import { DialogComponent } from "../../components/dialog";
-
 import cartList from "../../api/cart/cartList";
 import checkout from "../../api/cart/checkout";
 import getRestaurantDetails from "../../api/restaurant/getRestaurantDetails";
 import applyPromoCode from "../../api/cart/promocode";
-import getBranchesAndHours, {
-  GET_BRANCHES_AND_HOURS_QUERY_KEY,
-} from "../../api/restaurant/branches/getBranchesAndHours";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import deliveryPriceApi from "../../api/common/getDeliveryCharges";
-
 import { addToCart } from "../../store/reducers/cartSlice";
 import { setThemeColor } from "../../store/reducers/themeSlice";
 import {
   getBranchHours,
   getNearByRest,
 } from "../../store/reducers/resturantsSlice";
-
 import {
   getDistanceFromLatLonInKm,
   truncateString,
 } from "../../utils/getAddress";
-
 import { paths } from "../../routes/paths";
-
 import "./style.css";
+import SchedulePicker from "../../components/shared/schedulePicker";
 
 const toastList = new Set();
 const MAX_TOAST = 1;
@@ -108,20 +92,12 @@ function CartPage() {
   const DELIVERY_CHARGE = Number(0).toFixed(3);
   const [isDialogOpen, setDialogOpen] = useState(false);
 
-  const [showTimePicker, setShowTimePicker] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [notDeliver, setNotDeliver] = useState(false);
   const [restaurantOpen, setRestaurantOpen] = useState(false);
   const [updateText, setUpdateText] = useState("");
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [userTrusted, setUserTrusted] = useState(false);
-  const [selectedSchedule, setSelectedSchedule] = useState(
-    "14 August 2023, ASAP"
-  );
-
-  const [pickDay, setPickDay] = useState("");
-  const [minTime, setMinTime] = useState(dayjs());
-  const [maxTime, setMaxTime] = useState(dayjs());
 
   const token = localStorage.getItem("token");
   const restaurantId = localStorage.getItem("restaurantID");
@@ -241,39 +217,9 @@ function CartPage() {
       });
   };
 
-  const { data: branchesAndHoursResponse, isSuccess } = useQuery({
-    queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, cart[0]?.restaurant_id],
-    queryFn: () => {
-      return getBranchesAndHours(cart[0]?.restaurant_id);
-    },
-  });
-
-  const branchId = localStorage.getItem("branchId");
-
-  const timeByDate = branchesAndHoursResponse?.data
-    ?.find((val) => (val.id = branchId))
-    ?.branch_hours?.find((val) => {
-      return val.week_day == pickDay;
-    });
-
   useEffect(() => {
     setCartItems(cart);
   }, [cart]);
-
-  const getSingleDigitHour = (fullTime) => {
-    let Hour;
-    Hour =
-      fullTime?.split(":")[0][0] == "0"
-        ? fullTime?.split(":")[0][1]
-        : fullTime?.split(":")[0];
-
-    if (fullTime?.includes("AM")) {
-      return parseInt(Hour);
-    }
-    if (fullTime?.includes("PM")) {
-      return parseInt(Hour) + 12;
-    }
-  };
 
   const checkoutHandler = (event) => {
     event.preventDefault();
@@ -642,44 +588,6 @@ function CartPage() {
       date: pickDate?.split("-")[0],
       time: pickTime,
     },
-  };
-
-  const handlerFunc = (ampm, date) => {
-    const selectedTime = dayjs(date);
-    if (ampm == "pm") {
-      setMinTime(
-        selectedTime
-          .set("hour", getSingleDigitHour(timeByDate?.from_time))
-          .set("minute", 0)
-      );
-      setMaxTime(
-        selectedTime
-          .set("hour", getSingleDigitHour(timeByDate?.to_time))
-          .set("minute", 0)
-          .add(1, "day")
-      );
-    }
-    if (ampm == "am") {
-      setMinTime(
-        selectedTime
-          .subtract(1, "day")
-          .set("hour", getSingleDigitHour(timeByDate?.from_time))
-          .set("minute", 0)
-      );
-      setMaxTime(
-        selectedTime
-          .subtract(1, "day")
-          .set("hour", getSingleDigitHour(timeByDate?.to_time))
-          .set("minute", 0)
-          .add(1, "day")
-      );
-    }
-  };
-
-  const onDateSelected = () => {
-    if (pickDate !== null) {
-      setOpenSchedulePopup(false);
-    }
   };
 
   const trunct = (str) => {
@@ -1064,37 +972,10 @@ function CartPage() {
             <CloseIcon />
           </IconButton> */}
 
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              open={openSchedulePopup}
-              sx={{
-                display: "none",
-              }}
-              minTime={minTime}
-              maxTime={maxTime}
-              disablePast
-              ampm={true}
-              onChange={(date, e, ew) => {
-                handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
-                setPickDay(date.format("dddd"));
-                date.preventDefault();
-              }}
-              onClose={() => {
-                onDateSelected();
-              }}
-              onAccept={(date) => {
-                setOpenSchedulePopup(false);
-                if (date) {
-                  localStorage.setItem(
-                    "pickDate",
-                    date.format("MMM DD, YYYY-dddd")
-                  );
-                  localStorage.setItem("isAsap", false);
-                  localStorage.setItem("pickTime", date.format("hh:mm a"));
-                }
-              }}
-            />
-          </LocalizationProvider>
+          <SchedulePicker
+            isPopUpOpen={openSchedulePopup}
+            popUpHandler={(isOpen) => setOpenSchedulePopup(isOpen)}
+          />
           <div className="scrollableContainerWrapper">
             <div className="scrollableContainer" id="scrollableContainer">
               <Stack spacing={2}>

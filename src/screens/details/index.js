@@ -1426,11 +1426,8 @@ export const Details = () => {
           />
 
           <SchedulePicker
-            openSchedulePopup={openSchedulePopup}
-            setOpenSchedulePopup={setOpenSchedulePopup}
-            showTimePicker={showTimePicker}
-            setShowTimePicker={setShowTimePicker}
-            menuCard={true}
+            isPopUpOpen={openSchedulePopup}
+            popUpHandler={(isOpen) => setOpenSchedulePopup(isOpen)}
           />
 
           <ScheduleDialog

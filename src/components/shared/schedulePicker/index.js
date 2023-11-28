@@ -1,44 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-// import { useDispatch } from "react-redux";
-
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useQuery } from "@tanstack/react-query";
-
-import dayjs from "dayjs";
-
-// import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import {
-  DateTimePicker,
-  // , MobileTimePicker
-} from "@mui/x-date-pickers";
-
+import dayjs from "dayjs";
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../../api/restaurant/branches/getBranchesAndHours";
 
-const SchedulePicker = (props) => {
-  const {
-    openSchedulePopup,
-    setOpenSchedulePopup,
-    // showTimePicker,
-    // setShowTimePicker,
-    // menuCard,
-  } = props;
-
-  // const dispatch = useDispatch();
-
+const SchedulePicker = ({ popUpHandler, isPopUpOpen }) => {
   const popularDishRestId = localStorage.getItem("restaurantIdForRedirect");
   const restaurant_id = localStorage.getItem("restaurantID");
-
   const [pickDate, setPickDate] = useState(
     dayjs(new Date()).format("MMM DD, YYYY")
   );
   const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [isAsap, setIsAsap] = useState(true);
   const [pickTime, setPickTime] = useState(dayjs(asapTime).format("hh:mm a"));
-  // const [fromDetail, setFromDetail] = useState(false);
   const [pickDay, setPickDay] = useState("");
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
@@ -71,12 +48,6 @@ const SchedulePicker = (props) => {
       );
     },
   });
-
-  const onDateSelected = () => {
-    if (localStorage.getItem("pickDate") !== null) {
-      setOpenSchedulePopup(false);
-    }
-  };
 
   const branchId = localStorage.getItem("branchId");
 
@@ -133,35 +104,43 @@ const SchedulePicker = (props) => {
     }
   };
 
+  const Overlay = () => {
+    return <div className="overlay"></div>;
+  };
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DateTimePicker
-        open={openSchedulePopup}
-        sx={{
-          display: "none",
-        }}
-        minTime={minTime}
-        maxTime={maxTime}
-        disablePast
-        ampm={true}
-        onChange={(date, e, ew) => {
-          handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
-          setPickDay(date.format("dddd"));
-          date.preventDefault();
-        }}
-        onClose={() => {
-          onDateSelected();
-        }}
-        onAccept={(date) => {
-          setOpenSchedulePopup(false);
-          if (date) {
-            localStorage.setItem("pickDate", date.format("MMM DD, YYYY-dddd"));
-            localStorage.setItem("isAsap", false);
-            localStorage.setItem("pickTime", date.format("hh:mm a"));
-          }
-        }}
-      />
-    </LocalizationProvider>
+    <>
+      {isPopUpOpen && <Overlay />}
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateTimePicker
+          open={isPopUpOpen}
+          sx={{
+            display: "none",
+          }}
+          minTime={minTime}
+          maxTime={maxTime}
+          disablePast
+          ampm={true}
+          onClose={() => popUpHandler(false)}
+          onChange={(date, e, ew) => {
+            handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
+            setPickDay(date.format("dddd"));
+            date.preventDefault();
+          }}
+          onAccept={(date) => {
+            popUpHandler(false);
+            if (date) {
+              localStorage.setItem(
+                "pickDate",
+                date.format("MMM DD, YYYY-dddd")
+              );
+              localStorage.setItem("isAsap", false);
+              localStorage.setItem("pickTime", date.format("hh:mm a"));
+            }
+          }}
+        />
+      </LocalizationProvider>
+    </>
   );
 };
 

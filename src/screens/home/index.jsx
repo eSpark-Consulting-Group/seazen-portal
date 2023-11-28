@@ -846,10 +846,8 @@ const Home = () => {
       />
 
       <SchedulePicker
-        openSchedulePopup={openSchedulePopup}
-        setOpenSchedulePopup={setOpenSchedulePopup}
-        showTimePicker={showTimePicker}
-        setShowTimePicker={setShowTimePicker}
+        isPopUpOpen={openSchedulePopup}
+        popUpHandler={(isOpen) => setOpenSchedulePopup(isOpen)}
       />
 
       <ScheduleDialog

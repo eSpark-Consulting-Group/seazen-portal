@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
-import { useQuery } from "@tanstack/react-query";
-
 import { v4 as uuidv4 } from "uuid";
-
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import {
   Stack,
   Typography,
@@ -17,33 +12,19 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
-
 import { styled } from "@mui/material/styles"; // Import styled from MUI
 import { lighten } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
-
 import dayjs from "dayjs";
-
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateTimePicker, MobileTimePicker } from "@mui/x-date-pickers";
-
-import getBranchesAndHours, {
-  GET_BRANCHES_AND_HOURS_QUERY_KEY,
-} from "../../../../api/restaurant/branches/getBranchesAndHours";
 import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant";
-
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../../../utils/getAddress";
-
 import { getNearByRest } from "../../../../store/reducers/resturantsSlice";
-
 import { paths } from "../../../../routes/paths";
-
 import "./style.css";
+import SchedulePicker from "../../../shared/schedulePicker";
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
@@ -110,10 +91,7 @@ const DeliveryDetails = (props) => {
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   // const [showTimePicker, setShowTimePicker] = useState(false);
   const [restaurantOpen, setRestaurantOpen] = useState(false);
-  const [pickDay, setPickDay] = useState("");
   const [addressID, setAddressID] = useState();
-  const [minTime, setMinTime] = useState(dayjs());
-  const [maxTime, setMaxTime] = useState(dayjs());
 
   const { id: restaurant_id } = useParams();
 
@@ -300,42 +278,6 @@ const DeliveryDetails = (props) => {
     localStorage.setItem("isAsap", true);
   };
 
-  const { data: branchesAndHoursResponse, isSuccess } = useQuery({
-    queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, restaurant_id],
-    queryFn: () => {
-      return getBranchesAndHours(restaurant_id);
-    },
-  });
-
-  const branchId = localStorage.getItem("branchId");
-
-  const timeByDate = branchesAndHoursResponse?.data
-    ?.find((val) => (val.id = branchId))
-    ?.branch_hours?.find((val) => {
-      return val.week_day == pickDay;
-    });
-
-  const getSingleDigitHour = (fullTime) => {
-    let Hour;
-    Hour =
-      fullTime?.split(":")[0][0] == "0"
-        ? fullTime?.split(":")[0][1]
-        : fullTime?.split(":")[0];
-
-    if (fullTime?.includes("AM")) {
-      return parseInt(Hour);
-    }
-    if (fullTime?.includes("PM")) {
-      return parseInt(Hour) + 12;
-    }
-  };
-
-  const onDateSelected = () => {
-    if (pickDate !== null) {
-      setOpenSchedulePopup(false);
-    }
-  };
-
   useEffect(() => {
     if (fullAddress !== null) {
       localStorage.setItem(
@@ -384,45 +326,8 @@ const DeliveryDetails = (props) => {
     }
   };
 
-  const Overlay = () => {
-    return <div className="overlay"></div>;
-  };
-
-  const handlerFunc = (ampm, date) => {
-    const selectedTime = dayjs(date);
-    if (ampm == "pm") {
-      setMinTime(
-        selectedTime
-          .set("hour", getSingleDigitHour(timeByDate?.from_time))
-          .set("minute", 0)
-      );
-      setMaxTime(
-        selectedTime
-          .set("hour", getSingleDigitHour(timeByDate?.to_time))
-          .set("minute", 0)
-          .add(1, "day")
-      );
-    }
-    if (ampm == "am") {
-      setMinTime(
-        selectedTime
-          .subtract(1, "day")
-          .set("hour", getSingleDigitHour(timeByDate?.from_time))
-          .set("minute", 0)
-      );
-      setMaxTime(
-        selectedTime
-          .subtract(1, "day")
-          .set("hour", getSingleDigitHour(timeByDate?.to_time))
-          .set("minute", 0)
-          .add(1, "day")
-      );
-    }
-  };
-
   return (
     <>
-      {openSchedulePopup && <Overlay />}
       <StyledOuterContainer
         className="delivery_outer_container"
         style={{ background: restaurantTheme.main + 24, position: "relative" }}
@@ -643,37 +548,10 @@ const DeliveryDetails = (props) => {
             </Stack>
           )}
         </div>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateTimePicker
-            open={openSchedulePopup}
-            sx={{
-              display: "none",
-            }}
-            minTime={minTime}
-            maxTime={maxTime}
-            disablePast
-            ampm={true}
-            onChange={(date, e, ew) => {
-              handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
-              setPickDay(date.format("dddd"));
-              date.preventDefault();
-            }}
-            onClose={() => {
-              onDateSelected();
-            }}
-            onAccept={(date) => {
-              setOpenSchedulePopup(false);
-              if (date) {
-                localStorage.setItem(
-                  "pickDate",
-                  date.format("MMM DD, YYYY-dddd")
-                );
-                localStorage.setItem("isAsap", false);
-                localStorage.setItem("pickTime", date.format("hh:mm a"));
-              }
-            }}
-          />
-        </LocalizationProvider>
+        <SchedulePicker
+          isPopUpOpen={openSchedulePopup}
+          popUpHandler={(isOpen) => setOpenSchedulePopup(isOpen)}
+        />
         {/* <Stack
         justifyContent="center"
         alignItems="center"
