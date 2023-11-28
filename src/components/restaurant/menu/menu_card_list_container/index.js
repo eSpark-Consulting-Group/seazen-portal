@@ -2,23 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  Box,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Stack,
-  Typography,
-  Modal,
-  CircularProgress,
-} from "@mui/material";
+import { Box, Stack, Typography, Modal, CircularProgress } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { Button } from "react-bootstrap";
 
-import InfiniteScroll from "react-infinite-scroll-component";
-
-import Card from "../../../adressList/index.js";
 import MenuCard from "../menu_card/index.js";
 import { DialogComponent } from "../../../dialog/index.js";
 import SelectLocation from "../../../dialog/selectLocation.js";
@@ -45,7 +33,6 @@ import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant
 import "./style.css";
 
 const MenuCardListContainer = ({
-  itemDetail,
   itemCategoryList,
   locationDeliver,
   restaurantBranchHours,
@@ -55,6 +42,7 @@ const MenuCardListContainer = ({
   setSelectedItemToDeliver,
   setNotDeliver,
   setRestaurantOpen,
+  ItemsCategoryLoading,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -65,9 +53,7 @@ const MenuCardListContainer = ({
   );
   const cart = useSelector((state) => state.cart.cart);
   const addressData = useSelector((state) => state.address.addressData);
-  const resturantsData = useSelector(
-    (state) => state.resturants.resturantsData
-  );
+
   const branchHours = useSelector((state) => state.resturants.branchHours);
   const nearbyRestaurants = useSelector(
     (state) => state.resturants.nearbyRestaurants
@@ -79,7 +65,6 @@ const MenuCardListContainer = ({
   );
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showList, setShowList] = useState([]);
@@ -97,7 +82,6 @@ const MenuCardListContainer = ({
 
   const { id } = useParams();
 
-  // const itemQuantity= useSelector((state) => state.)
   useEffect(() => {
     if (cartTotalItems === 0) {
       dispatch(resetCart());
@@ -105,7 +89,6 @@ const MenuCardListContainer = ({
   }, [cartTotalItems]);
 
   useEffect(() => {
-    // console.log(categoryList?.slice(0, 10), "categoryList?.slice(0, 10)")
     setShowList(categoryList?.slice(0, 10));
   }, [categoryList]);
 
@@ -122,8 +105,8 @@ const MenuCardListContainer = ({
   useEffect(() => {
     const options = {
       root: null, // Use the viewport as the root
-      rootMargin: "-100px",
-      threshold: 0.5, // Trigger when 50% of the element is visible
+      rootMargin: "-300px",
+      threshold: [0, 0.25, 0.5, 0.75, 1],
     };
 
     const observer = new IntersectionObserver((entries, observer) => {
@@ -229,16 +212,10 @@ const MenuCardListContainer = ({
             setDistanceIsFar(true);
             setOpenAddressPopup(false);
           } else {
-            const address = {
-              latitude: fullAddress.lat,
-              longitude: fullAddress.lng,
-              service_type: "dinein",
-            };
-
-            fetchNearbyRestaurant(address);
-
             setDistanceIsFar(false);
             setOpenAddressPopup(false);
+
+            checkNearByRest(filterBranch);
 
             break;
           }
@@ -246,31 +223,6 @@ const MenuCardListContainer = ({
       }
     }
   }, [fullAddress, branchHours]);
-
-  const fetchNearbyRestaurant = (address) => {
-    if (nearbyRestaurants.length === 0) {
-      getNearByRestaurants(address).then((res) => {
-        if (res.status === "ok") {
-          localStorage.setItem(
-            "selected",
-            JSON.stringify({ ...fullAddress, addressId: addressID })
-          );
-
-          dispatch(getNearByRest(res?.data));
-          setOpenAddressPopup(false);
-          checkNearByRest(res?.data);
-        }
-      });
-    } else {
-      localStorage.setItem(
-        "selected",
-        JSON.stringify({ ...fullAddress, addressId: addressID })
-      );
-
-      setOpenAddressPopup(false);
-      checkNearByRest(nearbyRestaurants);
-    }
-  };
 
   const navigateUser = () => {
     navigate(paths.location, {
@@ -283,24 +235,20 @@ const MenuCardListContainer = ({
     });
   };
 
-  const checkNearByRest = (nearby) => {
-    const filterRestaurant = nearby?.filter((nearBy) => {
-      const splitLogo = nearBy?.logo?.split("/");
-      const splitName = splitLogo[splitLogo.length - 1];
+  const checkNearByRest = (branch) => {
+    localStorage.setItem(
+      "selected",
+      JSON.stringify({ ...fullAddress, addressId: addressID })
+    );
 
-      const name = splitName.split("-")[0];
-
-      return name === restaurantDetail?.name_en?.toLowerCase();
-    });
-
-    if (filterRestaurant?.length === 0) {
+    if (branch?.length === 0) {
       setRestaurantName(restaurantDetail?.name_en);
       setDistanceIsFar(true);
       setOpenAddressPopup(false);
     } else {
       if (localStorage.getItem("isAsap") === "true") {
-        for (let i = 0; i < filterRestaurant?.length; i++) {
-          if (filterRestaurant[i]?.openingStatus === "Open") {
+        for (let i = 0; i < branch?.length; i++) {
+          if (branch[i]?.branch_hours[0].openingStatus === "Open") {
             setRestaurantIsOpen(false);
             navigate(paths?.cart);
             break;
@@ -351,7 +299,7 @@ const MenuCardListContainer = ({
               </div>
             </div> */}
             <>
-              {!categoryList && (
+              {ItemsCategoryLoading && (
                 <Box
                   sx={{
                     display: "flex",
@@ -362,8 +310,8 @@ const MenuCardListContainer = ({
                   <CircularProgress />
                 </Box>
               )}
-              <Stack spacing={1.5}>
-                {categoryList && (
+              <Stack>
+                {categoryList && categoryList?.length > 0 && (
                   <div className="searchwrapper">
                     <img
                       src="/assets/img/Icon - Search.svg"
@@ -376,40 +324,50 @@ const MenuCardListContainer = ({
                 {Object.keys(categoriesWiseList).map((val, index) => {
                   return (
                     <>
-                      <div id={index + 1} className="card_list_title">
+                      <div
+                        id={index + 1}
+                        className="card_list_title"
+                        style={{
+                          marginTop: index == 0 ? "-3px" : "16px",
+                        }}
+                      >
                         {
                           itemCategoryList?.find((item) => item.id == val)
                             ?.name_en
                         }
                       </div>{" "}
                       {categoriesWiseList[val].map((item, index) => {
-                        return (
-                          <MenuCard
-                            allData={item}
-                            key={index}
-                            locationDeliver={locationDeliver}
-                            resturantId={resturantId}
-                            restaurantBranchHours={restaurantBranchHours}
-                            restaurantDetail={restaurantDetail}
-                            foodItem={item.name_en}
-                            foodIngredients={item.description_en}
-                            foodPrice={item.price}
-                            foodImage={item.image}
-                            id={item.id}
-                            restaurant_id={item.restaurant_id}
-                            showSubTractButton={
-                              item.has_extras === false &&
-                              item.has_variants === false &&
-                              item.has_options === false
-                            }
-                            setOpenModal={setOpenModal}
-                            setSelectedItemToDeliver={setSelectedItemToDeliver}
-                            setNotDeliver={setNotDeliver}
-                            setRestaurantOpen={setRestaurantOpen}
-                            setOpenAddressPopup={setOpenAddressPopup}
-                            setRestaurantIsOpen={setRestaurantIsOpen}
-                          />
-                        );
+                        if (item.branch_status) {
+                          return (
+                            <MenuCard
+                              allData={item}
+                              key={index}
+                              locationDeliver={locationDeliver}
+                              resturantId={resturantId}
+                              restaurantBranchHours={restaurantBranchHours}
+                              restaurantDetail={restaurantDetail}
+                              foodItem={item.name_en}
+                              foodIngredients={item.description_en}
+                              foodPrice={item.price}
+                              foodImage={item.image}
+                              id={item.id}
+                              restaurant_id={item.restaurant_id}
+                              showSubTractButton={
+                                item.has_extras === false &&
+                                item.has_variants === false &&
+                                item.has_options === false
+                              }
+                              setOpenModal={setOpenModal}
+                              setSelectedItemToDeliver={
+                                setSelectedItemToDeliver
+                              }
+                              setNotDeliver={setNotDeliver}
+                              setRestaurantOpen={setRestaurantOpen}
+                              setOpenAddressPopup={setOpenAddressPopup}
+                              setRestaurantIsOpen={setRestaurantIsOpen}
+                            />
+                          );
+                        }
                       })}
                     </>
                   );
@@ -446,8 +404,8 @@ const MenuCardListContainer = ({
           onClick={() => {
             localStorage.getItem("token") === null
               ? navigate(paths.cart)
-              : addressData?.length === 0
-              ? navigate(paths.address, {
+              : addressData?.length === 0 && cart.length
+              ? navigate(paths.location, {
                   state: {
                     noAddress: true,
                     latlng: {
@@ -459,18 +417,18 @@ const MenuCardListContainer = ({
                     restaurant_id: id,
                   },
                 })
-              : localStorage.getItem("selected") === null &&
-                cart?.length > 0 &&
-                !locationDeliver
-              ? navigate(paths.location, {
-                  state: {
-                    path: "/cart",
-                    restaurant_id: restaurantDetail.id,
-                    restaurantName: restaurantDetail?.page_title_en,
-                    notSelected: true,
-                  },
-                })
-              : addressData?.length > 0 &&
+              : // : localStorage.getItem("selected") === null &&
+              //   cart?.length > 0 &&
+              //   !locationDeliver
+              // ? navigate(paths.location, {
+              //     state: {
+              //       path: "/cart",
+              //       restaurant_id: restaurantDetail.id,
+              //       restaurantName: restaurantDetail?.page_title_en,
+              //       notSelected: true,
+              //     },
+              //   })
+              addressData?.length > 0 &&
                 localStorage.getItem("selected") === null
               ? setOpenAddressPopup(true)
               : navigate(paths.cart, {

@@ -1,24 +1,28 @@
 import React from "react";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import "./style.css";
+import { useDispatch } from "react-redux";
+// import { useNavigate } from "react-router";
+
+import { Box, Card } from "@mui/material";
+// import { useMediaQuery } from "@mui/material";
+
 import deliveryIcon from "./delivery-icon.svg";
 import pickupIcon from "./pickup-icon.svg";
 import cateringIcon from "./catering-icon.svg";
 import dineInIcon from "./dinein-icon.svg";
-import { useNavigate } from "react-router";
-import { paths } from "../../routes/paths";
-// import { useMediaQuery } from "@mui/material";
-import { useSelector } from "react-redux";
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
-  >
-    •
-  </Box>
-);
+// import { paths } from "../../routes/paths";
+
+import "./style.css";
+import { setSelectedService } from "../../store/reducers/resturantsSlice";
+
+// const bull = (
+//   <Box
+//     component="span"
+//     sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
+//   >
+//     •
+//   </Box>
+// );
 
 const images = [
   {
@@ -117,26 +121,23 @@ const BasicCard = (props) => {
     clickedButtonIndex,
     orderTypeFilter,
     restaurantsData,
-    setOpenAddressPopup,
     goToRestaurantMenuPage,
-    setRestaurantId,
-    setRestaurantName,
     selectedText,
-    filterSelectedNow,
     typesState,
   } = props;
 
-  const navigate = useNavigate();
-  const isToken = localStorage.getItem("token");
+  // const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // const isToken = localStorage.getItem("token");
 
-  const captions = [
-    icons,
-    [icons[0], icons[1], icons[3]],
-    icons,
-    icons,
-    [icons[0], icons[1], icons[3]],
-    [icons[1], icons[3]],
-  ];
+  // const captions = [
+  //   icons,
+  //   [icons[0], icons[1], icons[3]],
+  //   icons,
+  //   icons,
+  //   [icons[0], icons[1], icons[3]],
+  //   [icons[1], icons[3]],
+  // ];
 
   // const isMediumScreen = useMediaQuery(
   //   "(max-width: 400px) and (min-width: 385px)"
@@ -251,6 +252,24 @@ const BasicCard = (props) => {
   const iconWidth = "9px";
   const iconHeight = "11px";
 
+  const serviceSelect = (serviceStatus, text) => {
+    let noRoute;
+
+    if (text === "Dine In" && serviceStatus?.dinein_status) {
+      noRoute = "dinein";
+    } else if (serviceStatus?.catering_status && text === "Catering") {
+      noRoute = "catering";
+    } else if (serviceStatus?.delivery_status && text === "Delivery") {
+      noRoute = "delivery";
+    } else if (serviceStatus?.pickup_status && text === "Pickup") {
+      noRoute = "pickup";
+    } else {
+      noRoute = null;
+    }
+
+    return noRoute;
+  };
+
   return (
     <div>
       <div
@@ -262,9 +281,12 @@ const BasicCard = (props) => {
             <div
               key={index}
               className={`restaurantCards restaurantCard-large ${
-                selectedText !== "Delivery"
+                selectedText !== "Delivery" &&
+                (restaurant?.dinein_status || restaurant?.pickup_status)
                   ? getCardClassName(images[index].service)
-                  : null
+                  : !restaurant?.delivery_status || !restaurant.catering_status
+                  ? "delivery-false"
+                  : ""
               } ${
                 selectedText === "Catering" &&
                 selectedText !== "Dine In" &&
@@ -287,6 +309,14 @@ const BasicCard = (props) => {
                 }}
                 className="restaurantCards"
                 onClick={() => {
+                  if (selectedText !== "") {
+                    dispatch(
+                      setSelectedService(
+                        serviceSelect(restaurant, selectedText)
+                      )
+                    );
+                  }
+
                   goToRestaurantMenuPage(restaurant.id);
                 }}
               >

@@ -225,7 +225,7 @@ function Box({
         const restName = resturantsData?.find(
           (res) => res.id === restaurant_id
         );
-        fetchBranchHours(restaurant_id);
+        // fetchBranchHours(restaurant_id);
 
         localStorage.setItem("restaurantName", restName.name_en);
 

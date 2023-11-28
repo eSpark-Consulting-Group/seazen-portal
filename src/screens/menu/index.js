@@ -44,6 +44,7 @@ import getBranchesAndHours, {
 import {
   getNearByRest,
   getResturantsDetails,
+  setBranchID,
 } from "../../store/reducers/resturantsSlice.js";
 import { setThemeColor } from "../../store/reducers/themeSlice.js";
 import { closeReorderModal } from "../../store/reducers/orderSlice.js";
@@ -68,6 +69,9 @@ const Menu = () => {
   const nearbyRestaurants = useSelector(
     (state) => state.resturants.nearbyRestaurants
   );
+  const currentRestaurantDetail = useSelector(
+    (state) => state.resturants.restaurantDetail
+  );
   const reorder = useSelector((state) => state.order.reorder);
   const cart = useSelector((state) => state.cart.cart);
 
@@ -91,6 +95,7 @@ const Menu = () => {
   const [fullAddress, setFullAddress] = useState(null);
   const [restaurantName, setRestaurantName] = useState("");
   const [addressID, setAddressID] = useState();
+  const [branchesAndHoursResponse, setBranchesAndHoursResponse] = useState();
 
   const {
     data: restaurantDetailResponse,
@@ -186,16 +191,21 @@ const Menu = () => {
     }
   }, [userCurrentAddress, nearbyRestaurants]);
 
-  const { data: branchesAndHoursResponse, isSuccess } = useQuery({
-    queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, restaurant_id],
-    queryFn: () => {
-      return getBranchesAndHours(restaurant_id);
-    },
-  });
+  const fetchBranches = () => {
+    getBranchesAndHours(restaurant_id)
+      .then((res) => {
+        setBranchesAndHoursResponse(res);
+      })
+      .catch((e) => console.log(e));
+  };
+
+  useEffect(() => {
+    fetchBranches();
+  }, []);
 
   const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
     (val) => {
-      return val.week_day == localStorage.getItem("pickDate").split("-")[1];
+      return val.week_day == localStorage.getItem("pickDate")?.split("-")[1];
     }
   );
 
@@ -256,16 +266,10 @@ const Menu = () => {
             setDistanceIsFar(true);
             setOpenAddressPopup(false);
           } else {
-            const address = {
-              latitude: fullAddress.lat,
-              longitude: fullAddress.lng,
-              service_type: "dinein",
-            };
-
-            fetchNearbyRestaurant(address);
-
             setDistanceIsFar(false);
             setOpenAddressPopup(false);
+
+            checkNearByRest(filterBranch);
 
             break;
           }
@@ -274,30 +278,6 @@ const Menu = () => {
     }
   }, [fullAddress, branchesAndHoursResponse?.data]);
 
-  const fetchNearbyRestaurant = (address) => {
-    if (nearbyRestaurants.length === 0) {
-      getNearByRestaurants(address).then((res) => {
-        if (res.status === "ok") {
-          localStorage.setItem(
-            "selected",
-            JSON.stringify({ ...fullAddress, addressId: addressID })
-          );
-
-          dispatch(getNearByRest(res?.data));
-          setOpenAddressPopup(false);
-          checkNearByRest(res?.data);
-        }
-      });
-    } else {
-      localStorage.setItem(
-        "selected",
-        JSON.stringify({ ...fullAddress, addressId: addressID })
-      );
-
-      setOpenAddressPopup(false);
-      checkNearByRest(nearbyRestaurants);
-    }
-  };
   const navigateUser = () => {
     navigate(paths.location, {
       state: {
@@ -309,31 +289,27 @@ const Menu = () => {
     });
   };
 
-  const checkNearByRest = (nearby) => {
-    const filterRestaurant = nearby?.filter((nearBy) => {
-      const splitLogo = nearBy?.logo?.split("/");
-      const splitName = splitLogo[splitLogo.length - 1];
+  const checkNearByRest = (branch) => {
+    localStorage.setItem(
+      "selected",
+      JSON.stringify({ ...fullAddress, addressId: addressID })
+    );
 
-      const name = splitName.split("-")[0];
-
-      return name === restaurantDetail?.name_en?.toLowerCase();
-    });
-
-    if (filterRestaurant?.length === 0) {
+    if (branch?.length === 0) {
       setRestaurantName(restaurantDetail?.name_en);
       setDistanceIsFar(true);
       setOpenAddressPopup(false);
     } else {
       if (localStorage.getItem("isAsap") === "true") {
-        for (let i = 0; i < filterRestaurant?.length; i++) {
-          if (filterRestaurant[i]?.openingStatus === "Open") {
+        for (let i = 0; i < branch?.length; i++) {
+          if (branch[i]?.branch_hours[0]?.openingStatus === "Open") {
             setRestaurantOpen(false);
             navigate(paths?.cart, {
               state: { fromMenu: true, path: "/home" },
             });
 
             break;
-          } else if (filterRestaurant[i]?.openingStatus === "Close") {
+          } else if (branch[i]?.branch_hours[0]?.openingStatus === "Close") {
             setRestaurantOpen(true);
           }
         }
@@ -342,6 +318,53 @@ const Menu = () => {
         navigate(paths?.cart, {
           state: { fromMenu: true, path: "/home" },
         });
+      }
+    }
+  };
+
+  useEffect(() => {
+    getBranchIdNearToLocation();
+  }, [branchesAndHoursResponse, restaurantDetail]);
+
+  const getBranchIdNearToLocation = () => {
+    const filterBranch = branchesAndHoursResponse?.data?.filter(
+      (rest) => rest.restaurant_id === restaurantDetail?.id
+    );
+
+    if (branchesAndHoursResponse?.data.length && filterBranch?.length) {
+      for (let i = 0; i < filterBranch?.length; i++) {
+        // const resLat = +filterBranch[i]?.latitude;
+        // const resLng = +filterBranch[i]?.longitude;
+
+        // const selected = JSON.parse(localStorage.getItem("selected"));
+        // const currentLocation = JSON.parse(localStorage.getItem("location"));
+
+        // let fromLocation;
+        // if (selected === null && currentLocation !== null) {
+        //   fromLocation = currentLocation;
+        // } else if (selected !== null && currentLocation !== null) {
+        //   fromLocation = selected;
+        // }
+
+        // const distance = getDistanceFromLatLonInKm(
+        //   resLat,
+        //   resLng,
+        //   fromLocation?.lat || 29.3140728,
+        //   fromLocation?.lng || 47.68022
+        // );
+
+        localStorage.setItem("branchId", branchesAndHoursResponse.data[i].id);
+        dispatch(setBranchID(branchesAndHoursResponse.data[i].id));
+
+        break;
+
+        // if (distance > 50) {
+
+        // } else {
+        //   localStorage.setItem("branchId", branchesAndHoursResponse.data[i].id);
+
+        //   break;
+        // }
       }
     }
   };

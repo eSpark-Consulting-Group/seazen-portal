@@ -169,6 +169,7 @@ const App = () => {
         fromDetail={location?.state?.fromDetail}
         backToCart={location?.state?.backToCart}
         backCart={location?.state?.backCart}
+        editLocation={location?.state?.editLocation}
       />
       {isLoading
         ? Array.from({ length: 3 }).map((_) => (

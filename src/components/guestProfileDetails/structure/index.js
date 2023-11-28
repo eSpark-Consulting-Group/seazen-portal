@@ -17,7 +17,11 @@ const Structure = ({ name, register, imageUrl }) => {
         <div>
           <button
             className="guest-register-button"
-            onClick={() => navigate(paths.phone_verification_index)}
+            onClick={() =>
+              navigate(paths.phone_verification_index, {
+                state: { register: true },
+              })
+            }
           >
             <span className="guest-register-text">Register</span>
           </button>

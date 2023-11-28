@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setKey, geocode, RequestType } from "react-geocode";
-
-import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -64,58 +62,67 @@ const Home = () => {
   useEffect(() => {
     if (sessionStorage.getItem("cartEmpty") === null) {
       if (token !== null) {
-        if (cart?.length === 0) {
+        if (cart?.length === 0 && branchHours?.length) {
           cartList(token)
             .then((res) => {
               res.data.map((val) => {
-                const has_variants =
-                  val?.size_variant_id === "" &&
-                  val.side_variant_id === "" &&
-                  val.topping_variant_id === ""
-                    ? false
-                    : true;
+                if (branchHours?.length) {
+                  const findRestaurant = branchHours?.find(
+                    (branch) => branch.id === val?.branch_id
+                  );
 
-                const variants =
-                  val?.size_variant_id === "" &&
-                  val.side_variant_id === "" &&
-                  val.topping_variant_id === ""
-                    ? null
-                    : {
-                        sizeVariant: {
-                          ...val.size_variant[0],
-                          variantId: val.size_variant_id,
-                        },
-                        toppingVariant: val.topping_variant.map((value) => ({
-                          ...value,
-                          variantId: val.topping_variant_id,
-                        })),
-                        sideVariant: val.side_variant.map((value) => ({
-                          ...value,
-                          variantId: val.side_variant_id,
-                        })),
-                      };
+                  const has_variants =
+                    val?.size_variant_id === "" &&
+                    val.side_variant_id === "" &&
+                    val.topping_variant_id === ""
+                      ? false
+                      : true;
 
-                const obj = {
-                  id: val?.item_id,
-                  cart_id: val.cart_id,
-                  itemName: val?.menu_item_name_en,
-                  discountedPrice: val?.discounted_price,
-                  price: val?.unit_price,
-                  quantity: val.quantity,
-                  variants,
-                  item_code: val.item_code,
-                  specialInstructions: "",
-                  itemImage: val?.menu_item_image,
-                  restaurant_id: 1,
-                  totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
-                  has_variants,
-                };
+                  const variants =
+                    val?.size_variant_id === "" &&
+                    val.side_variant_id === "" &&
+                    val.topping_variant_id === ""
+                      ? null
+                      : {
+                          sizeVariant: {
+                            ...val.size_variant[0],
+                            variantId: val.size_variant_id,
+                          },
+                          toppingVariant: val.topping_variant.map((value) => ({
+                            ...value,
+                            variantId: val.topping_variant_id,
+                          })),
+                          sideVariant: val.side_variant.map((value) => ({
+                            ...value,
+                            variantId: val.side_variant_id,
+                          })),
+                        };
 
-                obj.has_variants === false && delete obj.has_variants;
-                obj.variants === null && delete obj.variants;
+                  const obj = {
+                    id: val?.item_id,
+                    cart_id: val.cart_id,
+                    itemName: val?.menu_item_name_en,
+                    discountedPrice: val?.discounted_price,
+                    price: val?.unit_price,
+                    quantity: val.quantity,
+                    variants,
+                    item_code: val.item_code,
+                    specialInstructions: "",
+                    itemImage: val?.menu_item_image,
+                    restaurant_id: findRestaurant.restaurant_id,
+                    totalPrice: Number(val.quantity * val.unit_price).toFixed(
+                      3
+                    ),
+                    has_variants,
+                    branch_id: val?.branch_id,
+                  };
 
-                dispatch(addToCart(obj));
-                sessionStorage.setItem("cartEmpty", true);
+                  obj.has_variants === false && delete obj.has_variants;
+                  obj.variants === null && delete obj.variants;
+
+                  dispatch(addToCart(obj));
+                  sessionStorage.setItem("cartEmpty", true);
+                }
               });
             })
             .catch((err) => {
@@ -124,7 +131,7 @@ const Home = () => {
         }
       }
     }
-  }, [cart, token]);
+  }, [cart, token, branchHours]);
 
   const [userCurrentAddress, setUserCurrentAddress] = useState({
     latitude: 0,
@@ -180,48 +187,6 @@ const Home = () => {
     }
   }, [userCurrentAddress]);
 
-  useEffect(() => {
-    if (JSON.parse(userLocation) === null) {
-      // eslint-disable-next-line no-undef
-      setKey(process.env.REACT_APP_GOOGLE_API_KEY);
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            let addToRedux = {
-              lat: "",
-              lng: "",
-              address: "",
-            };
-            geocode(
-              RequestType.LATLNG,
-              `${position.coords.latitude},${position.coords.longitude}`,
-              {
-                enable_address_descriptor: true,
-              }
-            )
-              .then(({ results }) => {
-                const address = results[0].formatted_address;
-                const lat = results[0].geometry.location.lat;
-                const lng = results[0].geometry.location.lng;
-
-                addToRedux = {
-                  lat: lat,
-                  lng: lng,
-                  address: address,
-                };
-
-                localStorage.setItem("location", JSON.stringify(addToRedux));
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          },
-          () => {}
-        );
-      }
-    }
-  }, []);
-
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [addressId, setAddressID] = useState();
 
@@ -256,7 +221,7 @@ const Home = () => {
         addressId,
       };
 
-      localStorage?.setItem("selected", address);
+      localStorage?.setItem("selected", JSON.stringify(address));
     }
   }, [selectedAddress]);
 
@@ -388,16 +353,10 @@ const Home = () => {
             setDistanceIsFar(true);
             setOpenAddressToChoose(false);
           } else {
-            const address = {
-              latitude: chooseFullAddress.lat,
-              longitude: chooseFullAddress.lng,
-              service_type: "dinein",
-            };
-
-            fetchNearbyRestaurant(address);
-
             setDistanceIsFar(false);
             setOpenAddressToChoose(false);
+
+            checkNearByRest();
 
             break;
           }
@@ -406,44 +365,19 @@ const Home = () => {
     }
   }, [chooseFullAddress, branchHours]);
 
-  const fetchNearbyRestaurant = (address) => {
-    if (nearbyRestaurants.length === 0) {
-      getNearByRestaurants(address).then((res) => {
-        if (res.status === "ok") {
-          localStorage.setItem(
-            "selected",
-            JSON.stringify({ ...chooseFullAddress, addressId })
-          );
+  const checkNearByRest = () => {
+    localStorage.setItem(
+      "selected",
+      JSON.stringify({ ...chooseFullAddress, addressId })
+    );
 
-          dispatch(getNearByRest(res?.data));
-          setOpenAddressToChoose(false);
-          checkNearByRest(res?.data);
-        }
-      });
-    } else {
-      localStorage.setItem(
-        "selected",
-        JSON.stringify({ ...chooseFullAddress, addressId })
-      );
-
-      setOpenAddressToChoose(false);
-      checkNearByRest(nearbyRestaurants);
-    }
-  };
-
-  const checkNearByRest = (nearby) => {
     const restaurant = resturantsData.find(
       (res) => res.id === cart[0]?.restaurant_id
     );
 
-    const filterRestaurant = nearby?.filter((nearBy) => {
-      const splitLogo = nearBy?.logo?.split("/");
-      const splitName = splitLogo[splitLogo.length - 1];
-
-      const name = splitName.split("-")[0];
-
-      return name === restaurant?.name_en?.toLowerCase();
-    });
+    const filterRestaurant = branchHours.filter(
+      (branch) => branch.restaurant_id === restaurant.id
+    );
 
     if (filterRestaurant?.length === 0) {
       setRestaurantName(restaurant?.name_en);
@@ -452,7 +386,7 @@ const Home = () => {
     } else {
       if (localStorage.getItem("isAsap") === "true") {
         for (let i = 0; i < filterRestaurant?.length; i++) {
-          if (filterRestaurant[i]?.openingStatus === "Open") {
+          if (filterRestaurant[i]?.branch_hours[0].openingStatus === "Open") {
             setRestaurantOpen(false);
             navigate(paths?.cart, {
               state: { fromHome: true, path: "/home" },
@@ -652,20 +586,20 @@ const Home = () => {
     navigate(paths.menu + `/restaurant/${id}`);
   };
 
-  const distanceCheck = (resLat, resLng, location) => {
-    const distance = getDistanceFromLatLonInKm(
-      resLat,
-      resLng,
-      location.lat,
-      location.lng
-    );
+  // const distanceCheck = (resLat, resLng, location) => {
+  //   const distance = getDistanceFromLatLonInKm(
+  //     resLat,
+  //     resLng,
+  //     location.lat,
+  //     location.lng
+  //   );
 
-    if (distance > 50) {
-      removeClasses();
-    } else {
-      addClasses();
-    }
-  };
+  //   if (distance > 50) {
+  //     removeClasses();
+  //   } else {
+  //     addClasses();
+  //   }
+  // };
 
   useEffect(() => {
     if (
@@ -677,12 +611,25 @@ const Home = () => {
       removeBrownClasses();
 
       if (branchHours.length) {
-        branchHours?.forEach((res) => {
-          const resLat = +res.latitude;
-          const resLng = +res.longitude;
+        for (let i = 0; i < branchHours.length; i++) {
+          const resLat = +branchHours[i].latitude;
+          const resLng = +branchHours[i].longitude;
 
           if (fullAddress !== null && userSelected === null) {
-            distanceCheck(resLat, resLng, fullAddress);
+            // distanceCheck(resLat, resLng, fullAddress);
+            const distance = getDistanceFromLatLonInKm(
+              resLat,
+              resLng,
+              fullAddress.lat,
+              fullAddress.lng
+            );
+
+            if (distance > 50) {
+              removeClasses();
+            } else {
+              addClasses();
+              break;
+            }
 
             //
           } else if (
@@ -691,7 +638,21 @@ const Home = () => {
           ) {
             const selected = JSON.parse(userSelected);
 
-            distanceCheck(resLat, resLng, selected);
+            const distance = getDistanceFromLatLonInKm(
+              resLat,
+              resLng,
+              selected.lat,
+              selected.lng
+            );
+
+            if (distance > 50) {
+              removeClasses();
+            } else {
+              addClasses();
+              break;
+            }
+
+            // distanceCheck(resLat, resLng, selected);
             //
           } else if (
             (fullAddress !== null || fullAddress === null) &&
@@ -701,7 +662,21 @@ const Home = () => {
           ) {
             const location = JSON.parse(userLocation);
 
-            distanceCheck(resLat, resLng, location);
+            const distance = getDistanceFromLatLonInKm(
+              resLat,
+              resLng,
+              location.lat,
+              location.lng
+            );
+
+            if (distance > 50) {
+              removeClasses();
+            } else {
+              addClasses();
+              break;
+            }
+
+            // distanceCheck(resLat, resLng, location);
             //
           } else if (
             (fullAddress !== null || fullAddress === null) &&
@@ -713,7 +688,7 @@ const Home = () => {
           ) {
             navigate(paths.location, { state: { guestUser: true } });
           }
-        });
+        }
       }
     }
 
@@ -786,7 +761,13 @@ const Home = () => {
         setDistanceIsFar={setDistanceIsFar}
         setRestaurantOpen={setRestaurantOpen}
       />
-      <Footer showFooterSection={true} />
+      <Box
+        sx={{
+          marginTop: "60px",
+        }}
+      >
+        <Footer showFooterSection={true} />
+      </Box>
 
       <Dialog
         open={openAddressPopup}

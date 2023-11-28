@@ -496,6 +496,7 @@ const AddressForm = () => {
         fromDetail={location?.state?.fromDetail}
         backToCart={true}
         notSelected={location?.state?.notSelected}
+        addFromDropdown={location?.state?.addFromDropdown}
       />
 
       <div className="button-style">
@@ -520,6 +521,10 @@ const AddressForm = () => {
                     name: location?.state?.name,
                     latlng: location?.state?.latlng,
                     editLocation: true,
+                    path: location?.state?.path,
+                    fromHome: location?.state?.fromHome,
+                    fromMenu: location?.state?.fromMenu,
+                    fromDetail: location?.state?.fromDetail,
                   },
                 })
               }

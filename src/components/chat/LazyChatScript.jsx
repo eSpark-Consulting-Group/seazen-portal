@@ -22,7 +22,7 @@ const LazyChatScript = () => {
             element &&
             (currentURL.pathname.includes("order/receipt/") ||
               currentURL.pathname.includes("menu/restaurant/") ||
-              currentURL.pathname.includes("menu-item-details/"))
+              currentURL.pathname.includes("menu-item-details/") || currentURL.pathname.includes("/cart"))
           ) {
             element?.classList.add("remove-chat-icon");
           } else {

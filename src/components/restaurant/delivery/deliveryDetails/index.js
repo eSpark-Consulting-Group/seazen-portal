@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 
+import { v4 as uuidv4 } from "uuid";
+
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -25,7 +27,7 @@ import dayjs from "dayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { MobileTimePicker } from "@mui/x-date-pickers";
+import { DateTimePicker, MobileTimePicker } from "@mui/x-date-pickers";
 
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
@@ -65,6 +67,7 @@ const DeliveryDetails = (props) => {
   const restaurantDetail = useSelector(
     (state) => state.resturants.restaurantDetail
   );
+  const branchHours = useSelector((state) => state.resturants.branchHours);
 
   const selected = JSON.parse(localStorage.getItem("selected"));
   const currentLocation = JSON.parse(localStorage.getItem("location"));
@@ -105,9 +108,12 @@ const DeliveryDetails = (props) => {
   const [isDeliveryDropDown, setIsDeliveryDropDown] = useState(false);
   const [fullAddress, setFullAddress] = useState(null);
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  // const [showTimePicker, setShowTimePicker] = useState(false);
   const [restaurantOpen, setRestaurantOpen] = useState(false);
+  const [pickDay, setPickDay] = useState("");
   const [addressID, setAddressID] = useState();
+  const [minTime, setMinTime] = useState(dayjs());
+  const [maxTime, setMaxTime] = useState(dayjs());
 
   const { id: restaurant_id } = useParams();
 
@@ -115,22 +121,21 @@ const DeliveryDetails = (props) => {
     if (onDelivery) {
       if (sessionStorage.getItem("popupOpened") === null) {
         if (isAsap === "true") {
-          const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
-            const splitLogo = nearBy?.logo?.split("/");
-            const splitName = splitLogo[splitLogo.length - 1];
-
-            const name = splitName.split("-")[0];
-
-            return name === restaurantDetail?.name_en?.toLowerCase();
-          });
+          const filterRestaurant = branchHours?.filter(
+            (branch) => branch.restaurant_id === restaurantDetail.id
+          );
 
           for (let i = 0; i < filterRestaurant?.length; i++) {
-            if (filterRestaurant[i]?.openingStatus === "Open") {
+            if (
+              filterRestaurant[i]?.branch_hours[0]?.openingStatus === "Open"
+            ) {
               setRestaurantOpen(false);
               break;
 
               //
-            } else if (filterRestaurant[i]?.openingStatus === "Close") {
+            } else if (
+              filterRestaurant[i]?.branch_hours[0]?.openingStatus === "Close"
+            ) {
               setRestaurantOpen(true);
               //
             }
@@ -144,13 +149,40 @@ const DeliveryDetails = (props) => {
         setRestaurantOpen(false);
       }
     }
-  }, [nearbyRestaurants, restaurantDetail]);
+  }, [branchHours, restaurantDetail]);
 
   const locationLabelName = () => {
-    let text = "Add Address";
-    if (addressData?.length > 0 && token) {
-      return (text = "Select Address");
+    let text = "";
+    const truncLoc = truncateString(currentLocation?.address, 15);
+
+    if (
+      localStorage.getItem("locatPermission") === "denied" ||
+      localStorage.getItem("locatPermission") === "granted" ||
+      localStorage.getItem("locatPermission") === "prompt"
+    ) {
+      if (token !== null) {
+        if (currentLocation !== null) {
+          text = truncLoc;
+        }
+        if (selected !== null) {
+          text = truncateString(selected?.address, 15);
+        }
+        if (selected === null && currentLocation === null) {
+          if (addressData.length) {
+            text = "Select Address";
+          } else {
+            text = "Add Address";
+          }
+        }
+      } else {
+        if (currentLocation !== null) {
+          text = truncLoc;
+        } else {
+          text = "Add Address";
+        }
+      }
     }
+
     return text;
   };
 
@@ -232,23 +264,20 @@ const DeliveryDetails = (props) => {
   };
 
   const asapHandler = () => {
-    if (nearbyRestaurants?.length !== 0) {
-      const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
-        const splitLogo = nearBy?.logo?.split("/");
-        const splitName = splitLogo[splitLogo.length - 1];
-
-        const name = splitName.split("-")[0];
-
-        return name === restaurantDetail?.name_en?.toLowerCase();
-      });
+    if (branchHours?.length !== 0) {
+      const filterRestaurant = branchHours?.filter(
+        (branch) => branch.restaurant_id === restaurantDetail.id
+      );
 
       for (let i = 0; i < filterRestaurant?.length; i++) {
-        if (filterRestaurant[i]?.openingStatus === "Open") {
+        if (filterRestaurant[i]?.branch_hours[0].openingStatus === "Open") {
           asapCall();
           break;
 
           //
-        } else if (filterRestaurant[i]?.openingStatus === "Close") {
+        } else if (
+          filterRestaurant[i]?.branch_hours[0].openingStatus === "Close"
+        ) {
           setRestaurantOpen(true);
           //
         }
@@ -278,11 +307,28 @@ const DeliveryDetails = (props) => {
     },
   });
 
-  const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
-    (val) => {
-      return val.week_day == pickDate?.split("-")[1];
+  const branchId = localStorage.getItem("branchId");
+
+  const timeByDate = branchesAndHoursResponse?.data
+    ?.find((val) => (val.id = branchId))
+    ?.branch_hours?.find((val) => {
+      return val.week_day == pickDay;
+    });
+
+  const getSingleDigitHour = (fullTime) => {
+    let Hour;
+    Hour =
+      fullTime?.split(":")[0][0] == "0"
+        ? fullTime?.split(":")[0][1]
+        : fullTime?.split(":")[0];
+
+    if (fullTime?.includes("AM")) {
+      return parseInt(Hour);
     }
-  );
+    if (fullTime?.includes("PM")) {
+      return parseInt(Hour) + 12;
+    }
+  };
 
   const onDateSelected = () => {
     if (pickDate !== null) {
@@ -332,257 +378,303 @@ const DeliveryDetails = (props) => {
           path: "menu/restaurant",
           restaurant_id: restaurant_id,
           restaurantName: restaurantDetail?.page_title_en,
+          addFromDropdown: true,
         },
       });
     }
   };
 
+  const Overlay = () => {
+    return <div className="overlay"></div>;
+  };
+
+  const handlerFunc = (ampm, date) => {
+    const selectedTime = dayjs(date);
+    if (ampm == "pm") {
+      setMinTime(
+        selectedTime
+          .set("hour", getSingleDigitHour(timeByDate?.from_time))
+          .set("minute", 0)
+      );
+      setMaxTime(
+        selectedTime
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
+    }
+    if (ampm == "am") {
+      setMinTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.from_time))
+          .set("minute", 0)
+      );
+      setMaxTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
+    }
+  };
+
   return (
-    <StyledOuterContainer
-      className="delivery_outer_container"
-      style={{ background: restaurantTheme.main + 24, position: "relative" }}
-    >
-      <div className="delivery_inner_container">
-        <div className="left_dropdown_container">
-          <div className="left_dropdown_container_heading_container">
-            Deliver to
-          </div>
-          <Dropdown
-            style={{ width: "163px" }}
-            show={openDropdown}
-            onToggle={toggleDropdown}
-          >
-            <Dropdown.Toggle
-              variant="success"
-              id="dropdown-basic"
-              style={{
-                backgroundColor: "transparent",
-                color: "#323F4B",
-                fontFamily: "Titillium Web",
-                fontSize: "10px",
-                fontWeight: "bold",
-                border: "none",
-                padding: "0",
-              }}
+    <>
+      {openSchedulePopup && <Overlay />}
+      <StyledOuterContainer
+        className="delivery_outer_container"
+        style={{ background: restaurantTheme.main + 24, position: "relative" }}
+      >
+        <div className="delivery_inner_container">
+          <div className="left_dropdown_container">
+            <div className="left_dropdown_container_heading_container">
+              Deliver to
+            </div>
+            <Dropdown
+              style={{ width: "163px" }}
+              show={openDropdown}
+              onToggle={toggleDropdown}
             >
-              {userLocation}
-              <StyledOuterContainerIcon className="dropdown_icon_container">
-                <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
-              </StyledOuterContainerIcon>
-            </Dropdown.Toggle>
+              <Dropdown.Toggle
+                variant="success"
+                id="dropdown-basic"
+                style={{
+                  backgroundColor: "transparent",
+                  color: "#323F4B",
+                  fontFamily: "Titillium Web",
+                  fontSize: "10px",
+                  fontWeight: "bold",
+                  border: "none",
+                  padding: "0",
+                }}
+              >
+                {userLocation}{" "}
+                <StyledOuterContainerIcon className="dropdown_icon_container">
+                  <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
+                </StyledOuterContainerIcon>
+              </Dropdown.Toggle>
 
-            <Dropdown.Menu
-              style={{
-                backgroundColor: "#F0F6F5",
-                color: "#323F4B",
-                fontFamily: "Titillium Web",
-                fontSize: "11pt",
-                fontWeight: "bold",
-                border: "none",
-                transform: "translate(0px, -22px)",
-              }}
-            >
-              <Dropdown.Item defaultChecked onClick={addLocation}>
-                Add location
-              </Dropdown.Item>
-              {addressData?.length ? (
-                addressData.map((address) => {
-                  return (
-                    <Dropdown.Item
-                      onClick={() => {
-                        getUserAddress(address.latitude, address.longitude);
-                        setAddressID(address.id);
-                        fetchNearbyRestaurant(
-                          address.latitude,
-                          address.longitude
-                        );
-                      }}
-                      style={{
-                        textTransform: "capitalize",
-                      }}
-                      key={address.id}
-                    >
-                      {address.address_label !== ""
-                        ? address.address_label
-                        : address.address_type}{" "}
-                      {address?.address_type === "house"
-                        ? truncateString(
-                            `(Build: ${address?.building}, Bl: ${address?.block}, Str: ${address?.street})`,
-                            18
-                          )
-                        : address?.address_type === "office"
-                        ? truncateString(
-                            `(Comp: ${address?.company_name}, Bl: ${address?.block}, Floor: ${address?.floor})`,
-                            18
-                          )
-                        : truncateString(
-                            `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
-                            18
-                          )}
-                    </Dropdown.Item>
-                  );
-                })
-              ) : (
-                <Dropdown.Item
-                  style={{
-                    textTransform: "capitalize",
-                  }}
-                  disabled={true}
-                >
-                  No Address
+              <Dropdown.Menu
+                style={{
+                  backgroundColor: "#F0F6F5",
+                  color: "#323F4B",
+                  fontFamily: "Titillium Web",
+                  fontSize: "11pt",
+                  fontWeight: "bold",
+                  border: "none",
+                  transform: "translate(0px, -22px)",
+                }}
+              >
+                <Dropdown.Item defaultChecked onClick={addLocation}>
+                  Add location
                 </Dropdown.Item>
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-        <span
-          style={{
-            borderLeft: "1.5px solid #C3D8D4",
-            height: "30px",
-            marginTop: "8px",
-          }}
-        ></span>
-        <div className="right_dropdown_container">
-          <div className="right_dropdown_container_heading_container">
-            Delivery Time
+
+                <Dropdown.Item defaultChecked onClick={addLocation}>
+                  Select current location
+                </Dropdown.Item>
+
+                {addressData?.length ? (
+                  addressData.map((address) => {
+                    return (
+                      <Dropdown.Item
+                        onClick={() => {
+                          getUserAddress(address.latitude, address.longitude);
+                          setAddressID(address.id);
+                          fetchNearbyRestaurant(
+                            address.latitude,
+                            address.longitude
+                          );
+                          localStorage.setItem("selectCurrent", false);
+                        }}
+                        style={{
+                          textTransform: "capitalize",
+                        }}
+                        key={address.id}
+                      >
+                        {address.address_label !== ""
+                          ? address.address_label
+                          : address.address_type}{" "}
+                        {address?.address_type === "house"
+                          ? truncateString(
+                              `(Build: ${address?.building}, Bl: ${address?.block}, Str: ${address?.street})`,
+                              18
+                            )
+                          : address?.address_type === "office"
+                          ? truncateString(
+                              `(Comp: ${address?.company_name}, Bl: ${address?.block}, Floor: ${address?.floor})`,
+                              18
+                            )
+                          : truncateString(
+                              `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
+                              18
+                            )}
+                        <span
+                          style={{
+                            fontSize: 13,
+                          }}
+                        >
+                          {selected !== null &&
+                            currentLocation !== null &&
+                            parseFloat(selected?.lat) ===
+                              parseFloat(currentLocation?.lat) &&
+                            parseFloat(selected?.lng) ===
+                              parseFloat(currentLocation?.lng) &&
+                            "(current location)"}
+                        </span>
+                      </Dropdown.Item>
+                    );
+                  })
+                ) : (
+                  <Dropdown.Item
+                    style={{
+                      textTransform: "capitalize",
+                    }}
+                    disabled={true}
+                  >
+                    No Address
+                  </Dropdown.Item>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
+          <span
+            style={{
+              borderLeft: "1.5px solid #C3D8D4",
+              height: "30px",
+              marginTop: "8px",
+            }}
+          ></span>
+          <div className="right_dropdown_container">
+            <div className="right_dropdown_container_heading_container">
+              Delivery Time
+            </div>
 
-          <Dropdown
-            onToggle={() => setIsDeliveryDropDown(!isDeliveryDropDown)}
-            show={isDeliveryDropDown}
-            style={{ width: "163px" }}
-          >
-            <Dropdown.Toggle
-              variant="success"
-              id="dropdown-basic"
-              style={{
-                backgroundColor: "transparent",
-                color: "#323F4B",
-                fontFamily: "Titillium Web",
-                fontSize: "10px",
-                fontWeight: "700",
-                border: "none",
-                padding: "0",
-              }}
+            <Dropdown
+              onToggle={() => setIsDeliveryDropDown(!isDeliveryDropDown)}
+              show={isDeliveryDropDown}
+              style={{ width: "163px" }}
             >
-              {pickDate?.split("-")[0]} {isAsap === "true" ? "ASAP" : pickTime}
-              <StyledOuterContainerIcon className="dropdown_icon_container">
-                <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
-              </StyledOuterContainerIcon>
-            </Dropdown.Toggle>
+              <Dropdown.Toggle
+                variant="success"
+                id="dropdown-basic"
+                style={{
+                  backgroundColor: "transparent",
+                  color: "#323F4B",
+                  fontFamily: "Titillium Web",
+                  fontSize: "10px",
+                  fontWeight: "700",
+                  border: "none",
+                  padding: "0",
+                }}
+              >
+                {pickDate?.split("-")[0]}{" "}
+                {isAsap === "true" ? "ASAP" : pickTime}
+                <StyledOuterContainerIcon className="dropdown_icon_container">
+                  <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
+                </StyledOuterContainerIcon>
+              </Dropdown.Toggle>
 
-            <Dropdown.Menu
-              style={{
-                backgroundColor: "#F0F6F5",
-                color: "#323F4B",
-                fontFamily: "Titillium Web",
-                fontSize: "11pt",
-                fontWeight: "bold",
-                border: "none",
-                transform: "translate(0px, -22px)",
-                // top: "12px",
+              <Dropdown.Menu
+                style={{
+                  backgroundColor: "#F0F6F5",
+                  color: "#323F4B",
+                  fontFamily: "Titillium Web",
+                  fontSize: "11pt",
+                  fontWeight: "bold",
+                  border: "none",
+                  transform: "translate(0px, -22px)",
+                  // top: "12px",
+                }}
+              >
+                <Dropdown.Item defaultChecked onClick={asapHandler}>
+                  ASAP
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setOpenSchedulePopup(true);
+                    document.body.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+                  }}
+                >
+                  Schedule for later
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+          {(currentLocation !== null || selected !== null) && (
+            <Stack
+              justifyContent="center"
+              alignItems="center"
+              sx={{
+                bgcolor: (theme) => theme.palette.themeColor.main,
+                color: "common.white",
+                p: 1,
+                borderRadius: "8px",
+                position: "absolute",
+                width: "33px",
+                height: "32px",
+                // left: "-7px",
+                top: "8px",
+                right: "12px",
               }}
+              spacing={0}
             >
-              <Dropdown.Item defaultChecked onClick={asapHandler}>
-                ASAP
-              </Dropdown.Item>
-              <Dropdown.Item onClick={() => setOpenSchedulePopup(true)}>
-                Schedule for later
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+              <Typography
+                variant="h4"
+                fontWeight={600}
+                sx={{
+                  lineHeight: 1,
+                  fontSize: "19px",
+                }}
+              >
+                30
+              </Typography>
+              <Typography
+                variant="caption"
+                fontWeight={300}
+                sx={{
+                  lineHeight: 1,
+                  fontSize: "6px",
+                }}
+              >
+                minutes
+              </Typography>
+            </Stack>
+          )}
         </div>
-        <Stack
-          justifyContent="center"
-          alignItems="center"
-          sx={{
-            bgcolor: (theme) => theme.palette.themeColor.main,
-            color: "common.white",
-            p: 1,
-            borderRadius: "8px",
-            position: "absolute",
-            width: "33px",
-            height: "32px",
-            // left: "-7px",
-            top: "8px",
-            right: "12px",
-          }}
-          spacing={0}
-        >
-          <Typography
-            variant="h4"
-            fontWeight={600}
-            sx={{
-              lineHeight: 1,
-              fontSize: "19px",
-            }}
-          >
-            30
-          </Typography>
-          <Typography
-            variant="caption"
-            fontWeight={300}
-            sx={{
-              lineHeight: 1,
-              fontSize: "6px",
-            }}
-          >
-            minutes
-          </Typography>
-        </Stack>
-      </div>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <MobileDatePicker
-          // onChange={(date) => localStorage.setItem("pickDate", date.format("MMM DD, YYYY-dddd")))}
-          minDate={dayjs(new Date())}
-          open={openSchedulePopup}
-          defaultValue={dayjs(new Date().toString())}
-          onClose={() => {
-            onDateSelected();
-          }}
-          onAccept={(date) => {
-            if (date) {
-              localStorage.setItem(
-                "pickDate",
-                date.format("MMM DD, YYYY-dddd")
-              );
-              setShowTimePicker(true);
-            }
-          }}
-          sx={{
-            display: "none",
-          }}
-        />
-        {showTimePicker && (
-          <MobileTimePicker
-            minTime={dayjs(
-              new Date().setHours(
-                parseInt(timeByDate?.from_time?.split(":")[0])
-              )
-            )}
-            maxTime={dayjs(
-              new Date().setHours(
-                parseInt(timeByDate?.to_time?.split(":")[0]) + 12
-              )
-            )}
-            // defaultValue={dayjs(new Date())}
-            open={showTimePicker}
-            // onChange={(time) => {
-            // localStorage.setItem("isAsap", false);
-            // localStorage.setItem("pickTime", time.format("hh:mm a"));
-            // }}
-            onClose={() => setShowTimePicker(false)}
-            onAccept={(time) => {
-              localStorage.setItem("isAsap", false);
-              localStorage.setItem("pickTime", time.format("hh:mm a"));
-            }}
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            open={openSchedulePopup}
             sx={{
               display: "none",
             }}
+            minTime={minTime}
+            maxTime={maxTime}
+            disablePast
+            ampm={true}
+            onChange={(date, e, ew) => {
+              handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
+              setPickDay(date.format("dddd"));
+              date.preventDefault();
+            }}
+            onClose={() => {
+              onDateSelected();
+            }}
+            onAccept={(date) => {
+              setOpenSchedulePopup(false);
+              if (date) {
+                localStorage.setItem(
+                  "pickDate",
+                  date.format("MMM DD, YYYY-dddd")
+                );
+                localStorage.setItem("isAsap", false);
+                localStorage.setItem("pickTime", date.format("hh:mm a"));
+              }
+            }}
           />
-        )}
-      </LocalizationProvider>
-      {/* <Stack
+        </LocalizationProvider>
+        {/* <Stack
         justifyContent="center"
         alignItems="center"
         sx={{
@@ -620,92 +712,93 @@ const DeliveryDetails = (props) => {
         </Typography>
       </Stack> */}
 
-      <Dialog
-        open={restaurantOpen}
-        onClose={() => {
-          sessionStorage.setItem("popupOpened", true);
-          setRestaurantOpen(false);
-        }}
-        sx={{
-          margin: "0",
-          textAlign: "center",
-        }}
-        className="cart-dialog"
-        PaperProps={{
-          sx: {
-            overflow: "visible",
-            margin: "0px 0px 0px 27px",
-            width: "327px",
+        <Dialog
+          open={restaurantOpen}
+          onClose={() => {
+            sessionStorage.setItem("popupOpened", true);
+            setRestaurantOpen(false);
+          }}
+          sx={{
+            margin: "0",
+            textAlign: "center",
+          }}
+          className="cart-dialog"
+          PaperProps={{
+            sx: {
+              overflow: "visible",
+              margin: "0px 0px 0px 27px",
+              width: "327px",
 
-            "@media (max-width: 500px)": {
-              width: "375px",
-              margin: "0px 0px 0px 0px",
-            },
+              "@media (max-width: 500px)": {
+                width: "375px",
+                margin: "0px 0px 0px 0px",
+              },
 
-            "@media (max-width: 400px)": {
-              width: "90%",
+              "@media (max-width: 400px)": {
+                width: "90%",
+              },
             },
-          },
-        }}
-      >
-        <DialogTitle
-          id="alert-dialog-title"
-          className="dialog-title title-cart"
+          }}
         >
-          <img src="/assets/img/exclaim.svg"></img>
-
-          <div
-            style={{
-              position: "absolute",
-              top: "8px",
-              right: "10px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onClick={() => {
-              setRestaurantOpen(false);
-              sessionStorage.setItem("popupOpened", true);
-            }}
+          <DialogTitle
+            id="alert-dialog-title"
+            className="dialog-title title-cart"
           >
-            <CloseIcon
-              sx={{
-                width: "24px",
-                fontSize: "24px",
-                cursor: "pointer",
-                color: "#707070 !important",
+            <img src="/assets/img/exclaim.svg"></img>
+
+            <div
+              style={{
+                position: "absolute",
+                top: "8px",
+                right: "10px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-            />
+              onClick={() => {
+                setRestaurantOpen(false);
+                sessionStorage.setItem("popupOpened", true);
+              }}
+            >
+              <CloseIcon
+                sx={{
+                  width: "24px",
+                  fontSize: "24px",
+                  cursor: "pointer",
+                  color: "#707070 !important",
+                }}
+              />
+            </div>
+          </DialogTitle>
+          <DialogContent className="dialog-content-cart">
+            Restaurant is closed. Do you want to schedule for later?
+          </DialogContent>
+
+          <div className="btn-navigate">
+            <Button
+              className="common-st add-btn"
+              onClick={() => {
+                sessionStorage.setItem("popupOpened", true);
+                navigate(paths.home);
+              }}
+            >
+              Home Page
+            </Button>
+
+            <Button
+              className="common-st go-to-btn"
+              onClick={() => {
+                setRestaurantOpen(false);
+                setOpenSchedulePopup(true);
+                sessionStorage.setItem("popupOpened", true);
+              }}
+            >
+              Schedule for later
+            </Button>
           </div>
-        </DialogTitle>
-        <DialogContent className="dialog-content-cart">
-          Restaurant is closed. Do you want to schedule for later?
-        </DialogContent>
-
-        <div className="btn-navigate">
-          <Button
-            className="common-st add-btn"
-            onClick={() => {
-              sessionStorage.setItem("popupOpened", true);
-              navigate(paths.home);
-            }}
-          >
-            Home Page
-          </Button>
-
-          <Button
-            className="common-st go-to-btn"
-            onClick={() => {
-              setRestaurantOpen(false);
-              setOpenSchedulePopup(true);
-              sessionStorage.setItem("popupOpened", true);
-            }}
-          >
-            Schedule for later
-          </Button>
-        </div>
-      </Dialog>
-    </StyledOuterContainer>
+        </Dialog>
+      </StyledOuterContainer>
+    </>
   );
 };
 

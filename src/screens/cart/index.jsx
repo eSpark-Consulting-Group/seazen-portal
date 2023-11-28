@@ -25,7 +25,7 @@ import dayjs from "dayjs";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { MobileTimePicker } from "@mui/x-date-pickers";
+import { DateTimePicker, MobileTimePicker } from "@mui/x-date-pickers";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
@@ -51,6 +51,7 @@ import getBranchesAndHours, {
 } from "../../api/restaurant/branches/getBranchesAndHours";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
+import deliveryPriceApi from "../../api/common/getDeliveryCharges";
 
 import { addToCart } from "../../store/reducers/cartSlice";
 import { setThemeColor } from "../../store/reducers/themeSlice";
@@ -91,12 +92,14 @@ function CartPage() {
   const selectedAdd = JSON.parse(localStorage.getItem("selected"));
   const currentLocation = JSON.parse(localStorage.getItem("location"));
 
-  const [tipValue, setTipValue] = React.useState(0.25);
+  const [tipValue, setTipValue] = React.useState(0);
+  const [tipID, setTipID] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [cartItems, setCartItems] = React.useState();
   const [specialIns, setSpecialIns] = React.useState("");
   const [restaurantLogo, setRestaurantLogo] = React.useState("");
   const [restaurantName, setRestaurantName] = React.useState("");
+  const [deliveryPrice, setDeliveryPrice] = React.useState("0");
   const [promoCode, setPromoCode] = React.useState("");
   const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
@@ -116,8 +119,12 @@ function CartPage() {
     "14 August 2023, ASAP"
   );
 
+  const [pickDay, setPickDay] = useState("");
+  const [minTime, setMinTime] = useState(dayjs());
+  const [maxTime, setMaxTime] = useState(dayjs());
+
   const token = localStorage.getItem("token");
-  // const restaurantId = localStorage.getItem("restaurantID");
+  const restaurantId = localStorage.getItem("restaurantID");
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
@@ -133,7 +140,7 @@ function CartPage() {
 
     // Add a beforeunload event listener to prevent the prompt
     window.addEventListener("beforeunload", handleBeforeUnload);
-
+    fetchAllDeliveryPrice();
     return () => {
       // Clean up the event listener when the component unmounts
       window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -241,15 +248,32 @@ function CartPage() {
     },
   });
 
-  const timeByDate = branchesAndHoursResponse?.data[0]?.branch_hours?.find(
-    (val) => {
-      return val.week_day == pickDate?.split("-")[1];
-    }
-  );
+  const branchId = localStorage.getItem("branchId");
+
+  const timeByDate = branchesAndHoursResponse?.data
+    ?.find((val) => (val.id = branchId))
+    ?.branch_hours?.find((val) => {
+      return val.week_day == pickDay;
+    });
 
   useEffect(() => {
     setCartItems(cart);
   }, [cart]);
+
+  const getSingleDigitHour = (fullTime) => {
+    let Hour;
+    Hour =
+      fullTime?.split(":")[0][0] == "0"
+        ? fullTime?.split(":")[0][1]
+        : fullTime?.split(":")[0];
+
+    if (fullTime?.includes("AM")) {
+      return parseInt(Hour);
+    }
+    if (fullTime?.includes("PM")) {
+      return parseInt(Hour) + 12;
+    }
+  };
 
   const checkoutHandler = (event) => {
     event.preventDefault();
@@ -282,16 +306,9 @@ function CartPage() {
           setNotDeliver(true);
         } else {
           if (paymentMethod === "KNET") {
-            const firstWord = restaurantName?.split(" ")[0];
-
-            const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
-              const splitLogo = nearBy?.logo?.split("/");
-              const splitName = splitLogo[splitLogo.length - 1];
-
-              const name = splitName?.split("-")[0];
-
-              return name === firstWord?.toLowerCase();
-            });
+            const filterRestaurant = branchHours.filter(
+              (branch) => branch.restaurant_id === cart[0].restaurant_id
+            );
 
             if (filterRestaurant?.length === 0) {
               setNotDeliver(true);
@@ -300,7 +317,10 @@ function CartPage() {
 
               if (isAsap === "true") {
                 for (let j = 0; j < filterRestaurant?.length; j++) {
-                  if (filterRestaurant[j]?.openingStatus === "Open") {
+                  if (
+                    filterRestaurant[j]?.branch_hours[0].openingStatus ===
+                    "Open"
+                  ) {
                     setRestaurantOpen(false);
 
                     const data = {
@@ -333,7 +353,10 @@ function CartPage() {
                       });
 
                     break;
-                  } else if (filterRestaurant[j]?.openingStatus === "Close") {
+                  } else if (
+                    filterRestaurant[j]?.branch_hours[0].openingStatus ===
+                    "Close"
+                  ) {
                     setRestaurantOpen(true);
                   }
                 }
@@ -447,19 +470,12 @@ function CartPage() {
   }, []);
 
   const asapHandler = () => {
-    const firstWord = restaurantName.split(" ")[0];
-
-    const filterRestaurant = nearbyRestaurants?.filter((nearBy) => {
-      const splitLogo = nearBy?.logo?.split("/");
-      const splitName = splitLogo[splitLogo.length - 1];
-
-      const name = splitName.split("-")[0];
-
-      return name === firstWord?.toLowerCase();
-    });
+    const filterRestaurant = branchHours.filter(
+      (branch) => branch.restaurant_id === cart[0].restaurant_id
+    );
 
     for (let i = 0; i < filterRestaurant?.length; i++) {
-      if (filterRestaurant[i]?.openingStatus === "Open") {
+      if (filterRestaurant[i]?.branch_hours[0].openingStatus === "Open") {
         const currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes() + 30);
 
@@ -474,7 +490,9 @@ function CartPage() {
         setRestaurantOpen(false);
 
         break;
-      } else if (filterRestaurant[i]?.openingStatus === "Close") {
+      } else if (
+        filterRestaurant[i]?.branch_hours[0].openingStatus === "Close"
+      ) {
         setRestaurantOpen(true);
         setOpenPopup(false);
       }
@@ -508,7 +526,11 @@ function CartPage() {
         cartList(token)
           .then((res) => {
             const resData = res.data.map((val) => {
-              return {
+              const findRestaurant = branchHours?.find(
+                (branch) => branch.id === val?.branch_id
+              );
+
+              const obj = {
                 id: val?.item_id,
                 cart_id: val.cart_id,
                 itemName: val?.menu_item_name_en,
@@ -532,12 +554,15 @@ function CartPage() {
                 item_code: val.item_code,
                 specialInstructions: "",
                 itemImage: val?.menu_item_image,
-                restaurant_id: 1,
+                restaurant_id: findRestaurant.restaurant_id,
                 totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
               };
+
+              dispatch(addToCart(obj));
+
+              return obj;
             });
             setCartItems(resData);
-            // dispatch(addToCart(resData));
             setIsLoading(false);
           })
           .catch((err) => {
@@ -561,7 +586,7 @@ function CartPage() {
   };
 
   const getDeliveryCharge = () => {
-    return DELIVERY_CHARGE;
+    return Number(deliveryPrice).toFixed(3);
   };
 
   const getPromoDiscount = () => {
@@ -586,6 +611,16 @@ function CartPage() {
     ).toFixed(3);
   };
 
+  const fetchAllDeliveryPrice = () => {
+    deliveryPriceApi()
+      .then((res) => {
+        setDeliveryPrice(res.data[0].price);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const checkoutData = {
     payment_method_id: "1",
     order_total_price:
@@ -596,16 +631,49 @@ function CartPage() {
     driver_id: "1",
     address_id: JSON.parse(localStorage.getItem("selected"))?.addressId,
     service_type: "delivery", // it will be dynamic later
-    tip_id: "1",
+    tip_id: tipID,
+    tip_amount: tipValue,
     pick_from_store: "",
     pickup_from_car: "",
-    delivery_charges: "0",
+    delivery_charges: deliveryPrice,
     promo_code: "Test1",
     comments: specialIns,
-    schedule: {
-      date: pickDate.split("-")[0],
+    delivery_schedule: {
+      date: pickDate?.split("-")[0],
       time: pickTime,
     },
+  };
+
+  const handlerFunc = (ampm, date) => {
+    const selectedTime = dayjs(date);
+    if (ampm == "pm") {
+      setMinTime(
+        selectedTime
+          .set("hour", getSingleDigitHour(timeByDate?.from_time))
+          .set("minute", 0)
+      );
+      setMaxTime(
+        selectedTime
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
+    }
+    if (ampm == "am") {
+      setMinTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.from_time))
+          .set("minute", 0)
+      );
+      setMaxTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
+    }
   };
 
   const onDateSelected = () => {
@@ -618,12 +686,14 @@ function CartPage() {
     return truncateString(str, 100);
   };
 
-  const tipHandler = (tip) => {
+  const tipHandler = (tip, tipID) => {
     if (tip == tipValue) {
       setTipValue(0);
+      setTipID(null);
       return;
     }
     setTipValue(tip);
+    setTipID(tipID);
   };
 
   return (
@@ -670,7 +740,7 @@ function CartPage() {
                 : (location?.state?.fromMenu !== undefined ||
                     location?.state?.fromDetail !== undefined) &&
                   cart?.length !== 0
-                ? `${paths.menu}/restaurant/${cart[0].restaurant_id}/delivery`
+                ? `${paths.menu}/restaurant/${restaurantId}/delivery`
                 : location?.state?.backToCart !== undefined
                 ? paths.home
                 : -1
@@ -995,58 +1065,35 @@ function CartPage() {
           </IconButton> */}
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <MobileDatePicker
-              // onChange={(date) =>
-              //   localStorage.setItem(
-              //     "pickDate",
-              //     date.format("MMM DD, YYYY-dddd")
-              //   )
-              // }
-              minDate={dayjs(new Date())}
+            <DateTimePicker
               open={openSchedulePopup}
-              defaultValue={dayjs(new Date().toString())}
-              onClose={() => onDateSelected()}
+              sx={{
+                display: "none",
+              }}
+              minTime={minTime}
+              maxTime={maxTime}
+              disablePast
+              ampm={true}
+              onChange={(date, e, ew) => {
+                handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
+                setPickDay(date.format("dddd"));
+                date.preventDefault();
+              }}
+              onClose={() => {
+                onDateSelected();
+              }}
               onAccept={(date) => {
+                setOpenSchedulePopup(false);
                 if (date) {
                   localStorage.setItem(
                     "pickDate",
                     date.format("MMM DD, YYYY-dddd")
                   );
-                  setShowTimePicker(true);
+                  localStorage.setItem("isAsap", false);
+                  localStorage.setItem("pickTime", date.format("hh:mm a"));
                 }
               }}
-              sx={{
-                display: "none",
-              }}
             />
-            {showTimePicker && (
-              <MobileTimePicker
-                minTime={dayjs(
-                  new Date().setHours(
-                    parseInt(timeByDate?.from_time?.split(":")[0])
-                  )
-                )}
-                maxTime={dayjs(
-                  new Date().setHours(
-                    parseInt(timeByDate?.to_time?.split(":")[0]) + 12
-                  )
-                )}
-                defaultValue={dayjs(new Date())}
-                open={showTimePicker}
-                // onChange={(time) => {
-                //   localStorage.setItem("isAsap", false);
-                //   localStorage.setItem("pickTime", time.format("hh:mm a"));
-                // }}
-                onClose={() => setShowTimePicker(false)}
-                onAccept={(time) => {
-                  localStorage.setItem("isAsap", false);
-                  localStorage.setItem("pickTime", time.format("hh:mm a"));
-                }}
-                sx={{
-                  display: "none",
-                }}
-              />
-            )}
           </LocalizationProvider>
           <div className="scrollableContainerWrapper">
             <div className="scrollableContainer" id="scrollableContainer">
@@ -1210,7 +1257,7 @@ function CartPage() {
             </Typography>
 
             <Stack direction="row" justifyContent="space-between" spacing={1}>
-              {[0.25, 0.5, 1.0].map((tip) => (
+              {[0.25, 0.5, 1.0].map((tip, index) => (
                 <Box
                   key={tip + "tip"}
                   sx={{
@@ -1233,7 +1280,7 @@ function CartPage() {
                     }),
                     boxShadow: (theme) => theme.shadows[7],
                   }}
-                  onClick={() => tipHandler(tip)}
+                  onClick={() => tipHandler(tip, index + 1)}
                 >
                   <SvgIcon
                     fontSize="large"

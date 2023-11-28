@@ -17,13 +17,20 @@ import {
   Skeleton,
   Typography,
   Divider,
+  DialogContent,
   alpha,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
 } from "@mui/material";
 import { AddShoppingCartRounded, Label } from "@mui/icons-material";
 
 import { DetailsHeader } from "../../components/header/detailsHeader";
 import IncDec from "../../components/Input/InputWithIncDec";
 import { DialogComponent } from "../../components/dialog";
+import SelectLocation from "../../components/dialog/selectLocation";
+import SchedulePicker from "../../components/shared/schedulePicker";
+import ScheduleDialog from "../../components/dialog/scheduleDialog";
 
 import getMenuItemDetails, {
   GET_MENU_ITEM_DETAILS_QUERY_KEY,
@@ -32,6 +39,14 @@ import addToCartApiCall from "../../api/cart/addToCart";
 import updateCartApiCall from "../../api/cart/updateCart";
 import clearCart from "../../api/cart/clearCart";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
+import {
+  getNearByRest,
+  getResturants,
+} from "../../store/reducers/resturantsSlice";
+import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
+import getAllRestaurants from "../../api/home/getAllRestaurants";
+import { GET_ALL_RESTAURANTS_QUERY_KEY } from "../../api/home/getAllRestaurantsBanner";
+import CloseIcon from "@mui/icons-material/Close";
 
 import {
   updateCartItem,
@@ -39,22 +54,18 @@ import {
   resetCart,
 } from "../../store/reducers/cartSlice";
 
-import { paths } from "../../routes/paths";
-
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../utils/getAddress";
 
+import { paths } from "../../routes/paths";
+
 import "./style.css";
-import SelectLocation from "../../components/dialog/selectLocation";
-import { getNearByRest } from "../../store/reducers/resturantsSlice";
-import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
-import SchedulePicker from "../../components/shared/schedulePicker";
-import ScheduleDialog from "../../components/dialog/scheduleDialog";
 
 export const Details = () => {
   const { id } = useParams();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -68,6 +79,7 @@ export const Details = () => {
     (state) => state.resturants.nearbyRestaurants
   );
   const branchHours = useSelector((state) => state.resturants.branchHours);
+  const country = useSelector((state) => state.auth.country);
 
   const token = localStorage.getItem("token");
   const restaurant_id = localStorage.getItem("restaurantID");
@@ -94,8 +106,40 @@ export const Details = () => {
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [addressId, setAddressID] = useState();
+  const [sharedItemForCart, setSharedItemForCart] = useState({});
+  const [clearCartModal, setClearCartModal] = useState(false);
+  const [menuItemDetails, setMenuItemDetails] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const restaurantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
 
   const { search } = useLocation();
+
+  const {
+    data: getAllResturantsResponse,
+    isLoading: resturantsDataLoading,
+    error: resturantsDataError,
+    isError: resturantsDataIsError,
+    refetch,
+  } = useQuery({
+    queryKey: [GET_ALL_RESTAURANTS_QUERY_KEY],
+    queryFn: () => getAllRestaurants(country.id),
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (resturantsData?.length === 0) {
+      refetch();
+    }
+  }, [resturantsData]);
+
+  useEffect(() => {
+    if (getAllResturantsResponse?.data?.length !== 0) {
+      dispatch(getResturants(getAllResturantsResponse?.data));
+    }
+  }, [getAllResturantsResponse]);
 
   useLayoutEffect(() => {
     if (
@@ -122,9 +166,9 @@ export const Details = () => {
   }, [resturantsData]);
 
   useLayoutEffect(() => {
-    if (token !== null) {
-      fetchBranchHours();
-    }
+    // if (token !== null) {
+    fetchBranchHours();
+    // }
   }, []);
 
   const fetchBranchHours = () => {
@@ -183,17 +227,21 @@ export const Details = () => {
     }
   };
 
-  const {
-    data: menuItemDetails,
-    isLoading,
-    error,
-    isError,
-  } = useQuery({
-    queryKey: [GET_MENU_ITEM_DETAILS_QUERY_KEY],
-    queryFn: () =>
-      getMenuItemDetails(id, restaurant_id, location.state.branch_id),
-  });
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
+
+  const getItemDetails = () => {
+    setIsLoading(true);
+    getMenuItemDetails(id, restaurant_id, location.state.branch_id)
+      .then((res) => {
+        setIsLoading(false);
+        setMenuItemDetails(res);
+      })
+      .catch((err) => console.error(err));
+  };
+
+  useEffect(() => {
+    getItemDetails();
+  }, []);
 
   const calculateToppingVariantTotal = (toppingVariantData) => {
     const eachToppingTotal = toppingVariantData
@@ -250,7 +298,8 @@ export const Details = () => {
 
   React.useEffect(() => {
     const cartItem = cart.find(
-      (item) => item.item_code === searchParams.get("item_code")
+      (item) =>
+        item.item_code === searchParams.get("item_code") || item.id === +id
     );
 
     setCartItem(cartItem);
@@ -263,7 +312,8 @@ export const Details = () => {
 
   const checkIfItemIsInCart = () => {
     return cart.find(
-      (item) => item.item_code === searchParams.get("item_code")
+      (item) =>
+        item.item_code === searchParams.get("item_code") || item.id === +id
     );
   };
 
@@ -439,11 +489,10 @@ export const Details = () => {
     const sizeVariant = cartItem.variants?.sizeVariant?.variantId;
     const toppingVariant = cartItem.variants?.toppingVariant[0]?.variantId;
 
-    const cartItemDataForApi = {
+    let cartItemDataForApi = {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
       quantity: cartItem.quantity,
-      // cart_id: cartItem.cart_id || "5",
       topping_variant_id: toppingVariant || 0,
       side_variant_id: sideVariant || 0,
       size_variant_id: sizeVariant || 0,
@@ -463,6 +512,11 @@ export const Details = () => {
     };
 
     if (checkIfItemIsInCart()) {
+      cartItemDataForApi = {
+        ...cartItemDataForApi,
+        cart_id: cartItem.cart_id,
+      };
+
       updateCartApiCall(cartItemDataForApi, token)
         .then((res) => {})
         .catch((err) => {
@@ -491,13 +545,18 @@ export const Details = () => {
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
 
-    if (menuItemDetails?.data.has_variants && !sizeVariant) {
-      setErrorShow(true);
+    if (
+      cart.length > 0 &&
+      data.restaurant_id !== cart[0]?.restaurant_id &&
+      !clearCartModal
+    ) {
+      setClearCartModal(true);
       return;
     }
 
-    if (cart.length > 0 && data.restaurant_id !== cart[0]?.restaurant_id) {
-      clearCartItems();
+    if (menuItemDetails?.data.has_variants && !sizeVariant) {
+      setErrorShow(true);
+      return;
     }
 
     var ItemDataObject = {
@@ -516,26 +575,34 @@ export const Details = () => {
       itemImage: data?.image,
       has_variants: data?.has_variants,
       restaurant_id: data.restaurant_id,
+      branch_id: data?.branch_id,
     };
 
-    const itemExists = ItemDataObject.has_variants
-      ? cart.find(
-          (item) =>
-            JSON.stringify(item.variants) ===
-            JSON.stringify(ItemDataObject.variants)
-        )
-      : false;
+    const itemExists =
+      ItemDataObject.has_variants &&
+      (ItemDataObject?.variants?.sizeVariant ||
+        ItemDataObject?.variants?.toppingVariant ||
+        ItemDataObject.variants?.sideVariant)
+        ? cart.find(
+            (item) =>
+              JSON.stringify(item.variants) ===
+              JSON.stringify(ItemDataObject.variants)
+          )
+        : false;
 
     if (checkIfItemIsInCart()) {
       const item_code = cartItem?.item_code;
+      const cart_id = `${cartItem?.id}`;
 
       ItemDataObject = {
         ...ItemDataObject,
         item_code,
+        cart_id,
       };
 
       dispatch(updateCartItem(ItemDataObject));
       addToCartApiHandler(ItemDataObject);
+
       navigate(paths.cart);
     } else {
       const item_code = uuidv4();
@@ -556,6 +623,54 @@ export const Details = () => {
   };
 
   const openNotDelivered = () => {
+    const { data } = menuItemDetails;
+
+    if (menuItemDetails?.data.has_variants && !sizeVariant) {
+      setErrorShow(true);
+      return;
+    }
+
+    var ItemDataObject = {
+      id: data?.id,
+      itemName: data?.name_en,
+      discountedPrice: data?.discounted_price,
+      price: data?.price,
+      quantity: quantity,
+      variants: {
+        sizeVariant: sizeVariant,
+        toppingVariant: toppingVariant,
+        sideVariant: sideVariant,
+      },
+      totalPrice: Number(totalPrice).toFixed(3),
+      specialInstructions: specialInstructions,
+      itemImage: data?.image,
+      restaurant_id: data.restaurant_id,
+      branch_id: data?.branch_id,
+    };
+
+    const item_code = uuidv4();
+
+    ItemDataObject = {
+      ...ItemDataObject,
+      item_code,
+    };
+
+    const restaurantIdForRedirect = localStorage?.getItem("restaurantID");
+    const findName = resturantsData?.find(
+      (restaurant) => restaurant.id === +restaurantIdForRedirect
+    );
+
+    const sharedState = {
+      restaurant_id: +restaurant_id,
+      path: location.pathname,
+      restaurantName: findName?.name_en,
+      ItemDataObject,
+      menuItemDetails,
+      guest: true,
+    };
+
+    setSharedItemForCart(sharedState);
+
     setNotDeliver(true);
   };
 
@@ -582,6 +697,7 @@ export const Details = () => {
       specialInstructions: specialInstructions,
       itemImage: data?.image,
       restaurant_id: data.restaurant_id,
+      branch_id: data?.branch_id,
     };
 
     const item_code = uuidv4();
@@ -591,23 +707,29 @@ export const Details = () => {
       item_code,
     };
 
-    const restaurantIdForRedirect = localStorage?.getItem(
-      "restaurantIdForRedirect"
-    );
+    const restaurantIdForRedirect = localStorage?.getItem("restaurantID");
     const findName = resturantsData?.find(
       (restaurant) => restaurant.id === +restaurantIdForRedirect
     );
 
-    navigate(paths.location, {
-      state: {
-        restaurant_id: +restaurant_id,
-        path: location.pathname,
-        restaurantName: findName?.name_en,
-        ItemDataObject,
-        menuItemDetails,
-        guest: true,
-      },
-    });
+    const sharedState = {
+      restaurant_id: +restaurant_id,
+      path: location.pathname,
+      restaurantName: findName?.name_en,
+      ItemDataObject,
+      menuItemDetails,
+      guest: true,
+    };
+
+    if (!location?.state?.locationDeliver) {
+      navigate(paths.phone_verification_index, {
+        state: sharedState,
+      });
+    } else {
+      navigate(paths.location, {
+        state: sharedState,
+      });
+    }
   };
 
   const handleClose = () => {
@@ -624,7 +746,7 @@ export const Details = () => {
 
   useEffect(() => {
     const filterBranch = branchHours?.filter(
-      (rest) => rest.restaurant_id === +id
+      (rest) => rest.restaurant_id === +restaurant_id
     );
 
     if (fullAddress !== null) {
@@ -655,16 +777,10 @@ export const Details = () => {
             setDistanceIsFar(true);
             setOpenAddressPopup(false);
           } else {
-            const address = {
-              latitude: fullAddress.lat,
-              longitude: fullAddress.lng,
-              service_type: "dinein",
-            };
-
-            fetchNearbyRestaurant(address);
-
             setDistanceIsFar(false);
             setOpenAddressPopup(false);
+
+            checkNearByRest(filterBranch);
 
             break;
           }
@@ -673,49 +789,20 @@ export const Details = () => {
     }
   }, [fullAddress, branchHours]);
 
-  const fetchNearbyRestaurant = (address) => {
-    if (nearbyRestaurants.length === 0) {
-      getNearByRestaurants(address).then((res) => {
-        if (res.status === "ok") {
-          localStorage.setItem(
-            "selected",
-            JSON.stringify({ ...fullAddress, addressId })
-          );
+  const checkNearByRest = (branch) => {
+    localStorage.setItem(
+      "selected",
+      JSON.stringify({ ...fullAddress, addressId })
+    );
 
-          dispatch(getNearByRest(res?.data));
-          setOpenAddressPopup(false);
-          checkNearByRest(res?.data);
-        }
-      });
-    } else {
-      localStorage.setItem(
-        "selected",
-        JSON.stringify({ ...fullAddress, addressId })
-      );
-
-      setOpenAddressPopup(false);
-      checkNearByRest(nearbyRestaurants);
-    }
-  };
-
-  const checkNearByRest = (nearby) => {
-    const filterRestaurant = nearby?.filter((nearBy) => {
-      const splitLogo = nearBy?.logo?.split("/");
-      const splitName = splitLogo[splitLogo.length - 1];
-
-      const name = splitName.split("-")[0];
-
-      return name === restaurantDetail?.name_en?.toLowerCase();
-    });
-
-    if (filterRestaurant?.length === 0) {
+    if (branch?.length === 0) {
       setRestaurantName(restaurantDetail?.name_en);
       setDistanceIsFar(true);
       setOpenAddressPopup(false);
     } else {
       if (localStorage.getItem("isAsap") === "true") {
-        for (let i = 0; i < filterRestaurant?.length; i++) {
-          if (filterRestaurant[i]?.openingStatus === "Open") {
+        for (let i = 0; i < branch?.length; i++) {
+          if (branch[i]?.branch_hours[0].openingStatus === "Open") {
             setRestaurantIsOpen(false);
             navigate(paths?.cart, {
               state: { fromDetail: true, path: "/home" },
@@ -739,517 +826,640 @@ export const Details = () => {
     navigate(paths.location, {
       state: {
         path: "menu/restaurant",
-        restaurant_id: id,
+        restaurant_id: restaurant_id,
         restaurantName: restaurantDetail?.name_en,
         addNew: true,
       },
     });
   };
 
+  const previousRestaurant = restaurantsData?.find((val) => {
+    return val.id == cart[0]?.restaurant_id;
+  });
+  const currentRestaurant = restaurantsData?.find((val) => {
+    return val.id == restaurant_id;
+  });
+
   return (
-    <div>
-      <DetailsHeader
-        image={menuItemDetails?.data?.image}
-        setOpenAddressPopup={setOpenAddressPopup}
-        fromDetail={true}
-      />
-      <div className="container-fluid section">
-        <Stack
-          spacing={2}
-          sx={{
-            color: "common.black",
-          }}
+    <>
+      <Dialog
+        open={clearCartModal}
+        onClose={() => {}}
+        sx={{
+          margin: "0",
+          textAlign: "center",
+        }}
+        className="cart-dialog"
+        PaperProps={{
+          sx: {
+            overflow: "visible",
+            margin: "0px 0px 0px 27px",
+            width: "327px",
+
+            "@media (max-width: 500px)": {
+              width: "375px",
+              margin: "0px 0px 0px 0px",
+            },
+
+            "@media (max-width: 400px)": {
+              width: "90%",
+            },
+          },
+        }}
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          className="dialog-title title-cart"
         >
-          <Box
-            sx={{
+          <img src="/assets/img/exclaim.svg"></img>
+
+          <div
+            style={{
               position: "absolute",
-              top: -2.5 * 8,
-              right: 3 * 8,
-              backgroundColor: (theme) => theme.palette.themeColor.main,
-              color: "white",
-              borderRadius: "12px",
-              zIndex: 1,
-              width: "121px",
-              height: "35px",
+              top: "8px",
+              right: "10px",
               display: "flex",
+              alignItems: "center",
               justifyContent: "center",
-              paddingTop: "8px",
+            }}
+            onClick={() => {
+              setClearCartModal(false);
+              sessionStorage.setItem("popupOpened", true);
             }}
           >
-            <Typography variant="body1" component="div">
-              <Typography
-                variant="subtitle2"
-                component="sup"
+            <CloseIcon
+              sx={{
+                width: "24px",
+                fontSize: "24px",
+                cursor: "pointer",
+                color: "#707070 !important",
+              }}
+            />
+          </div>
+        </DialogTitle>
+        <DialogContent className="dialog-content-cart">
+          {`Warning: You are about to change your original order from ${previousRestaurant?.name_en} to ${currentRestaurant?.name_en}. All items currently in your cart from ${previousRestaurant?.name_en} will be removed. Continue?.`}
+        </DialogContent>
+        <div className="btn-navigate">
+          <Button
+            className="common-st add-btn"
+            onClick={() => setClearCartModal(false)}
+          >
+            No
+          </Button>
+
+          <Button
+            className="common-st go-to-btn"
+            onClick={() => {
+              clearCartItems();
+              handleAddToCart();
+            }}
+          >
+            Yes
+          </Button>
+        </div>
+      </Dialog>
+      {!isLoading ? (
+        <div>
+          <DetailsHeader
+            image={menuItemDetails?.data?.image}
+            setOpenAddressPopup={setOpenAddressPopup}
+            fromDetail={true}
+            editItem={location?.state?.editItem}
+          />
+          <div className="container-fluid section">
+            <Stack
+              spacing={2}
+              sx={{
+                color: "common.black",
+              }}
+            >
+              <Box
                 sx={{
-                  mr: 0.5,
-                  fontWeight: "600",
-                  fontSize: "13px",
+                  position: "absolute",
+                  top: -2.5 * 8,
+                  right: 3 * 8,
+                  backgroundColor: (theme) => theme.palette.themeColor.main,
+                  color: "white",
+                  borderRadius: "12px",
+                  zIndex: 1,
+                  width: "121px",
+                  height: "35px",
+                  display: "flex",
+                  justifyContent: "center",
+                  paddingTop: "8px",
                 }}
               >
-                KWD
-              </Typography>
-              <div
-                style={{
-                  fontWeight: "700",
-                  marginTop: "-29px",
-                  marginLeft: "29px",
-                  fontSize: "18px",
-                }}
-              >
-                {menuItemPriceWithoutCurrency()}
-              </div>
-            </Typography>
-          </Box>
-          <Stack spacing={1}>
-            {isLoading ? (
-              <Skeleton variant="rectangular" width={210} height={118} />
-            ) : (
-              <>
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
+                <Typography variant="body1" component="div">
                   <Typography
-                    variant="h5"
-                    component="div"
+                    variant="subtitle2"
+                    component="sup"
                     sx={{
-                      marginLeft: "12px !important",
-                      fontSize: "22px",
+                      mr: 0.5,
+                      fontWeight: "600",
+                      fontSize: "13px",
                     }}
                   >
-                    {menuItemDetails?.data?.name_en}
+                    KWD
                   </Typography>
-
-                  <Typography
-                    variant="caption"
-                    component="div"
-                    sx={{
-                      color: (theme) => theme.palette.themeColor.main,
-                      marginRight: "15px !important",
+                  <div
+                    style={{
+                      fontWeight: "700",
+                      marginTop: "-29px",
+                      marginLeft: "29px",
+                      fontSize: "18px",
                     }}
                   >
-                    483 Kcal
-                  </Typography>
-                </Stack>
-                <Typography
-                  variant="body2"
-                  component="div"
-                  sx={{
-                    marginLeft: "12px !important",
-                    fontWeight: "normal",
-                  }}
-                >
-                  {menuItemDetails?.data?.description_en}
+                    {menuItemPriceWithoutCurrency()}
+                  </div>
                 </Typography>
-              </>
-            )}
-
-            {menuItemDetails &&
-              menuItemDetails?.data?.variants?.map((variant) => {
-                return (
-                  <Stack key={variant?.id} spacing={0.5}>
+              </Box>
+              <Stack spacing={1}>
+                {isLoading ? (
+                  <Skeleton variant="rectangular" width={210} height={118} />
+                ) : (
+                  <>
                     <Stack
                       direction="row"
+                      spacing={2}
                       justifyContent="space-between"
                       alignItems="center"
-                      spacing={1}
-                      sx={{
-                        py: 0.5,
-                        px: 1.5,
-                        // borderRadius: 999,
-                        backgroundColor: (theme) =>
-                          alpha(theme.palette.themeColor.main, 0.12),
-                        height: "40px",
-                        borderRadius: "16px",
-                        display: "flex",
-                        alignItems: "center",
-                        border:
-                          errorShow && variant?.name_en == "Choose the Size"
-                            ? "1px solid red"
-                            : "",
-                      }}
                     >
-                      <Typography variant="h6" component="div" fontWeight="600">
-                        {variant?.name_en}
-
-                        <Typography
-                          variant="subtitle2"
-                          component="sub"
-                          color="GrayText"
-                          fontWeight="600"
-                          sx={{
-                            ml: 0.5,
-                            top: "-1px",
-                          }}
-                        >
-                          {variant.name_en === "Choose the Size"
-                            ? "(Choose 1)"
-                            : variant.name_en === "Extra Topping"
-                            ? "(Choose up to 7)"
-                            : variant.name_en === "Extra Sides"
-                            ? "(Choose up to 2)"
-                            : ""}
-                        </Typography>
+                      <Typography
+                        variant="h5"
+                        component="div"
+                        sx={{
+                          marginLeft: "12px !important",
+                          fontSize: "22px",
+                        }}
+                      >
+                        {menuItemDetails?.data?.name_en}
                       </Typography>
 
                       <Typography
-                        variant="body1"
+                        variant="caption"
                         component="div"
-                        fontWeight={600}
                         sx={{
                           color: (theme) => theme.palette.themeColor.main,
-                          display: "flex",
-                          marginBottom: "1px",
+                          marginRight: "15px !important",
                         }}
                       >
-                        {errorShow && variant.name_en === "Choose the Size" && (
-                          <img
-                            style={{ marginRight: "5px" }}
-                            src="/assets/img/errorIcon.svg"
-                            alt="error_icon"
-                          />
-                        )}
-                        {variant.name_en === "Choose the Size" ? (
-                          <span style={{ marginBottom: 2 }}>(Required)</span>
-                        ) : variant.name_en === "Extra Topping" ? (
-                          <span style={{ marginBottom: 2 }}>(Optional)</span>
-                        ) : variant.name_en === "Extra Sides" ? (
-                          <span style={{ marginBottom: 2 }}>(Optional)</span>
-                        ) : (
-                          ""
-                        )}
+                        483 Kcal
                       </Typography>
                     </Stack>
+                    <Typography
+                      variant="body2"
+                      component="div"
+                      sx={{
+                        marginLeft: "12px !important",
+                        fontWeight: "normal",
+                      }}
+                    >
+                      {menuItemDetails?.data?.description_en}
+                    </Typography>
+                  </>
+                )}
 
-                    {variant?.options?.map((option, index) => {
-                      const isLastItem = variant?.options?.length - 1 === index;
+                {menuItemDetails &&
+                  menuItemDetails?.data?.variants?.map((variant) => {
+                    return (
+                      <Stack key={variant?.id} spacing={0.5}>
+                        <Stack
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          spacing={1}
+                          sx={{
+                            py: 0.5,
+                            px: 1.5,
+                            // borderRadius: 999,
+                            backgroundColor: (theme) =>
+                              alpha(theme.palette.themeColor.main, 0.12),
+                            height: "40px",
+                            borderRadius: "16px",
+                            display: "flex",
+                            alignItems: "center",
+                            border:
+                              errorShow && variant?.name_en == "Choose the Size"
+                                ? "1px solid red"
+                                : "",
+                          }}
+                        >
+                          <Typography
+                            variant="h6"
+                            component="div"
+                            fontWeight="600"
+                          >
+                            {variant?.name_en}
 
-                      return (
-                        <Fragment key={option?.id}>
-                          <Stack
-                            direction="row"
-                            spacing={0.5}
-                            justifyContent="space-between"
-                            alignItems="center"
+                            <Typography
+                              variant="subtitle2"
+                              component="sub"
+                              color="GrayText"
+                              fontWeight="600"
+                              sx={{
+                                ml: 0.5,
+                                top: "-1px",
+                              }}
+                            >
+                              {variant.name_en === "Choose the Size"
+                                ? "(Choose 1)"
+                                : variant.name_en === "Extra Topping"
+                                ? "(Choose up to 7)"
+                                : variant.name_en === "Extra Sides"
+                                ? "(Choose up to 2)"
+                                : ""}
+                            </Typography>
+                          </Typography>
+
+                          <Typography
+                            variant="body1"
+                            component="div"
+                            fontWeight={600}
                             sx={{
-                              marginLeft: "-7px !important",
-                              // color:
-                              //   variant.name_en === "Extra Topping" &&
-                              //   isLastItem
-                              //     ? "#e0e0e0"
-                              //     : "", // Apply grey background to last item in Extra Topping section
+                              color: (theme) => theme.palette.themeColor.main,
+                              display: "flex",
+                              marginBottom: "1px",
                             }}
                           >
-                            <FormControlLabel
-                              checked={
-                                variant.name_en === "Choose the Size"
-                                  ? checkIfSizeIsAdded(option?.name_en)
-                                  : // : variant.name_en === "Extra Topping"
-                                  // ? checkIfToppingIsAdded(option?.name_en)
-                                  variant.name_en === "Extra Sides"
-                                  ? checkIfSideIsAdded(option?.name_en)
-                                  : false
-                              }
-                              onChange={() => {
-                                variant.name_en === "Choose the Size"
-                                  ? handleSizeVariant(option, variant.id)
-                                  : variant.name_en === "Extra Topping"
-                                  ? handleToppingVariant(option, variant.id)
-                                  : variant.name_en === "Extra Sides"
-                                  ? handleSideVariant(option, variant.id)
-                                  : () => {};
-                              }}
-                              control={
-                                variant.name_en !== "Extra Topping" ? (
-                                  <Checkbox color="themeColor" />
-                                ) : (
-                                  <span
-                                    style={{
-                                      marginLeft: "12px",
-                                      marginTop: "40px",
-                                    }}
-                                    color="themeColor"
-                                  />
-                                )
-                              }
-                              label={option?.name_en}
-                              disabled={
-                                variant.name_en === "Extra Topping" &&
-                                !checkIfToppingIsAdded(option?.name_en)
-                                  ? extraToppingCount == 7
-                                  : false
-                              }
-                            />
-
-                            {variant.name_en === "Extra Topping" && (
-                              <div className="extra-topping-price-wrapper">
-                                <p className="extra-topping-price">{`(Each +KWD ${option?.unit_price})`}</p>
-                              </div>
+                            {errorShow &&
+                              variant.name_en === "Choose the Size" && (
+                                <img
+                                  style={{ marginRight: "5px" }}
+                                  src="/assets/img/errorIcon.svg"
+                                  alt="error_icon"
+                                />
+                              )}
+                            {variant.name_en === "Choose the Size" ? (
+                              <span style={{ marginBottom: 2 }}>
+                                (Required)
+                              </span>
+                            ) : variant.name_en === "Extra Topping" ? (
+                              <span style={{ marginBottom: 2 }}>
+                                (Optional)
+                              </span>
+                            ) : variant.name_en === "Extra Sides" ? (
+                              <span style={{ marginBottom: 2 }}>
+                                (Optional)
+                              </span>
+                            ) : (
+                              ""
                             )}
+                          </Typography>
+                        </Stack>
 
-                            {variant.name_en === "Extra Topping" ? (
-                              <IncDec
-                                IncButtonProps={{
-                                  disabled: extraToppingCount == 7,
-                                }}
-                                DecButtonProps={{
-                                  disabled: !checkIfToppingIsAdded(
-                                    option?.name_en ||
-                                      getExtraToppingQuantity(option) === 0
-                                  ),
-                                }}
-                                quantity={getExtraToppingQuantity(option)}
-                                onIncrease={() => {
-                                  handleAddToppingQuantity(option);
-                                }}
-                                onDecrease={() => {
-                                  handleRemoveToppingQuantity(option);
-                                }}
-                              />
-                            ) : null}
-                            {variant.name_en === "Choose the Size" ||
-                            variant.name_en === "Extra Sides" ? (
-                              <Typography
-                                variant="body1"
-                                component="div"
+                        {variant?.options?.map((option, index) => {
+                          const isLastItem =
+                            variant?.options?.length - 1 === index;
+
+                          return (
+                            <Fragment key={option?.id}>
+                              <Stack
+                                direction="row"
+                                spacing={0.5}
+                                justifyContent="space-between"
+                                alignItems="center"
                                 sx={{
-                                  color: "common.black",
-                                  marginRight: "10px !important",
+                                  marginLeft: "-7px !important",
+                                  // color:
+                                  //   variant.name_en === "Extra Topping" &&
+                                  //   isLastItem
+                                  //     ? "#e0e0e0"
+                                  //     : "", // Apply grey background to last item in Extra Topping section
                                 }}
                               >
-                                {variant.name_en === "Choose the Size" &&
-                                index === 0
-                                  ? ""
-                                  : getFormattedPrice(option?.unit_price)}
-                              </Typography>
-                            ) : null}
-                          </Stack>
+                                <FormControlLabel
+                                  checked={
+                                    variant.name_en === "Choose the Size"
+                                      ? checkIfSizeIsAdded(option?.name_en)
+                                      : // : variant.name_en === "Extra Topping"
+                                      // ? checkIfToppingIsAdded(option?.name_en)
+                                      variant.name_en === "Extra Sides"
+                                      ? checkIfSideIsAdded(option?.name_en)
+                                      : false
+                                  }
+                                  onChange={() => {
+                                    variant.name_en === "Choose the Size"
+                                      ? handleSizeVariant(option, variant.id)
+                                      : variant.name_en === "Extra Topping"
+                                      ? handleToppingVariant(option, variant.id)
+                                      : variant.name_en === "Extra Sides"
+                                      ? handleSideVariant(option, variant.id)
+                                      : () => {};
+                                  }}
+                                  control={
+                                    variant.name_en !== "Extra Topping" ? (
+                                      <Checkbox color="themeColor" />
+                                    ) : (
+                                      <span
+                                        style={{
+                                          marginLeft: "12px",
+                                          marginTop: "40px",
+                                        }}
+                                        color="themeColor"
+                                      />
+                                    )
+                                  }
+                                  label={option?.name_en}
+                                  disabled={
+                                    variant.name_en === "Extra Topping" &&
+                                    !checkIfToppingIsAdded(option?.name_en)
+                                      ? extraToppingCount == 7
+                                      : false
+                                  }
+                                />
 
-                          {variant?.options?.length - 1 !== index && (
-                            <Divider />
-                          )}
-                        </Fragment>
-                      );
-                    })}
-                  </Stack>
-                );
-              })}
-          </Stack>
+                                {variant.name_en === "Extra Topping" && (
+                                  <div className="extra-topping-price-wrapper">
+                                    <p className="extra-topping-price">{`(Each +KWD ${option?.unit_price})`}</p>
+                                  </div>
+                                )}
 
-          <TextField
-            multiline
-            rows={4}
-            placeholder="Special instructions (Optional)"
-            InputProps={{
-              classes: {
-                notchedOutline: "custom-notched-outline", // Add a custom class to override the styles
-              },
-            }}
-            sx={{
-              "& .custom-notched-outline": {
-                border: "none", // Remove the border
-              },
-              background: "#FAFAFA 0% 0% no-repeat padding-box",
-              borderRadius: "16px",
-            }}
-            onChange={handleSpecialInstructionsChange}
-            fullWidth
-          />
-          <Stack
-            spacing={0}
-            alignItems="center"
-            sx={{
-              pb: 2,
-            }}
-          >
-            <Box
-              sx={{
-                width: "85%",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                py: 1,
-                px: 2,
-                borderTopLeftRadius: "12px",
-                borderTopRightRadius: "12px",
-                color: "common.white",
-                backgroundColor: (theme) => theme.palette.themeColor.main,
-              }}
-            >
-              <Typography variant="h6" component="div">
-                Quantity
-              </Typography>
+                                {variant.name_en === "Extra Topping" ? (
+                                  <IncDec
+                                    IncButtonProps={{
+                                      disabled: extraToppingCount == 7,
+                                    }}
+                                    DecButtonProps={{
+                                      disabled: !checkIfToppingIsAdded(
+                                        option?.name_en ||
+                                          getExtraToppingQuantity(option) === 0
+                                      ),
+                                    }}
+                                    quantity={getExtraToppingQuantity(option)}
+                                    onIncrease={() => {
+                                      handleAddToppingQuantity(option);
+                                    }}
+                                    onDecrease={() => {
+                                      handleRemoveToppingQuantity(option);
+                                    }}
+                                  />
+                                ) : null}
+                                {variant.name_en === "Choose the Size" ||
+                                variant.name_en === "Extra Sides" ? (
+                                  <Typography
+                                    variant="body1"
+                                    component="div"
+                                    sx={{
+                                      color: "common.black",
+                                      marginRight: "10px !important",
+                                    }}
+                                  >
+                                    {variant.name_en === "Choose the Size" &&
+                                    index === 0
+                                      ? ""
+                                      : getFormattedPrice(option?.unit_price)}
+                                  </Typography>
+                                ) : null}
+                              </Stack>
 
-              <IncDec
-                quantity={quantity}
-                onIncrease={() => {
-                  setQuantity(quantity + 1);
-                }}
-                onDecrease={() => {
-                  if (quantity > 0) {
-                    setQuantity(quantity - 1);
-                  }
-                }}
-                IncButtonProps={{
-                  // disabled: quantity === 10,
-                  sx: {
-                    color: "common.white",
-                    backgroundColor: "#ffffff24",
-                    "&:hover": {
-                      backgroundColor: "#ffffff24",
-                    },
+                              {variant?.options?.length - 1 !== index && (
+                                <Divider />
+                              )}
+                            </Fragment>
+                          );
+                        })}
+                      </Stack>
+                    );
+                  })}
+              </Stack>
+
+              <TextField
+                multiline
+                rows={4}
+                placeholder="Special instructions (Optional)"
+                InputProps={{
+                  classes: {
+                    notchedOutline: "custom-notched-outline", // Add a custom class to override the styles
                   },
                 }}
-                DecButtonProps={{
-                  // disabled: quantity === 0,
-                  sx: {
-                    color: "common.white",
-                    backgroundColor: "#ffffff24",
-                    "&:hover": {
-                      backgroundColor: "#ffffff24",
-                    },
+                sx={{
+                  "& .custom-notched-outline": {
+                    border: "none", // Remove the border
                   },
+                  background: "#FAFAFA 0% 0% no-repeat padding-box",
+                  borderRadius: "16px",
                 }}
+                onChange={handleSpecialInstructionsChange}
+                fullWidth
               />
-            </Box>
-            <Button
-              size="large"
-              variant="contained"
-              fullWidth
-              // disabled={
-              //   location?.state?.locationDeliver || farRestaurant
-              //     ? false
-              //     : menuItemDetails?.data.has_variants && !sizeVariant
-              // }
-              sx={{
-                py: 2,
-                display: "flex",
-                justifyContent:
-                  location?.state?.locationDeliver ||
-                  token === null ||
-                  farRestaurant
-                    ? "center"
-                    : "space-between",
-                alignItems: "center",
-                backgroundColor: `${restaurantTheme.main} !important`,
-                "&:hover": {
-                  backgroundColor: (theme) => theme.palette.themeColor.light,
-                },
-              }}
-              onClick={
-                location?.state?.locationDeliver || farRestaurant
-                  ? openNotDelivered
-                  : token === null
-                  ? moveToLocation
-                  : handleAddToCart
-              }
-            >
-              {location?.state?.locationDeliver || farRestaurant ? (
-                <Typography
-                  variant="h6"
-                  component="span"
-                  fontWeight={600}
+              <Stack
+                spacing={0}
+                alignItems="center"
+                sx={{
+                  pb: 2,
+                }}
+              >
+                <Box
                   sx={{
+                    width: "85%",
                     display: "flex",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    justifyContent: "center",
-                    color: "white",
+                    py: 1,
+                    px: 2,
+                    borderTopLeftRadius: "12px",
+                    borderTopRightRadius: "12px",
+                    color: "common.white",
+                    backgroundColor: (theme) => theme.palette.themeColor.main,
                   }}
                 >
-                  Change Location to Start Ordering
-                </Typography>
-              ) : token === null ? (
-                <Typography
-                  variant="h6"
-                  component="span"
-                  fontWeight={600}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "white",
-                  }}
-                >
-                  Start Ordering
-                </Typography>
-              ) : (
-                <>
-                  <Typography
-                    variant="h6"
-                    component="span"
-                    fontWeight={600}
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      color: "white",
+                  <Typography variant="h6" component="div">
+                    Quantity
+                  </Typography>
+
+                  <IncDec
+                    quantity={quantity}
+                    onIncrease={() => {
+                      setQuantity(quantity + 1);
                     }}
-                  >
-                    <AddShoppingCartRounded
+                    onDecrease={() => {
+                      if (quantity > 0) {
+                        setQuantity(quantity - 1);
+                      }
+                    }}
+                    IncButtonProps={{
+                      // disabled: quantity === 10,
+                      sx: {
+                        color: "common.white",
+                        backgroundColor: "#ffffff24",
+                        "&:hover": {
+                          backgroundColor: "#ffffff24",
+                        },
+                      },
+                    }}
+                    DecButtonProps={{
+                      // disabled: quantity === 0,
+                      sx: {
+                        color: "common.white",
+                        backgroundColor: "#ffffff24",
+                        "&:hover": {
+                          backgroundColor: "#ffffff24",
+                        },
+                      },
+                    }}
+                  />
+                </Box>
+                <Button
+                  size="large"
+                  variant="contained"
+                  fullWidth
+                  // disabled={
+                  //   location?.state?.locationDeliver || farRestaurant
+                  //     ? false
+                  //     : menuItemDetails?.data.has_variants && !sizeVariant
+                  // }
+                  sx={{
+                    py: 2,
+                    display: "flex",
+                    justifyContent:
+                      location?.state?.locationDeliver ||
+                      token === null ||
+                      farRestaurant
+                        ? "center"
+                        : "space-between",
+                    alignItems: "center",
+                    backgroundColor: `${restaurantTheme.main} !important`,
+                    "&:hover": {
+                      backgroundColor: (theme) =>
+                        theme.palette.themeColor.light,
+                    },
+                  }}
+                  onClick={
+                    location?.state?.locationDeliver || farRestaurant
+                      ? openNotDelivered
+                      : token === null
+                      ? moveToLocation
+                      : handleAddToCart
+                  }
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "absolute",
+                      background: "#ffffff24",
+                      left: "0px",
+                    }}
+                  ></div>
+                  {location?.state?.locationDeliver || farRestaurant ? (
+                    <Typography
+                      variant="h6"
+                      component="span"
+                      fontWeight={600}
                       sx={{
-                        mr: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "white",
                       }}
-                    />
-                    {checkIfItemIsInCart() && search
-                      ? "Update Cart"
-                      : "Add to Cart"}
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    component="span"
-                    sx={{
-                      color: "white",
-                    }}
-                  >
-                    +KWD {Number(totalPrice).toFixed(3)}
-                  </Typography>
-                </>
-              )}
-            </Button>
-          </Stack>
-        </Stack>
-      </div>
+                    >
+                      Change Location to Start Ordering
+                    </Typography>
+                  ) : token === null ? (
+                    <Typography
+                      variant="h6"
+                      component="span"
+                      fontWeight={600}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "white",
+                      }}
+                    >
+                      Start Ordering
+                    </Typography>
+                  ) : (
+                    <>
+                      <Typography
+                        variant="h6"
+                        component="span"
+                        fontWeight={600}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          color: "white",
+                        }}
+                      >
+                        <AddShoppingCartRounded
+                          sx={{
+                            mr: 1,
+                          }}
+                        />
+                        {checkIfItemIsInCart() && search
+                          ? "Update Cart"
+                          : "Add to Cart"}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        component="span"
+                        sx={{
+                          color: "white",
+                        }}
+                      >
+                        +KWD {Number(totalPrice).toFixed(3)}
+                      </Typography>
+                    </>
+                  )}
+                </Button>
+              </Stack>
+            </Stack>
+          </div>
 
-      <SelectLocation
-        openAddressPopup={openAddressPopup}
-        handleClose={() => setOpenAddressPopup(false)}
-        chooseAddress={chooseAddress}
-        navigateUser={navigateUser}
-      />
+          <SelectLocation
+            openAddressPopup={openAddressPopup}
+            handleClose={() => setOpenAddressPopup(false)}
+            chooseAddress={chooseAddress}
+            navigateUser={navigateUser}
+          />
 
-      <DialogComponent
-        notDeliver={distanceIsFar}
-        setNotDeliver={setDistanceIsFar}
-        restaurantName={restaurantName}
-        fromDetail={true}
-        resturantId={id}
-        location={location}
-        home={true}
-        menuCard={true}
-      />
+          <DialogComponent
+            notDeliver={distanceIsFar}
+            setNotDeliver={setDistanceIsFar}
+            restaurantName={restaurantName}
+            fromDetail={true}
+            resturantId={restaurant_id}
+            location={location}
+            home={true}
+            menuCard={true}
+          />
 
-      <SchedulePicker
-        openSchedulePopup={openSchedulePopup}
-        setOpenSchedulePopup={setOpenSchedulePopup}
-        showTimePicker={showTimePicker}
-        setShowTimePicker={setShowTimePicker}
-        menuCard={true}
-      />
+          <SchedulePicker
+            openSchedulePopup={openSchedulePopup}
+            setOpenSchedulePopup={setOpenSchedulePopup}
+            showTimePicker={showTimePicker}
+            setShowTimePicker={setShowTimePicker}
+            menuCard={true}
+          />
 
-      <ScheduleDialog
-        restaurantOpen={restaurantIsOpen}
-        setRestaurantOpen={setRestaurantIsOpen}
-        setOpenSchedulePopup={setOpenSchedulePopup}
-        menuCard={true}
-      />
+          <ScheduleDialog
+            restaurantOpen={restaurantIsOpen}
+            setRestaurantOpen={setRestaurantIsOpen}
+            setOpenSchedulePopup={setOpenSchedulePopup}
+            menuCard={true}
+          />
 
-      <DialogComponent
-        notDeliver={notDeliver}
-        setNotDeliver={setNotDeliver}
-        location={location}
-        fromDetail={true}
-      />
-    </div>
+          <DialogComponent
+            notDeliver={notDeliver}
+            setNotDeliver={setNotDeliver}
+            location={location}
+            fromDetail={true}
+            locationDeliver={location?.state?.locationDeliver}
+            sharedItemForCart={sharedItemForCart}
+          />
+        </div>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "170px !important",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+    </>
   );
 };

@@ -13,6 +13,7 @@ import updateProfile from "../../api/customer/updateProfile";
 import { paths } from "../../routes/paths";
 import { addUserInfo } from "../../store/reducers/authSlice";
 import "./style.css";
+import { toast } from "react-toastify";
 
 const updateProfileFormSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -23,7 +24,7 @@ const updateProfileFormSchema = Yup.object().shape({
     .matches(/^[a-z ,.'-]+$/i)
     .max(40)
     .required(),
-  email: Yup.string().email().required(),
+  email: Yup.string().email(),
   mobile_no: Yup.string()
     .matches(/^\d{8}$/, "Mobile number must be exactly 8 digits")
     .required(),
@@ -61,6 +62,19 @@ export const UpdateCustomerProfile = () => {
     onSuccess: () => {
       navigate(paths.profile);
     },
+    onError:(error) => {
+      const errorMessage = error || 'An unknown error occurred';
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    }
   });
 
   const formikUpdateCustomerProfile = useFormik({
