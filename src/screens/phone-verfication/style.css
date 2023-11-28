@@ -1,0 +1,18 @@
+.Phone-Nav .logo-home {
+  margin: 0px 0px 0px 0px !important;
+}
+
+.Phone-Nav {
+  margin-top: 12px !important;
+  margin: 0px -5px 0px 0px !important;
+}
+
+#mobile_no::-webkit-outer-spin-button,
+#mobile_no::-webkit-inner-spin-button,
+#mobile_country_code::-webkit-outer-spin-button,
+#mobile_country_code::-webkit-inner-spin-button,
+.otp-input input::-webkit-outer-spin-button,
+.otp-input input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}

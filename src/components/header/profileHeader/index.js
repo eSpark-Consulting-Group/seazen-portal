@@ -1,14 +1,38 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./style.css";
-import { useNavigate } from "react-router";
+// import "./style.css";
+import { useNavigate } from "react-router-dom";
 import { paths } from "../../../routes/paths";
+import countryList from "../../../api/common/getAllCountries";
+import { useDispatch, useSelector } from "react-redux";
+import { resetCart } from "../../../store/reducers/cartSlice";
+import clearCart from "../../../api/cart/clearCart";
+import { addCountry } from "../../../store/reducers/authSlice";
+import {
+  getCategoryItemList,
+  getRestaurantsBanner,
+} from "../../../store/reducers/resturantsSlice";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const ProfileHeader = (props) => {
-  const { showFlagOption } = props;
+  const { showFlagOption, customIcon } = props;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isCountryPopupOpen, setIsCountryPopupOpen] = useState(false);
+  const [currentFlag, setCurrentFlag] = useState(""); // Default flag
+  const [currentCountryName, setCountryName] = useState(""); // Default flag
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const isCountry = localStorage.getItem("country");
+    if (isCountry) {
+      setCurrentFlag(JSON.parse(isCountry).flag);
+      setCountryName(JSON.parse(isCountry).name_en);
+    }
+    fetchAllCountries();
+  }, []);
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -17,35 +41,76 @@ const ProfileHeader = (props) => {
   const toggleCountryPopup = (country) => {
     setSelectedCountry(country);
     setIsPopupOpen(false); // Close the first popup
-    setIsCountryPopupOpen(!isCountryPopupOpen);
+    if (country.name_en !== currentCountryName) {
+      setIsCountryPopupOpen(!isCountryPopupOpen);
+    }
   };
 
-  const countries = [
-    { name: "Bahrian", flag: "/assets/img/flag2.svg" },
-    { name: "Kuwait", flag: "/assets/img/flag1.svg" },
-    { name: "Oman", flag: "/assets/img/flag4.svg" },
-    { name: "Qatar", flag: "/assets/img/flag3.svg" },
-    { name: "Saudi Arabia", flag: "/assets/img/flag6.svg" },
-    { name: "UAE", flag: "/assets/img/flag5.svg" },
-  ];
+  const handleConfirmCountryChange = () => {
+    clearCartItems();
+    setCurrentFlag(selectedCountry.flag);
+    setCountryName(selectedCountry.name_en);
+    localStorage.setItem("country", JSON.stringify(selectedCountry));
+    dispatch(addCountry(selectedCountry));
+    setIsCountryPopupOpen(false);
+  };
+
+  const fetchAllCountries = () => {
+    countryList()
+      .then((res) => {
+        setCountries(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const clearCartItems = () => {
+    dispatch(resetCart());
+    dispatch(getRestaurantsBanner([]));
+    dispatch(getCategoryItemList([]));
+    clearCart()
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <nav className="profile-header">
       <div
-        className="profileHeaderaccount"
+        className={customIcon ? "home-icon" : "profileHeaderaccount"}
         onClick={() => navigate(paths.home)}
       >
-        <div className="profileHeaderaccount-icon">
-          <img src="/assets/img/Group 330.svg" alt="Account Icon" />
+        <div
+          className={
+            customIcon ? "home-icon-header" : "profileHeaderaccount-icon"
+          }
+        >
+          {customIcon ? (
+            <img
+              style={{ width: "21.47px" }}
+              src="/assets/img/home.png"
+              alt="Home Icon"
+            />
+          ) : (
+            <img src="/assets/img/Group 330.svg" alt="Account Icon" />
+          )}{" "}
         </div>
       </div>
-      <div className="profileHeaderlogo">
-        <img src="/assets/img/Group 143.svg" alt="Logo" />
-      </div>
+      {/* <div className="profileHeaderlogo">
+        <img
+          style={{ width: "90px" }}
+          src="/assets/img/order seazen logo.svg"
+          alt="Logo"
+        />
+      </div> */}
       {showFlagOption && (
         <div className="profileHeaderflag-profile">
           <div className="profileHeadercircle-container" onClick={togglePopup}>
-            <img src="/assets/img/flag1.svg" alt="Default Flag" />
+            <LazyLoadImage src={currentFlag} alt="Flag" effect="blur" />
           </div>
           {isPopupOpen && (
             <div
@@ -55,7 +120,11 @@ const ProfileHeader = (props) => {
           )}
           {isPopupOpen && (
             <div className="profileHeaderpopup">
-              <h2>Select which country to order from</h2>
+              <div>
+                <div className="profileHeaderpopup-heading">
+                  <h2>Select which country to order from</h2>
+                </div>
+              </div>
               <div className="profileHeadercountry-list">
                 {countries.map((country, index) => (
                   <div
@@ -63,8 +132,10 @@ const ProfileHeader = (props) => {
                     key={index}
                     onClick={() => toggleCountryPopup(country)}
                   >
-                    <img src={country.flag} alt={country.name} />
-                    <p className="profileHeadercountry-name">{country.name}</p>
+                    <img src={country.flag} alt={country.name_en} />
+                    <p className="profileHeadercountry-name">
+                      {country.name_en}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -88,16 +159,27 @@ const ProfileHeader = (props) => {
               </p>
               <div className="profileHeaderselected-country">
                 <div className="profileHeadercountry-info">
-                  <img src="/assets/img/flag1.svg" alt="Default Flag" />
-                  <h2>Kuwait</h2>
+                  <img src={currentFlag} alt="Current Flag" />
+                  <h2>
+                    {currentCountryName === "United Arab Emirates"
+                      ? "UAE"
+                      : currentCountryName}
+                  </h2>
                 </div>
                 <img
                   className="profileHeadergreater-sign"
                   src="/assets/img/sign.svg"
                 ></img>
                 <div className="profileHeadercountry-info">
-                  <img src={selectedCountry.flag} alt={selectedCountry.name} />
-                  <h2>{selectedCountry.name}</h2>
+                  <img
+                    src={selectedCountry.flag}
+                    alt={selectedCountry.name_en}
+                  />
+                  <h2>
+                    {selectedCountry.name_en === "United Arab Emirates"
+                      ? "UAE"
+                      : selectedCountry.name_en}
+                  </h2>
                 </div>
               </div>
               <br></br>
@@ -109,18 +191,18 @@ const ProfileHeader = (props) => {
                   className="profileHeaderbutton-cancel"
                   onClick={() => setIsCountryPopupOpen(false)}
                 >
-                  <span className="profileHeadercancel-text">Cancel</span>
+                  <span className="profileHeadercancel-text">Back</span>
                 </button>
                 <button
                   className="profileHeaderbutton-confirm"
-                  onClick={() => setIsCountryPopupOpen(false)}
+                  onClick={handleConfirmCountryChange}
                 >
                   <span className="profileHeaderconfirm-text">Confirm</span>
                 </button>
               </div>
             </div>
           )}
-        </div>  
+        </div>
       )}
       <div className="profileHeaderoption">
         <div className="profileHeaderoption-icon">

@@ -2,32 +2,51 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://34.133.246.217/api/v1/",
-  timeout: 1000,
+  baseURL: process.env.REACT_APP_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
 });
 
-// Add a request interceptor
-axiosInstance.interceptors.request.use(
-  function (config) {
-    // Do something before request is sent
-    return config;
-  },
-  function (error) {
-    // Do something with request error
-    return Promise.reject(error);
-  }
-);
+// Create a cancel token source.
+const cancelTokenSource = axios.CancelToken.source();
 
-// Add a response interceptor
+// Request interceptor to limit the number of retries
+axiosInstance.interceptors.request.use((config) => {
+  config.retry = 1; // Set the maximum number of retries (including the initial request)
+  config.retryDelay = 3000; // Set the delay between retries in milliseconds
+  config.cancelToken = cancelTokenSource.token; // Associate the request with the cancel token
+  return config;
+});
+
+// Response interceptor to handle mixed content errors and retries
 axiosInstance.interceptors.response.use(
-  function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
+  (response) => {
+    // Successful response, return it as-is
     return response;
   },
-  function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
+  (error) => {
+    const { config, response } = error;
+
+    // Check if the error is due to mixed content
+    if (response && response.status === 0 && config.retry) {
+      // Reduce the number of retries
+      config.retry--;
+
+      // Cancel any pending retries to prevent multiple retries
+      cancelTokenSource.cancel("Request canceled due to mixed content error");
+
+      // Create a new promise to retry the request after a delay
+      const retryPromise = new Promise((resolve) => {
+        setTimeout(() => resolve(axiosInstance(config)), config.retryDelay);
+      });
+
+      return retryPromise;
+    }
+
+    // Handle other errors
     return Promise.reject(error);
   }
 );

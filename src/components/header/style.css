@@ -1,5 +1,20 @@
-.logo {
+.logo-home {
   color: #0d0d0d;
+  margin: 0px 18px 0px 71px;
+}
+
+@media screen and (max-width: 391px) and (min-width: 380px) {
+  .logo-home {
+    color: #0d0d0d;
+    margin: 0px 24px 0px 68px;
+  }
+}
+
+@media screen and (max-width: 450px) and (min-width: 420px) {
+  .logo-home {
+    color: #0d0d0d;
+    margin: 0px 32.5px 0px 68px;
+  }
 }
 
 .search-bar {
@@ -45,20 +60,100 @@
   transform: translateX(-100%);
 }
 
-.icon-btn {
-  border-radius: 999px;
+.arabicicon-btn {
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: white;
-  height: 40px;
-  width: 40px;
+  height: 42px;
+  width: 42px;
+  cursor: pointer;
+  box-shadow: 0px 24px 48px #314f7c1f;
+}
+
+.arabicicon-btn img {
+  object-fit: contain;
+  width: 11px;
+  height: 20px;
+}
+
+.icon-btn {
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 42px;
+  width: 42px;
+  cursor: pointer;
+  box-shadow: 0px 24px 48px #314f7c1f;
+}
+.icon-btn-country {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 42px;
+  width: 42px;
   cursor: pointer;
   box-shadow: 0px 24px 48px #314f7c1f;
 }
 
 .icon-btn img {
   object-fit: contain;
+  width: 24px;
+  height: 24px;
+}
+
+.arrowicon-btn {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 42px;
+  width: 42px;
+  cursor: pointer;
+  box-shadow: 0px 24px 48px #314f7c1f;
+}
+/* .icon-btn-country img {
   width: 20px;
   height: 20px;
+} */
+
+.iconaccount-btn img {
+  object-fit: contain;
+  width: 16px;
+  height: 19px;
+  margin-top: -1px;
+  margin-left: 1px;
+}
+
+.iconaccount-btn {
+  border-radius: 999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 42px;
+  width: 42px;
+  cursor: pointer;
+  box-shadow: 0px 24px 48px #314f7c1f;
+  margin-left: -5px;
+  margin-top: -3px;
+}
+
+.items-count {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: #98694e;
+  border-radius: 4px;
+  top: -3px;
+  right: -3px;
+  font-size: 10px;
+  text-align: center;
 }

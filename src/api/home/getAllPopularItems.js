@@ -1,15 +1,21 @@
 import axiosInstance from "../axiosInstance";
 import API_ENDPOINTS from "../endpoints";
+import { handleApiError } from "../utils/errorHandling";
 
 export const GET_ALL_POPULAR_ITEMS_QUERY_KEY =
   "get_all_popular_items_query_key";
 
-// we will use this function with react-query
-const getAllPopularItems = async () => {
-  const { data } = await axiosInstance.get(
-    API_ENDPOINTS.HOME.GET_ALL_POPULAR_ITEMS + "?country_id=3&currency_id=3"
-  );
-  return data;
+const getAllPopularItems = async (country_id) => {
+  try {
+    // Make the GET request to fetch popular items.
+    const { data } = await axiosInstance.get(
+      API_ENDPOINTS.HOME.GET_ALL_POPULAR_ITEMS + "?country_id="+ country_id +"&currency_id=3"
+    );
+    return data;
+  } catch (error) {
+    // Use the handleApiError function for error handling
+    handleApiError(error);
+  }
 };
 
 export default getAllPopularItems;

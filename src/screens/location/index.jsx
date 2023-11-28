@@ -1,21 +1,64 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import SvgIcon from "@mui/material/SvgIcon";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-// import Autocomplete from "@mui/material/Autocomplete";
-import Autocomplete from "react-google-autocomplete";
-import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
-import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
-import { ReactComponent as ProfileIcon } from "../../assets/icons/profile.svg";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import {
+  GoogleMap,
+  // MarkerF,
+  useLoadScript,
+  Autocomplete,
+} from "@react-google-maps/api";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { setKey, geocode, RequestType } from "react-geocode";
+
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+} from "use-places-autocomplete";
+
+import {
+  Box,
+  Stack,
+  Button,
+  Typography,
+  // IconButton,
+  CircularProgress,
+} from "@mui/material";
+// import SvgIcon from "@mui/material/SvgIcon";
+// import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxPopover,
+  ComboboxList,
+  ComboboxOption,
+} from "@reach/combobox";
+import "@reach/combobox/styles.css";
+
+// import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
+
+import Navbar, { NavbarVariants } from "../../components/header";
+
+// import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
+// import SearchIcon from "../../assets/icons/Icon - Search.jpg";
+import LocationGreen from "../../assets/icons/location-green.png";
+import LocationRed from "../../assets/icons/location-red.png";
+
+// import LocationOnIcon from "@mui/icons-material/LocationOn";
+
+import getRestaurantBranchHours, {
+  GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
+} from "../../api/restaurant/getRestaurantBranchHours";
+// import { addAddressDetail } from "../../store/reducers/addressSlice";
+
+import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
+
 import { paths } from "../../routes/paths";
+
+import "./style.css";
 
 const containerStyle = {
   width: "100%",
@@ -31,51 +74,524 @@ const defaultMapOptions = {
   rotateControl: false,
   disableDefaultUI: true,
   keyboardShortcuts: false,
+  clickableIcons: false,
+  draggable: true,
+  panControl: true,
+  zoomControl: false,
+  overviewMapControl: true,
 };
+
+const lib = ["places"];
 
 function LocationPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const countries = useSelector((state) => state.auth.countries);
+
+  const selectedAdd = JSON.parse(localStorage.getItem("selected"));
+  const token = localStorage.getItem("token");
+
   const { isLoaded } = useLoadScript({
+    id: "google-map-script",
+    // eslint-disable-next-line no-undef
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
+    libraries: lib,
   });
 
-  // get current location of user and set it as center
-  const [center, setCenter] = React.useState({ lat: 0, lng: 0 });
-  const [placeDetails, setPlaceDetails] = React.useState(null);
+  const [center, setCenter] = useState({ lat: 0, lng: 0 });
+  const [address, setAddress] = useState("");
+  const [autocomplete, setAutocomplete] = useState(null);
+  const [distanceIsFar, setDistanceIsFar] = useState(false);
+  const [noRegion, setNoRegion] = useState(false);
+  const [clicked, setClicked] = useState(false);
+  const [placeChanged, setPlaceChanged] = useState(false);
 
-  React.useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setCenter({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
+  const mapRef = useRef();
+
+  useEffect(() => {
+    navigator.permissions &&
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then(function (PermissionStatus) {
+          // If user has granted permission
+          if (PermissionStatus.state == "granted") {
+            if (
+              location?.state?.editLocation === undefined &&
+              location?.state?.latlng === undefined
+            ) {
+              if (localStorage.getItem("selected") !== null) {
+                // If User selected any location
+                const selected = JSON.parse(localStorage.getItem("selected"));
+
+                getAdd(selected.lat, selected.lng);
+                // If User didn't selected any location
+              } else if (localStorage.getItem("location") !== null) {
+                const currentLocation = JSON.parse(
+                  localStorage.getItem("location")
+                );
+
+                getAdd(currentLocation.lat, currentLocation.lng);
+              }
+            }
+            //
+            // If user permission is off
+          } else if (PermissionStatus.state == "prompt") {
+            if (
+              token === null &&
+              localStorage.getItem("selected") === null &&
+              localStorage.getItem("location") === null
+            ) {
+              getAdd(29.3140728, 47.68022);
+              // If User selected any location
+            } else if (localStorage.getItem("selected") !== null) {
+              const selected = JSON.parse(localStorage.getItem("selected"));
+
+              getAdd(selected.lat, selected.lng);
+              // If User didn't selected any location
+            } else if (localStorage.getItem("location") !== null) {
+              const currentLocation = JSON.parse(
+                localStorage.getItem("location")
+              );
+
+              getAdd(currentLocation.lat, currentLocation.lng);
+            } else if (
+              token !== null &&
+              localStorage.getItem("selected") === null &&
+              localStorage.getItem("location") === null
+            ) {
+              getAdd(29.3140728, 47.68022);
+            }
+            //
+            // If user has denied permission
+          } else {
+            if (
+              token === null &&
+              localStorage.getItem("selected") === null &&
+              localStorage.getItem("location") === null
+            ) {
+              getAdd(29.3140728, 47.68022);
+              // If User selected any location
+            } else if (localStorage.getItem("selected") !== null) {
+              const selected = JSON.parse(localStorage.getItem("selected"));
+
+              getAdd(selected.lat, selected.lng);
+              // If User didn't selected any location
+            } else if (localStorage.getItem("location") !== null) {
+              const currentLocation = JSON.parse(
+                localStorage.getItem("location")
+              );
+
+              getAdd(currentLocation.lat, currentLocation.lng);
+            } else if (
+              token !== null &&
+              localStorage.getItem("selected") === null &&
+              localStorage.getItem("location") === null
+            ) {
+              getAdd(29.3140728, 47.68022);
+            }
+          }
         });
+  }, []);
+
+  const { data } = useQuery({
+    queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY],
+    queryFn: () => getRestaurantBranchHours(location?.state?.restaurant_id),
+    onSuccess: (data) => {},
+  });
+
+  useLayoutEffect(() => {
+    if (
+      (location?.state?.restaurant_id !== undefined && selectedAdd !== null) ||
+      (location?.state?.restaurant_id !== undefined && location !== null)
+    ) {
+      if (data?.data?.length > 0) {
+        if (data?.status === "ok") {
+          watchBranchHours(data.data);
+        }
+      }
+    }
+  }, [data, center, location]);
+
+  const watchBranchHours = (array) => {
+    if (array.length) {
+      for (let i = 0; i < array?.length; i++) {
+        if (center.lat !== 0 && center.lng !== 0) {
+          const resLat = +array[i]?.latitude;
+          const resLng = +array[i]?.longitude;
+
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            center.lat,
+            center.lng
+          );
+
+          if (distance > 50) {
+            setDistanceIsFar(true);
+          } else {
+            setDistanceIsFar(false);
+            break;
+          }
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (
+      location?.state?.editLocation === true &&
+      location?.state?.latlng !== undefined
+    ) {
+      const lat = location?.state?.latlng.lat;
+      const lng = location?.state?.latlng.lng;
+
+      getAdd(lat, lng);
+    }
+  }, [location?.state]);
+
+  useEffect(() => {
+    if (
+      location?.state?.latlng !== undefined &&
+      location?.state?.editLocation === undefined
+    ) {
+      getAdd(+location?.state?.latlng?.lat, +location?.state?.latlng?.lng);
+    }
+  }, [location?.state]);
+
+  const getAdd = async (latitude, longitude) => {
+    // eslint-disable-next-line no-undef
+    setKey(process.env.REACT_APP_GOOGLE_API_KEY);
+    geocode(RequestType.LATLNG, `${+latitude},${+longitude}`, {
+      enable_address_descriptor: true,
+    })
+      .then(({ results }) => {
+        const address = results[0].formatted_address;
+
+        setAddress(address);
+        setCenter({ lat: +latitude, lng: +longitude });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useLayoutEffect(() => {
+    const userSelected = localStorage.getItem("selected");
+    const userLocation = localStorage.getItem("location");
+
+    // if (token !== null) {
+    if (
+      userSelected === null &&
+      userLocation === null &&
+      location?.state?.latlng === undefined &&
+      location?.state?.editLocation === undefined
+    ) {
+      //
+      const getCountry = address.split(",");
+      const lastElem = getCountry[getCountry.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudia Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
+
+      if (!placeChanged) {
+        servicePlaceCheck(forCondition.trim());
+      }
+
+      //
+    } else if (
+      userSelected === null &&
+      userLocation !== null &&
+      location?.state?.latlng === undefined &&
+      location?.state?.editLocation === undefined
+    ) {
+      //
+      const parsedUserLocation = JSON.parse(userLocation);
+
+      const getCountry = parsedUserLocation.address.split(",");
+      const lastElem = getCountry[getCountry.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudia Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
+
+      if (!placeChanged) {
+        servicePlaceCheck(forCondition.trim());
+      }
+
+      //
+    } else if (
+      userSelected === null &&
+      userLocation !== null &&
+      location?.state?.latlng !== undefined &&
+      location?.state?.editLocation === undefined
+    ) {
+      //
+      const parsedUserLocation = JSON.parse(userLocation);
+
+      const getCountry = parsedUserLocation.address.split(",");
+      const lastElem = getCountry[getCountry.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudia Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
+
+      if (!placeChanged) {
+        servicePlaceCheck(forCondition.trim());
+      }
+
+      //
+    } else if (
+      userSelected !== null &&
+      userLocation !== null &&
+      location?.state?.latlng === undefined &&
+      location?.state?.editLocation === undefined
+    ) {
+      //
+
+      const parsedUserLocation = JSON.parse(userSelected);
+
+      const getCountry = parsedUserLocation.address.split(",");
+      const lastElem = getCountry[getCountry.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudia Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
+
+      if (!placeChanged) {
+        servicePlaceCheck(forCondition.trim());
+      }
+    }
+    // }
+  }, [localStorage, address, placeChanged, location]);
+
+  const servicePlaceCheck = (fullAddress) => {
+    let countriesName = [];
+
+    if (countries.length) {
+      countriesName = countries.map((obj) => obj.name_en);
+    }
+
+    if (countriesName.includes(fullAddress)) {
+      setNoRegion(false);
+    } else {
+      setNoRegion(true);
+    }
+  };
+
+  const onLoad = (autocompleteInstance) => {
+    setAutocomplete(autocompleteInstance);
+  };
+
+  const onPlaceChanged = () => {
+    setPlaceChanged(true);
+    if (autocomplete) {
+      const lat = autocomplete.getPlace().geometry.location.lat();
+      const lng = autocomplete.getPlace().geometry.location.lng();
+
+      const restrictToRegion = autocomplete
+        .getPlace()
+        .formatted_address.split(",");
+
+      const lastElem = restrictToRegion[restrictToRegion.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
+
+      if (forCondition === "Arabia") {
+        forCondition = "Saudia Arabia";
+      }
+
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
+
+      let countriesName = [];
+
+      if (countries.length) {
+        countriesName = countries.map((obj) => obj.name_en);
+      }
+
+      if (countriesName.includes(forCondition)) {
+        setNoRegion(false);
+      } else {
+        setNoRegion(true);
+      }
+
+      setCenter({ lat, lng });
+      setAddress(autocomplete.getPlace().formatted_address);
+    }
+  };
+
+  const handleLoad = (map) => {
+    mapRef.current = map;
+  };
+
+  const handleCenterChanged = async () => {
+    if (!mapRef.current) return;
+    if (mapRef.current.center) {
+      const lat = await mapRef?.current?.center?.lat();
+      const lng = await mapRef?.current?.center?.lng();
+      if (lat && lng) {
+        getAdd(lat, lng);
+      }
+    }
+  };
+
+  const makeCenter = () => {
+    setClicked(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        getAdd(position.coords.latitude, position.coords.longitude);
       },
       () => {}
     );
-  }, []);
 
-  const {
-    placesService,
-    placePredictions,
-    getPlacePredictions,
-    isPlacePredictionsLoading,
-  } = usePlacesService({
-    apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
-  });
+    setTimeout(() => {
+      setClicked(false);
+    }, 100);
+  };
 
-  React.useEffect(() => {
-    // fetch place details for the first element in placePredictions array
-    console.log(placesService, "placesService");
-    console.log(placePredictions, "placePredictions");
-    if (placePredictions.length)
-      placesService?.getDetails(
-        {
-          placeId: placePredictions[0].place_id,
+  const confirmLocation = () => {
+    if (token === null) {
+      const fullAddress = {
+        address,
+        lat: center.lat,
+        lng: center.lng,
+      };
+
+      localStorage.setItem("location", JSON.stringify(fullAddress));
+
+      if (location?.state?.guestUser) {
+        if (location?.state?.path === "menu/restaurant") {
+          navigate(
+            `${paths.menu}/restaurant/${+location?.state
+              ?.restaurant_id}/delivery`
+          );
+        } else {
+          navigate(paths.home);
+        }
+      } else {
+        navigate(paths.phone_verification_index, { state: location?.state });
+      }
+    } else if (
+      location?.state?.path === "/cart" ||
+      location?.state?.path === "/home" ||
+      location?.state?.path?.includes("menu-item-details") ||
+      location?.state?.path === "menu/restaurant"
+    ) {
+      if (
+        location?.state?.path?.includes("menu-item-details") ||
+        location?.state?.path === "menu/restaurant"
+      ) {
+        if (location?.state?.addNew !== undefined) {
+          navigate(paths.address, {
+            state: {
+              name: address,
+              latlng: center,
+              path: location?.state?.path,
+              restaurant_id: +location?.state?.restaurant_id,
+              addNew: true,
+            },
+          });
+        } else if (location?.state?.fromMenu !== undefined) {
+          navigate(paths.address, {
+            state: {
+              name: address,
+              latlng: center,
+              path: location?.state?.path,
+              restaurant_id: +location?.state?.restaurant_id,
+              fromMenu: location?.state?.fromMenu,
+            },
+          });
+        } else if (location?.state?.fromDetail !== undefined) {
+          navigate(paths.address, {
+            state: {
+              name: address,
+              latlng: center,
+              path: location?.state?.path,
+              restaurant_id: +location?.state?.restaurant_id,
+              fromDetail: location?.state?.fromDetail,
+            },
+          });
+        } else if (location?.state?.noAddress !== undefined) {
+          navigate(paths.address, {
+            state: location?.state,
+          });
+        } else {
+          navigate(paths.address, {
+            state: {
+              name: address,
+              latlng: center,
+              path: location?.state?.path,
+              restaurant_id: +location?.state?.restaurant_id,
+              addFromDropdown: location?.state?.addFromDropdown,
+            },
+          });
+        }
+      } else if (location?.state?.notSelected !== undefined) {
+        navigate(paths.address, {
+          state: {
+            name: address,
+            latlng: center,
+            path: "/cart",
+            restaurant_id: +location?.state?.restaurant_id,
+            notSelected: location?.state?.notSelected,
+          },
+        });
+      } else if (location?.state?.fromHome !== undefined) {
+        navigate(paths.address, {
+          state: {
+            name: address,
+            latlng: center,
+            path: location?.state?.path,
+            fromHome: location?.state?.fromHome,
+          },
+        });
+      } else {
+        navigate(paths.address, {
+          state: { name: address, latlng: center, path: location?.state?.path },
+        });
+      }
+    } else {
+      navigate(paths.address, {
+        state: {
+          name: address,
+          latlng: center,
+          path: location?.state?.path,
+          fromHome: location?.state?.fromHome,
+          fromMenu: location?.state?.fromMenu,
+          fromDetail: location?.state?.fromDetail,
+          editLocation: location?.state?.editLocation,
         },
-        (placeDetails) => setPlaceDetails(placeDetails)
-      );
-  }, [placePredictions]);
+      });
+    }
+  };
 
   return (
     <Stack
@@ -85,6 +601,7 @@ function LocationPage() {
         color: "text.primary",
         position: "relative",
       }}
+      className="parent-stack"
     >
       <Stack
         spacing={2}
@@ -93,11 +610,10 @@ function LocationPage() {
           position: "absolute",
           zIndex: (theme) => theme.zIndex.appBar,
           top: 0,
-          p: 3,
           backgroundColor: "transparent",
         }}
       >
-        <Stack
+        {/* <Stack
           direction="row"
           alignItems="center"
           justifyContent="space-between"
@@ -110,111 +626,160 @@ function LocationPage() {
               boxShadow: (theme) => theme.shadows[16],
             }}
             edge="start"
-            onClick={() => navigate(paths.cart)}
+            onClick={() => navigate(-1)}
+            className="back-location"
           >
-            <ArrowBackRoundedIcon fontSize="large" />
+            <ArrowBackRoundedIcon
+              fontSize="large"
+              sx={{ width: "24px", height: "24px" }}
+            />
           </IconButton>
+          <div className="d-flex align-items-center logo">
+            <img
+              style={{ width: "90px", marginRight: "-5px" }}
+              src="/assets/img/order seazen logo.svg"
+              alt="Logo"
+            />{" "}
+          </div>
           <IconButton
             size="large"
             sx={{
               boxShadow: (theme) => theme.shadows[16],
+              marginTop: "2px",
             }}
             edge="end"
             onClick={() => navigate(-1)}
+            className="right-icon"
           >
-            <SvgIcon component={ProfileIcon} fontSize="large" />
+            <img src="/assets/img/options icon.svg" alt="Options"></img>
           </IconButton>
-        </Stack>
-        <Box
+        </Stack> */}
+        <Stack
           sx={{
-            boxSizing: "border-box",
-            px: 1.5,
-            py: 1,
-            width: "100%",
-            backgroundColor: "background.paper",
-            borderRadius: 1,
-            boxShadow: (theme) => theme.shadows[16],
-            border: (theme) => `1px solid ${theme.palette.primary.main}`,
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
+            // minHeight: "70vh",
+            color: "text.primary",
+            paddingLeft: "16px !important",
+            paddingRight: "16px !important",
+            padding: "0",
+          }}
+          justifyContent="space-between"
+          spacing={2}
+        >
+          <div style={{ padding: "8px", marginTop: "12px" }}>
+            <Navbar
+              backIcon
+              logo
+              languageIcon
+              guestUser={location.state?.guestUser ? true : false}
+              autoRedirect={location?.state?.autoRedirect}
+              path={location?.state?.path}
+              location={location?.state}
+            />
+          </div>
+        </Stack>
+        <Stack
+          spacing={2}
+          sx={{
+            padding: "24px 24px 0px 24px",
           }}
         >
-          <SvgIcon
-            sx={{
-              stroke: (theme) => theme.palette.primary.main,
-              fill: "none",
-              width: "1.5rem",
-            }}
-            component={SearchIcon}
-            fontSize="large"
-          />
+          {isLoaded ? (
+            <div>
+              <Autocomplete
+                className="autocomplete"
+                onLoad={onLoad}
+                onPlaceChanged={onPlaceChanged}
+              >
+                <div className="dp-fl">
+                  {/* <img src={SearchIcon} alt="Search Icon" className="icon" /> */}
+                  <input
+                    id="autocomplete"
+                    type="text"
+                    placeholder="Search an address"
+                    className="input"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                </div>
+              </Autocomplete>
+            </div>
+          ) : null}
 
-          <Autocomplete
-            style={{
-              width: "calc(100% - 2rem)",
-              fontSize: "1rem",
-              borderRadius: "0.5rem",
-              outline: "none",
-              border: "none",
-            }}
-            apiKey={process.env.REACT_APP_GOOGLE_API_KEY}
-            onPlaceSelected={(place) => {
-              console.log(place);
-              setCenter({
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng(),
-              });
-              setPlaceDetails(place);
-            }}
-          />
-        </Box>
-
-        {/* // <Autocomplete
-        //   sx={{
-        //     "& .MuiFormControl-root": {
-        //       backgroundColor: "background.paper",
-        //       borderRadius: 1,
-        //     },
-        //   }}
-        //   onChange={(event, value) => {
-        //     console.log(value, "value");
-        //     getPlacePredictions({
-        //       input: value,
-        //     });
-        //   }}
-        //   options={placePredictions.map((prediction) => prediction.description)}
-        //   loading={isPlacePredictionsLoading}
-        //   renderInput={(params) => (
-        //     <TextField
-        //       InputProps={{
-        //         startAdornment: (
-        //           <SvgIcon component={SearchIcon} fontSize="large" />
-        //         ),
-        //       }}
-        //       {...params}
-        //       label="Search"
-        //       variant="outlined"
-        //     />
-        //   )}
-        // /> */}
+          {/* <PlacesAutocomplete
+          setSelected={setCenter}
+          setAddress={setAddress}
+          address={address}
+          location={location.state}
+        />  */}
+        </Stack>
       </Stack>
       {!isLoaded ? (
-        <h1>Loading...</h1>
+        <div className="progress-bar">
+          <CircularProgress className="bar" />
+        </div>
       ) : (
         <GoogleMap
+          onLoad={handleLoad}
+          onDragEnd={handleCenterChanged}
           mapContainerStyle={containerStyle}
           center={center}
           zoom={15}
           options={defaultMapOptions}
+          ref={mapRef}
+          mapContainerClassName="GOOGLE"
         >
-          <Marker
+          <div className="marker">
+            <img
+              src={
+                (distanceIsFar && noRegion) ||
+                (distanceIsFar && !noRegion) ||
+                (!distanceIsFar && noRegion)
+                  ? LocationRed
+                  : LocationGreen
+              }
+            />
+          </div>
+
+          {/* <MarkerF
             position={{
               lat: center.lat,
               lng: center.lng,
             }}
-            // icon={<LocationOnIcon color="primary" />}
-          />
+            draggable={true}
+            icon={{
+              url: LocationRed,
+            }}
+            animation={"Drop"}
+          /> */}
+
+          {distanceIsFar && !noRegion ? (
+            <Box className="info-window-box">
+              <Typography variant="h5">
+                {location?.state?.restaurantName !== undefined
+                  ? location?.state?.restaurantName
+                  : localStorage.getItem("restaurantName")}{" "}
+                dosen&apos;t deliver here
+              </Typography>
+              <Typography variant="h5">
+                Please choose another location
+              </Typography>
+            </Box>
+          ) : null}
+
+          {(distanceIsFar && noRegion) || (!distanceIsFar && noRegion) ? (
+            <Box className="info-window-box">
+              <Typography variant="h5">
+                No services in your country right now
+              </Typography>
+            </Box>
+          ) : null}
+
+          <div
+            className={clicked ? "recenter-div clicked" : "recenter-div"}
+            onClick={() => makeCenter()}
+          >
+            <img src="/assets/img/recenter.png" alt="" />
+          </div>
         </GoogleMap>
       )}
 
@@ -229,14 +794,106 @@ function LocationPage() {
         }}
       >
         <Typography fontWeight="semi-bold" gutterBottom>
-          Pinned Address: {placeDetails?.formatted_address}
+          Pinned Address: {isLoaded ? address : null}
         </Typography>
-        <Button size="large" fullWidth variant="contained">
-          Confirm Your Location
-        </Button>
+
+        {location?.state?.fromBranch === undefined ? (
+          <Button
+            size="large"
+            fullWidth
+            variant="contained"
+            className="confirm-button"
+            onClick={() => confirmLocation()}
+            disabled={address === "" || distanceIsFar || noRegion}
+          >
+            Confirm Your Location
+          </Button>
+        ) : null}
       </Stack>
     </Stack>
   );
 }
 
 export default LocationPage;
+
+const PlacesAutocomplete = ({ setSelected, setAddress, address, location }) => {
+  const {
+    ready,
+    value,
+    setValue,
+    suggestions: { status, data },
+    clearSuggestions,
+  } = usePlacesAutocomplete();
+
+  const [remov, setRemov] = useState(false);
+
+  const handleSelect = async (address) => {
+    setRemov(true);
+    setAddress(address);
+    setValue(address, false);
+    clearSuggestions();
+
+    const results = await getGeocode({ address });
+    const { lat, lng } = await getLatLng(results[0]);
+    setSelected({ lat, lng });
+  };
+
+  useEffect(() => {
+    if (address !== "") {
+      setValue(address, false);
+    }
+  }, [address]);
+
+  const [loc, setLoc] = useState(null);
+
+  useEffect(() => {
+    if (address === "") {
+      setLoc(null);
+    } else {
+      setLoc(location);
+    }
+  }, [address]);
+
+  useEffect(() => {
+    if (loc === null) {
+      setRemov(true);
+    }
+  }, [loc]);
+
+  return (
+    <Combobox onSelect={handleSelect} className="combobox">
+      <ComboboxInput
+        value={loc === null ? value : address}
+        onChange={(e) => {
+          setRemov(false);
+          loc === null ? setValue(e.target.value) : setAddress(e.target.value);
+        }}
+        disabled={!ready}
+        className="combobox-input"
+        placeholder="Search an address"
+        onClick={() => loc === null && setRemov(false)}
+      />
+
+      {!remov ? (
+        <ComboboxPopover className="combobox-popover">
+          <ComboboxList className="combobox-list">
+            {status === "OK" &&
+              data.map(({ place_id, description }, index) => (
+                <div key={place_id} className="combobox-parent">
+                  <ComboboxOption
+                    value={description}
+                    className="combobox-option"
+                  />
+                  {data.length - 1 === index ? null : (
+                    <span className="border" />
+                  )}
+                </div>
+              ))}
+          </ComboboxList>
+        </ComboboxPopover>
+      ) : (
+        false
+      )}
+    </Combobox>
+  );
+};

@@ -1,0 +1,24 @@
+.branch-img {
+  height: 27px;
+  opacity: 1;
+  margin-left: 4px;
+}
+
+.branch-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.branch-content p {
+  text-align: center;
+  font: normal normal normal 12px/14px Titillium Web;
+  letter-spacing: 0px;
+  color: #40484e;
+  opacity: 1;
+  margin-top: 27px;
+  padding-right: 52px;
+  margin-left: 60px;
+  margin-bottom: 15px;
+}

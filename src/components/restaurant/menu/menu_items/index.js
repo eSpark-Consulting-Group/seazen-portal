@@ -1,11 +1,52 @@
-import React from "react";
-import "./style.css";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Tab, Tabs, Box } from "@mui/material";
+import { isEmpty } from "lodash";
+import "./style.css";
 
-const MenuItems = () => {
+const menu_categories = [
+  "Burrito in a Bowl",
+  "Quesadilla",
+  "Burrito",
+  "Sides",
+  "Carne",
+  "Poultry",
+  "Pescheria",
+  "Pasta",
+  "Pizza",
+  "Dessert",
+  "Soft drinks",
+];
+
+const MenuItems = ({ itemCategoryList }) => {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  const restaurantTheme = useSelector((state) => state.theme.themeColor);
+  const visibleCategoryElementID = useSelector(
+    (state) => state.resturants.visibleCategoryElementID
+  );
+  const scrollToElement = (id, index) => {
+    if (index || index === 0) {
+      setValue(index);
+    }
+
+    const container = document.getElementById(id);
+    if (container) {
+      container.scrollIntoView({ behavior: "auto" });
+    }
+  };
+
+  useEffect(() => {
+    setValue(parseInt(visibleCategoryElementID - 1));
+  }, [visibleCategoryElementID]);
+
   return (
-    <div className="menu_item_outer_container">
+    <div className="menu_item_outer_container px-3 px-sm-4">
       <div className="menu_item_inner_container">
         <div className="menu_dropdown_container">
           <Dropdown>
@@ -22,9 +63,9 @@ const MenuItems = () => {
                 padding: "0",
               }}
             >
-              <span className="dropdown_icon_container_menu">
-                <img src=".\assets\img\menu_Icon.svg" alt="chevron_down_icon" />
-              </span>
+              <div className="dropdown_icon_container_menu">
+                <img src="/assets/img/menu_Icon.svg" alt="chevron_down_icon" />
+              </div>
             </Dropdown.Toggle>
 
             <Dropdown.Menu
@@ -32,29 +73,78 @@ const MenuItems = () => {
                 backgroundColor: "#F0F6F5",
                 color: "#323F4B",
                 fontFamily: "Titillium Web",
-                fontSize: "11pt",
+                fontSize: "14px",
                 fontWeight: "bold",
                 border: "none",
+                maxHeight: "150px",
+                overflowY: "scroll",
+                borderRadius: "0 0 16px 16px",
+                position: "static",
               }}
             >
-              <Dropdown.Item href="#/action-1">Burrito in a Bowl</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Quesadilla</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Burrito</Dropdown.Item>
-              <Dropdown.Item href="#/action-4">Carne</Dropdown.Item>
-              <Dropdown.Item href="#/action-5">Poultry</Dropdown.Item>
-              <Dropdown.Item href="#/action-6">Pescheria</Dropdown.Item>
-              <Dropdown.Item href="#/action-7">Pasta</Dropdown.Item>
-              <Dropdown.Item href="#/action-8">Pizza</Dropdown.Item>
-              <Dropdown.Item href="#/action-9">Dessert</Dropdown.Item>
-              <Dropdown.Item href="#/action-10">Soft drinks</Dropdown.Item>
+              {!isEmpty(itemCategoryList)
+                ? itemCategoryList?.map((category, index) => (
+                    <Dropdown.Item
+                      key={category.id}
+                      onClick={() => {
+                        scrollToElement(category?.id, index);
+                      }}
+                    >
+                      {category?.name_en}
+                    </Dropdown.Item>
+                  ))
+                : menu_categories.map((category, index) => (
+                    <Dropdown.Item
+                      key={`menu_category_drop_${index}`}
+                      onClick={() => {
+                        scrollToElement(category.id, index);
+                      }}
+                    >
+                      {category}
+                    </Dropdown.Item>
+                  ))}
             </Dropdown.Menu>
           </Dropdown>
         </div>
         <div className="menu_itmes_text_container">
-          <button onClick={()=>{}}>Burrito in a Bowl</button>
-          <button onClick={()=>{}}>Quesadilla</button>
-          <button onClick={()=>{}}>Buritto</button>
-          <button onClick={()=>{}}>Sides</button>
+          <Box
+            sx={{
+              maxWidth: { xs: "100%" },
+              bgcolor: "background.paper",
+            }}
+          >
+            <Tabs
+              value={value === -1 ? value + 1 : value}
+              onChange={handleChange}
+              variant="scrollable"
+              scrollButtons={false}
+              textColor="black"
+              aria-label="scrollable prevent tabs example"
+              TabIndicatorProps={{
+                style: { backgroundColor: restaurantTheme?.main },
+              }}
+              sx={{
+                "& .MuiButtonBase-root": {
+                  textTransform: "none",
+                  minWidth: "0px",
+                  marginRight: "12px",
+                },
+              }}
+            >
+              {itemCategoryList?.map((val, index) => {
+                return (
+                  <Tab
+                    onClick={() => scrollToElement(index + 1)}
+                    key={val.id}
+                    label={
+                      val.name_en.charAt(0).toUpperCase() +
+                      val.name_en.slice(1).toLowerCase()
+                    }
+                  />
+                );
+              })}
+            </Tabs>
+          </Box>
         </div>
       </div>
     </div>

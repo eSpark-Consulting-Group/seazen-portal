@@ -36,6 +36,16 @@ export default function InfoModal(props) {
             justifyContent: "center",
             alignItems: "center",
           },
+
+          "@media (max-width: 500px)": {
+            width: "375px",
+            margin: "30px",
+          },
+
+          "@media (max-width: 400px)": {
+            width: "90%",
+            margin: "25px",
+          },
         }}
       >
         <InfoOutlinedIcon

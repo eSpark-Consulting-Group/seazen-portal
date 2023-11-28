@@ -1,13 +1,14 @@
 .profile-section {
-  top: 90px;
-  left: 24px;
-  width: 327px;
+  /* top: 90px;
+  left: 24px; */
+  width: 100%;
   height: 100px;
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 0px 48px #314f7c1f;
   border-radius: 16px;
   opacity: 1;
-  position: absolute;
+  position: relative;
+  margin-top: 39px;
 }
 
 .profile-register {
@@ -55,7 +56,6 @@
 .profile-name {
   top: 18px;
   left: 105px;
-  width: 79px;
   height: 31px;
   text-align: left;
   font: normal normal 600 16px Titillium Web;
@@ -108,7 +108,7 @@
   background: 0% 0% no-repeat padding-box;
   border: none;
   top: 32px;
-  left: 275px;
+  right: 12px;
   height: 25px;
   cursor: pointer;
   position: absolute;
@@ -169,3 +169,90 @@
   left: 10px;
   top: 8px;
 }
+
+.inline-container3 {
+  display: inline-flex;
+  align-items: center;
+  position: absolute;
+  top: 200px;
+  left: 13px;
+  cursor: pointer;
+}
+
+.inline-container3 p {
+  text-align: left;
+  font: normal normal 600 14px/10px Titillium Web;
+  letter-spacing: 0px;
+  color: #1f2933;
+  opacity: 1;
+  position: relative;
+  left: 10px;
+  top: 8px;
+}
+
+.profile-footer {
+  margin-top: 70px;
+  position: relative;
+}
+.profile-footer .footer-container {
+  bottom: 0px;
+  position: fixed;
+  /* width: 355px;
+  padding-top: 10px;
+  background: #ffffff; */
+}
+
+/* @media screen and (max-width: 320px) {
+  .profile-footer .footer-container {
+    bottom: -150px;
+  }
+} */
+
+/* @media screen and (max-width: 450px) and (min-width: 400px) {
+  .profile-section {
+    width: 380px;
+  }
+  .profile-edit-button {
+    left: 325px;
+  }
+  .profile-footer {
+    margin-top: 220px;
+  }
+}
+
+@media screen and (max-width: 395px) and (min-width: 361px) {
+  .profile-footer {
+    margin-top: 220px;
+  }
+  .profile-section {
+    width: 340px;
+  }
+}
+@media screen and (max-width: 360px) and (min-width: 341px) {
+  .profile-footer {
+    margin-top: 220px;
+  }
+  .profile-section {
+    width: 319px;
+    left: 20px;
+  }
+}
+
+@media screen and (max-width: 340px) and (min-width: 300px) {
+  .profile-footer {
+    margin-top: 265px;
+  }
+}
+
+@media screen and (max-width: 290px) {
+  .profile-footer {
+    margin-top: 170px;
+  }
+  .profile-section {
+    width: 313px;
+    left: 12px;
+  }
+  .profile-edit-button{
+    left: 265px;
+  }
+} */

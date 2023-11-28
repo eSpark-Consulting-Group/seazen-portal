@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Titillium+Web:wght@200;300;400;600;700;900&display=swap");
+.branch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  height: 56px;
+  background: #ffffff00 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+.branch-left-icons{
+  border-radius: 999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 42px;
+  width: 42px;
+  cursor: pointer;
+  box-shadow: 0px 24px 48px #314f7c1f;
+  /* margin-left: -4px; */
+}
+
+.branch-left-icons img {
+  /* width: 24px;
+  height: 24px;
+  opacity: 1;
+  position: absolute;
+  top: 30px;
+  left: 32px;
+  cursor: pointer; */
+  object-fit: contain;
+  width: 24px;
+  height: 24px;
+}
+
+.right-icons-branch{
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 42px;
+  width: 42px;
+  cursor: pointer;
+  box-shadow: 0px 24px 48px #314f7c1f;
+}
+
+.right-icons-branch img {
+  /* width: 24px;
+  height: 20px;
+  opacity: 1;
+  position: absolute;
+  top: 31px;
+  left: 325px; */
+  /* object-fit: contain; */
+  width: 11px;
+  height: 20px;
+  position: relative;
+  left: 12px;
+}
+
+.branch-logo h3 {
+  /* top: 30px; */
+  /* left: 101px; */
+  /* width: 174px; */
+  /* height: 22px; */
+  /* text-align: center; */
+  /* font: normal normal bold 18px/24px Montserrat; */
+  /* letter-spacing: 0.36px; */
+  /* color: #1f2933; */
+  /* opacity: 1; */
+  /* position: absolute; */
+  /* margin-left: -75px; */
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  /* font: normal normal bold 18px/24px; */
+  letter-spacing: 0.36px;
+  color: #1f2933;
+  opacity: 1;
+  /* position: absolute; */
+  /* margin-left: -75px; */
+  display: flex;
+  justify-content: center;
+  font-family: 'Titillium Web',sans-serif;
+  font-size: 1.2857142857142856rem;
+  font-weight: bold;
+
+}
+

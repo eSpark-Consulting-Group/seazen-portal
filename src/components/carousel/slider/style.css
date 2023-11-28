@@ -1,30 +1,105 @@
-.card-spacing {
-  margin-right: -15px;
-  margin-left: -15px;
-  margin-top: 13px;
+.hover-slider {
+  margin-bottom: 17px;
+  /* margin-right: -24px; */
 }
 
 .carouselBanner {
   border-radius: 20px;
+  margin: 0px auto 8px;
   position: relative;
+  width: 327px;
+  height: 120px;
+}
+
+@media (max-width: 500px) {
+  .carouselBanner {
+    margin: 0px 6px !important;
+    padding-left: 2px;
+    height: 130px;
+  }
+
+  .carouselBanner img {
+    margin: 0px 6px !important;
+    padding-left: 2px !important;
+    height: 100% !important;
+  }
+}
+
+@media screen and (max-width: 425px) and (min-width: 400px) {
+  .carouselBanner img {
+    width: 365px !important;
+  }
+
+  .carouselBanner {
+    width: 365px;
+  }
+}
+
+@media screen and (min-width: 400px) {
+  .carouselBanner {
+    width: 100%;
+  }
+
+  .carouselBanner img {
+    width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 400px) and (min-width: 380px) {
+  .carouselBanner img {
+    width: 100% !important;
+  }
+
+  .carouselBanner {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 380px) and (min-width: 370px) {
+  .carouselBanner img {
+    width: 324px !important;
+  }
+
+  .carouselBanner {
+    width: 324px;
+  }
+}
+
+@media (max-width: 331px) {
+  .carouselBanner img {
+    width: 284px !important;
+    height: 120px;
+    min-width: 284px;
+  }
+
+  .carouselBanner {
+    width: 284px;
+  }
+}
+
+@media (max-width: 355px) {
+  .carouselBanner img {
+    width: 300px !important;
+  }
+
+  .carouselBanner {
+    width: 300px;
+  }
 }
 
 .carouselBanner img {
-  width: 100%;
-  height: 100%;
+  width: 327px;
+  height: 120px;
   object-fit: cover;
   border-radius: 20px;
 }
 
-.hover-slider:hover {
-  transform: scale(1.05);
-}
-
 .caption {
   position: absolute;
-  bottom: 6.5px;
+  bottom: 0px;
   right: 0px;
   color: white;
+  bottom: 6px;
   font-weight: bold;
   width: 109px;
   height: 28px;
@@ -40,4 +115,90 @@
   color: #ffffff;
   opacity: 1;
   padding-left: 27px;
+}
+
+.reserve-style {
+  text-align: center;
+  font: normal normal bold 12px/16px Titillium Web;
+  letter-spacing: 0.24px;
+  color: #ffffff;
+  opacity: 1;
+  padding-left: 34px;
+}
+
+.reserve {
+  background: #b69280 0% 0% no-repeat padding-box;
+  position: absolute;
+  bottom: 6px;
+  right: 0px;
+  color: white;
+  font-weight: bold;
+  width: 109px;
+  height: 28px;
+  border-radius: 16px 0px;
+  opacity: 1;
+}
+
+/* .bEjuCR{
+  grid-template-columns: repeat(4,100%);
+
+} */
+
+@media screen and (max-width: 767px) {
+  .gZzsDe {
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .dluTbn {
+    overflow: visible !important;
+    margin: 0 !important;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .gYgxKc {
+    grid-template-columns: repeat(2, 100%);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .cBSMIr {
+    grid-template-columns: repeat(2, 100%);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .kLfeLb {
+    padding-left: 10px;
+    grid-template-columns: repeat(1, 97%) !important;
+  }
+}
+.home-banner-images {
+  cursor: pointer;
+}
+.slick-slider-wrapper {
+  margin: 13px 0px;
+}
+.home-banner-images img {
+  height: 120px;
+  width: 100%;
+  border-radius: 20px;
+}
+.slick-dots li {
+  height: auto !important;
+  width: 3px !important;
+}
+.slick-dots li.slick-active button:before {
+  font-size: 12px !important;
+}
+.slick-dots li button:before {
+  font-size: 7px !important;
+}
+
+@media (max-width: 500px) {
+  .home-banner-images img {
+    height: auto !important;
+  }
 }

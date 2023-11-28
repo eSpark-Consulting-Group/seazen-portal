@@ -11,43 +11,64 @@ import { GuestProfile } from "../screens/guestProfile";
 import { PrivacyPolicy } from "../screens/privacyPolicy";
 import { Terms } from "../screens/terms";
 import CustomerRegistration from "../screens/customer/registration";
-import { EditForm } from "../screens/editForm";
-import AddressForm from "../screens/adress";
+import { UpdateCustomerProfile } from "../screens/editForm";
+import AddressForm from "../screens/address";
+import { Details } from "../screens/details";
+import { Branches } from "../screens/branches";
+import Addresses from "../screens/myAdresses";
+import MyOrderScreen from "../screens/myorder";
+import Receipt from "../screens/receipt";
+import SearchScreen from "../screens/searchPage";
+import { OrderFailed } from "../screens/orderFailed";
 
 export const paths = {
   home: "/",
   error: "*",
   menu: "/menu",
   cart: "/cart",
+  myorder: "/profile/order",
+  receipt: "/profile/order/receipt/",
   location: "/location",
-  orderplace: "orderplace",
+  order_status: "/order-complete",
   customer_registration: "/customer_registration",
-  phone_verification_index: "phone-verification",
+  phone_verification_index: "/phone-verification",
   phone_verification_otp: "/phone-verification/otp",
   profile: "/profile",
   update_profile: "/update_profile",
-  guest_profile: "/guest-profile",
+  guest_profile: "guest-profile",
   privacy_policy: "/privacy-policy",
   terms: "/terms",
-  address: '/address'
+  address: "/address",
+  details: "/menu-item-details",
+  branches: "/restaurant/",
+  addresses: "/my-addresses",
+  search: "search",
+  order_failed: "/order-failed",
 };
 
 export const routes = {
   home: "/",
   error: "*",
-  menu: "/menu",
-  address: '/address',
+  menu: "/menu/:restaurant/:id/:option?",
+  details: "/menu-item-details/:id",
+  address: "/address",
   cart: "/cart",
+  myorder: "/profile/order",
+  receipt: "/profile/order/receipt/:id",
   location: "/location",
-  orderplace: "orderplace",
+  order_status: "/order-complete",
   customer_registration: "/customer_registration",
   phone_verification_index: "/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
-  profile: "/profile",
+  profile: "profile",
   update_profile: "/update_profile",
   guest_profile: "/guest-profile",
   privacy_policy: "/privacy-policy",
   terms: "/terms",
+  branches: "/restaurant/:id/branches",
+  addresses: "/my-addresses",
+  search: "/search",
+  order_failed: "/order-failed",
 };
 
 export const publicRoutes = {
@@ -55,6 +76,11 @@ export const publicRoutes = {
     name: "Home",
     path: routes.home,
     component: <Home />,
+  },
+  [paths.details]: {
+    name: "Details",
+    path: routes.details,
+    component: <Details />,
   },
   [paths.address]: {
     name: "Address",
@@ -76,15 +102,15 @@ export const publicRoutes = {
     path: routes.menu,
     component: <Menu />,
   },
-  [paths.orderplace]: {
+  [paths.order_status]: {
     name: "Orderplace",
-    path: routes.orderplace,
+    path: routes.order_status,
     component: <OrderScreen />,
   },
   [paths.update_profile]: {
     name: "Update Profile",
     path: routes.update_profile,
-    component: <EditForm />,
+    component: <UpdateCustomerProfile />,
   },
   [paths.customer_registration]: {
     name: "Customer Registration",
@@ -120,6 +146,36 @@ export const publicRoutes = {
     name: "Terms",
     path: routes.terms,
     component: <Terms />,
+  },
+  [paths.branches]: {
+    name: "branches",
+    path: routes.branches,
+    component: <Branches />,
+  },
+  [paths.addresses]: {
+    name: "addresses",
+    path: routes.addresses,
+    component: <Addresses />,
+  },
+  [paths.myorder]: {
+    name: "MyOrder",
+    path: routes.myorder,
+    component: <MyOrderScreen />,
+  },
+  [paths.receipt]: {
+    name: "Receipt",
+    path: routes.receipt,
+    component: <Receipt />,
+  },
+  [paths.search]: {
+    name: "Search",
+    path: routes.search,
+    component: <SearchScreen />,
+  },
+  [paths.order_failed]: {
+    name: "Order Failed",
+    path: routes.order_failed,
+    component: <OrderFailed />,
   },
 };
 

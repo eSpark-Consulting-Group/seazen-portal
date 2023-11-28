@@ -6,6 +6,7 @@
   box-sizing: border-box;
   font-family: "Titillium Web", sans-serif;
   position: relative;
+  height: 100%;
 }
 
 #close-button {
@@ -91,7 +92,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 15px;
+  /* margin-top: 15px; */
 }
 
 #order-status-tag p {
@@ -170,7 +171,7 @@
   display: flex;
   justify-content: space-between;
   padding: 0 20px;
-  margin: 50px 0 70px 0;
+  margin: 50px 0 70px 0 !important;
 }
 
 #call-tag {
@@ -197,13 +198,15 @@
   justify-content: space-around;
   padding:0 3px;
   align-items: center;
-  width: 118px;
+  width: 150.32px;
   height: 27px;
   background-color: #2fa124;
   border-radius: 8px;
   color: #ffffff;
   font-weight: 600;
   font-size: 15px;
+  margin-left: 8px;
+
 }
 
 #whatsapp-tag a {
@@ -235,7 +238,21 @@
 
 .orderaddress-text p {
   text-align: left;
-  font: normal normal 600 14px/16px Titillium Web;
+  font: normal normal 400 14px/16px Titillium Web;
   letter-spacing: 0px;
   color: #1f2933;
+  margin-bottom: 0rem !important;
+}
+.orderconfirm-footer .footer-section {
+  display: flex;
+  justify-content: end;
+  bottom: 26px;
+  right: 26px;
+  position: fixed;
+}
+
+@media screen and (min-width: 600px) {
+  .orderconfirm-footer .footer-section {
+    position: absolute;
+  }
 }

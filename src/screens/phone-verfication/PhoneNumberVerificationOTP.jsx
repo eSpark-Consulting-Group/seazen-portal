@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Navbar, { NavbarVariants } from "../../components/header";
@@ -8,6 +13,14 @@ import { MuiOtpInput } from "mui-one-time-password-input";
 import { Footer } from "../../components/footer/footerContent";
 import { paths } from "../../routes/paths";
 import InfoModal from "../../components/modal/InfoModal";
+import { useMutation } from "@tanstack/react-query";
+import verifyOTP from "../../api/customer/verifyOTP";
+import resendOTP from "../../api/customer/resendOTP";
+import getUserInfo from "../../api/customer/getUserInfo";
+import { useDispatch, useSelector } from "react-redux";
+import "./style.css";
+import addToCartApiCall from "../../api/cart/addToCart";
+import { addToCart } from "../../store/reducers/cartSlice";
 
 const MODAL_INFO_TYPE = {
   INVALID_OTP: "invalid-otp",
@@ -16,22 +29,143 @@ const MODAL_INFO_TYPE = {
 
 function PhoneNumberVerificationOTP() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   const [otpTimeout, setOtpTimeout] = React.useState(60);
   const [infoType, setInfoType] = React.useState(MODAL_INFO_TYPE.INVALID_OTP);
   const [open, setOpen] = React.useState(false);
   const [otp, setOtp] = React.useState("");
+  const [mobileCountryCode, setMobileCountryCode] = React.useState("");
+  const [mobileNumber, setMobileNumber] = React.useState("");
 
   const handleChange = (otp) => {
     setOtp(otp);
-    if (otp.length === 6) {
-      navigate(paths.home);
-    }
   };
+
+  const { mutate: verifyOtp } = useMutation({
+    mutationFn: verifyOTP,
+    onSuccess: (data) => {
+      localStorage.setItem("token", data.data.token);
+
+      getUserInfo(data.data.token).then((res) => {
+        const { first_name, last_name } = res.data;
+        const mobileCountryCodeWithoutPlus = mobileCountryCode.substring(1);
+
+        if (location?.state?.guest !== undefined) {
+          const cartItem = location?.state?.ItemDataObject;
+          const token = data.data.token;
+
+          dispatch(addToCart(cartItem));
+          addToCartApiHandler(cartItem, token);
+        }
+
+        if (location?.state?.autoRedirect !== undefined) {
+          const cartItemDataForApi = location?.state?.cartItemDataForApi;
+          const inCart = location?.state?.addtoCart;
+          const token = data.data.token;
+
+          dispatch(addToCart(inCart));
+          addToCartApiCall(cartItemDataForApi, token)
+            .then((res) => {})
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+
+        first_name && last_name
+          ? location?.state?.guest !== undefined ||
+            location?.state?.autoRedirect !== undefined
+            ? navigate(
+                `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
+              )
+            : navigate(paths.home)
+          : navigate(
+              paths.customer_registration +
+                "?" +
+                createSearchParams({
+                  mobile: mobileNumber,
+                  mobile_country_code: mobileCountryCodeWithoutPlus,
+                })
+            );
+      });
+    },
+    onError: (error) => {
+      setInfoType(MODAL_INFO_TYPE.INVALID_OTP);
+      setOpen(true);
+    },
+  });
+
+  const variantsForApi = (variantID, optionId, quantity) => {
+    const menuItemDetails = location?.state?.menuItemDetails;
+    const { data } = menuItemDetails;
+
+    const dataVariants = data.variants?.find((val) => val.id === variantID);
+
+    if (!dataVariants) return [];
+    const dataOptions = dataVariants.options?.map((val, index) => {
+      return {
+        option_id: val.id,
+        option_quantity:
+          val.id == (optionId[index] || optionId) ? quantity || 1 : 0,
+      };
+    });
+    return dataOptions;
+  };
+
+  const getSelectedItemsIds = (selectedItems) => {
+    const idsArr = selectedItems.map((val) => val.id);
+
+    return idsArr;
+  };
+
+  const addToCartApiHandler = (cartItem, token) => {
+    const sideVariant = cartItem?.variants?.sideVariant[0]?.variantId;
+    const sizeVariant = cartItem?.variants?.sizeVariant?.variantId;
+    const toppingVariant = cartItem?.variants?.toppingVariant[0]?.variantId;
+
+    const cartItemDataForApi = {
+      item_code: cartItem.item_code,
+      item_id: cartItem.id,
+      quantity: cartItem.quantity,
+      topping_variant_id: toppingVariant || 0,
+      side_variant_id: sideVariant || 0,
+      size_variant_id: sizeVariant || 0,
+      size_variant: variantsForApi(
+        sizeVariant,
+        cartItem.variants?.sizeVariant?.id
+      ),
+      topping_variant: variantsForApi(
+        toppingVariant,
+        getSelectedItemsIds(cartItem.variants?.toppingVariant),
+        cartItem.variants?.toppingVariant[0]?.quantity
+      ),
+      side_variant: variantsForApi(
+        sideVariant,
+        getSelectedItemsIds(cartItem.variants?.sideVariant)
+      ),
+    };
+
+    addToCartApiCall(cartItemDataForApi, token)
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const { mutate: resendOtp } = useMutation({
+    mutationFn: resendOTP,
+    onSuccess: (data) => {
+      setOtpTimeout(60);
+      setOpen(false);
+      setOtp("");
+    },
+  });
 
   useEffect(() => {
     if (otpTimeout > 0) {
-      let timer1 = setTimeout(() => setOtpTimeout(otpTimeout - 1), 100);
+      let timer1 = setTimeout(() => setOtpTimeout(otpTimeout - 1), 1000);
 
       return () => {
         clearTimeout(timer1);
@@ -40,9 +174,13 @@ function PhoneNumberVerificationOTP() {
   }, [otpTimeout]);
 
   const validateOTP = () => {
-    setOtpTimeout(60);
-    setInfoType(MODAL_INFO_TYPE.INVALID_OTP);
-    setOpen(true);
+    const mobile_country_code = "+" + searchParams.get("mobile_country_code");
+    const mobile_number = searchParams.get("mobile");
+
+    setMobileCountryCode(mobile_country_code);
+    setMobileNumber(mobile_number);
+
+    verifyOtp({ mobile_country_code, mobile_number, otp });
   };
 
   useEffect(() => {
@@ -62,13 +200,25 @@ function PhoneNumberVerificationOTP() {
     <>
       <Stack
         sx={{
-          minHeight: "100vh",
+          minHeight: "70vh",
           color: "text.primary",
+          paddingLeft: "16px",
+          paddingRight: "16px",
         }}
         justifyContent="space-between"
         spacing={2}
       >
-        <Navbar variant={NavbarVariants.backWithProfile} />
+        <div style={{ padding: 8 }}>
+          <Navbar
+            backIcon
+            logo
+            languageIcon
+            location={location?.state}
+            path={location?.state?.path}
+            autoRedirect={location?.state?.autoRedirect}
+            register={location?.state?.register}
+          />
+        </div>
         <Stack
           spacing={5}
           sx={{
@@ -89,12 +239,17 @@ function PhoneNumberVerificationOTP() {
             value={otp}
             onChange={handleChange}
             TextFieldsProps={{
+              className: "otp-input",
+              type: "number",
               placeholder: "0",
               disabled: otp.length === 4,
               sx: {
                 "& .MuiOutlinedInput-root": {
                   "& input": {
                     fontSize: "2rem",
+                  },
+                  "& input:focus::placeholder ": {
+                    color: "transparent",
                   },
                 },
               },
@@ -123,9 +278,11 @@ function PhoneNumberVerificationOTP() {
               },
             }}
             onClick={() => {
-              setOtpTimeout(60);
-              setOpen(false);
-              setOtp("");
+              resendOtp({
+                mobile_country_code:
+                  "+" + searchParams.get("mobile_country_code"),
+                mobile_number: searchParams.get("mobile"),
+              });
             }}
           >
             Resend OTP
@@ -145,9 +302,10 @@ function PhoneNumberVerificationOTP() {
         }
         actionButtonLabel="Resend OTP"
         actionButtonOnClick={() => {
-          setOtpTimeout(60);
-          setOpen(false);
-          setOtp("");
+          resendOtp({
+            mobile_country_code: "+" + searchParams.get("mobile_country_code"),
+            mobile_number: searchParams.get("mobile"),
+          });
         }}
       />
     </>

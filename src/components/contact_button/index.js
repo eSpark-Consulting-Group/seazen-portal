@@ -1,14 +1,14 @@
 import React from "react";
 import "./style.css"
 
-const ContactButton = ({color,text,icon_image,handleclick}) => {
+const ContactButton = ({color,text,icon_image,handleButtonClick}) => {
     return (
         <button
             className="contact_button"
-            onClick={handleclick}
+            onClick={handleButtonClick}
             style={{backgroundColor: color}}>
             <span className="contact_button_span"><img src={icon_image} alt="iconimage" /></span>
-            {text}
+            <span className="contact_button_text" style={{width: "100%"}}>{text}</span>
         </button>);
 }
  

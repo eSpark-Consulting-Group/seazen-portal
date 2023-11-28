@@ -1,12 +1,17 @@
 import React from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Navbar, { NavbarVariants } from "../../../components/header";
 import { Footer } from "../../../components/footer/footerContent";
+import { paths } from "../../../routes/paths";
+import updateProfile from "../../../api/customer/updateProfile";
+import { useMutation } from "@tanstack/react-query";
+import "./style.css";
 
 const initialState = {
   first_name: "",
@@ -16,35 +21,66 @@ const initialState = {
 
 const registrationSchema = Yup.object().shape({
   first_name: Yup.string()
-    .matches(/^[A-Za-z ]*$/)
+    .matches(/^[a-z ,.'-]+$/i)
     .max(40)
     .required(),
   last_name: Yup.string()
-    .matches(/^[A-Za-z ]*$/)
+    .matches(/^[a-z ,.'-]+$/i)
     .max(40)
     .required(),
-  email: Yup.string().email(),
+  email: Yup.string().email().required(),
 });
 
 function CustomerRegistration() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const token = localStorage.getItem("token");
+
+  const { mutate: updateCustomerInfo, isLoading } = useMutation({
+    mutationFn: updateProfile,
+    onSuccess: () => {
+      navigate(paths.profile);
+    },
+  });
+
   const formikCustomerRegistration = useFormik({
     initialValues: initialState,
     validationSchema: registrationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      const mobile_country_code = "+" + searchParams.get("mobile_country_code");
+      const mobile_number = searchParams.get("mobile");
+
+      updateCustomerInfo({
+        token,
+        data: {
+          first_name: values.first_name,
+          last_name: values.last_name,
+          email: values.email,
+          mobile_country_code: mobile_country_code,
+          mobile_number: mobile_number,
+        },
+      });
     },
   });
+
+  const { first_name, last_name } = formikCustomerRegistration.errors;
+  const isFormError = first_name || last_name;
 
   return (
     <Stack
       sx={{
         minHeight: "100vh",
         color: "text.primary",
+        paddingLeft: "16px",
+        paddingRight: "16px",
       }}
       justifyContent="space-between"
       spacing={2}
     >
-      <Navbar variant={NavbarVariants.backWithProfile} />
+      <div style={{ padding: "20px 12px 0px 8px" }}>
+        <Navbar backIcon logo languageIcon />
+      </div>{" "}
       <Stack
         spacing={5}
         sx={{
@@ -112,7 +148,7 @@ function CustomerRegistration() {
             fullWidth
             id="email"
             variant="outlined"
-            placeholder="Email (optional)"
+            placeholder="Email"
             sx={{
               flex: 1,
             }}
@@ -132,6 +168,7 @@ function CustomerRegistration() {
         <Button
           size="large"
           variant="contained"
+          disabled={!!isFormError}
           fullWidth
           onClick={formikCustomerRegistration.handleSubmit}
         >
@@ -142,7 +179,6 @@ function CustomerRegistration() {
           Terms & Conditions apply
         </Typography>
       </Stack>
-
       <Footer showCommentOption={false} />
     </Stack>
   );

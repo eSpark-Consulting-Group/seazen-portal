@@ -1,5 +1,12 @@
 .footer-section {
-    position: absolute;
-    left: 82%;
-    top: 97%;
-  }
+  position: fixed;
+  bottom: 12px;
+  margin-left: -35px;
+  z-index: 1000;
+  right: 15px;
+}
+
+.footer-section img {
+  width: 40px;
+  height: 40px;
+}

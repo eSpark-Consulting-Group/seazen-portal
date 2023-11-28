@@ -8,48 +8,127 @@
   overflow-x: hidden;
 }
 
+/* @media screen and (max-width: 350px) {
+  .container_main {
+    margin-right: -56px;
+  }
+} */
+
 .design-section {
   flex: 1;
+  position: relative;
   color: #fff;
-  overflow: auto; 
-  overflow-y: scroll; 
-  overflow-x: hidden; 
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  overflow: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  height: 100vh;
 }
 
 .design-section::-webkit-scrollbar {
   display: none;
 }
 
-.content-section{
+.content-section {
   flex: 2;
+  height: 100vh;
   padding: 20px;
-  background-image: url('/public/assets/img/images.jpeg');
-  background-size: cover; 
-  background-repeat: no-repeat; 
+  background-image: url("/public/assets/img/images.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
   background-position: center;
-    
-  
 }
 
-.style{
+.style {
   padding-top: 20px;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 500px) {
   .content-section {
     display: none;
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   all: unset;
 }
 
-@media screen and (min-width: 1000px){
-  .design-section{
+@media screen and (min-width: 500px) {
+  .design-section {
     min-width: 375px;
     max-width: 375px;
   }
 }
+@media screen and (min-width: 500px) {
+  #fc_frame {
+    left: 290px !important;
+  }
+}
 
+iframe#webpack-dev-server-client-overlay {
+  display: none !important;
+}
+
+/* scrollbar styles
+  should be very thin and only thuumb should be visible
+*/
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.chat-icon-placement {
+  /* display: none !important; */
+  bottom: 62px !important;
+}
+
+.specific-page-body-style #fc_frame {
+  /* bottom: 52px !important; */
+  transform: translateY(-40px);
+}
+
+.another-specific-page-body-style #fc_frame {
+  bottom: 82px !important;
+}
+.header-wrapper {
+  padding: 20px 28px 0px !important;
+}
+.remove-chat-icon {
+  display: none;
+}
+.MuiPickersPopper-root {
+  position: absolute;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 999; /* Adjust the z-index to make sure the overlay is above other elements */
+}

@@ -1,0 +1,214 @@
+.addresses-container {
+  width: 327px;
+  background: #ffffff 0% 0% no-repeat border-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 12px;
+  box-shadow: 0px 0px 48px #314f7c1f;
+  margin: 0px auto 12px;
+  padding: 10px 15px;
+  opacity: 1;
+  cursor: pointer;
+  /* display: flex; */
+  /* height: 158px; */
+  /* margin-top: 10px; */
+  /* padding-top: 8px; */
+  /* padding-bottom: 6px; */
+  /* margin-left: 22px; */
+}
+
+.no-cursor {
+  cursor: default !important;
+}
+
+.addresses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.addresses-title {
+  display: flex;
+  align-items: center;
+}
+
+.dark-bg {
+  background-color: #eee;
+}
+
+.addresses-card-div {
+  width: 19px;
+  height: 17px;
+  margin-right: 3.8px;
+}
+
+.addresses-card-icon {
+  width: 100%;
+  opacity: 1;
+  object-fit: contain;
+  /* margin-left: 14px;
+  margin-top: 13px; */
+}
+
+.addresses-home-title {
+  font: normal normal bold 12px Titillium Web;
+  letter-spacing: 0px;
+  color: #40484e;
+  margin: 0px !important;
+  padding: 0px !important;
+  text-transform: capitalize;
+  /* text-align: left; */
+  /* opacity: 1; */
+  /* margin-top: -35px; */
+  /* margin-left: 34px; */
+}
+
+.addresses-home-title2 {
+  text-align: left;
+  font: normal normal normal 10px Titillium Web;
+  letter-spacing: 0px;
+  color: #40484e;
+  opacity: 1;
+  margin: 0px !important;
+  padding: 0px !important;
+  /* margin-top: -30px; */
+  /* margin-left: 34px; */
+}
+
+.addresses-button-section {
+  display: flex;
+  align-items: center;
+}
+
+.addresses-delete-button {
+  width: 67px;
+  height: 26px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #e02020;
+  border-radius: 10px;
+  opacity: 1;
+  cursor: pointer;
+  padding-top: 0px;
+  margin-right: 10px;
+  z-index: 2000000;
+}
+
+.addresses-edit-button {
+  width: 67px;
+  height: 26px;
+  background: #98694e 0% 0% no-repeat padding-box;
+  border: 1px solid #c0cdd7;
+  border-radius: 10px;
+  opacity: 1;
+  cursor: pointer;
+  padding-top: 0px;
+  z-index: 2000000;
+}
+
+.addresses-container hr {
+  width: 100%;
+  border: 1px dashed #b1b1b1;
+  opacity: 1;
+  margin: 5.5px 0px 9.5px;
+  /* height: 0px; */
+  /* margin-left: -57px; */
+  /* margin-top: 10px; */
+}
+
+.addresses-delete-text {
+  text-align: center;
+  font: normal normal bold 12px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #e02020;
+  opacity: 1;
+  position: relative;
+  top: -2px;
+}
+
+.addresses-edit-text {
+  text-align: center;
+  font: normal normal bold 12px/28px Titillium Web;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  position: relative;
+  top: -2px;
+}
+
+/* .addresses-details-and-map { */
+/* display: flex; Display children side by side */
+/* align-items: center; */
+/* } */
+
+.addresses-content {
+  display: flex;
+  justify-content: space-between;
+  /* margin-left: -300px; */
+  /* margin-top: 48px; */
+  /* padding-top: 5px; */
+}
+
+.addresses-button-container {
+  display: flex;
+  justify-content: end;
+  flex: 1;
+  /* margin-left: 100px; */
+  /* margin-top: 5px; */
+}
+
+.zIndex {
+  z-index: -1;
+}
+
+.addresses-map-section {
+  width: 83px;
+  height: 83px;
+  border-radius: 12px;
+  opacity: 1;
+  /* top: 52px; */
+  /* left: 225px; */
+  /* border: 1px solid #c0cdd7; */
+  /* position: absolute; */
+  /* padding-left: 115px; */
+  /* margin-top: -42%; */
+}
+
+.addresses-map-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.addresses-name {
+  text-align: left;
+  font: normal normal normal 12px/14px Titillium Web;
+  letter-spacing: 0px;
+  color: #40484e;
+  opacity: 1;
+  margin-bottom: 0px;
+}
+
+.additional-addresses {
+  font-size: 6px;
+  font-weight: 300;
+  color: #40484e;
+  margin-top: 5px;
+}
+
+/* .addresses-details { */
+/* top: 35px; */
+/* left: 12px; */
+/* position: absolute; */
+/* } */
+
+@media screen and (max-width: 500px) {
+  .addresses-container {
+    width: 100%;
+    box-shadow: 0px 0px 8px #314f7c1f;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .addresses-container {
+    width: 90%;
+  }
+}

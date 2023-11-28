@@ -1,115 +1,161 @@
-
-
-.restaurant-title{
+.restaurant-title {
   text-align: left;
   font: normal normal 600 18px/24px Titillium Web;
   letter-spacing: 0.36px;
-  color: #1F2933;
+  color: #1f2933;
   opacity: 1;
-  
 }
 
 .orderType-button-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-  
-  .custom-button {
-    display: flex;
-    align-items: center;
-    /* margin-right: 10px ; */
-    color: white;
-    cursor: pointer;
-    /* height: 36px; */
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 24px 48px #314F7C14;
-    border: 1px solid #EBEEF0;
-    border-radius: 16px;
-    opacity: 1;
-    justify-content: center;
-    cursor: pointer;
-    transform: scale(0.98); 
-    transition: all 0.3s;
-    }
-  
-
-  
-  .orderTypebutton-text {
-    font: normal normal bold 9px/7px Titillium Web;
-    letter-spacing: 0.18px;
-    color: #323F4B;
-    opacity: 1;
-    font-size: 8px;
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-
-  .basic-card.expanded {
-    /* Add border styles when expanded */
-    border: 2px solid #000; /* You can adjust the border styles as needed */
-
-  }
-  
-  
-  .orderTypebutton-icon {
-    width: 24px; 
-    height: 24px; 
-    padding: 1px;
-    }
-
-  .custom-button.expanded {
-    border: 1px solid #758B9A;
-    font: normal normal bold 9px/7px Titillium Web;
-    letter-spacing: 0.18px;
-    color: #323F4B;
-    opacity: 1;
-    font-size: 9px;
-    padding: 1px;
-  }
-
-.orderTypebutton-style-one{
-background: #93694F 0% 0% no-repeat padding-box;
-box-shadow: 0px 24px 48px #314F7C14;
-border: 1px solid #EBEEF0;
-border-radius: 16px;
-opacity: 1;
-text-align: center;
-font: normal normal 600 7px/6px Titillium Web;
-letter-spacing: 0.14px;
-color: #FFFFFF;
-opacity: 1;
-width: 83px;
-height: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 2px;
+  margin-top: 10px;
 }
 
-.orderTypebutton-style-two{
-  background: #4F948A 0% 0% no-repeat padding-box;
-box-shadow: 0px 24px 48px #314F7C14;
-border: 1px solid #4F948A;
-border-radius: 16px;
-opacity: 1;
-width: 62px;
-height: 16px;
-text-align: center;
-font: normal normal 600 7px/6px Titillium Web;
-letter-spacing: 0.14px;
-color: #FFFFFF;
-opacity: 1;
+.custom-button-expanded {
+  padding: 0 !important;
+}
+
+.shrink-expanded {
+  padding-right: 0px !important;
+  width: auto !important;
+}
+
+.shrink-expanded .orderTypebutton-text {
+  width: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.custom-button {
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  color: white;
+  cursor: pointer;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 24px 48px #314f7c14;
+  border: 1px solid #ebeef0;
+  border-radius: 16px;
+  opacity: 1;
+  cursor: pointer;
+  transform: scale(0.98);
+  transition: all 0.3s;
+  /* padding: 0.5px 0.5px 0.5px 0.5px !important; */
+}
+
+.orderTypebutton-text {
+  font: normal normal bold 9px/7px Titillium Web;
+  letter-spacing: 0.18px;
+  color: #323f4b;
+  opacity: 1;
+  font-size: 9px;
+  padding-left: 3px;
+  padding-right: 13px;
+  width: 29px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.basic-card.expanded {
+  /* Add border styles when expanded */
+  border: 2px solid #000;
+  /* You can adjust the border styles as needed */
+}
+
+.orderTypebutton-icon {
+  width: 28px;
+  height: 28px;
+  padding: 1px;
+}
+
+.custom-button.expanded {
+  border: 1px solid #758b9a;
+  font: normal normal bold 9px/7px Titillium Web;
+  letter-spacing: 0.18px;
+  color: #323f4b;
+  opacity: 1;
+  font-size: 9px;
+}
+
+.custom-button.hidden {
+  padding-right: 0px;
+}
+
+.custom-button.hidden .orderTypebutton-text {
+  width: 0px;
+  padding: 0px;
+  letter-spacing: unset;
+}
+
+.orderTypebutton-style-one {
+  box-shadow: 0px 24px 48px #314f7c14;
+  border: 1px solid #93694f;
+  border-radius: 16px;
+  opacity: 1;
+  text-align: center;
+  font: normal normal 600 7px/6px Titillium Web;
+  letter-spacing: 0.14px;
+  color: #93694f;
+  opacity: 1;
+  margin-top: 1px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  /* width: 82px; */
+  min-height: 16px;
+  padding: 1px 12px;
+}
+
+.orderTypebutton-style-one-active {
+  background: #93694f 0% 0% no-repeat padding-box;
+  color: #ffffff;
+}
+
+.orderTypebutton-style-one-active {
+  background: #93694f 0% 0% no-repeat padding-box;
+  color: #ffffff;
+}
+
+.orderTypebutton-style-two {
+  box-shadow: 0px 24px 48px #314f7c14;
+  border: 1px solid #4f948a;
+  border-radius: 16px;
+  opacity: 1;
+  /* width: 61px; */
+  min-height: 16px;
+  margin-top: 1px;
+  text-align: center;
+  font: normal normal 600 7px/6px Titillium Web;
+  letter-spacing: 0.14px;
+  color: #4f948a;
+  opacity: 1;
+  margin-left: 4px;
+  margin-right: 4px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+}
+
+.orderTypebutton-style-two-active {
+  background: #4f948a 0% 0% no-repeat padding-box;
+  color: #ffffff;
 }
 
 .custom-button.clicked {
-  background: #93694F 0% 0% no-repeat padding-box;
-  
+  background: #93694f 0% 0% no-repeat padding-box;
 }
 
-.orderTypebutton-text.clicked{
-  color: white; 
+.custom-button.clicked .orderTypebutton-text {
+  color: #ffffff;
+}
+
+.orderTypebutton-text.clicked {
+  color: white;
 }
 
 .options {
   display: flex;
-  margin-left: 10px;
+  margin-left: -5px;
 }
 
 .options span {
@@ -118,11 +164,55 @@ opacity: 1;
   background-color: #f0f0f0;
 }
 
+@media screen and (max-width: 500px) and (min-width: 430px) {
+  .custom-button {
+    /* padding-right: 18px; */
+    width: 100%;
+  }
 
+  .custom-button.expanded {
+    padding-right: 8px !important;
+  }
 
+  .orderTypebutton-style-one {
+    margin-left: 8px;
+    font-size: 9px;
+    line-height: 1;
+  }
 
+  .orderTypebutton-style-two {
+    margin-left: 6px;
+    font-size: 9px;
+    line-height: 1;
+  }
 
+  .orderTypebutton-icon {
+    width: 32px;
+    height: 32px;
+  }
 
+  .shrink-expanded .orderTypebutton-text {
+    margin-left: 0px !important;
+  }
 
+  .orderTypebutton-text {
+    margin-left: 1px;
+    margin-right: 0;
+    font-size: 12px;
+    width: 38px !important;
+  }
+}
 
+@media screen and (max-width: 315px) {
+  .orderTypebutton-style-one {
+    width: 65px;
+  }
 
+  .orderTypebutton-style-two {
+    width: 50px;
+  }
+}
+
+.text-width {
+  width: auto !important;
+}

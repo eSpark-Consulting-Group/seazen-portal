@@ -5,7 +5,7 @@
   color: #1f2933;
   opacity: 1;
   position: absolute;
-  top: 100px;
+  top: 120px;
   left: 109px;
 }
 
@@ -119,7 +119,8 @@
 }
 
 .editProfile-button {
-  top: 624px;
+  /* top: 624px; */
+  bottom: 24px;
   left: 19px;
   width: 326px;
   height: 56px;
@@ -138,3 +139,55 @@
   opacity: 1;
   cursor: pointer;
 }
+
+.EditForm-Nav .logo-home {
+  margin: 0px 0px 0px 0px !important;
+}
+.EditForm-Nav {
+  margin-top: 12px !important;
+}
+
+@media screen and (max-width: 500px) {
+  .EditForm-button {
+    position: fixed !important;
+    bottom: 20px !important;
+    width: 88% !important;
+  }
+}
+
+.EditForm-button {
+  width: 326px;
+  position: fixed;
+  bottom: 20px;
+}
+
+/* @media screen and (max-width: 500px) and (min-width: 380px) {
+  .editProfile-style h2 {
+    left: 140px;
+  }
+  .editProfileleft-name {
+    left: 57px;
+  }
+  .editProfileright-name {
+    left: 224px;
+  }
+  .editProfileemail-style {
+    left: 53px;
+  }
+  .editProfileright-number {
+    left: 144px;
+  }
+  .editProfileleft-code {
+    left: 52px;
+  }
+  .editProfile-button {
+    left: 56px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .editProfile-button {
+    bottom: -165px;
+    left: 22px;
+  }
+} */

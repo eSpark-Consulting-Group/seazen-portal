@@ -1,32 +1,135 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { Box, Stack, Button, Typography } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
+
 import IncDec from "../../Input/InputWithIncDec";
 
-function CartItem(props) {
-  const { item, quantity } = props;
+import deleteCart from "../../../api/cart/deleteCartItem";
+import clearCart from "../../../api/cart/clearCart";
+import updateCartApiCall from "../../../api/cart/updateCart";
 
-  const { name, price, image, variant } = item;
+import * as reduxCart from "../../../store/reducers/cartSlice";
+
+import { paths } from "../../../routes/paths";
+
+function CartItem(props) {
+  const {
+    quantity,
+    id,
+    cart_id,
+    menu_item_name_en,
+    unit_price,
+    itemName,
+    totalPrice,
+    itemImage,
+    variants,
+    cartRefetch,
+    item_code,
+    item_id,
+    branch_id,
+  } = props;
+
+  // const variant = "450g";
+
+  const token = localStorage.getItem("token");
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const cart = useSelector((state) => state.cart.cart);
 
   const [updatedQuantity, setUpdatedQuantity] = React.useState(quantity);
+  const [imageNotFound, setImageNotFound] = useState(false);
+
+  // const updateCartHandler = useQuery({
+  //   queryFn: () =>
+  //     updateCartApiCall(
+  //       {
+  //         cart_id: cart_id,
+  //         quantity: updatedQuantity,
+  //       },
+  //       token
+  //     ),
+  //   onSuccess: (data) => {
+  //     console.log(data, "data");
+  //   },
+  //   enabled: false,
+  // });
 
   function onIncrease() {
-    console.log("onIncrease");
-
+    dispatch(
+      reduxCart.updateCartItemQuantity({
+        itemCode: item_code,
+        quantity: updatedQuantity + 1,
+      })
+    );
     setUpdatedQuantity((prev) => prev + 1);
+    setTimeout(() => {
+      // updateCartHandler.refetch();
+      cartRefetch();
+    }, 100);
   }
 
-  function onDecrease() {
-    console.log("onDecrease");
+  const { data, refetch } = useQuery({
+    queryFn: () =>
+      deleteCart(
+        {
+          cart_id,
+          item_id: id,
+          item_code,
+        },
+        token
+      ),
+    onSuccess: (data) => {
+      console.log(data, "data");
+    },
+    enabled: false,
+  });
 
+  const clearCartHandler = () => {
+    clearCart(token)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const onDelete = () => {
+    if (cart.length < 2 && cart[0].quantity == 1) {
+      clearCartHandler();
+    }
+    dispatch(reduxCart.removeFromCart(id));
+    refetch();
+    setTimeout(() => {
+      cartRefetch();
+    }, 100);
+  };
+
+  function onDecrease() {
+    dispatch(
+      reduxCart.updateCartItemQuantity({
+        itemCode: item_code,
+        quantity: updatedQuantity - 1,
+      })
+    );
     setUpdatedQuantity((prev) => prev - 1);
+    setTimeout(() => {
+      // updateCartHandler.refetch();
+      cartRefetch();
+    }, 100);
   }
 
   function getItemName() {
-    return `${name} (${variant})`;
+    // return `${menu_item_name_en || itemName} (${variant})`;
+    return `${menu_item_name_en || itemName}`;
   }
 
   return (
@@ -51,7 +154,30 @@ function CartItem(props) {
             },
           }}
         >
-          <img src={image} alt={name} />
+          {imageNotFound ? (
+            <Box
+              sx={{
+                height: 68,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "common.white",
+                borderRadius: "8px",
+              }}
+            >
+              <ImageNotSupportedIcon fontSize="large"></ImageNotSupportedIcon>
+
+              <Typography variant="caption">No Image Found</Typography>
+            </Box>
+          ) : (
+            <img
+              onError={() => setImageNotFound(true)}
+              style={{ borderRadius: "8px" }}
+              src={itemImage}
+              alt={menu_item_name_en || itemName}
+            />
+          )}
         </Box>
 
         <Stack
@@ -70,6 +196,13 @@ function CartItem(props) {
             disableRipple
             disableElevation
             endIcon={<EditTwoToneIcon />}
+            onClick={() => {
+              localStorage.setItem("restaurantID", cart[0]?.restaurant_id);
+
+              navigate(`${paths.details}/${id}?item_code=${item_code}`, {
+                state: { branch_id },
+              });
+            }}
             sx={{
               p: 0,
               minHeight: "auto",
@@ -97,20 +230,20 @@ function CartItem(props) {
           height: "72px",
         }}
       >
-        <Typography
-          align="center"
-          fontWeight={600}
-        >{`KWD ${price}`}</Typography>
+        <Typography align="center" fontWeight={600}>
+          {`KWD ${Number(totalPrice).toFixed(3)}`}
+        </Typography>
         <IncDec
           quantity={updatedQuantity}
           onIncrease={onIncrease}
           onDecrease={onDecrease}
-          IncButtonProps={{
-            disabled: updatedQuantity === 10,
-          }}
-          DecButtonProps={{
-            disabled: updatedQuantity === 1,
-          }}
+          onDelete={onDelete}
+          IncButtonProps={
+            {
+              // disabled: updatedQuantity === 10,
+            }
+          }
+          isSingleItem={updatedQuantity < 2}
         />
       </Stack>
     </Stack>
