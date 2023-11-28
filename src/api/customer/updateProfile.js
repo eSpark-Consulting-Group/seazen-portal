@@ -11,16 +11,34 @@ import { handleApiError } from "../utils/errorHandling";
 //   "mobile_country_code": "string",
 //   "mobile_number": "string",
 // }
+
 const updateProfile = async (customer) => {
   try {
-    // Make the POST request to perform email login.
-    const { data } = await axiosInstance.post(
+    const { token, data } = customer;
+    // Check if the token is valid and available.
+    if (!token) {
+      throw new Error("Token is missing or invalid.");
+    }
+
+    // Make the POST request with the provided token and an empty body.
+    const response = await axiosInstance.post(
       API_ENDPOINTS.USER.UPDATE_PROFILE,
-      customer
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
-    return data;
+
+    // Check the response status code.
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
   } catch (error) {
-    // Use the handleApiError function for error handling
+    // Handle network errors or other exceptions.
     handleApiError(error);
   }
 };

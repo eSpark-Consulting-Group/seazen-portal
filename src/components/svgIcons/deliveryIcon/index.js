@@ -1,6 +1,49 @@
 import React from "react";
 
-const DeliveryIcon = () => {
+export const DeliveryIconLight = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xlinkHref="http://www.w3.org/1999/xlink"
+      width="16.75"
+      height="19.25"
+      viewBox="0 0 14.107 18"
+    >
+      <g id="delivery_Icon">
+        <path
+          id="Path_41"
+          data-name="Path 41"
+          d="M7.053,0A7.061,7.061,0,0,0,0,7.053C0,10.762,5.388,18,7.053,18s7.054-7.238,7.054-10.947A7.062,7.062,0,0,0,7.053,0m0,17.37C6.046,17.37.63,10.827.63,7.053a6.423,6.423,0,0,1,12.847,0c0,3.773-5.416,10.316-6.424,10.316"
+          transform="translate(0 0)"
+          fill="grey"
+        />
+        <path
+          id="Path_42"
+          data-name="Path 42"
+          d="M14.779,11.248a.315.315,0,0,0-.315.315V13.7a.218.218,0,0,1-.218.218H12.492a.218.218,0,0,1-.218-.218V11.563a.315.315,0,1,0-.63,0V13.7a.849.849,0,0,0,.848.848h.562V19.2a.315.315,0,0,0,.63,0V14.548h.562a.849.849,0,0,0,.848-.848V11.563a.315.315,0,0,0-.315-.315"
+          transform="translate(-7.975 -7.704)"
+          fill="grey"
+        />
+        <path
+          id="Path_43"
+          data-name="Path 43"
+          d="M16.434,13.475a.315.315,0,0,0,.315-.315v-1.6a.315.315,0,1,0-.63,0v1.6a.315.315,0,0,0,.315.315"
+          transform="translate(-11.04 -7.704)"
+          fill="grey"
+        />
+        <path
+          id="Path_44"
+          data-name="Path 44"
+          d="M25.592,11.247H25.5a.315.315,0,0,0-.315.315V19.2a.315.315,0,0,0,.63,0v-2.38h.974a.8.8,0,0,0,.8-.8V13.245a2,2,0,0,0-2-2m1.368,4.774a.168.168,0,0,1-.167.167h-.974V11.9a1.367,1.367,0,0,1,1.142,1.345Z"
+          transform="translate(-17.252 -7.703)"
+          fill="grey"
+        />
+      </g>
+    </svg>
+  );
+};
+
+export const DeliveryIconDark = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -42,5 +85,3 @@ const DeliveryIcon = () => {
     </svg>
   );
 };
-
-export default DeliveryIcon;

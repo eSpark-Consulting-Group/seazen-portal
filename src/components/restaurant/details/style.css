@@ -6,8 +6,9 @@
   height: 55px;
   margin-bottom: 12px;
   background-color: white;
-  margin-top: -12px;
-
+  margin-top: -10px;
+  z-index: 999;
+  position: relative;
 }
 
 .details_inner_div {
@@ -19,11 +20,15 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-family: Titillium Web;
   font-style: Regular 400;
   font-weight: 400;
   font-size: 12pt;
   color: #026754;
+  margin-top: -10px;
+  z-index: 999;
+  position: relative;
 }
 
 .tag_line {
@@ -31,8 +36,8 @@
   font-family: Titillium Web;
   font-weight: 400;
   font-size: 12px;
-  color: #7f8fa6;
-  margin-top: 8px;
+  color: #7f8fa6 !important;
+  margin-top: 4px;
 }
 
 /* @media screen and (max-width: 350px) {

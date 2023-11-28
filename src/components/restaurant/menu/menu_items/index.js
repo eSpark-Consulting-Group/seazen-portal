@@ -1,9 +1,10 @@
-import React from "react";
-import "./style.css";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useSearchParams } from "react-router-dom";
+import { Tab, Tabs, Box } from "@mui/material";
 import { isEmpty } from "lodash";
+import "./style.css";
 
 const menu_categories = [
   "Burrito in a Bowl",
@@ -20,14 +21,29 @@ const menu_categories = [
 ];
 
 const MenuItems = ({ itemCategoryList }) => {
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [value, setValue] = React.useState(0);
 
-  const handleMenuItemClick = (category) => {
-    // set only the category in the search params on whatever the current location is
-    setSearchParams({
-      category: category,
-    });
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
   };
+  const restaurantTheme = useSelector((state) => state.theme.themeColor);
+  const visibleCategoryElementID = useSelector(
+    (state) => state.resturants.visibleCategoryElementID
+  );
+  const scrollToElement = (id, index) => {
+    if (index || index === 0) {
+      setValue(index);
+    }
+
+    const container = document.getElementById(id);
+    if (container) {
+      container.scrollIntoView({ behavior: "auto" });
+    }
+  };
+
+  useEffect(() => {
+    setValue(parseInt(visibleCategoryElementID - 1));
+  }, [visibleCategoryElementID]);
 
   return (
     <div className="menu_item_outer_container px-3 px-sm-4">
@@ -60,10 +76,10 @@ const MenuItems = ({ itemCategoryList }) => {
                 fontSize: "14px",
                 fontWeight: "bold",
                 border: "none",
-                maxHeight: "300px",
+                maxHeight: "150px",
                 overflowY: "scroll",
-                marginTop:"12px",
-                borderRadius:"0 0 16px 16px"
+                borderRadius: "0 0 16px 16px",
+                position: "static",
               }}
             >
               {!isEmpty(itemCategoryList)
@@ -71,7 +87,7 @@ const MenuItems = ({ itemCategoryList }) => {
                     <Dropdown.Item
                       key={category.id}
                       onClick={() => {
-                        handleMenuItemClick(category?.id);
+                        scrollToElement(category?.id, index);
                       }}
                     >
                       {category?.name_en}
@@ -81,7 +97,7 @@ const MenuItems = ({ itemCategoryList }) => {
                     <Dropdown.Item
                       key={`menu_category_drop_${index}`}
                       onClick={() => {
-                        handleMenuItemClick(category);
+                        scrollToElement(category.id, index);
                       }}
                     >
                       {category}
@@ -91,29 +107,44 @@ const MenuItems = ({ itemCategoryList }) => {
           </Dropdown>
         </div>
         <div className="menu_itmes_text_container">
-          {!isEmpty(itemCategoryList)
-            ? itemCategoryList?.map((category, index) => (
-                <button
-                  style={{ color: "black" }}
-                  key={category?.id}
-                  onClick={() => {
-                    handleMenuItemClick(category?.id);
-                  }}
-                >
-                  {category?.name_en}
-                </button>
-              ))
-            : menu_categories.map((category, index) => (
-                <button
-                  style={{ color: "black" }}
-                  key={index}
-                  onClick={() => {
-                    handleMenuItemClick(category);
-                  }}
-                >
-                  {category}
-                </button>
-              ))}
+          <Box
+            sx={{
+              maxWidth: { xs: "100%" },
+              bgcolor: "background.paper",
+            }}
+          >
+            <Tabs
+              value={value === -1 ? value + 1 : value}
+              onChange={handleChange}
+              variant="scrollable"
+              scrollButtons={false}
+              textColor="black"
+              aria-label="scrollable prevent tabs example"
+              TabIndicatorProps={{
+                style: { backgroundColor: restaurantTheme?.main },
+              }}
+              sx={{
+                "& .MuiButtonBase-root": {
+                  textTransform: "none",
+                  minWidth: "0px",
+                  marginRight: "12px",
+                },
+              }}
+            >
+              {itemCategoryList?.map((val, index) => {
+                return (
+                  <Tab
+                    onClick={() => scrollToElement(index + 1)}
+                    key={val.id}
+                    label={
+                      val.name_en.charAt(0).toUpperCase() +
+                      val.name_en.slice(1).toLowerCase()
+                    }
+                  />
+                );
+              })}
+            </Tabs>
+          </Box>
         </div>
       </div>
     </div>

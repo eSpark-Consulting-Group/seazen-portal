@@ -1,14 +1,32 @@
 import React, { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import { useQuery } from "@tanstack/react-query";
+
 import getAllPopularItems, {
   GET_ALL_POPULAR_ITEMS_QUERY_KEY,
 } from "../../api/home/getAllPopularItems";
-import "./style.css";
-import { useNavigate } from "react-router-dom";
-import { paths } from "../../routes/paths";
-import { useSelector } from "react-redux";
+import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 
-export default function App() {
+import { paths } from "../../routes/paths";
+
+import { getBranchHours } from "../../store/reducers/resturantsSlice";
+
+import "./style.css";
+
+export default function App(props) {
+  const {
+    selectedLocation,
+    setOpenAddressPopup,
+    setFromPopular,
+    setPopularId,
+    setBranchId,
+    setRestaurantId,
+    setDistanceIsFar,
+    setRestaurantOpen,
+  } = props;
+
   const imageInfo = [
     {
       imageUrl: "/assets/img/7.png",
@@ -39,7 +57,7 @@ export default function App() {
     isLoading,
     error,
     isError,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: [GET_ALL_POPULAR_ITEMS_QUERY_KEY],
     queryFn: () => getAllPopularItems(country?.id),
@@ -49,15 +67,15 @@ export default function App() {
   });
 
   useEffect(() => {
-    refetch()
-  },[country])
+    refetch();
+  }, [country]);
 
   const { data: popularDishes } = popularDishesResponse || {};
 
   return (
     <div className="App">
       <div className="slider-tile">
-        <h3>Popular Dishes</h3>
+        {popularDishes?.length > 0 && <h3>Popular Dishes</h3>}
       </div>
       <CustomCarousel imageInfo={popularDishes}>
         {popularDishes?.map((info, index) => {
@@ -72,6 +90,16 @@ export default function App() {
               additionalText={info.currency_code}
               inlineText={info.price.toFixed(3)}
               isFirstCard={index === 0}
+              setOpenAddressPopup={setOpenAddressPopup}
+              selectedLocation={selectedLocation}
+              setFromPopular={setFromPopular}
+              setPopularId={setPopularId}
+              setBranchId={setBranchId}
+              restaurant_id={info.restaurant_id}
+              setRestaurantId={setRestaurantId}
+              setDistanceIsFar={setDistanceIsFar}
+              setRestaurantOpen={setRestaurantOpen}
+              branchId={info.branch_id}
             />
           );
         })}
@@ -149,6 +177,16 @@ function Box({
   additionalText,
   inlineText,
   isFirstCard,
+  setOpenAddressPopup,
+  selectedLocation,
+  setFromPopular,
+  setPopularId,
+  setBranchId,
+  restaurant_id,
+  setRestaurantId,
+  setDistanceIsFar,
+  branchId,
+  setRestaurantOpen,
 }) {
   const captionLines = caption.split("\n");
   const captionImageClass = isFirstCard
@@ -158,14 +196,48 @@ function Box({
     : "";
   const additionalTextClass = isFirstCard ? "first-card-additional-text" : "";
   const navigate = useNavigate();
+  const isToken = localStorage.getItem("token");
+  const dispatch = useDispatch();
+
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
+  const nearbyRestaurants = useSelector(
+    (state) => state.resturants.nearbyRestaurants
+  );
+
+  const fetchBranchHours = (restaurantId) => {
+    getRestaurantBranchHours(restaurantId).then((res) => {
+      if (res.status === "ok") {
+        dispatch(getBranchHours(res?.data));
+      }
+    });
+  };
 
   return (
     <div
       className="box"
       onClick={() => {
+        localStorage.setItem("restaurantIdForRedirect", restaurant_id);
+        localStorage.setItem("restaurantID", restaurant_id);
+        localStorage.setItem("menuDetailId", id);
+
+        const restName = resturantsData?.find(
+          (res) => res.id === restaurant_id
+        );
+        // fetchBranchHours(restaurant_id);
+
+        localStorage.setItem("restaurantName", restName.name_en);
+
+        setPopularId(id);
+        setBranchId(branchId);
+        setRestaurantId(restaurant_id);
         navigate(paths.details + "/" + id, {
           state: {
             id: id,
+            loc: "popular",
+            restaurant_id: restaurant_id,
+            branch_id: branchId,
           },
         });
       }}

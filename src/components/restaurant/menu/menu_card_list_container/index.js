@@ -1,51 +1,97 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import MenuCard from "../menu_card/index.js";
-import "./style.css";
-import { paths } from "../../../../routes/paths.jsx";
+import { useSearchParams, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { CircularProgress } from "@mui/material";
-import { resetCart } from "../../../../store/reducers/cartSlice.js";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { Modal } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+
+import { Box, Stack, Typography, Modal, CircularProgress } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
 import { Button } from "react-bootstrap";
 
+import MenuCard from "../menu_card/index.js";
+import { DialogComponent } from "../../../dialog/index.js";
+import SelectLocation from "../../../dialog/selectLocation.js";
+import SchedulePicker from "../../../shared/schedulePicker/index.js";
+import ScheduleDialog from "../../../../components/dialog/scheduleDialog.js";
 
-const MenuCardListContainer = ({itemCategoryList}) => {
+import { paths } from "../../../../routes/paths.jsx";
+
+import { resetCart } from "../../../../store/reducers/cartSlice.js";
+import {
+  getBranchHours,
+  getNearByRest,
+  setCategoryElementID,
+} from "../../../../store/reducers/resturantsSlice.js";
+
+import {
+  getDistanceFromLatLonInKm,
+  getFullAddress,
+} from "../../../../utils/getAddress.js";
+
+import getRestaurantBranchHours from "../../../../api/restaurant/getRestaurantBranchHours.js";
+import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant.js";
+
+import "./style.css";
+
+const MenuCardListContainer = ({
+  itemCategoryList,
+  locationDeliver,
+  restaurantBranchHours,
+  resturantId,
+  restaurantDetail,
+  setOpenModal,
+  setSelectedItemToDeliver,
+  setNotDeliver,
+  setRestaurantOpen,
+  ItemsCategoryLoading,
+}) => {
   const navigate = useNavigate();
-  const originalCartTotal = useSelector((state) => state.cart.total);
-  const cartTotal = originalCartTotal < 0 ? 0 : originalCartTotal;
+  const dispatch = useDispatch();
+
   const cartTotalItems = useSelector((state) => state.cart.totalQuantity);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [open, setOpen] = useState(false);
-
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const [showList, setShowList] = useState([]);
   const categoryList = useSelector(
     (state) => state?.resturants?.listItemByCategory
   );
-  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.cart);
+  const addressData = useSelector((state) => state.address.addressData);
+
+  const branchHours = useSelector((state) => state.resturants.branchHours);
+  const nearbyRestaurants = useSelector(
+    (state) => state.resturants.nearbyRestaurants
+  );
+
+  const cartTotal = cart.reduce(
+    (total, item) => total + Number(item.totalPrice),
+    0
+  );
+
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showList, setShowList] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+  const [fullAddress, setFullAddress] = useState(null);
+  const [openAddressPopup, setOpenAddressPopup] = useState(false);
+  const [restaurantName, setRestaurantName] = useState("");
+  const [distanceIsFar, setDistanceIsFar] = useState(false);
+  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
+  const [addressID, setAddressID] = useState();
 
+  const currentLocation = JSON.parse(localStorage.getItem("location"));
 
-  // const itemQuantity= useSelector((state) => state.)
-  useEffect(()=>{
-    if(cartTotalItems === 0){
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (cartTotalItems === 0) {
       dispatch(resetCart());
     }
-  },[cartTotalItems])
+  }, [cartTotalItems]);
 
-  useEffect(()=>{
-    // console.log(categoryList?.slice(0, 10), "categoryList?.slice(0, 10)")
-    setShowList(categoryList?.slice(0, 10))
-  },[categoryList])
-  
+  useEffect(() => {
+    setShowList(categoryList?.slice(0, 10));
+  }, [categoryList]);
+
   const toggleSearch = () => {
     setOpen(true);
     setIsSearchOpen(!isSearchOpen);
@@ -54,28 +100,59 @@ const MenuCardListContainer = ({itemCategoryList}) => {
   const handleClose = () => {
     setOpen(false);
     setIsSearchOpen(!isSearchOpen);
-  }
-  const getCategoryName = () => {
-    let category = searchParams.get("category");
-    if (category) {
-      return itemCategoryList?.find((item) => item.id == category)?.name_en;
-    }
-    return "All";
   };
+
+  useEffect(() => {
+    const options = {
+      root: null, // Use the viewport as the root
+      rootMargin: "-300px",
+      threshold: [0, 0.25, 0.5, 0.75, 1],
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const elementId = entry.target.id;
+          dispatch(setCategoryElementID(elementId));
+          // You can perform any action here with the element ID
+        }
+      });
+    }, options);
+
+    // You can select the elements you want to observe by their class or other attributes.
+    const elements = document.querySelectorAll(".card_list_title");
+    elements.forEach((element) => {
+      observer.observe(element);
+    });
+
+    // Cleanup the observer when the component unmounts
+    return () => observer.disconnect();
+  }, [categoryList]);
 
   const fetchMoreData = () => {
     const currentLength = showList?.length;
     const newItems = categoryList.slice(currentLength, currentLength + 10);
     setShowList([...showList, ...newItems]);
-    console.log(newItems,"fetchMoreData")
-  }
-  
+  };
+
+  let categoriesWiseList = {};
+
+  categoryList?.length &&
+    categoryList?.forEach(({ category_id }) => {
+      return (categoriesWiseList[category_id] = categoryList?.filter(
+        (val) => val.category_id == category_id
+      ));
+    });
+
   const filterItems = (query) => {
     const lowercasedQuery = query.toLowerCase();
     const filtered = categoryList.filter((item) => {
       const itemName = item.name_en.toLowerCase();
-      const itemIngredients = item.description_en.toLowerCase();
-      return itemName.includes(lowercasedQuery) || itemIngredients.includes(lowercasedQuery);
+      const itemIngredients = item.description_en?.toLowerCase();
+      return (
+        itemName.includes(lowercasedQuery) ||
+        itemIngredients?.includes(lowercasedQuery)
+      );
     });
     setFilteredItems(filtered);
   };
@@ -83,11 +160,107 @@ const MenuCardListContainer = ({itemCategoryList}) => {
   const handleSearchChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
-    if(query === ""){
+    if (query === "") {
       setFilteredItems([]);
       return;
     }
     filterItems(query);
+  };
+
+  const chooseAddress = (item) => {
+    const lat = +item.latitude;
+    const lng = +item.longitude;
+    setAddressID(item.id);
+
+    getFullAddress(lat, lng, setFullAddress);
+  };
+
+  const fetchBranchHours = () => {
+    getRestaurantBranchHours(id).then((res) => {
+      if (res.status === "ok") {
+        dispatch(getBranchHours(res?.data));
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (branchHours?.length === 0) {
+      fetchBranchHours();
+    }
+  }, [branchHours]);
+
+  useEffect(() => {
+    const filterBranch = branchHours?.filter(
+      (rest) => rest.restaurant_id === +id
+    );
+
+    if (fullAddress !== null) {
+      if (branchHours.length && filterBranch?.length) {
+        for (let i = 0; i < filterBranch?.length; i++) {
+          const resLat = +filterBranch[i]?.latitude;
+          const resLng = +filterBranch[i]?.longitude;
+
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            fullAddress.lat,
+            fullAddress.lng
+          );
+
+          if (distance > 50) {
+            setRestaurantName(restaurantDetail?.name_en);
+            setDistanceIsFar(true);
+            setOpenAddressPopup(false);
+          } else {
+            setDistanceIsFar(false);
+            setOpenAddressPopup(false);
+
+            checkNearByRest(filterBranch);
+
+            break;
+          }
+        }
+      }
+    }
+  }, [fullAddress, branchHours]);
+
+  const navigateUser = () => {
+    navigate(paths.location, {
+      state: {
+        path: "menu/restaurant",
+        restaurant_id: id,
+        restaurantName: restaurantDetail?.name_en,
+        addNew: true,
+      },
+    });
+  };
+
+  const checkNearByRest = (branch) => {
+    localStorage.setItem(
+      "selected",
+      JSON.stringify({ ...fullAddress, addressId: addressID })
+    );
+
+    if (branch?.length === 0) {
+      setRestaurantName(restaurantDetail?.name_en);
+      setDistanceIsFar(true);
+      setOpenAddressPopup(false);
+    } else {
+      if (localStorage.getItem("isAsap") === "true") {
+        for (let i = 0; i < branch?.length; i++) {
+          if (branch[i]?.branch_hours[0].openingStatus === "Open") {
+            setRestaurantIsOpen(false);
+            navigate(paths?.cart);
+            break;
+          } else {
+            setRestaurantIsOpen(true);
+          }
+        }
+      } else {
+        setRestaurantIsOpen(false);
+        navigate(paths?.cart);
+      }
+    }
   };
 
   return (
@@ -95,15 +268,12 @@ const MenuCardListContainer = ({itemCategoryList}) => {
       <div className="scrollable-container" id="scrollableDiv">
         <div className="menu_card_list_outer_container px-3 px-sm-4 pt-3 pt-sm-4 pb-5">
           <div className="menu_card_list_inner_container">
-            <div
+            {/* <div
               className={`card_list_title_search_container ${
                 isSearchOpen ? "expanded_search" : ""
               }`}
             >
-              <div className="card_list_title">{getCategoryName()}</div>
-              {/* <div
-                className={`search ${isSearchOpen ? "expanded_search" : ""}`}
-              > */}
+              <div className="card_list_title"></div>
               <div className="search">
                 <div
                   className={`searchwrapper ${
@@ -127,42 +297,81 @@ const MenuCardListContainer = ({itemCategoryList}) => {
                   )}
                 </div>
               </div>
-            </div>
+            </div> */}
             <>
-              {!categoryList && (
+              {ItemsCategoryLoading && (
                 <Box
                   sx={{
                     display: "flex",
                     justifyContent: "center",
-                    marginTop: "0px !important",
+                    marginTop: "70px !important",
                   }}
                 >
                   <CircularProgress />
                 </Box>
               )}
-              <Stack spacing={1.5}>
-                <InfiniteScroll
-                  dataLength={showList?.length}
-                  next={fetchMoreData}
-                  hasMore={true}
-                  loader={<h4>Loading...</h4>}
-                  scrollThreshold={0.9}
-                  scrollableTarget="scrollableDiv"
-                >
-                {showList?.map((item, index) => (
-                  <MenuCard
-                    key={index}
-                    foodItem={item.name_en}
-                    foodIngredients={item.description_en}
-                    foodPrice={item.price}
-                    foodImage={item.image}
-                    id={item.id}
-                    showSubTractButton={
-                      item.has_extras === false && item.has_options === false
-                    }
-                  />
-                ))}
-                </InfiniteScroll>
+              <Stack>
+                {categoryList && categoryList?.length > 0 && (
+                  <div className="searchwrapper">
+                    <img
+                      src="/assets/img/Icon - Search.svg"
+                      alt="search_icon"
+                      className="searchicon"
+                      onClick={toggleSearch}
+                    />
+                  </div>
+                )}
+                {Object.keys(categoriesWiseList).map((val, index) => {
+                  return (
+                    <>
+                      <div
+                        id={index + 1}
+                        className="card_list_title"
+                        style={{
+                          marginTop: index == 0 ? "-3px" : "16px",
+                        }}
+                      >
+                        {
+                          itemCategoryList?.find((item) => item.id == val)
+                            ?.name_en
+                        }
+                      </div>{" "}
+                      {categoriesWiseList[val].map((item, index) => {
+                        if (item.branch_status) {
+                          return (
+                            <MenuCard
+                              allData={item}
+                              key={index}
+                              locationDeliver={locationDeliver}
+                              resturantId={resturantId}
+                              restaurantBranchHours={restaurantBranchHours}
+                              restaurantDetail={restaurantDetail}
+                              foodItem={item.name_en}
+                              foodIngredients={item.description_en}
+                              foodPrice={item.price}
+                              foodImage={item.image}
+                              id={item.id}
+                              restaurant_id={item.restaurant_id}
+                              showSubTractButton={
+                                item.has_extras === false &&
+                                item.has_variants === false &&
+                                item.has_options === false
+                              }
+                              setOpenModal={setOpenModal}
+                              setSelectedItemToDeliver={
+                                setSelectedItemToDeliver
+                              }
+                              setNotDeliver={setNotDeliver}
+                              setRestaurantOpen={setRestaurantOpen}
+                              setOpenAddressPopup={setOpenAddressPopup}
+                              setRestaurantIsOpen={setRestaurantIsOpen}
+                            />
+                          );
+                        }
+                      })}
+                    </>
+                  );
+                })}
               </Stack>
             </>
 
@@ -188,12 +397,47 @@ const MenuCardListContainer = ({itemCategoryList}) => {
             borderTopLeftRadius: (theme) => theme.spacing(2),
             borderTopRightRadius: (theme) => theme.spacing(2),
             backgroundColor: (theme) => theme.palette.themeColor.main,
-            "@media (max-width: 600px)": {
+            "@media (max-width: 500px)": {
               maxWidth: "100%",
             },
           }}
           onClick={() => {
-            navigate(paths.cart);
+            localStorage.getItem("token") === null
+              ? navigate(paths.cart)
+              : addressData?.length === 0 && cart.length
+              ? navigate(paths.location, {
+                  state: {
+                    noAddress: true,
+                    latlng: {
+                      lat: currentLocation?.lat,
+                      lng: currentLocation?.lng,
+                    },
+                    name: currentLocation?.address,
+                    path: "menu/restaurant",
+                    restaurant_id: id,
+                  },
+                })
+              : // : localStorage.getItem("selected") === null &&
+              //   cart?.length > 0 &&
+              //   !locationDeliver
+              // ? navigate(paths.location, {
+              //     state: {
+              //       path: "/cart",
+              //       restaurant_id: restaurantDetail.id,
+              //       restaurantName: restaurantDetail?.page_title_en,
+              //       notSelected: true,
+              //     },
+              //   })
+              addressData?.length > 0 &&
+                localStorage.getItem("selected") === null
+              ? setOpenAddressPopup(true)
+              : navigate(paths.cart, {
+                  state: {
+                    fromMenu: true,
+                    path: "menu/restaurant",
+                    restaurant_id: cart[0]?.restaurant_id,
+                  },
+                });
           }}
         >
           <Stack direction="row" alignItems="center" spacing={1.5}>
@@ -202,7 +446,7 @@ const MenuCardListContainer = ({itemCategoryList}) => {
                 py: 0.5,
                 px: 2,
                 borderRadius: 1,
-                backgroundColor: (theme) => theme.palette.themeColor.light,
+                backgroundColor: "#ffffff24",
               }}
             >
               {cartTotalItems}
@@ -215,45 +459,104 @@ const MenuCardListContainer = ({itemCategoryList}) => {
               py: 0.5,
               px: 2,
               borderRadius: 1,
-              backgroundColor: (theme) => theme.palette.themeColor.light,
+              backgroundColor: "#ffffff24",
             }}
           >
             KWD {Number(cartTotal).toFixed(3) || Number(0).toFixed(3)}
           </Box>
         </Box>
       </div>
+
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        sx={{
+          border: "none",
+          overflowY: "hidden",
+        }}
       >
-        <div className="Modal_Search_Item">
+        <div className="Modal_Search_Item" tabIndex="">
           <div className="closebtnmodal">
             <Button className="closebtn">
               <CloseIcon sx={{ color: "#000" }} onClick={handleClose} />
             </Button>
           </div>
           <div className="InputSearchModal">
-            <input type="text" className="InputModal" placeholder="Search" value={searchQuery} onChange={(event) => handleSearchChange(event)} />
+            <input
+              type="text"
+              className="InputModal"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(event) => handleSearchChange(event)}
+            />
           </div>
-          
-            <div className="list-menu-cards">
-              {filteredItems?.map((item, index) => (
-                <div className="categoryItemsList" key={index+1}>
-                  <MenuCard
-                    key={index}
-                    foodItem={item.name_en}
-                    foodIngredients={item.description_en}
-                    foodPrice={item.price}
-                    foodImage={item.image}
-                    id={item.id}
-                  />
-                </div>
-              ))}
-            </div>
+
+          <div className="list-menu-cards">
+            {filteredItems?.map((item, index) => (
+              <div className="categoryItemsList" key={index + 1}>
+                <MenuCard
+                  allData={item}
+                  key={index}
+                  locationDeliver={locationDeliver}
+                  resturantId={resturantId}
+                  restaurantBranchHours={restaurantBranchHours}
+                  restaurantDetail={restaurantDetail}
+                  foodItem={item.name_en}
+                  foodIngredients={item.description_en}
+                  foodPrice={item.price}
+                  foodImage={item.image}
+                  id={item.id}
+                  restaurant_id={item.restaurant_id}
+                  showSubTractButton={
+                    item.has_extras === false &&
+                    item.has_variants === false &&
+                    item.has_options === false
+                  }
+                  setOpenModal={setOpenModal}
+                  setSelectedItemToDeliver={setSelectedItemToDeliver}
+                  setOpenAddressPopup={setOpenAddressPopup}
+                  setRestaurantIsOpen={setRestaurantIsOpen}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </Modal>
+
+      <SelectLocation
+        openAddressPopup={openAddressPopup}
+        handleClose={() => setOpenAddressPopup(false)}
+        chooseAddress={chooseAddress}
+        navigateUser={navigateUser}
+      />
+
+      <DialogComponent
+        notDeliver={distanceIsFar}
+        setNotDeliver={setDistanceIsFar}
+        restaurantName={restaurantName}
+        fromDetail={true}
+        resturantId={id}
+        location={location}
+        home={true}
+        menuCard={true}
+      />
+
+      <SchedulePicker
+        openSchedulePopup={openSchedulePopup}
+        setOpenSchedulePopup={setOpenSchedulePopup}
+        showTimePicker={showTimePicker}
+        setShowTimePicker={setShowTimePicker}
+        menuCard={true}
+      />
+
+      <ScheduleDialog
+        restaurantOpen={restaurantIsOpen}
+        setRestaurantOpen={setRestaurantIsOpen}
+        setOpenSchedulePopup={setOpenSchedulePopup}
+        menuCard={true}
+      />
     </div>
   );
 };

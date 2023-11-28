@@ -2,13 +2,9 @@ import axiosInstance from "../axiosInstance";
 import API_ENDPOINTS from "../endpoints";
 import { handleApiError } from "../utils/errorHandling";
 
-const addToCartApiCall = async (cartItem, token) => {
+const addToCartApiCall = async (cartItem) => {
   try {
-    // Check if the token is valid and available.
-    if (!token) {
-      throw new Error("Token is missing or invalid.");
-    }
-
+    const token = localStorage.getItem("token");
     // Make the POST request with the provided token and cart item.
     const response = await axiosInstance.post(
       API_ENDPOINTS.CART.ADD_TO_CART,

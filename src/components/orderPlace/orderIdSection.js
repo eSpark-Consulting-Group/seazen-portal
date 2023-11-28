@@ -1,23 +1,28 @@
-import React, { useState } from 'react'
-import '../../screens/order/style.css'
+import React from "react";
+import "../../screens/order/style.css";
+import { useNavigate } from "react-router-dom";
+import { paths } from "../../routes/paths";
 
-const OrderIdSection = () => {
-  const [orderId, setOrderId] = useState("KSE23-070400");
+const OrderIdSection = ({ orderID, orderNo }) => {
+  const navigate = useNavigate();
 
-  const handleViewReceipt = () => {
-    alert("Recept");
-  }
-
+  const handleReceipt = () => {
+    navigate(paths.receipt + orderID);
+  };
 
   return (
-    <div className='order-id-section'>
-      <p id='order-id-text'>Order ID</p>
-      <div className='orderid-with-tag'>
-        <p>{orderId}</p>
-        <div id='order-id-tag'><a href='' onClick={handleViewReceipt}>View Receipt</a></div>
+    <div className="order-id-section">
+      <p id="order-id-text">Order ID</p>
+      <div className="orderid-with-tag">
+        <p>{orderNo}</p>
+        <div id="order-id-tag">
+          <a href="" onClick={handleReceipt}>
+            View Receipt
+          </a>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default OrderIdSection
+export default OrderIdSection;

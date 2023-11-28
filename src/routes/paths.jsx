@@ -19,16 +19,17 @@ import Addresses from "../screens/myAdresses";
 import MyOrderScreen from "../screens/myorder";
 import Receipt from "../screens/receipt";
 import SearchScreen from "../screens/searchPage";
+import { OrderFailed } from "../screens/orderFailed";
 
 export const paths = {
   home: "/",
   error: "*",
   menu: "/menu",
   cart: "/cart",
-  myorder: "order",
-  receipt: "receipt",
+  myorder: "/profile/order",
+  receipt: "/profile/order/receipt/",
   location: "/location",
-  orderplace: "orderplace",
+  order_status: "/order-complete",
   customer_registration: "/customer_registration",
   phone_verification_index: "/phone-verification",
   phone_verification_otp: "/phone-verification/otp",
@@ -42,6 +43,7 @@ export const paths = {
   branches: "/restaurant/",
   addresses: "/my-addresses",
   search: "search",
+  order_failed: "/order-failed",
 };
 
 export const routes = {
@@ -51,10 +53,10 @@ export const routes = {
   details: "/menu-item-details/:id",
   address: "/address",
   cart: "/cart",
-  myorder: "profile/order",
-  receipt: "profile/order/receipt",
+  myorder: "/profile/order",
+  receipt: "/profile/order/receipt/:id",
   location: "/location",
-  orderplace: "orderplace",
+  order_status: "/order-complete",
   customer_registration: "/customer_registration",
   phone_verification_index: "/phone-verification/",
   phone_verification_otp: "/phone-verification/otp",
@@ -66,6 +68,7 @@ export const routes = {
   branches: "/restaurant/:id/branches",
   addresses: "/my-addresses",
   search: "/search",
+  order_failed: "/order-failed",
 };
 
 export const publicRoutes = {
@@ -99,9 +102,9 @@ export const publicRoutes = {
     path: routes.menu,
     component: <Menu />,
   },
-  [paths.orderplace]: {
+  [paths.order_status]: {
     name: "Orderplace",
-    path: routes.orderplace,
+    path: routes.order_status,
     component: <OrderScreen />,
   },
   [paths.update_profile]: {
@@ -168,6 +171,11 @@ export const publicRoutes = {
     name: "Search",
     path: routes.search,
     component: <SearchScreen />,
+  },
+  [paths.order_failed]: {
+    name: "Order Failed",
+    path: routes.order_failed,
+    component: <OrderFailed />,
   },
 };
 

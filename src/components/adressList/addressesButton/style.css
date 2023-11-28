@@ -6,7 +6,7 @@
   border-radius: 16px;
   border: none;
   margin-top: 70px;
-
+  margin-bottom: 15px;
 }
 
 .addresses-add-button-text {
@@ -24,15 +24,23 @@
   align-items: center;
 }
 
+@media only screen and (min-width: 1366px) {
+  .addresses-add-button {
+    height: 50px;
+    margin-top: 35px;
+
+  }
+}
+
 @media screen and (max-width:500px) and (min-width:355px) {
-  .addresses-add-button{
-    margin-top: 50px;
+  .addresses-add-button {
+    margin-top: 35px;
+    margin-bottom: 0px;
   }
 }
 
 @media screen and (max-width:350px) {
-  .addresses-add-button{
+  .addresses-add-button {
     margin-top: 165px;
   }
 }
-  

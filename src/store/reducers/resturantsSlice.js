@@ -3,8 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   resturantsData: [],
+  resturantsBanner: [],
   listItemByCategory: null,
   details: [],
+  nearbyRestaurants: [],
+  branchHours: [],
+  branchId: null,
+  visibleCategoryElementID: 0,
+  selectedService: null,
+  restaurantDetail: {},
 };
 
 const resturantsSlice = createSlice({
@@ -14,8 +21,17 @@ const resturantsSlice = createSlice({
     getResturants: (state, action) => {
       state.resturantsData = action.payload;
     },
+    getBranchHours: (state, action) => {
+      state.branchHours = action.payload;
+    },
+    getRestaurantsBanner: (state, action) => {
+      state.resturantsBanner = action.payload;
+    },
     getCategoryItemList: (state, action) => {
       state.listItemByCategory = action.payload;
+    },
+    getResturantsDetails: (state, action) => {
+      state.restaurantDetail = action.payload;
     },
     setVariantSize: (state, action) => {
       if (!state.details.includes(action.payload.id)) {
@@ -47,6 +63,12 @@ const resturantsSlice = createSlice({
     setSlides: (state, action) => {
       state.details.slides = action.payload;
     },
+    setCategoryElementID: (state, action) => {
+      state.visibleCategoryElementID = action.payload;
+    },
+    setBranchID: (state, action) => {
+      state.branchId = action.payload;
+    },
     setSlidesCount: (state, action) => {
       state.details.slides = state.details.slides.map((item, index) =>
         index !== action.payload.index
@@ -64,6 +86,15 @@ const resturantsSlice = createSlice({
     changeItemQuantity: (state, action) => {
       state.details.itemQuantity = action.payload;
     },
+    getNearByRest: (state, action) => {
+      state.nearbyRestaurants = action.payload;
+    },
+    setSelectedService: (state, action) => {
+      state.selectedService = action.payload;
+    },
+    removeSelectedService: (state) => {
+      state.selectedService = null;
+    },
   },
 });
 
@@ -72,10 +103,18 @@ export const {
   getCategoryItemList,
   setVariantSize,
   setExtraToppings,
+  getRestaurantsBanner,
   setExtraToppingsCount,
   setSlides,
   setSlidesCount,
   changeItemQuantity,
+  setCategoryElementID,
+  setBranchID,
+  getNearByRest,
+  getBranchHours,
+  setSelectedService,
+  removeSelectedService,
+  getResturantsDetails,
 } = resturantsSlice.actions;
 
 export default resturantsSlice.reducer;

@@ -1,22 +1,111 @@
-import React from 'react';
-import './style.css'
-import { useNavigate } from 'react-router';
+import React from "react";
 
-const MyAddresses = ({ title }) => {
-  const navigate = useNavigate();
+import Navbar from "../../../components/header";
+
+import { paths } from "../../../routes/paths";
+
+import "./style.css";
+
+const MyAddresses = (props) => {
+  const {
+    title,
+    path,
+    fromAllAddresses,
+    edit,
+    noAddress,
+    addNew,
+    restaurant_id,
+    fromCart,
+    fromHome,
+    fromMenu,
+    fromDetail,
+    backToCart,
+    backCart,
+    notSelected,
+    editLocation,
+    addFromDropdown,
+  } = props;
+
+  const pathToCart = () => {
+    return (
+      (fromAllAddresses && path === "/cart") ||
+      (fromCart !== undefined && path === "/cart") ||
+      (editLocation !== undefined &&
+        (fromHome !== undefined ||
+          fromDetail !== undefined ||
+          fromMenu !== undefined)) ||
+      (fromAllAddresses && backToCart !== undefined && path !== "/profile") ||
+      (fromAllAddresses &&
+        backCart !== undefined &&
+        (path === "/home" || path === "menu/restaurant"))
+    );
+  };
+
+  const pathToAddresses = () => {
+    return (
+      (fromHome !== undefined ||
+        fromMenu !== undefined ||
+        fromDetail !== undefined) &&
+      backToCart === undefined &&
+      backCart === undefined &&
+      editLocation === undefined
+    );
+  };
+
+  const pathToAddressWithEdit = () => {
+    return (
+      edit !== undefined ||
+      ((fromHome !== undefined ||
+        fromMenu !== undefined ||
+        fromDetail !== undefined) &&
+        backToCart !== undefined)
+    );
+  };
 
   return (
-    <header className="header container-fluid">
-      <div className="left-icons" onClick={() => { navigate(-1) }}>
-        <img src='/assets/img/Icon - Arrow.svg' alt="Back"></img>
-      </div>
-      <div className="logo">
-        <h3>{title}</h3>
-      </div>
-      <div className="right-icons">
-        <img src='/assets/img/options icon.svg' alt="Options"></img>
-      </div>
-    </header>
+    <div style={{ padding: "20px 29px 20px 24px" }}>
+      <Navbar
+        backIcon
+        languageIcon
+        backIconURLState={{
+          state: {
+            path: !fromAllAddresses && path === "/profile" ? "/profile" : "",
+            back:
+              fromAllAddresses &&
+              path === "/cart" &&
+              fromMenu === undefined &&
+              fromDetail === undefined
+                ? paths.home
+                : null,
+            fromHome: fromHome,
+            fromMenu: fromMenu,
+            fromDetail: fromDetail,
+            backToCart: backToCart,
+          },
+        }}
+        title={title}
+        backIconURL={
+          fromAllAddresses && path === "/profile"
+            ? paths.profile
+            : !fromAllAddresses && path === "/profile"
+            ? paths.addresses
+            : pathToAddresses()
+            ? paths.addresses
+            : pathToCart()
+            ? paths.cart
+            : pathToAddressWithEdit()
+            ? paths.addresses
+            : noAddress !== undefined ||
+              (backCart !== undefined && path !== "/home")
+            ? -1
+            : addNew !== undefined || notSelected !== undefined
+            ? `${paths.menu}/restaurant/${restaurant_id}/delivery`
+            : addFromDropdown !== undefined
+            ? -1
+            : paths.home
+        }
+      />
+    </div>
   );
 };
 

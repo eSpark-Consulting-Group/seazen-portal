@@ -11,7 +11,7 @@ const getMenuItemDetails = async (menuItemId, restauarntId, branchId) => {
       API_ENDPOINTS.MENU.GET_MENU_ITEM_DETAILS +
         `${restauarntId}` +
         "/branch/" +
-        `${branchId}` +
+        `${localStorage.getItem("branchId")}` +
         "/item/" +
         `${menuItemId}` +
         "?language=en&currency_id=3"

@@ -8,6 +8,7 @@ import { paths } from "../../../routes/paths";
 const Structure = ({ name, register, imageUrl }) => {
   const navigate = useNavigate();
   return (
+    // <div style={{ height: "500px" }}>
     <div className="profile-section">
       <div className="left-section">
         <img src={imageUrl} alt="Profile" className="image-style" />
@@ -16,15 +17,22 @@ const Structure = ({ name, register, imageUrl }) => {
         <div>
           <button
             className="guest-register-button"
-            onClick={() => navigate(paths.phone_verification_index)}
+            onClick={() =>
+              navigate(paths.phone_verification_index, {
+                state: { register: true },
+              })
+            }
           >
             <span className="guest-register-text">Register</span>
           </button>
         </div>
       </div>
       <DetailsButton />
-      <Footer showCommentOption={false} />
+      <div className="profile-footer">
+        <Footer showCommentOption={false} />
+      </div>
     </div>
+    // </div>
   );
 };
 

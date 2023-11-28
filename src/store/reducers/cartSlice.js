@@ -24,13 +24,6 @@ const cartSlice = createSlice({
         0
       );
 
-      console.log(
-        "type test",
-        state.total,
-        item.totalPrice,
-        state.total + Number(item.totalPrice)
-      );
-
       var total = state.total + Number(item.totalPrice);
 
       state.total = total;
@@ -54,6 +47,12 @@ const cartSlice = createSlice({
         const pricePerItem = itemTotalPrice / state.cart[itemIndex].quantity;
         state.cart[itemIndex].totalPrice = pricePerItem * quantity;
         state.cart[itemIndex].quantity = quantity;
+      }
+
+      if (quantity < 1) {
+        state.cart = state.cart.filter((val) => {
+          return val.item_code !== itemCode;
+        });
       }
 
       state.totalQuantity = state.cart.reduce(
@@ -96,11 +95,13 @@ const cartSlice = createSlice({
       );
 
       if (itemIndex !== -1) {
-        state.cart[itemIndex] = item;
+        state.cart[itemIndex].totalPrice =
+          Number(item.price.split(" ")[1]).toFixed(3) * (item.quantity + 1);
+        state.cart[itemIndex].quantity = item.quantity + 1;
       }
 
       state.totalQuantity = state.cart.reduce(
-        (total, item) => Number(total) + Number(item.totalPrice),
+        (total, item) => Number(total) + Number(item.quantity),
         0
       );
       state.total = state.cart.reduce(

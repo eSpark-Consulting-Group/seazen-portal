@@ -1,18 +1,15 @@
 .my_orderscreen {
   padding: 0 30px;
   position: relative;
+  overflow-y: scroll;
+  max-height: 100vh;
 }
-
-/* hr{
-        border-top: 1px dashed #707070;
-        margin: 0 15px;
-    } */
 
 .my_orderscreen_nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 30px 0;
+  margin: 26.5px 24px;
 }
 
 .brand_logo {
@@ -20,8 +17,10 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
+  margin-top: -13px !important;
+  box-shadow: 0px 24px 48px #314f7c1f;
 }
 
 .category_items {
@@ -62,6 +61,12 @@
   justify-content: space-between;
   color: #3f484e;
 }
+
+.card_nav img {
+  height: 30px;
+  object-fit: contain;
+}
+
 .card_nav_tags {
   display: flex;
   align-items: center;
@@ -71,7 +76,7 @@
 
 .status_tag {
   background-color: #4e948a;
-  width: 77px;
+  min-width: 77px;
   height: 22px;
   display: flex;
   align-items: center;
@@ -80,6 +85,7 @@
   font-weight: bold;
   border-radius: 12px;
   color: #ffffff;
+  padding: 0 10px;
 }
 
 .receipt_tag {
@@ -100,7 +106,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 15px;
   height: 60px;
 }
 

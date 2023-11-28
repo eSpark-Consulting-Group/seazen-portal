@@ -13,7 +13,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 170px;
+    /* gap: 170px; */
 }
 
 .catering_text_button_combined_container{
@@ -32,10 +32,5 @@
 }
 
 .catering_button_container{
-    width: 326px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-    text-align: center;
+   margin-top: 25px;
 }

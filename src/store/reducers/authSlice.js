@@ -4,23 +4,26 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: {
-      id: 1,
-      name: "John Doe",
-      email: "johndoe@example.com",
-      mobile_country_code: "+962",
-      mobile: "1234567890",
-      address: "123, Lorem Ipsum, Lorem Ipsum, Lorem Ipsum",
-      pincode: "123456",
-      city: "Lorem Ipsum",
-      state: "Lorem Ipsum",
-      country: "Lorem Ipsum",
+      id: null,
+      first_name: "",
+      last_name: "",
+      email: "",
+      mobile_country_code: "",
+      mobile: "",
+      address: "",
+      pincode: "",
+      city: "",
+      state: "",
+      country: "",
       image: "https://www.w3schools.com/howto/img_avatar.png",
     },
     token: null,
     isAuthenticated: false,
     isLoading: false,
     error: null,
-    country: {}
+    country: {},
+    currency: "KWD",
+    countries: [],
   },
   reducers: {
     addToken: (state, action) => {
@@ -28,22 +31,32 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
     },
     addUserInfo: (state, action) => {
-      const {values, mobileCountryCode, mobile} = action.payload
-      const {first_name, last_name, email } = values
-      // console.log(values, "shah");
-      // console.log(mobileCountryCode, "shah");
-      // console.log(mobile, "shah");
-      state.name = first_name + last_name;
-      state.email = email;
-      state.mobile_country_code = mobileCountryCode;
-      state.mobile = mobile
+      const {
+        customer_id,
+        first_name,
+        last_name,
+        email,
+        mobile_country_code,
+        mobile_no,
+      } = action.payload;
+      state.user.id = customer_id;
+      state.user.first_name = first_name;
+      state.user.last_name = last_name;
+      state.user.email = email;
+      state.user.mobile_country_code = mobile_country_code;
+      state.user.mobile = mobile_no;
     },
     addCountry: (state, action) => {
-      state.country = action.payload
-    }, 
+      state.country = action.payload;
+      state.currency = action.payload.currency;
+    },
+    allCountries: (state, action) => {
+      state.countries = action.payload;
+    },
   },
 });
 
-export const { addToken, addUserInfo, addCountry } = authSlice.actions;
+export const { addToken, addUserInfo, addCountry, allCountries } =
+  authSlice.actions;
 
 export default authSlice.reducer;

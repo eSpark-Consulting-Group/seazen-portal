@@ -7,38 +7,53 @@
 }
 
 .profileHeaderlogo {
-  font-size: 1.5rem;
-  color: #0d0d0d;
-  /* margin-left: 115px; */
-  /* margin-top: -16px; */
+  /* font-size: 1.5rem;
+  color: #0d0d0d; */
   justify-content: center;
-  position: relative;
+  display: flex;
+  /* position: relative;
   top: 23px;
-  left: 171px;
-  /* width: 38px; */
-  /* height: 40px; */
+  left: 135px; */
   opacity: 1;
+  margin-top: 20px;
 }
 
-.profileHeaderaccount {
-  top: 22px;
-  left: 27px;
-  width: 28px;
-  height: 28px;
+.profileHeaderaccount,
+.home-icon {
+  top: 20px;
+  left: 24px;
+  width: 41px;
+  height: 41px;
   background: #ffffff 0% 0% no-repeat padding-box;
   border-radius: 50%;
   box-shadow: 0px 24px 48px #314f7c1f;
-  padding: 7px;
+  /* padding: 7px; */
   opacity: 1;
   position: absolute;
   border: 1px solid #c0cdd7;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 10;
+}
+
+.profileHeaderaccount img {
+  top: 8px;
+  position: relative;
+  left: 7px;
+  width: 16px;
+  height: 19px;
 }
 
 .profileHeaderaccount-icon {
   padding-top: 2px;
   padding-left: 6px;
+}
+
+.home-icon-header {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* .shopping-icon {
@@ -61,10 +76,10 @@
   */
 
 .profileHeaderoption {
-  top: 22px;
-  left: 328px;
-  width: 42px;
-  height: 42px;
+  top: 20px;
+  right: 24px;
+  width: 41px;
+  height: 41px;
   font-size: 1.3rem;
   cursor: pointer;
   margin-left: 15px;
@@ -79,7 +94,7 @@
 
 .profileHeaderoption-icon {
   top: 7px;
-  left: 16px;
+  left: 15px;
   width: 11px;
   height: 20px;
   opacity: 1;
@@ -87,26 +102,26 @@
 }
 
 .profileHeaderflag-profile {
-  position: relative;
+  /* position: relative; */
   height: 100%;
 }
 
 .profileHeadercircle-container {
-  width: 42px;
-  height: 42px;
+  width: 41px;
+  height: 41px;
   background-color: #f0f0f0;
   border-radius: 50%;
   cursor: pointer;
   position: absolute;
-  left: 263px;
-  top: -27px;
-  border: 1px solid #c0cdd7;
+  right: 79px;
+  top: 20px;
 }
 
 .profileHeadercircle-container img {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  border: 1px solid #c0cdd7;
 }
 
 .profileHeaderpopup {
@@ -117,23 +132,29 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   padding: 20px;
   border-radius: 17px;
-  z-index: 2; /* Place above the overlay */
+  z-index: 99999999999;
+  /* Place above the overlay */
   bottom: 0px;
   border-bottom-right-radius: 0px;
   border-bottom-left-radius: 0px;
+  width: 333px;
 }
+
 .profileHeaderpopupWrapper {
   position: relative;
   height: 100%;
 }
+
 .profileHeaderpopup-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
-  z-index: 1; /* Ensure it's above other content */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black overlay */
+  z-index: 100;
+  /* Ensure it's above other content */
 }
 
 .profileHeaderpopup-heading h2 {
@@ -170,7 +191,8 @@
 }
 
 .profileHeadercountry {
-  width: 48%; /* Adjust the width for two columns */
+  width: 48%;
+  /* Adjust the width for two columns */
   display: flex;
   align-items: center;
   text-align: left;
@@ -180,7 +202,8 @@
 .profileHeadercountry img {
   width: 41px;
   height: 41px;
-  margin-right: 10px; /* Add spacing between flag and text */
+  margin-right: 10px;
+  /* Add spacing between flag and text */
   border: 1px solid #c0cdd7;
   border-radius: 50%;
   cursor: pointer;
@@ -272,7 +295,8 @@
 }
 
 .profileHeadercountry-info h2 {
-  padding-top: 2px; /* Push the h2 element to the bottom */
+  padding-top: 2px;
+  /* Push the h2 element to the bottom */
 }
 
 .profileHeadersymbol {
@@ -352,43 +376,58 @@
 .profile-header * {
   box-sizing: content-box;
 }
+
 .profile-header {
   height: 100%;
 }
 
+
 @media screen and (max-width: 500px) and (min-width: 360px) {
   .profileHeaderpopup {
     position: fixed;
-    /* top: 235px; */
+    width: 375px;
+    padding: 25px;
   }
 }
 
-@media screen and (max-width: 360px) and (min-width: 330px) {
+@media screen and (max-width: 500px) {
+  .profileHeaderpopup {
+    width: 95%;
+    padding: 20px 9.39px;
+  }
+}
+
+/* @media screen and (max-width: 360px) and (min-width: 330px) {
   .profileHeaderpopup {
     position: fixed;
-    /* top: 149px; */
-    /* margin-bottom: 40px; */
+    top: 149px;
+    margin-bottom: 40px;
     height: 294px;
   }
+
   .profileHeaderpopup2 {
     left: 185px;
   }
+
   .profileHeaderoption {
     left: 305px;
   }
+
   .profileHeadercircle-container {
     left: 239px;
   }
+
   .profileHeaderlogo {
     left: 151px;
   }
-}
-
+} */
+/* 
 @media screen and (max-width: 330px) and (min-width: 300px) {
   .profileHeaderpopup {
     position: fixed;
-    /* top: 390px; */
+    top: 390px;
   }
+
   .profileHeaderpopup2 {
     left: 188px;
   }
@@ -398,9 +437,11 @@
   .profileHeaderoption {
     left: 295px;
   }
+
   .profileHeadercircle-container {
     left: 230px;
   }
+
   .profileHeaderlogo {
     left: 151px;
   }
@@ -410,13 +451,16 @@
   .profileHeaderlogo {
     left: 185px;
   }
+
   .profileHeadercircle-container {
     left: 300px;
   }
+
   .profileHeaderoption {
     left: 370px;
   }
+
   .profileHeaderpopup2 {
     left: 215px;
   }
-}
+} */

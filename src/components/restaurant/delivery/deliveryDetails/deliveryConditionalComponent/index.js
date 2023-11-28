@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import DeliveryDetails from "..";
 import ErrorInformation from "../../../../errorInformation";
 import MenuCardListContainer from "../../../menu/menu_card_list_container";
@@ -22,31 +22,51 @@ const DeliveryConditionalComponent = ({
   setDeliveryAvailable,
   resturantId,
   errorMessage,
+  restaurantBranchHours,
+  restaurantDetail,
+  setOpenModal,
+  setSelectedItemToDeliver,
+  scheduleForLater,
+  fromDetail,
+  setFromDetail,
+  setNotDeliver,
+  setRestaurantOpen,
+  onDelivery,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const country = useSelector((state) => state.auth.country);
+  const categoryList = useSelector(
+    (state) => state?.resturants?.listItemByCategory
+  );
+  const dispatch = useDispatch();
+  const branchId = useSelector((state) => state.resturants.branchId);
 
-  const {
-    data: getAllItemsByCategoryResponse,
-    isLoading: itemsByCategoryLoading,
-    error: itemsByCategoryError,
-    isError: itemsByCategoryIsError,
-    refetch
-  } = useQuery({
-    queryKey: [
-      GET_CATEGORY_LIST_ITEM,
-      resturantId,
-      searchParams.get("category"),
-    ],
-    queryFn: () =>
-      getListItemByCategory(resturantId, searchParams.get("category"), country?.id),
-    onSuccess: (data) => {},
-  });
+  const [itemsData, setItemsData] = useState();
+
+  const fetchAllItems = () => {
+    if (branchId != null) {
+      getListItemByCategory(
+        resturantId,
+        branchId,
+        searchParams.get("category"),
+        country?.id
+      )
+        .then((res) => setItemsData(res))
+        .catch((e) => console.error(e));
+    }
+  };
 
   useEffect(() => {
-    refetch()
-  },[country])
-  
+    const restaurantId = localStorage.getItem("restaurantID");
+    if (
+      !categoryList ||
+      categoryList?.length == 0 ||
+      restaurantId != categoryList[0]?.restaurant_id
+    ) {
+      fetchAllItems();
+    }
+  }, [country, branchId]);
+
   const {
     data: getItemsCategoryResponse,
     isLoading: ItemsCategoryLoading,
@@ -58,19 +78,41 @@ const DeliveryConditionalComponent = ({
 
     onSuccess: (data) => {},
   });
-  const dispatch = useDispatch();
-  const { data: itemDetail } = getAllItemsByCategoryResponse || {};
+
+  const { data: itemDetail } = itemsData || {};
   const { data: itemCategoryList } = getItemsCategoryResponse || {};
 
   useEffect(() => {
-    dispatch(getCategoryItemList(getAllItemsByCategoryResponse?.data));
-  }, [getAllItemsByCategoryResponse]);
+    if (itemsData?.data) {
+      dispatch(getCategoryItemList(itemsData?.data));
+    }
+  }, [itemsData]);
+
   return (
     <>
-      <DeliveryDetails />
+      <DeliveryDetails
+        setLocationDeliver={setLocationDeliver}
+        restaurantBranchHours={restaurantBranchHours}
+        scheduleForLater={scheduleForLater}
+        fromDetail={fromDetail}
+        setFromDetail={setFromDetail}
+        onDelivery={onDelivery}
+      />
       {locationDeliver && <ErrorInformation errorMessage={errorMessage} />}
       <MenuItems itemDetail={itemDetail} itemCategoryList={itemCategoryList} />
-      <MenuCardListContainer itemDetail={itemDetail} itemCategoryList={itemCategoryList} />
+      <MenuCardListContainer
+        itemDetail={itemDetail}
+        itemCategoryList={itemCategoryList}
+        locationDeliver={locationDeliver}
+        resturantId={resturantId}
+        restaurantBranchHours={restaurantBranchHours}
+        restaurantDetail={restaurantDetail}
+        setOpenModal={setOpenModal}
+        setSelectedItemToDeliver={setSelectedItemToDeliver}
+        setNotDeliver={setNotDeliver}
+        setRestaurantOpen={setRestaurantOpen}
+        ItemsCategoryLoading={ItemsCategoryLoading}
+      />
     </>
   );
 };

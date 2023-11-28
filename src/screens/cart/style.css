@@ -21,9 +21,10 @@
   height: 20px;
   opacity: 1;
   position: absolute;
+  display: none;
 }
 /* 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 500px) {
   .PaperProps{
     width: 100% !important;
     position: fixed !important;
@@ -37,15 +38,60 @@
   display: flex;
   align-items: center;
 }
-.promo-message-wrapper p{
+.promo-message-wrapper p {
   font-size: 12px;
   margin: 0px !important;
   color: green;
 }
-.promo-message-wrapper .promo-cancel-icon{
+.promo-message-wrapper .promo-cancel-icon {
   color: gray;
   cursor: pointer;
   margin-top: 4px;
-
 }
 
+@media (min-width: 500px) {
+  .MuiDialog-paperWidthSm {
+    position: absolute !important;
+    left: -5px;
+  }
+}
+
+.scrollableContainerWrapper {
+  max-height: calc(100vh - 230px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  width: 100%;
+}
+.scrollableContainer {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.title-cart {
+  border-bottom: none;
+  padding: 0px !important;
+  margin: 26px auto 16.9px !important;
+}
+
+.dialog-content-cart {
+  font: normal normal bold 16px/18px Titillium Web;
+  color: #959fa8;
+  padding: 0px 30px !important;
+  overflow: hidden !important;
+}
+
+.cart-dialog .btn-navigate {
+  margin: 20px 0px 33px;
+}
+
+.cart-dialog .common-st {
+  padding: 4px 17px !important;
+}
+
+.cart-dialog .add-btn,
+.cart-dialog .go-to-btn {
+  margin: 0px !important;
+}

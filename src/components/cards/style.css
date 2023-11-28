@@ -15,24 +15,41 @@
 }
 
 .restaurantCard-border-delivery {
-  border: 2px solid #93674e;
-  border-radius: 12px; /* You can adjust the border color and width */
+  border-color: rgba(147, 103, 78, 1) !important;
+  border-radius: 12px;
+  /* You can adjust the border color and width */
 }
+
 .restaurantCard-border-delivery:hover {
-  border: 2px solid #93674e;
-  border-radius: 12px; /* You can adjust the border color and width */
-  transform: scale(1.08) !important;
+  border-color: rgba(147, 103, 78, 1) !important;
+  border-radius: 12px;
+  /* You can adjust the border color and width */
+  /* transform: scale(1.08) !important; */
   transition: all 0.2s ease-in-out !important;
 }
 
+.addBorder {
+  border-color: rgba(147, 103, 78, 1) !important;
+}
+
+.catering-bg {
+  background-color: #93674e !important;
+}
+
 .restaurantCard-border-near {
-  border: 2px solid #4f948a;
-  border-radius: 12px; /* You can adjust the border color and width */
+  border-color: rgb(79, 148, 138, 1) !important;
+  border-radius: 12px;
+  /* You can adjust the border color and width */
+}
+
+.catering-border {
+  border-color: rgba(147, 103, 78, 1) !important;
 }
 
 .restaurantCard-border-near:hover {
-  border: 2px solid #4f948a;
-  border-radius: 12px; /* You can adjust the border color and width */
+  border-color: rgba(79, 148, 138, 1);
+  border-radius: 12px;
+  /* You can adjust the border color and width */
   transform: scale(1.08) !important;
   transition: all 0.2s ease-in-out !important;
 }
@@ -46,11 +63,14 @@
   /* transition: transform 0.3s, box-shadow 0.3s; */
   cursor: pointer;
   border-radius: 12px;
+  border: 3px solid rgba(147, 103, 78, 0);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 95%;
 }
 
 .restaurantCard-img {
   width: 99%;
-  height: 74px;
+  /* height: 74px; */
   object-fit: cover;
   margin-bottom: -6.5px;
   border: 1px solid white;
@@ -58,14 +78,14 @@
 }
 
 .restaurantCards:hover {
-  transform: scale(1.05);
+  transform: scale(1.01);
   transition: all 0.2s ease-in-out;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
 }
 
 .svg-container {
-  position: relative;
+  /* position: relative; */
 }
 
 .icon-row {
@@ -82,6 +102,7 @@
   border-bottom-left-radius: 2px;
   display: inline-block;
   margin-left: -4px;
+  margin-bottom: 7px;
 }
 
 .icon-row-selected {
@@ -100,6 +121,7 @@
 .button-icons-styles-both {
   background-color: #5f934e !important;
 }
+
 .button-icons-styles-near {
   background-color: #4f948a !important;
   padding: 1px 12px 1px 2px;
@@ -107,6 +129,7 @@
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
 }
+
 .button-icons-styles-none {
   padding: 1px 12px 1px 2px;
   margin-left: -2px;
@@ -116,12 +139,34 @@
 
 .inner-svg-container {
   position: absolute;
-  top: -75px;
+  top: 2px;
   right: -6px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media screen and (max-width: 500px) and (min-width: 410px) {
+  .inner-svg-container {
+    /* top: -45px !important; */
+  }
+  .icon-row img {
+    width: 16px !important;
+    height: 16px !important;
+  }
 }
 
 .collapsed {
-  display: none;
+  opacity: 0;
+}
+
+.expanded {
+  opacity: 1;
+  /* width: auto !important; */
+}
+.expanded-width {
+  width: auto !important;
 }
 
 /* @media screen and (max-width: 500px) and (min-width: 400px) {
@@ -142,6 +187,6 @@
   }
 } */
 
-.another-class{
-  border: none !important;
+.another-class {
+  border: 3px solid rgba(147, 103, 78, 0) !important;
 }

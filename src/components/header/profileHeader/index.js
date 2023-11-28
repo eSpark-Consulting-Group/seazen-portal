@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./style.css";
+// import "./style.css";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../../routes/paths";
 import countryList from "../../../api/common/getAllCountries";
@@ -7,15 +7,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetCart } from "../../../store/reducers/cartSlice";
 import clearCart from "../../../api/cart/clearCart";
 import { addCountry } from "../../../store/reducers/authSlice";
+import {
+  getCategoryItemList,
+  getRestaurantsBanner,
+} from "../../../store/reducers/resturantsSlice";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const ProfileHeader = (props) => {
-  const { showFlagOption } = props;
+  const { showFlagOption, customIcon } = props;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isCountryPopupOpen, setIsCountryPopupOpen] = useState(false);
-  const [currentFlag, setCurrentFlag] = useState("/assets/img/flag1.svg"); // Default flag
-  const [currentCountryName, setCountryName] = useState("Kuwait"); // Default flag
+  const [currentFlag, setCurrentFlag] = useState(""); // Default flag
+  const [currentCountryName, setCountryName] = useState(""); // Default flag
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
@@ -36,7 +41,7 @@ const ProfileHeader = (props) => {
   const toggleCountryPopup = (country) => {
     setSelectedCountry(country);
     setIsPopupOpen(false); // Close the first popup
-    if(country.name_en !== currentCountryName){
+    if (country.name_en !== currentCountryName) {
       setIsCountryPopupOpen(!isCountryPopupOpen);
     }
   };
@@ -62,7 +67,9 @@ const ProfileHeader = (props) => {
 
   const clearCartItems = () => {
     dispatch(resetCart());
-    clearCart(token)
+    dispatch(getRestaurantsBanner([]));
+    dispatch(getCategoryItemList([]));
+    clearCart()
       .then((res) => {
         console.log(res);
       })
@@ -74,20 +81,36 @@ const ProfileHeader = (props) => {
   return (
     <nav className="profile-header">
       <div
-        className="profileHeaderaccount"
+        className={customIcon ? "home-icon" : "profileHeaderaccount"}
         onClick={() => navigate(paths.home)}
       >
-        <div className="profileHeaderaccount-icon">
-          <img src="/assets/img/Group 330.svg" alt="Account Icon" />
+        <div
+          className={
+            customIcon ? "home-icon-header" : "profileHeaderaccount-icon"
+          }
+        >
+          {customIcon ? (
+            <img
+              style={{ width: "21.47px" }}
+              src="/assets/img/home.png"
+              alt="Home Icon"
+            />
+          ) : (
+            <img src="/assets/img/Group 330.svg" alt="Account Icon" />
+          )}{" "}
         </div>
       </div>
-      <div className="profileHeaderlogo">
-        <img src="/assets/img/Group 143.svg" alt="Logo" />
-      </div>
+      {/* <div className="profileHeaderlogo">
+        <img
+          style={{ width: "90px" }}
+          src="/assets/img/order seazen logo.svg"
+          alt="Logo"
+        />
+      </div> */}
       {showFlagOption && (
         <div className="profileHeaderflag-profile">
           <div className="profileHeadercircle-container" onClick={togglePopup}>
-            <img src={currentFlag} alt="Flag" />
+            <LazyLoadImage src={currentFlag} alt="Flag" effect="blur" />
           </div>
           {isPopupOpen && (
             <div

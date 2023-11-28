@@ -14,6 +14,16 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
   const handleBranchHoursClick = () => {
     navigate(paths.branches + restaurantDetail?.id + "/branches");
   };
+
+  const getLogoSrc = () => {
+    if (restaurantDetail?.name_en === "Grove") {
+      return "/assets/img/Grove.svg";
+    } else if (restaurantDetail?.name_en === "Masgouf") {
+      // Add the path for the Masgouf logo
+      return "/assets/img/Maskof.svg";
+    }
+  };
+
   return (
     <div className="details_outer_container px-3 px-sm-4">
       <div className="details_inner_div w-100">
@@ -21,27 +31,44 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
           {restaurantDetail?.name_en === "Trapani" && (
             <img src="/assets/img/Trapani_logo.svg" alt="restaurant_logo" />
           )}
-          {restaurantDetail?.name_en === "Masgouf" && (
+          {/* {restaurantDetail?.name_en === "Masgouf" && (
             <img src={restaurantDetail?.logo} alt="restaurant_logo" />
-          )}
+          )} */}
+          {getLogoSrc() && <img src={getLogoSrc()} alt="restaurant_logo" />}
           {/* {restaurantDetail?.name_en === "Grove" && (
             <img src={restaurantDetail?.logo} alt="restaurant_logo" />
           )} */}
-          <StyledItemPrice
-            className="information_container"
-            onClick={() => {
-              handleBranchHoursClick();
-            }}
-            style={{ cursor: "pointer", fontSize: "12px", marginRight: "5px" }}
-          >
-            {"Branches & Hours "}
+          <StyledItemPrice className="information_container">
             <span
-              style={{ marginLeft: "16px", position: "relative", top: "2px" }}
+              style={{
+                cursor: "pointer",
+                marginRight: "5px",
+                marginTop: "15px",
+                font: "normal normal 12px/20px Titillium Web",
+              }}
+              onClick={() => {
+                handleBranchHoursClick();
+              }}
+            >
+              Branches & Hours
+            </span>
+
+            <span
+              style={{ marginLeft: "5px", position: "relative", top: "2px" }}
             >
               <img
                 src="/assets/img/information_icon.svg"
                 alt="information_icon"
               />
+            </span>
+            <span
+              style={{
+                display: "block",
+                textAlign: "right",
+                font: "normal normal 10px/20px Titillium Web",
+              }}
+            >
+              Min. order: 7 KWD
             </span>
           </StyledItemPrice>
         </div>

@@ -2,19 +2,32 @@ import * as React from "react";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import DineInIcon from "../../svgIcons/dineInIcon";
-import CateringIcon from "../../svgIcons/cateringIcon";
-import DeliveryIcon from "../../svgIcons/deliveryIcon";
-import PickupIcon from "../../svgIcons/pickupIcon";
+import { DineInIconLight, DineInIconDark } from "../../svgIcons/dineInIcon";
+import {
+  CateringIconLight,
+  CateringIconDark,
+} from "../../svgIcons/cateringIcon";
+import {
+  DeliveryIconLight,
+  DeliveryIconDark,
+} from "../../svgIcons/deliveryIcon";
+import { PickupIconLight, PickupIconDark } from "../../svgIcons/pickupIcon";
 import { useParams } from "react-router-dom/dist";
 import { lighten } from "@mui/material/styles";
 import { styled } from "@mui/material/styles"; // Import styled from MUI
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export default function IconPositionTabs({
+  tabPosition,
   setTabPosition,
   locationDeliver,
   deliveryAvailable,
   resturantId,
+  isPickup,
+  isDelivery,
+  isCatering,
+  isDineIn,
 }) {
   const [value, setValue] = React.useState(0);
   const navigate = useNavigate();
@@ -35,36 +48,61 @@ export default function IconPositionTabs({
     );
   };
 
+  useEffect(() => {
+    if (tabPosition !== null) {
+      setTabPositionAndNavigate(tabPosition);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isDineIn) {
+      return setValue(0);
+    }
+    if (isCatering) {
+      return setValue(1);
+    }
+    if (isDelivery) {
+      return setValue(2);
+    }
+    if (isPickup) {
+      return setValue(3);
+    }
+  }, [isPickup, isDelivery, isCatering, isDineIn]);
+
   React.useEffect(() => {
-    if (option === "dinein") {
+    if (option === "dinein" && isDineIn) {
       setValue(0);
       setTabPosition("dinein");
-    } else if (option === "catering") {
+    } else if (option === "catering" && isCatering) {
       setValue(1);
       setTabPosition("catering");
-    } else if (option === "delivery") {
+    } else if (option === "delivery" && isDelivery) {
       setValue(2);
       setTabPosition("delivery");
-    } else if (option === "pickup") {
+    } else if (option === "pickup" && isPickup) {
       setValue(3);
       setTabPosition("pickup");
     }
-  }, [option]);
-
+  }, [option, isPickup, isDelivery, isCatering, isDineIn]);
+  const restaurantTheme = useSelector((state) => state.theme.themeColor);
   return (
     <Tabs
       centered
       value={value}
       onChange={handleChange}
       aria-label="options tabs"
-      TabIndicatorProps={{ sx: { backgroundColor: "#323F4B",  overflow:"visible", } }}
+      TabIndicatorProps={{
+        sx: { backgroundColor: "#323F4B", overflow: "visible" },
+      }}
       sx={{
-        backgroundColor: (theme) =>
-          lighten(theme.palette.themeColor.light, 0.95),
+        backgroundColor: restaurantTheme.main + 12,
         width: "100%",
-        padding: "0 20px",
+        padding: "0px 33px 0px 28px",
         color: "#323F4B",
         minHeight: "40px",
+        "& .MuiTabs-flexContainer": {
+          justifyContent: "space-between ",
+        },
         "& button": {
           width: "auto",
           padding: "0",
@@ -73,17 +111,18 @@ export default function IconPositionTabs({
           fontWeight: "700",
         },
         "& button.Mui-selected": { color: "#323F4B" },
-        "& .MuiTabs-scroller":{overflow:"visible !important"}
+        "& .MuiTabs-scroller": { overflow: "visible !important" },
       }}
     >
       <Tab
+        disabled={!isDineIn}
         onClick={() => {
           setTabPositionAndNavigate("dinein");
         }}
         iconPosition="start"
         label={
-          <div style={{ display: "flex", alignItems: "center"  }}>
-            <DineInIcon />
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {!isDineIn ? <DineInIconLight /> : <DineInIconDark />}
             <span style={{ marginLeft: "8px", fontWeight: 600 }}>Dine In</span>
           </div>
         }
@@ -98,13 +137,14 @@ export default function IconPositionTabs({
         }}
       />
       <Tab
+        disabled={!isCatering}
         onClick={() => {
           setTabPositionAndNavigate("catering");
         }}
         iconPosition="start"
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
-            <CateringIcon />
+            {!isCatering ? <CateringIconLight /> : <CateringIconDark />}
             <span style={{ marginLeft: "8px", fontWeight: 600 }}>Catering</span>
           </div>
         }
@@ -119,13 +159,14 @@ export default function IconPositionTabs({
         }}
       />
       <Tab
+        disabled={!isDelivery}
         onClick={() => {
           setTabPositionAndNavigate("delivery");
         }}
         iconPosition="start"
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
-            <DeliveryIcon />
+            {!isDelivery ? <DeliveryIconLight /> : <DeliveryIconDark />}
             <span style={{ marginLeft: "8px", fontWeight: 600 }}>Delivery</span>
           </div>
         }
@@ -140,13 +181,14 @@ export default function IconPositionTabs({
         }}
       />
       <Tab
+        disabled={!isPickup}
         onClick={() => {
           setTabPositionAndNavigate("pickup");
         }}
         iconPosition="start"
         label={
           <div style={{ display: "flex", alignItems: "center" }}>
-            <PickupIcon />
+            {!isPickup ? <PickupIconLight /> : <PickupIconDark />}
             <span style={{ marginLeft: "8px", fontWeight: 600 }}>Pickup</span>
           </div>
         }

@@ -1,24 +1,28 @@
 import React from "react";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import "./style.css";
+import { useDispatch } from "react-redux";
+// import { useNavigate } from "react-router";
+
+import { Box, Card } from "@mui/material";
+// import { useMediaQuery } from "@mui/material";
+
 import deliveryIcon from "./delivery-icon.svg";
 import pickupIcon from "./pickup-icon.svg";
 import cateringIcon from "./catering-icon.svg";
 import dineInIcon from "./dinein-icon.svg";
-import { useNavigate } from "react-router";
-import { paths } from "../../routes/paths";
-// import { useMediaQuery } from "@mui/material";
-import { useSelector } from "react-redux";
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
-  >
-    •
-  </Box>
-);
+// import { paths } from "../../routes/paths";
+
+import "./style.css";
+import { setSelectedService } from "../../store/reducers/resturantsSlice";
+
+// const bull = (
+//   <Box
+//     component="span"
+//     sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
+//   >
+//     •
+//   </Box>
+// );
 
 const images = [
   {
@@ -112,20 +116,28 @@ const icons = {
 //   // },
 // };
 
-const BasicCard = ({
-  clickedButtonIndex,
-  orderTypeFilter,
-  restaurantsData,
-}) => {
-  const navigate = useNavigate();
-  const captions = [
-    icons,
-    [icons[0], icons[1], icons[3]],
-    icons,
-    icons,
-    [icons[0], icons[1], icons[3]],
-    [icons[1], icons[3]],
-  ];
+const BasicCard = (props) => {
+  const {
+    clickedButtonIndex,
+    orderTypeFilter,
+    restaurantsData,
+    goToRestaurantMenuPage,
+    selectedText,
+    typesState,
+  } = props;
+
+  // const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // const isToken = localStorage.getItem("token");
+
+  // const captions = [
+  //   icons,
+  //   [icons[0], icons[1], icons[3]],
+  //   icons,
+  //   icons,
+  //   [icons[0], icons[1], icons[3]],
+  //   [icons[1], icons[3]],
+  // ];
 
   // const isMediumScreen = useMediaQuery(
   //   "(max-width: 400px) and (min-width: 385px)"
@@ -155,13 +167,18 @@ const BasicCard = ({
     if (orderTypeFilter) {
       const { delivery, near, selectedNow } = orderTypeFilter;
       const { doesDelivery, isNear } = service;
-    if (delivery && !near) {
-    return doesDelivery ? "restaurantCard-border-delivery " + (clickedButtonIndex !== null ? "expanded" : "another-class") : "";
-}
+      if (delivery && !near) {
+        return doesDelivery
+          ? "restaurantCard-border-delivery " +
+              (clickedButtonIndex !== null ? "expanded" : "another-class")
+          : "";
+      }
 
       if (!delivery && near) {
-    return isNear ? "restaurantCard-border-near " + (clickedButtonIndex !== null ? "expanded" : "another-class") : "";
-
+        return isNear
+          ? "restaurantCard-border-near " +
+              (clickedButtonIndex !== null ? "expanded" : "another-class")
+          : "";
       }
 
       if (delivery && near) {
@@ -177,8 +194,6 @@ const BasicCard = ({
           return "restaurantCard-border-delivery";
         }
       }
-
-     
     }
   };
 
@@ -220,120 +235,192 @@ const BasicCard = ({
   const getServicesIcon = (serviceName) => {
     return (
       <div className="icon-row">
-      <img
-        className={getClassNameAccordingToFilter(
-          icons[serviceName].id,
-          images[1].service
-        )}
-        src={ icons[serviceName]?.image}
-        // alt={`Icon ${i + 1}`}
-        style={{ width: iconWidth, height: iconHeight }}
-      />
-    </div>
-    )
-  }
+        <img
+          className={getClassNameAccordingToFilter(
+            icons[serviceName].id,
+            images[1].service
+          )}
+          src={icons[serviceName]?.image}
+          // alt={`Icon ${i + 1}`}
+          style={{ width: iconWidth, height: iconHeight }}
+        />
+      </div>
+    );
+  };
 
   // Define the width and height for the SVG icons
-  const iconWidth = "7px";
-  const iconHeight = "9px";
+  const iconWidth = "9px";
+  const iconHeight = "11px";
 
-  const goToRestaurantMenuPage = (restaurant) => {
-    localStorage.setItem("restaurantID", restaurant)
-    navigate(paths.menu + `/restaurant/${restaurant}`);
+  const serviceSelect = (serviceStatus, text) => {
+    let noRoute;
+
+    if (text === "Dine In" && serviceStatus?.dinein_status) {
+      noRoute = "dinein";
+    } else if (serviceStatus?.catering_status && text === "Catering") {
+      noRoute = "catering";
+    } else if (serviceStatus?.delivery_status && text === "Delivery") {
+      noRoute = "delivery";
+    } else if (serviceStatus?.pickup_status && text === "Pickup") {
+      noRoute = "pickup";
+    } else {
+      noRoute = null;
+    }
+
+    return noRoute;
   };
+
   return (
-    <div className="restaurantCard-container container-fluid">
-      {restaurantsData.map((restaurant, index) => {
-        if (restaurantsData && (index === 0 || index === 1)) {
+    <div>
+      <div
+        className="restaurantCard-container container-fluid"
+        id="parent-of-all"
+      >
+        {restaurantsData.map((restaurant, index) => {
           return (
             <div
               key={index}
-              className={`restaurantCards restaurantCard-large ${getCardClassName(images[index].service)}`}
+              className={`restaurantCards restaurantCard-large ${
+                selectedText !== "Delivery" &&
+                (restaurant?.dinein_status || restaurant?.pickup_status)
+                  ? getCardClassName(images[index].service)
+                  : !restaurant?.delivery_status || !restaurant.catering_status
+                  ? "delivery-false"
+                  : ""
+              } ${
+                selectedText === "Catering" &&
+                selectedText !== "Dine In" &&
+                selectedText !== "Delivery" &&
+                selectedText !== "Pickup" &&
+                typesState.catering
+                  ? "catering-border"
+                  : ""
+              }`}
+              id="when-deliver"
             >
               <Card
                 sx={{
                   width: "100%",
                   borderRadius: "10px",
-                  boxShadow:"none",
-                  border:"none",
+                  boxShadow: "none",
+                  border: "none",
+                  maxHeight: "98%",
+                  position: "relative",
                 }}
                 className="restaurantCards"
                 onClick={() => {
-                  goToRestaurantMenuPage(restaurant?.id);
+                  if (selectedText !== "") {
+                    dispatch(
+                      setSelectedService(
+                        serviceSelect(restaurant, selectedText)
+                      )
+                    );
+                  }
+
+                  goToRestaurantMenuPage(restaurant.id);
                 }}
               >
                 <img
                   className="restaurantCard-img"
                   src={restaurant?.image}
-                  alt={`Card ${index + 1}`}
+                  alt={`${restaurant?.name_en}`}
                 />
                 <div
                   className={`svg-container ${
-                    clickedButtonIndex !== null ? "expanded" : "collapsed"
+                    clickedButtonIndex !== null
+                      ? "expanded expanded-width"
+                      : "collapsed"
                   }`}
                 >
-                  <div className="inner-svg-container">
-                    {restaurant.catering_status && getServicesIcon("catering_status")}
-                    {restaurant.delivery_status && getServicesIcon("delivery_status")}
-                    {restaurant.dinein_status && getServicesIcon("dinein_status")}
-                    {restaurant.pickup_status && getServicesIcon("pickup_status")}
+                  <div className="inner-svg-container" id="inner-svg-container">
+                    {restaurant.catering_status && (
+                      <div className="icon-row">
+                        <img
+                          className={
+                            selectedText === "Catering" &&
+                            selectedText !== "Dine In" &&
+                            selectedText !== "Delivery" &&
+                            selectedText !== "Pickup"
+                              ? "catering-bg"
+                              : ""
+                          }
+                          src={icons["catering_status"]?.image}
+                          // alt={`Icon ${i + 1}`}
+                          style={{ width: "12px", height: "11px" }}
+                        />
+                      </div>
+                    )}
+                    {restaurant.delivery_status && (
+                      <div className="icon-row" id="icon-row">
+                        <img
+                          className="icons"
+                          src={icons["delivery_status"]?.image}
+                          style={{ width: iconWidth, height: iconHeight }}
+                          id="deliver-icon"
+                        />
+                      </div>
+                    )}
+                    {restaurant.dinein_status &&
+                      getServicesIcon("dinein_status")}
+                    {restaurant.pickup_status &&
+                      getServicesIcon("pickup_status")}
                   </div>
                 </div>
               </Card>
             </div>
           );
-        }
-        // } else {
-        //   return (
-        //     <div
-        //       key={index}
-        //       className={`restaurantCards restaurantCard-${
-        //         isSmallScreen ? "small" : "large"
-        //       } ${getCardClassName(images[index].service)}`}
-        //     >
-        //       <Card
-        //         sx={{
-        //           width: "100%",
-        //           borderRadius: "10px",
-        //         }}
-        //         className="restaurantCards"
-        //         // onClick={() => {
-        //         //   goToRestaurantMenuPage(restaurant.split(" ")[1]);
-        //         // }}
-        //       >
-        //         <img
-        //           className="restaurantCard-img"
-        //           src={images[index].image}
-        //           alt={`Card ${index + 1}`}
-        //         />
-        //         <div
-        //           className={`svg-container ${
-        //             clickedButtonIndex !== null ? "expanded" : "collapsed"
-        //           }`}
-        //         >
-        //           <div className="inner-svg-container">
-        //             {captions[index].map((icon, i) => {
-        //               return (
-        //                 <div key={i} className="icon-row">
-        //                   <img
-        //                     className={getClassNameAccordingToFilter(
-        //                       icon.id,
-        //                       images[index].service
-        //                     )}
-        //                     src={icon.image}
-        //                     alt={`Icon ${i + 1}`}
-        //                     style={{ width: iconWidth, height: iconHeight }}
-        //                   />
-        //                 </div>
-        //               );
-        //             })}
-        //           </div>
-        //         </div>
-        //       </Card>
-        //     </div>
-        //   );
-        // }
-      })}
+          // } else {
+          //   return (
+          //     <div
+          //       key={index}
+          //       className={`restaurantCards restaurantCard-${
+          //         isSmallScreen ? "small" : "large"
+          //       } ${getCardClassName(images[index].service)}`}
+          //     >
+          //       <Card
+          //         sx={{
+          //           width: "100%",
+          //           borderRadius: "10px",
+          //         }}
+          //         className="restaurantCards"
+          //         // onClick={() => {
+          //         //   goToRestaurantMenuPage(restaurant.split(" ")[1]);
+          //         // }}
+          //       >
+          //         <img
+          //           className="restaurantCard-img"
+          //           src={images[index].image}
+          //           alt={`Card ${index + 1}`}
+          //         />
+          //         <div
+          //           className={`svg-container ${
+          //             clickedButtonIndex !== null ? "expanded" : "collapsed"
+          //           }`}
+          //         >
+          //           <div className="inner-svg-container">
+          //             {captions[index].map((icon, i) => {
+          //               return (
+          //                 <div key={i} className="icon-row">
+          //                   <img
+          //                     className={getClassNameAccordingToFilter(
+          //                       icon.id,
+          //                       images[index].service
+          //                     )}
+          //                     src={icon.image}
+          //                     alt={`Icon ${i + 1}`}
+          //                     style={{ width: iconWidth, height: iconHeight }}
+          //                   />
+          //                 </div>
+          //               );
+          //             })}
+          //           </div>
+          //         </div>
+          //       </Card>
+          //     </div>
+          //   );
+          // }
+        })}
+      </div>
     </div>
   );
 };

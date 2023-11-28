@@ -6,6 +6,7 @@ const API_ENDPOINTS = {
   },
   RESTAURANT: {
     GET_RESTAURANT_DETAIL: "/restaurant/",
+    GET_NEARBY_RESTAURANT: "/find-nearest-restaurants",
     GET_BRANCHES_AND_HOURS(restaurantId, language = "en") {
       return `/restaurant/${restaurantId}/branches?language=${language}`;
     },
@@ -34,8 +35,18 @@ const API_ENDPOINTS = {
   MENU: {
     GET_MENU_ITEM_DETAILS: "/restaurant/",
   },
+  ADDRESS: {
+    ADDRESS: "/address",
+  },
   COMMON: {
     GET_ALL_COUNTRIES: "/common/countries",
+    GET_DELIVERY_CHARGES: "/delivery-charges",
+  },
+  ORDER: {
+    GET_ORDERS: "/order",
+    GET_ORDER_DETAILS: "/order/",
+    ORDER_RATING: "/order/rating",
+    GET_ORDER_STATUS: "/order/status",
   },
 };
 

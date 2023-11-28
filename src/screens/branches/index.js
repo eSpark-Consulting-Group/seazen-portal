@@ -59,9 +59,16 @@ export const Branches = () => {
     <div className="branches-screen-container">
       <BranchHeader />
       <BranchContent />
-      {branchesAndHours && <RestaurantInfo restaurants={branchesAndHours} />}
+      {branchesAndHours && (
+        <RestaurantInfo
+          restaurants={branchesAndHours}
+          branchesData={branchesAndHoursResponse.data}
+        />
+      )}
       <div className="branches-footer">
-        <Footer showFooterSection />
+        <div className="profile-footer">
+          <Footer showFooterSection />
+        </div>
       </div>
     </div>
   );

@@ -1,70 +1,231 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import SvgIcon from "@mui/material/SvgIcon";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { toast } from "react-toastify";
+import { useTheme } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Button,
+  SvgIcon,
+  TextField,
+  Typography,
+  IconButton,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  CloseIcon,
+  CircularProgress,
+} from "@mui/material";
+
+import dayjs from "dayjs";
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker, MobileTimePicker } from "@mui/x-date-pickers";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CartItem from "../../components/shared/cart/CartItem";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
+import CancelIcon from "@mui/icons-material/Cancel";
+
+import { isEmpty } from "lodash";
+
 import { ReactComponent as DollarIcon } from "../../assets/icons/dollar.svg";
 import { ReactComponent as KNETIcon } from "../../assets/icons/knet.svg";
-import { paths } from "../../routes/paths";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import CloseIcon from "@mui/icons-material/Close";
-import { useTheme } from "@mui/material";
-import { setThemeColor } from "../../store/reducers/themeSlice";
-import { useDispatch, useSelector } from "react-redux";
-import "./style.css";
-import { useQuery } from "@tanstack/react-query";
+
+import CartItem from "../../components/shared/cart/CartItem";
+import { DialogComponent } from "../../components/dialog";
+
 import cartList from "../../api/cart/cartList";
-import CircularProgress from "@mui/material/CircularProgress";
 import checkout from "../../api/cart/checkout";
 import getRestaurantDetails from "../../api/restaurant/getRestaurantDetails";
-import { addToCart } from "../../store/reducers/cartSlice";
 import applyPromoCode from "../../api/cart/promocode";
-import CancelIcon from '@mui/icons-material/Cancel';
+import getBranchesAndHours, {
+  GET_BRANCHES_AND_HOURS_QUERY_KEY,
+} from "../../api/restaurant/branches/getBranchesAndHours";
+import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
+import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
+import deliveryPriceApi from "../../api/common/getDeliveryCharges";
+
+import { addToCart } from "../../store/reducers/cartSlice";
+import { setThemeColor } from "../../store/reducers/themeSlice";
+import {
+  getBranchHours,
+  getNearByRest,
+} from "../../store/reducers/resturantsSlice";
+
+import {
+  getDistanceFromLatLonInKm,
+  truncateString,
+} from "../../utils/getAddress";
+
+import { paths } from "../../routes/paths";
+
+import "./style.css";
+
+const toastList = new Set();
+const MAX_TOAST = 1;
 
 function CartPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-  const [tipValue, setTipValue] = React.useState(0.25);
+
+  const branchHours = useSelector((state) => state.resturants.branchHours);
+  const nearbyRestaurants = useSelector(
+    (state) => state.resturants.nearbyRestaurants
+  );
+  const cart = useSelector((state) => state.cart.cart);
+  const totalPrice = useSelector((state) => state.cart.total);
+  const country = useSelector((state) => state.auth.country);
+
+  const pickDate = localStorage.getItem("pickDate");
+  const isAsap = localStorage.getItem("isAsap");
+  const pickTime = localStorage.getItem("pickTime");
+  const selectedAdd = JSON.parse(localStorage.getItem("selected"));
+  const currentLocation = JSON.parse(localStorage.getItem("location"));
+
+  const [tipValue, setTipValue] = React.useState(0);
+  const [tipID, setTipID] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [cartItems, setCartItems] = React.useState();
   const [specialIns, setSpecialIns] = React.useState("");
   const [restaurantLogo, setRestaurantLogo] = React.useState("");
+  const [restaurantName, setRestaurantName] = React.useState("");
+  const [deliveryPrice, setDeliveryPrice] = React.useState("0");
   const [promoCode, setPromoCode] = React.useState("");
   const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
-  const DISCOUNT_AMOUNT = Number(1).toFixed(3);
-  const DELIVERY_CHARGE = Number(1).toFixed(3);
+  const [discount, setDiscount] = React.useState(0);
+  const DISCOUNT_AMOUNT = Number(0).toFixed(3);
+  const DELIVERY_CHARGE = Number(0).toFixed(3);
   const [isDialogOpen, setDialogOpen] = useState(false);
+
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [notDeliver, setNotDeliver] = useState(false);
+  const [restaurantOpen, setRestaurantOpen] = useState(false);
+  const [updateText, setUpdateText] = useState("");
+  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
+  const [userTrusted, setUserTrusted] = useState(false);
+  const [selectedSchedule, setSelectedSchedule] = useState(
+    "14 August 2023, ASAP"
+  );
+
+  const [pickDay, setPickDay] = useState("");
+  const [minTime, setMinTime] = useState(dayjs());
+  const [maxTime, setMaxTime] = useState(dayjs());
+
+  const token = localStorage.getItem("token");
+  const restaurantId = localStorage.getItem("restaurantID");
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
 
-  const token = localStorage.getItem("token");
-  const cart = useSelector((state) => state.cart.cart);
-  const totalPrice = useSelector((state) => state.cart.total);
-  const dispatch = useDispatch();
-  const restaurantId = localStorage.getItem("restaurantID")
-  
+  useEffect(() => {
+    // Check if the user has already trusted the site
+    const redirectPreference = localStorage.getItem("redirectPermission");
+    if (redirectPreference === "allowed") {
+      setUserTrusted(true);
+    }
+
+    // Add a beforeunload event listener to prevent the prompt
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    fetchAllDeliveryPrice();
+    return () => {
+      // Clean up the event listener when the component unmounts
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  const handleBeforeUnload = (event) => {
+    if (!userTrusted) {
+      // Show a confirmation prompt to prevent accidental navigation
+      event.returnValue = "Are you sure you want to leave this page?";
+    }
+  };
+
+  useLayoutEffect(() => {
+    if (location?.state?.back === "back-to-cart") {
+      setUpdateText("new");
+    } else {
+      setUpdateText("");
+    }
+  }, [location?.state?.back]);
+
+  useLayoutEffect(() => {
+    if (location?.state?.back === "back-to-cart") {
+      setTimeout(() => {
+        navigate(location.pathname, { replace: true });
+      }, 5000);
+    }
+  }, [location?.state?.back]);
+
+  useLayoutEffect(() => {
+    if (cartItems !== undefined && cartItems?.length > 0) {
+      if (branchHours?.length === 0) {
+        getBranchHoursApiCall();
+      } else {
+        const forCurrent = branchHours?.filter(
+          (rest) => rest.restaurant_id === cart[0]?.restaurant_id
+        );
+        checkBranchHours(forCurrent);
+      }
+    }
+  }, [cartItems?.length, branchHours]);
+
+  const getBranchHoursApiCall = () => {
+    getRestaurantBranchHours(cart[0]?.restaurant_id).then((res) => {
+      checkBranchHours(res.data);
+      dispatch(getBranchHours(res.data));
+    });
+  };
+
+  const checkBranchHours = (array) => {
+    if (array?.length) {
+      for (let i = 0; i < array?.length; i++) {
+        const selectedAddress = selectedAdd;
+
+        if (selectedAddress !== null) {
+          const resLat = +array[i]?.latitude;
+          const resLng = +array[i]?.longitude;
+
+          const selectedLat = selectedAddress?.lat;
+          const selectedLng = selectedAddress?.lng;
+
+          const distance = getDistanceFromLatLonInKm(
+            resLat,
+            resLng,
+            selectedLat,
+            selectedLng
+          );
+
+          if (distance > 50) {
+            setNotDeliver(true);
+          } else {
+            setNotDeliver(false);
+            break;
+          }
+        }
+      }
+    }
+  };
+
   // Function to handle opening the dialog
   const handleDialogOpen = () => {
     applyPromoCode(
       {
-        restaurant_id: restaurantId,
-        promo_code: promoCode
+        restaurant_id: cart[0]?.restaurant_id,
+        promo_code: promoCode,
       },
       token
     )
@@ -76,43 +237,222 @@ function CartPage() {
         setPromoDiscount(res.data);
       })
       .catch((err) => {
-        console.log(err);
         setDialogOpen(true);
       });
   };
 
-  const checkoutData = {
-    payment_method_id: "1",
-    order_total_price: totalPrice + tipValue,
-    currency_id: "3",
-    country_id: "3",
-    restaurant_id: "2",
-    branch_id: "1",
-    driver_id: "1",
-    address_id: "1",
-    service_type: "pickup",
-    tip_id: "1",
-    pick_from_store: "",
-    pickup_from_car: "",
-    delivery_charges: "0",
-    promo_code: "Test1",
-    comments: specialIns,
-  };
+  const { data: branchesAndHoursResponse, isSuccess } = useQuery({
+    queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, cart[0]?.restaurant_id],
+    queryFn: () => {
+      return getBranchesAndHours(cart[0]?.restaurant_id);
+    },
+  });
+
+  const branchId = localStorage.getItem("branchId");
+
+  const timeByDate = branchesAndHoursResponse?.data
+    ?.find((val) => (val.id = branchId))
+    ?.branch_hours?.find((val) => {
+      return val.week_day == pickDay;
+    });
 
   useEffect(() => {
     setCartItems(cart);
   }, [cart]);
 
-  const checkoutHandler = () => {
-    checkout(checkoutData, token)
-      .then((res) => {
-        const checkoutRedirectUrl = res.data.payment_methods[0].redirect_url;
-        window.open(checkoutRedirectUrl, "_blank"); // '_blank' opens the URL in a new tab
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const getSingleDigitHour = (fullTime) => {
+    let Hour;
+    Hour =
+      fullTime?.split(":")[0][0] == "0"
+        ? fullTime?.split(":")[0][1]
+        : fullTime?.split(":")[0];
+
+    if (fullTime?.includes("AM")) {
+      return parseInt(Hour);
+    }
+    if (fullTime?.includes("PM")) {
+      return parseInt(Hour) + 12;
+    }
   };
+
+  const checkoutHandler = (event) => {
+    event.preventDefault();
+
+    setUserTrusted(true);
+    localStorage.setItem("redirectPermission", "allowed");
+
+    const selectedAddress = selectedAdd;
+
+    if (selectedAddress !== null) {
+      const selectedLat = selectedAddress?.lat;
+      const selectedLng = selectedAddress?.lng;
+
+      const forCurrent = branchHours?.filter(
+        (rest) => rest.restaurant_id === +cart[0]?.restaurant_id
+      );
+
+      for (let i = 0; i < forCurrent?.length; i++) {
+        const resLat = +forCurrent[i]?.latitude;
+        const resLng = +forCurrent[i]?.longitude;
+
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          selectedLat,
+          selectedLng
+        );
+
+        if (distance > 50) {
+          setNotDeliver(true);
+        } else {
+          if (paymentMethod === "KNET") {
+            const filterRestaurant = branchHours.filter(
+              (branch) => branch.restaurant_id === cart[0].restaurant_id
+            );
+
+            if (filterRestaurant?.length === 0) {
+              setNotDeliver(true);
+            } else {
+              setNotDeliver(false);
+
+              if (isAsap === "true") {
+                for (let j = 0; j < filterRestaurant?.length; j++) {
+                  if (
+                    filterRestaurant[j]?.branch_hours[0].openingStatus ===
+                    "Open"
+                  ) {
+                    setRestaurantOpen(false);
+
+                    const data = {
+                      ...checkoutData,
+                      branch_id: forCurrent[i].id,
+                      discount_price: getDiscountAmount(),
+                    };
+
+                    checkout(data, token)
+                      .then((res) => {
+                        if (res?.success === "error") {
+                          const parsedError = res?.message
+                            ?.split(":")[1]
+                            ?.trim();
+
+                          if (toastList.size < MAX_TOAST) {
+                            const id = toast.error(parsedError, {
+                              onClose: () => toastList.delete(id),
+                            });
+                            toastList.add(id);
+                          }
+                        } else {
+                          const checkoutRedirectUrl =
+                            res.data?.payment_methods[0].redirect_url;
+                          window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                        }
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+
+                    break;
+                  } else if (
+                    filterRestaurant[j]?.branch_hours[0].openingStatus ===
+                    "Close"
+                  ) {
+                    setRestaurantOpen(true);
+                  }
+                }
+              } else {
+                const data = {
+                  ...checkoutData,
+                  branch_id: forCurrent[i].id,
+                  discount_price: getDiscountAmount(),
+                };
+
+                checkout(data, token)
+                  .then((res) => {
+                    if (res?.success === "error") {
+                      const parsedError = res?.message?.split(":")[1]?.trim();
+
+                      if (toastList.size < MAX_TOAST) {
+                        const id = toast.error(parsedError, {
+                          onClose: () => toastList.delete(id),
+                        });
+                        toastList.add(id);
+                      }
+                    } else {
+                      const checkoutRedirectUrl =
+                        res.data?.payment_methods[0].redirect_url;
+                      window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }
+            }
+          }
+
+          break;
+        }
+      }
+    }
+  };
+
+  const [userCurrentAddress, setUserCurrentAddress] = useState({
+    latitude: 0,
+    longitude: 0,
+    service_type: "dinein",
+  });
+
+  useEffect(() => {
+    const userSelected = localStorage.getItem("selected");
+    const userLocation = localStorage.getItem("location");
+    const defaultLocation = { lat: 29.3140728, lng: 47.68022 };
+
+    if (userSelected === null && userLocation === null) {
+      setUserCurrentAddress({
+        latitude: defaultLocation.lat,
+        longitude: defaultLocation.lng,
+        service_type: "dinein",
+      });
+      //
+    } else if (userSelected === null && userLocation !== null) {
+      const parsedUserLocation = JSON.parse(userLocation);
+
+      setUserCurrentAddress({
+        latitude: parsedUserLocation.lat,
+        longitude: parsedUserLocation.lng,
+        service_type: "dinein",
+      });
+      //
+    } else if (userSelected !== null && userLocation !== null) {
+      const parsedUserLocation = JSON.parse(userSelected);
+
+      setUserCurrentAddress({
+        latitude: parsedUserLocation.lat,
+        longitude: parsedUserLocation.lng,
+        service_type: "dinein",
+      });
+      //
+    }
+  }, []);
+
+  const { refetch: recall } = useQuery({
+    queryFn: () => getNearByRestaurants(userCurrentAddress),
+    onSuccess: (data) => {
+      dispatch(getNearByRest(data.data));
+    },
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (
+      userCurrentAddress.latitude !== 0 &&
+      userCurrentAddress.longitude !== 0 &&
+      nearbyRestaurants?.length === 0
+    ) {
+      recall();
+    }
+  }, [userCurrentAddress, nearbyRestaurants]);
 
   useEffect(() => {
     let isCartEmpty = searchParams.get("empty");
@@ -129,23 +469,52 @@ function CartPage() {
     }
   }, []);
 
-  const country = useSelector((state) => state.auth.country);
+  const asapHandler = () => {
+    const filterRestaurant = branchHours.filter(
+      (branch) => branch.restaurant_id === cart[0].restaurant_id
+    );
+
+    for (let i = 0; i < filterRestaurant?.length; i++) {
+      if (filterRestaurant[i]?.branch_hours[0].openingStatus === "Open") {
+        const currentTime = new Date();
+        currentTime.setMinutes(currentTime.getMinutes() + 30);
+
+        localStorage.setItem("pickTime", dayjs(currentTime).format("hh:mm a"));
+        localStorage.setItem(
+          "pickDate",
+          dayjs(currentTime).format("MMM DD, YYYY-dddd")
+        );
+        localStorage.setItem("isAsap", true);
+
+        setOpenPopup(false);
+        setRestaurantOpen(false);
+
+        break;
+      } else if (
+        filterRestaurant[i]?.branch_hours[0].openingStatus === "Close"
+      ) {
+        setRestaurantOpen(true);
+        setOpenPopup(false);
+      }
+    }
+  };
 
   useEffect(() => {
     cartRefetch();
-    getRestaurantLogo(cart[0]?.restaurant_id)
+    getRestaurantLogo(cart[0]?.restaurant_id);
   }, [country]);
 
   const getRestaurantLogo = (restaurantId) => {
     setTimeout(() => {
-      if(restaurantId) {
+      if (restaurantId) {
         getRestaurantDetails(restaurantId, country?.id)
-        .then((res) => {
-          setRestaurantLogo(res.data.logo);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+          .then((res) => {
+            setRestaurantLogo(res.data.logo);
+            setRestaurantName(res.data.page_title_en);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     }, 500);
   };
@@ -153,31 +522,47 @@ function CartPage() {
   const cartRefetch = () => {
     if (cart.length == 0) {
       setTimeout(() => {
-        setIsLoading(true)
+        setIsLoading(true);
         cartList(token)
           .then((res) => {
             const resData = res.data.map((val) => {
-              return {
-                  id: val?.item_id,
-                  cart_id: val.cart_id,
-                  itemName: val?.menu_item_name_en,
-                  discountedPrice: val?.discounted_price,
-                  price: val?.unit_price,
-                  quantity: val.quantity,
-                  variants: {
-                    sizeVariant: {...val.size_variant[0], variantId: val.size_variant_id },
-                    toppingVariant: val.topping_variant.map((value) => ({...value, variantId: val.topping_variant_id })),
-                    sideVariant: val.side_variant.map((value) => ({...value, variantId: val.side_variant_id })),
+              const findRestaurant = branchHours?.find(
+                (branch) => branch.id === val?.branch_id
+              );
+
+              const obj = {
+                id: val?.item_id,
+                cart_id: val.cart_id,
+                itemName: val?.menu_item_name_en,
+                discountedPrice: val?.discounted_price,
+                price: val?.unit_price,
+                quantity: val.quantity,
+                variants: {
+                  sizeVariant: {
+                    ...val.size_variant[0],
+                    variantId: val.size_variant_id,
                   },
-                  item_code: val.item_code,
-                  specialInstructions: "",
-                  itemImage: val?.menu_item_image,
-                  restaurant_id: 1,
-                  totalPrice: Number(val.quantity * val.unit_price).toFixed(3) 
-              }
-            })
+                  toppingVariant: val.topping_variant.map((value) => ({
+                    ...value,
+                    variantId: val.topping_variant_id,
+                  })),
+                  sideVariant: val.side_variant.map((value) => ({
+                    ...value,
+                    variantId: val.side_variant_id,
+                  })),
+                },
+                item_code: val.item_code,
+                specialInstructions: "",
+                itemImage: val?.menu_item_image,
+                restaurant_id: findRestaurant.restaurant_id,
+                totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
+              };
+
+              dispatch(addToCart(obj));
+
+              return obj;
+            });
             setCartItems(resData);
-            dispatch(addToCart(resData));
             setIsLoading(false);
           })
           .catch((err) => {
@@ -189,30 +574,32 @@ function CartPage() {
   };
 
   const getItemTotal = () => {
-    return cartItems.reduce((acc, cartItem) => {
-      return acc + Number(cartItem.totalPrice);
-    }, 0).toFixed(3);
+    return cartItems
+      .reduce((acc, cartItem) => {
+        return acc + Number(cartItem.totalPrice);
+      }, 0)
+      .toFixed(3);
   };
 
   const getTipAmount = () => {
-    return tipValue.toFixed(2);
+    return tipValue.toFixed(3);
   };
 
   const getDeliveryCharge = () => {
-    return DELIVERY_CHARGE;
+    return Number(deliveryPrice).toFixed(3);
   };
 
   const getPromoDiscount = () => {
-    let discount = 0
-    if(promoDiscount.discount_type == "percentage"){
-      discount = getItemTotal() / 100 * promoDiscount.discount_value
-      promoDiscount.message = `${promoDiscount.discount_value}% Discount Applied`
+    let discount = 0;
+    if (promoDiscount.discount_type == "percentage") {
+      discount = (getItemTotal() / 100) * promoDiscount.discount_value;
+      promoDiscount.message = `${promoDiscount.discount_value}% Discount Applied`;
     }
-    return discount
-  }
+    return discount;
+  };
 
   const getDiscountAmount = () => {
-    return Number(getPromoDiscount()).toFixed(2);
+    return Number(getPromoDiscount()).toFixed(3);
   };
 
   const getGrandTotal = () => {
@@ -220,28 +607,93 @@ function CartPage() {
       Number(getItemTotal()) +
       Number(getTipAmount()) -
       Number(getDiscountAmount()) +
-      Number(getDeliveryCharge()) - 
-      Number(getPromoDiscount())
+      Number(getDeliveryCharge())
     ).toFixed(3);
   };
-  const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
-  const [selectedSchedule, setSelectedSchedule] = useState(
-    "14 August 2023, ASAP"
-  );
 
-  const scheduleOptions = [
-    "14 August 2023, ASAP",
-    "12 August 2023, 11:00 pm - 11:30 pm",
-    "12 August 2023, 11:30 pm - 12:00 am",
-    "12 August 2023, 12:00 am - 12:30 am",
-    "12 August 2023, 12:30 am - 01:00 am",
-    "12 August 2023, 01:00 am - 01:30 am",
-    "12 August 2023, 01:30 am - 02:00 am",
-  ];
+  const fetchAllDeliveryPrice = () => {
+    deliveryPriceApi()
+      .then((res) => {
+        setDeliveryPrice(res.data[0].price);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  const handleScheduleOptionClick = (option) => {
-    setSelectedSchedule(option);
-    setOpenSchedulePopup(false); // Close the dialog after selecting an option
+  const checkoutData = {
+    payment_method_id: "1",
+    order_total_price:
+      totalPrice + tipValue - (!isEmpty(promoDiscount) && getDiscountAmount()),
+    currency_id: "3",
+    country_id: "3",
+    restaurant_id: cart[0]?.restaurant_id,
+    driver_id: "1",
+    address_id: JSON.parse(localStorage.getItem("selected"))?.addressId,
+    service_type: "delivery", // it will be dynamic later
+    tip_id: tipID,
+    tip_amount: tipValue,
+    pick_from_store: "",
+    pickup_from_car: "",
+    delivery_charges: deliveryPrice,
+    promo_code: "Test1",
+    comments: specialIns,
+    delivery_schedule: {
+      date: pickDate?.split("-")[0],
+      time: pickTime,
+    },
+  };
+
+  const handlerFunc = (ampm, date) => {
+    const selectedTime = dayjs(date);
+    if (ampm == "pm") {
+      setMinTime(
+        selectedTime
+          .set("hour", getSingleDigitHour(timeByDate?.from_time))
+          .set("minute", 0)
+      );
+      setMaxTime(
+        selectedTime
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
+    }
+    if (ampm == "am") {
+      setMinTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.from_time))
+          .set("minute", 0)
+      );
+      setMaxTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
+    }
+  };
+
+  const onDateSelected = () => {
+    if (pickDate !== null) {
+      setOpenSchedulePopup(false);
+    }
+  };
+
+  const trunct = (str) => {
+    return truncateString(str, 100);
+  };
+
+  const tipHandler = (tip, tipID) => {
+    if (tip == tipValue) {
+      setTipValue(0);
+      setTipID(null);
+      return;
+    }
+    setTipValue(tip);
+    setTipID(tipID);
   };
 
   return (
@@ -259,7 +711,8 @@ function CartPage() {
         alignItems="center"
         sx={{
           position: "relative",
-          py: 1,
+          paddingTop: "3px",
+          paddingBottom: "8px",
         }}
       >
         <IconButton
@@ -268,11 +721,40 @@ function CartPage() {
             position: "absolute",
             left: 0,
             boxShadow: (theme) => theme.shadows[16],
+            marginLeft: "0",
+            width: "42px",
+            height: "42px",
           }}
           edge="start"
-          onClick={() => navigate(-1)}
+          onClick={() =>
+            navigate(
+              location?.state?.back &&
+                location?.state?.fromHome === undefined &&
+                location?.state?.fromMenu === undefined &&
+                location?.state?.fromDetail === undefined
+                ? location?.state?.back
+                : location?.state?.noAddress && cart?.length !== 0
+                ? `${paths.menu}/restaurant/${cart[0]?.restaurant_id}/delivery`
+                : location?.state?.fromHome !== undefined
+                ? paths.home
+                : (location?.state?.fromMenu !== undefined ||
+                    location?.state?.fromDetail !== undefined) &&
+                  cart?.length !== 0
+                ? `${paths.menu}/restaurant/${restaurantId}/delivery`
+                : location?.state?.backToCart !== undefined
+                ? paths.home
+                : -1
+            )
+          }
         >
-          <ArrowBackRoundedIcon fontSize="medium" />
+          <ArrowBackRoundedIcon
+            fontSize="medium"
+            sx={{
+              width: "24px",
+              height: "24px",
+              color: "#1F2933",
+            }}
+          />
         </IconButton>
         <Typography
           variant="h5"
@@ -280,6 +762,7 @@ function CartPage() {
           fontWeight={700}
           sx={{
             mb: 0,
+            // marginTop: "-18px",
           }}
         >
           Your Cart
@@ -320,7 +803,9 @@ function CartPage() {
                 },
               }}
             >
-              {restaurantLogo && <img src={restaurantLogo} alt="Restaurant Logo" />}
+              {restaurantLogo && (
+                <img src={restaurantLogo} alt="Restaurant Logo" />
+              )}
             </Box>
           </Stack>
 
@@ -346,7 +831,9 @@ function CartPage() {
                 }}
               >
                 <LocationOnIcon fontSize="small" sx={{ mr: 0.5 }} />
-                1234, Street Name, City Name, Country Name
+                {currentLocation !== null && selectedAdd === null
+                  ? trunct(currentLocation?.address)
+                  : trunct(selectedAdd?.address)}
               </Typography>
             </Stack>
 
@@ -370,7 +857,46 @@ function CartPage() {
                   fontSize: "16px",
                 },
               }}
-              onClick={() => navigate(paths.location)}
+              onClick={() => {
+                const initialState = {
+                  restaurant_id: cart[0].restaurant_id,
+                  restaurantName,
+                  path: location.pathname,
+                };
+
+                if (location?.state?.fromHome) {
+                  navigate(paths.addresses, {
+                    state: {
+                      ...initialState,
+                      fromHome: location?.state?.fromHome,
+                      backCart: true,
+                    },
+                  });
+                } else if (location?.state?.fromMenu) {
+                  navigate(paths.addresses, {
+                    state: {
+                      ...initialState,
+                      fromMenu: location?.state?.fromMenu,
+                      backCart: true,
+                    },
+                  });
+                } else if (location?.state?.fromDetail) {
+                  navigate(paths.addresses, {
+                    state: {
+                      ...initialState,
+                      fromDetail: location?.state?.fromDetail,
+                      backCart: true,
+                    },
+                  });
+                } else {
+                  navigate(paths.addresses, {
+                    state: {
+                      ...initialState,
+                      fromCart: true,
+                    },
+                  });
+                }
+              }}
             >
               Change
             </Button>
@@ -439,7 +965,8 @@ function CartPage() {
                     lineHeight: "24px", // Set the line height
                   }}
                 >
-                  {selectedSchedule}
+                  {pickDate?.split("-")[0]}{" "}
+                  {isAsap === "true" ? "ASAP" : pickTime}
                 </Typography>
               </Stack>
             </Stack>
@@ -464,14 +991,15 @@ function CartPage() {
                   fontSize: "16px",
                 },
               }}
-              onClick={() => setOpenSchedulePopup(true)}
+              onClick={() => setOpenPopup(true)}
             >
               Schedule
             </Button>
           </Stack>
+
           <Dialog
-            open={openSchedulePopup}
-            onClose={() => setOpenSchedulePopup(false)}
+            open={openPopup}
+            onClose={() => setOpenPopup(false)}
             sx={{
               margin: "0",
               textAlign: "center",
@@ -480,75 +1008,117 @@ function CartPage() {
               sx: {
                 overflow: "visible",
                 margin: "0",
-                height: "275px",
-                bottom: "0",
+                height: "175px",
                 position: "fixed",
                 width: "375px",
-                left: "0",
-                borderBottomLeftRadius: "0px",
-                borderBottomRightRadius: "0px",
+                left: "0px !important",
                 paddingTop: "20px",
-                "@media (max-width: 600px)": {
+
+                "@media (max-width: 500px)": {
                   width: "100%",
                 },
               },
             }}
           >
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={() => setOpenSchedulePopup(false)}
-              sx={{
-                position: "absolute",
-                top: "-16px",
-                right: "18px",
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-            <DialogTitle>Select time</DialogTitle>
-            <DialogContent
+            <Typography
+              variant="h5"
               sx={{
                 fontFamily: "Titillium Web, sans-serif", // Set the font family
                 fontWeight: 600, // Set the font weight
+                fontSize: "24px", // Set the font size
+                lineHeight: "24px", // Set the line height
               }}
             >
-              {scheduleOptions.map((option, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleScheduleOptionClick(option)}
-                  style={{
-                    cursor: "pointer",
-
-                    color: selectedSchedule === option ? "#026754" : "inherit",
-                  }}
-                >
-                  {option}
-                </div>
-              ))}
-            </DialogContent>
-          </Dialog>
-          <Stack spacing={2}>
-            <Typography variant="h5">
-              Your Items
-              {cartItems.length > 0 ? ` (s)` : ""}
+              Order Time
             </Typography>
+            <Box
+              justifyContent={"center"}
+              sx={{ marginTop: "30px", display: "flex" }}
+            >
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setOpenSchedulePopup(true);
+                  setOpenPopup(false);
+                }}
+                sx={{ marginRight: "15px" }}
+              >
+                Schedule for later
+              </Button>
+              <Button variant="contained" onClick={asapHandler}>
+                ASAP
+              </Button>
+            </Box>
+          </Dialog>
 
-            {cartItems.length > 0 ? (
-              cartItems.map((cartItem) => {
-                return (
-                  <CartItem
-                    key={cartItem.id}
-                    {...cartItem}
-                    cartRefetch={cartRefetch}
-                  />
-                );
-              })
-            ) : (
-              <Typography variant="body1">No items in your cart</Typography>
-            )}
-          </Stack>
+          {/* <IconButton
+            edge="end"
+            color="inherit"
+            onClick={() => setOpenSchedulePopup(false)}
+            sx={{
+              position: "absolute",
+              top: "-16px",
+              right: "18px",
+            }}
+          >
+            <CloseIcon />
+          </IconButton> */}
 
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimePicker
+              open={openSchedulePopup}
+              sx={{
+                display: "none",
+              }}
+              minTime={minTime}
+              maxTime={maxTime}
+              disablePast
+              ampm={true}
+              onChange={(date, e, ew) => {
+                handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
+                setPickDay(date.format("dddd"));
+                date.preventDefault();
+              }}
+              onClose={() => {
+                onDateSelected();
+              }}
+              onAccept={(date) => {
+                setOpenSchedulePopup(false);
+                if (date) {
+                  localStorage.setItem(
+                    "pickDate",
+                    date.format("MMM DD, YYYY-dddd")
+                  );
+                  localStorage.setItem("isAsap", false);
+                  localStorage.setItem("pickTime", date.format("hh:mm a"));
+                }
+              }}
+            />
+          </LocalizationProvider>
+          <div className="scrollableContainerWrapper">
+            <div className="scrollableContainer" id="scrollableContainer">
+              <Stack spacing={2}>
+                <Typography variant="h5">
+                  Your Items
+                  {cartItems.length > 0 ? ` (s)` : ""}
+                </Typography>
+
+                {cartItems.length > 0 ? (
+                  cartItems.map((cartItem) => {
+                    return (
+                      <CartItem
+                        key={cartItem?.item_code}
+                        {...cartItem}
+                        cartRefetch={cartRefetch}
+                      />
+                    );
+                  })
+                ) : (
+                  <Typography variant="body1">No items in your cart</Typography>
+                )}
+              </Stack>
+            </div>
+          </div>
           <TextField
             id="special-instructions"
             placeholder="Special Instructions (Optional)"
@@ -601,10 +1171,18 @@ function CartPage() {
               ),
             }}
           />
-          {/* {promoDiscount.message && <div className="promo-message-wrapper">
-             <p>{promoDiscount.message}</p> 
-             <span onClick={() => setPromoDiscount({})}><CancelIcon className="promo-cancel-icon" fontSize="small" color="grey" /></span>
-          </div>} */}
+          {promoDiscount.message && (
+            <div className="promo-message-wrapper">
+              <p>{promoDiscount.message}</p>
+              <span onClick={() => setPromoDiscount({})}>
+                <CancelIcon
+                  className="promo-cancel-icon"
+                  fontSize="small"
+                  color="grey"
+                />
+              </span>
+            </div>
+          )}
           {/* Dialog */}
           <Dialog
             open={isDialogOpen}
@@ -620,6 +1198,16 @@ function CartPage() {
                   left: "0",
                   position: "fixed",
                   margin: "20px",
+                },
+
+                "@media (max-width: 500px)": {
+                  width: "375px",
+                  margin: "30px",
+                },
+
+                "@media (max-width: 400px)": {
+                  width: "90%",
+                  margin: "25px",
                 },
               },
             }}
@@ -669,7 +1257,7 @@ function CartPage() {
             </Typography>
 
             <Stack direction="row" justifyContent="space-between" spacing={1}>
-              {[0.25, 0.5, 1.0].map((tip) => (
+              {[0.25, 0.5, 1.0].map((tip, index) => (
                 <Box
                   key={tip + "tip"}
                   sx={{
@@ -692,7 +1280,7 @@ function CartPage() {
                     }),
                     boxShadow: (theme) => theme.shadows[7],
                   }}
-                  onClick={() => setTipValue(tip)}
+                  onClick={() => tipHandler(tip, index + 1)}
                 >
                   <SvgIcon
                     fontSize="large"
@@ -818,7 +1406,7 @@ function CartPage() {
           </Stack>
 
           <Button
-            onClick={() => checkoutHandler()}
+            onClick={(e) => checkoutHandler(e)}
             variant="contained"
             size="large"
           >
@@ -861,7 +1449,7 @@ function CartPage() {
                 }}
                 variant="contained"
                 size="large"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(location?.state?.back || -1)}
               >
                 Back
               </Button>
@@ -879,6 +1467,72 @@ function CartPage() {
           )}
         </>
       )}
+
+      <DialogComponent
+        notDeliver={notDeliver}
+        setNotDeliver={setNotDeliver}
+        location={location}
+        hasItems={true}
+        cartItems={cartItems?.length ? cartItems : []}
+        updateText={updateText}
+      />
+
+      <Dialog
+        open={restaurantOpen}
+        onClose={() => setRestaurantOpen(false)}
+        sx={{
+          margin: "0",
+          textAlign: "center",
+        }}
+        className="cart-dialog"
+        PaperProps={{
+          sx: {
+            overflow: "visible",
+            margin: "0px 0px 0px 27px",
+            width: "327px",
+
+            "@media (max-width: 500px)": {
+              width: "375px",
+              margin: "0px 0px 0px 0px",
+            },
+
+            "@media (max-width: 400px)": {
+              width: "90%",
+            },
+          },
+        }}
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          className="dialog-title title-cart"
+        >
+          <img src="/assets/img/exclaim.svg"></img>
+        </DialogTitle>
+        <DialogContent className="dialog-content-cart">
+          Restaurant you’re about to order is closed. Do you want to schedule
+          for later?
+        </DialogContent>
+
+        <div className="btn-navigate">
+          <Button
+            className="common-st add-btn"
+            onClick={() => navigate(paths.home)}
+          >
+            Home Page
+          </Button>
+
+          <Button
+            className="common-st go-to-btn"
+            onClick={() => {
+              setOpenSchedulePopup(true);
+              setOpenPopup(false);
+              setRestaurantOpen(false);
+            }}
+          >
+            Schedule for later
+          </Button>
+        </div>
+      </Dialog>
     </Stack>
   );
 }
