@@ -442,6 +442,9 @@ const MenuCard = (props) => {
 
     if (foodItemQuantity === 1) {
       dispatch(removeFromCart(id));
+      if (cart.length == 1) {
+        clearCartItems();
+      }
     }
 
     if (foodItemQuantity > 1) {

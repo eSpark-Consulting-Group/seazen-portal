@@ -221,6 +221,7 @@ function Box({
         localStorage.setItem("restaurantIdForRedirect", restaurant_id);
         localStorage.setItem("restaurantID", restaurant_id);
         localStorage.setItem("menuDetailId", id);
+        localStorage.setItem("branchId", branchId);
 
         const restName = resturantsData?.find(
           (res) => res.id === restaurant_id
