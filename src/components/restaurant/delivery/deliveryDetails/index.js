@@ -112,6 +112,8 @@ const DeliveryDetails = (props) => {
   const [restaurantOpen, setRestaurantOpen] = useState(false);
   const [pickDay, setPickDay] = useState("");
   const [addressID, setAddressID] = useState();
+  const [delivery_charges, setDeliveryCharge] = useState();
+  const [delivery_time, setDeliveryTime] = useState();
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
 
@@ -340,7 +342,12 @@ const DeliveryDetails = (props) => {
     if (fullAddress !== null) {
       localStorage.setItem(
         "selected",
-        JSON.stringify({ ...fullAddress, addressId: addressID })
+        JSON.stringify({
+          ...fullAddress,
+          addressId: addressID,
+          delivery_charges,
+          delivery_time,
+        })
       );
 
       setUserLocation(truncateString(fullAddress?.address, 15));
@@ -476,56 +483,71 @@ const DeliveryDetails = (props) => {
                 </Dropdown.Item>
 
                 {addressData?.length ? (
-                  addressData.map((address) => {
-                    return (
-                      <Dropdown.Item
-                        onClick={() => {
-                          getUserAddress(address.latitude, address.longitude);
-                          setAddressID(address.id);
-                          fetchNearbyRestaurant(
-                            address.latitude,
-                            address.longitude
-                          );
-                          localStorage.setItem("selectCurrent", false);
-                        }}
-                        style={{
-                          textTransform: "capitalize",
-                        }}
-                        key={address.id}
-                      >
-                        {address.address_label !== ""
-                          ? address.address_label
-                          : address.address_type}{" "}
-                        {address?.address_type === "house"
-                          ? truncateString(
-                              `(Build: ${address?.building}, Bl: ${address?.block}, Str: ${address?.street})`,
-                              18
-                            )
-                          : address?.address_type === "office"
-                          ? truncateString(
-                              `(Comp: ${address?.company_name}, Bl: ${address?.block}, Floor: ${address?.floor})`,
-                              18
-                            )
-                          : truncateString(
-                              `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
-                              18
-                            )}
-                        <span
-                          style={{
-                            fontSize: 13,
+                  addressData
+                    ?.filter((address) => {
+                      const isDeliveryChargeInfoArray = !Array.isArray(
+                        address.delivery_charge_area_info
+                      );
+                      return isDeliveryChargeInfoArray;
+                    })
+                    ?.map((address) => {
+                      return (
+                        <Dropdown.Item
+                          onClick={() => {
+                            getUserAddress(address.latitude, address.longitude);
+                            setAddressID(address.id);
+                            setDeliveryCharge(
+                              address?.delivery_charge_area_info?.delivery_charges?.split(
+                                " "
+                              )[1]
+                            );
+                            setDeliveryTime(
+                              address?.delivery_charge_area_info?.delivery_time
+                            );
+                            fetchNearbyRestaurant(
+                              address.latitude,
+                              address.longitude
+                            );
+                            localStorage.setItem("selectCurrent", false);
                           }}
+                          style={{
+                            textTransform: "capitalize",
+                          }}
+                          key={address.id}
                         >
-                          {selected !== null &&
-                            currentLocation !== null &&
-                            parseFloat(selected?.lat) ===
-                              parseFloat(currentLocation?.lat) &&
-                            parseFloat(selected?.lng) ===
-                              parseFloat(currentLocation?.lng) &&
-                            "(current location)"}
-                        </span>
-                      </Dropdown.Item>
-                    );
-                  })
+                          {address.address_label !== ""
+                            ? address.address_label
+                            : address.address_type}{" "}
+                          {address?.address_type === "house"
+                            ? truncateString(
+                                `(Build: ${address?.building}, Bl: ${address?.block}, Str: ${address?.street})`,
+                                18
+                              )
+                            : address?.address_type === "office"
+                            ? truncateString(
+                                `(Comp: ${address?.company_name}, Bl: ${address?.block}, Floor: ${address?.floor})`,
+                                18
+                              )
+                            : truncateString(
+                                `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
+                                18
+                              )}
+                          <span
+                            style={{
+                              fontSize: 13,
+                            }}
+                          >
+                            {selected !== null &&
+                              currentLocation !== null &&
+                              parseFloat(selected?.lat) ===
+                                parseFloat(currentLocation?.lat) &&
+                              parseFloat(selected?.lng) ===
+                                parseFloat(currentLocation?.lng) &&
+                              "(current location)"}
+                          </span>
+                        </Dropdown.Item>
+                      );
+                    })
                 ) : (
                   <Dropdown.Item
                     style={{
@@ -628,7 +650,7 @@ const DeliveryDetails = (props) => {
                   fontSize: "19px",
                 }}
               >
-                30
+                {selected?.delivery_time?.split(" ")[1]}
               </Typography>
               <Typography
                 variant="caption"

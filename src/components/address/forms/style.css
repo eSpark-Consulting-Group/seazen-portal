@@ -122,6 +122,11 @@
   padding-bottom: 100px;
 }
 
+.MuiMenu-paper {
+  top: 340px !important;
+  max-height: 55% !important;
+}
+
 #AdditionalDirection {
   resize: none;
   overflow-y: hidden;
@@ -144,6 +149,10 @@
   transform: translateY(-100%);
   font: normal normal bold 16px/28px Titillium Web;
   color: #959fa8;
+}
+
+.errorinputwrapper::after {
+  color: #e02020;
 }
 
 .inputwrapper:has(> .form-style:not(:placeholder-shown))::after {
