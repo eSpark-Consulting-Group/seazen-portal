@@ -1,59 +1,70 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
-// import {
-//   OutlinedInput,
-//   Select,
-//   MenuItem,
-//   FormControl,
-//   InputLabel,
-//   TextField,
-// } from "@mui/material";
+import { OutlinedInput, Select, MenuItem, ListSubheader } from "@mui/material";
 
 import "./style.css";
-
-// const ITEM_HEIGHT = 48;
-// const ITEM_PADDING_TOP = 8;
 
 export const OfficeAdress = (props) => {
   const {
     handleChange,
     address,
-    //  areaErr,
+    areaErr,
     blockErr,
     streetErr,
     buildingErr,
     floorErr,
     companyNameErr,
+    setAddress,
+    area,
+    setArea,
   } = props;
 
-  // const [open, setOpen] = React.useState(false);
+  const allAreas = useSelector((state) => state.address.allAreas);
 
-  // const handleClose = () => {
-  //   setOpen(false);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  // const renderSelectGroup = (zone) => {
+  //   const areas = zone?.areas?.map((area) => {
+  //     return (
+  //       <MenuItem
+  //         key={area.name_en}
+  //         value={area.name_en}
+  //         className="select-menuitem"
+  //         onClick={() => console.log(zone.name_en)}
+  //       >
+  //         {area.name_en}
+  //       </MenuItem>
+  //     );
+  //   });
+  //   return [
+  //     <ListSubheader key={zone.name_en}>{zone.name_en}</ListSubheader>,
+  //     areas,
+  //   ];
   // };
-
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const areas = ["Area"];
 
   return (
     <form className="container-style px-3">
-      {/* <Select
+      <Select
         displayEmpty
-        value={address.area}
-        onChange={(e) => handleChange("area", e.target.value)}
+        value={area}
+        onChange={(e) => setArea(e.target.value)}
         input={<OutlinedInput />}
         renderValue={(selected) => {
-          if (selected.length === 0) {
+          if (selected?.length === 0) {
             return (
               <span
-                className={
-                  areaErr
-                    ? ["dropdown-placeholder", "error-placeholder"].join(" ")
-                    : "dropdown-placeholder"
-                }
+                className={`dropdown-placeholder ${
+                  areaErr ? "error-placeholder" : ""
+                }`}
               >
                 Area
               </span>
@@ -62,15 +73,19 @@ export const OfficeAdress = (props) => {
 
           return selected;
         }}
-        inputProps={{ "aria-label": "Without label" }}
-        className={areaErr ? ["form-style", "error"].join(" ") : "form-style"}
+        inputProps={{ "aria-label": "With`out label" }}
+        className={`form-style ${areaErr ? "error" : ""}`}
         open={open}
         onClose={handleClose}
         onOpen={handleOpen}
         IconComponent={() => {
           return (
-            <div className="area-dropdown">
-              <img src="/assets/img/dropdown.png" alt="Dropdown" />
+            <div className="area-dropdown" onClick={handleOpen}>
+              {areaErr ? (
+                <img src="/assets/img/error-arrow.png" />
+              ) : (
+                <img src="/assets/img/dropdown.png" alt="Dropdown" />
+              )}
             </div>
           );
         }}
@@ -78,18 +93,35 @@ export const OfficeAdress = (props) => {
         <MenuItem disabled value="">
           Area
         </MenuItem>
-        {areas.map((name) => (
-          <MenuItem key={name} value={name} className="select-menuitem">
-            {name}
-          </MenuItem>
-        ))}
-      </Select> */}
+        {/* {allAreas?.map((zone) => renderSelectGroup(zone))} */}
+        {allAreas?.map((zone) =>
+          zone?.areas
+            ?.filter((area) => area.area_name !== "")
+            ?.map((area) => (
+              <MenuItem
+                key={area.area_id}
+                value={area.name_en}
+                className="select-menuitem"
+                onClick={() =>
+                  setAddress((address) => ({
+                    ...address,
+                    delivery_charge_area_id: area.area_id,
+                    delivery_zone_id: zone.zone_id,
+                  }))
+                }
+              >
+                {area?.name_en}
+              </MenuItem>
+            ))
+        )}
+      </Select>
 
-      <div className="inputwrapper" data-required="(Required)">
+      <div
+        className={`inputwrapper ${blockErr ? "errorinputwrapper" : ""}`}
+        data-required="(Required)"
+      >
         <input
-          className={
-            blockErr ? ["form-style", "error"].join(" ") : "form-style"
-          }
+          className={`form-style ${blockErr ? "error" : ""}`}
           type="text"
           name="Block"
           placeholder="Block"
@@ -98,11 +130,12 @@ export const OfficeAdress = (props) => {
         />
       </div>
 
-      <div className="inputwrapper" data-required="(Required)">
+      <div
+        className={`inputwrapper ${streetErr ? "errorinputwrapper" : ""}`}
+        data-required="(Required)"
+      >
         <input
-          className={
-            streetErr ? ["form-style", "error"].join(" ") : "form-style"
-          }
+          className={`form-style ${streetErr ? "error" : ""}`}
           type="text"
           name="Street"
           placeholder="Street"
@@ -120,11 +153,12 @@ export const OfficeAdress = (props) => {
         value={address.avenue}
       />
 
-      <div className="inputwrapper" data-required="(Required)">
+      <div
+        className={`inputwrapper ${buildingErr ? "errorinputwrapper" : ""}`}
+        data-required="(Required)"
+      >
         <input
-          className={
-            buildingErr ? ["form-style", "error"].join(" ") : "form-style"
-          }
+          className={`form-style ${buildingErr ? "error" : ""}`}
           type="text"
           name="Building"
           placeholder="Building"
@@ -133,11 +167,12 @@ export const OfficeAdress = (props) => {
         />
       </div>
 
-      <div className="inputwrapper" data-required="(Required)">
+      <div
+        className={`inputwrapper ${floorErr ? "errorinputwrapper" : ""}`}
+        data-required="(Required)"
+      >
         <input
-          className={
-            floorErr ? ["form-style", "error"].join(" ") : "form-style"
-          }
+          className={`form-style ${floorErr ? "error" : ""}`}
           type="text"
           name="Floor"
           placeholder="Floor"
@@ -146,11 +181,12 @@ export const OfficeAdress = (props) => {
         />
       </div>
 
-      <div className="inputwrapper" data-required="(Required)">
+      <div
+        className={`inputwrapper ${companyNameErr ? "errorinputwrapper" : ""}`}
+        data-required="(Required)"
+      >
         <input
-          className={
-            companyNameErr ? ["form-style", "error"].join(" ") : "form-style"
-          }
+          className={`form-style ${companyNameErr ? "error" : ""}`}
           type="text"
           name="Company Name"
           placeholder="Company Name"

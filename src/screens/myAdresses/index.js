@@ -52,6 +52,8 @@ const App = () => {
   const [deleteAdd, setDeleteAdd] = useState(false);
   const [addressToBeDeleted, setAddressToBeDeleted] = useState({});
   const [isLoading, setIsloading] = useState(false);
+  const [delivery_charges, setDeliveryCharge] = useState();
+  const [delivery_time, setDeliveryTime] = useState();
 
   const fetchFunction = async () => {
     setIsloading(true);
@@ -84,6 +86,10 @@ const App = () => {
   const selectCurrentAddress = (item) => {
     setSelectedId(item.id);
     setSelectedAddress(item);
+    setDeliveryCharge(
+      item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+    );
+    setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
 
     const selectedAddress = {
       lat: +item.latitude,
@@ -97,7 +103,12 @@ const App = () => {
     if (fullAddress !== null) {
       localStorage.setItem(
         "selected",
-        JSON.stringify({ ...fullAddress, addressId: selectedId })
+        JSON.stringify({
+          ...fullAddress,
+          addressId: selectedId,
+          delivery_charges,
+          delivery_time,
+        })
       );
 
       if (location?.state?.path === "/cart") {
@@ -171,83 +182,91 @@ const App = () => {
         backCart={location?.state?.backCart}
         editLocation={location?.state?.editLocation}
       />
-      {isLoading
-        ? Array.from({ length: 3 }).map((_) => (
-            <>
-              <div className="skeleton-container container-fluid">
-                <div className="skeleton-header">
-                  <div>
-                    <Skeleton
-                      className="skeleton-title"
-                      variant="text"
-                      width={50}
-                      height={20}
-                    />
-                    <Skeleton
-                      className="skeleton-title2  "
-                      variant="text"
-                      width={50}
-                      height={20}
-                    />
-                  </div>
-                  <div className="skeleton-button">
-                    <Skeleton
-                      className="skeleton-btn"
-                      variant="text"
-                      width={"30%"}
-                      height={45}
-                    />
-                    <Skeleton variant="text" width={"30%"} height={45} />
-                  </div>
+      {isLoading ? (
+        Array.from({ length: 3 }).map((_) => (
+          <>
+            <div className="skeleton-container container-fluid">
+              <div className="skeleton-header">
+                <div>
+                  <Skeleton
+                    className="skeleton-title"
+                    variant="text"
+                    width={50}
+                    height={20}
+                  />
+                  <Skeleton
+                    className="skeleton-title2  "
+                    variant="text"
+                    width={50}
+                    height={20}
+                  />
                 </div>
-                <Skeleton
-                  className="skeleton-dots"
-                  variant="text"
-                  width={"90%"}
-                  height={2}
-                />
-
-                <div className="skeleton-detail">
-                  <div>
-                    <Skeleton
-                      className="skeleton-title"
-                      variant="text"
-                      width={50}
-                      height={20}
-                    />
-                    <Skeleton
-                      className="skeleton-title2  "
-                      variant="text"
-                      width={70}
-                      height={20}
-                    />
-                    <Skeleton
-                      className="skeleton-title"
-                      variant="text"
-                      width={60}
-                      height={20}
-                    />
-                    <Skeleton
-                      className="skeleton-title2"
-                      variant="text"
-                      width={60}
-                      height={20}
-                    />
-                  </div>
-
-                  <div>
-                    <Skeleton
-                      className="skeleton-rectangular"
-                      variant="rectangular"
-                    />
-                  </div>
+                <div className="skeleton-button">
+                  <Skeleton
+                    className="skeleton-btn"
+                    variant="text"
+                    width={"30%"}
+                    height={45}
+                  />
+                  <Skeleton variant="text" width={"30%"} height={45} />
                 </div>
               </div>
-            </>
-          ))
-        : addressData?.length && (
-            <div className="parent-address">
-              {addressData?.map((data) => (
+              <Skeleton
+                className="skeleton-dots"
+                variant="text"
+                width={"90%"}
+                height={2}
+              />
+
+              <div className="skeleton-detail">
+                <div>
+                  <Skeleton
+                    className="skeleton-title"
+                    variant="text"
+                    width={50}
+                    height={20}
+                  />
+                  <Skeleton
+                    className="skeleton-title2  "
+                    variant="text"
+                    width={70}
+                    height={20}
+                  />
+                  <Skeleton
+                    className="skeleton-title"
+                    variant="text"
+                    width={60}
+                    height={20}
+                  />
+                  <Skeleton
+                    className="skeleton-title2"
+                    variant="text"
+                    width={60}
+                    height={20}
+                  />
+                </div>
+
+                <div>
+                  <Skeleton
+                    className="skeleton-rectangular"
+                    variant="rectangular"
+                  />
+                </div>
+              </div>
+            </div>
+          </>
+        ))
+      ) : (
+        <div className="parent-address">
+          {addressData?.length &&
+            addressData
+              ?.filter((address) => {
+                const isDeliveryChargeInfoArray = !Array.isArray(
+                  address.delivery_charge_area_info
+                );
+                return isDeliveryChargeInfoArray;
+              })
+              ?.map((data) => (
                 <div key={data.id}>
                   <Card
                     iconUrl={
@@ -270,8 +289,8 @@ const App = () => {
                   />
                 </div>
               ))}
-            </div>
-          )}
+        </div>
+      )}
       <AddressesButton
         restaurantName={location?.state?.restaurantName}
         restaurant_id={location?.state?.restaurant_id}
