@@ -91,13 +91,14 @@ const cartSlice = createSlice({
     updateCartItem: (state, action) => {
       const item = action.payload;
       const itemIndex = state.cart.findIndex(
-        (cartItem) => cartItem.id === item.id
+        (cartItem) => cartItem.item_code === item.item_code
       );
 
       if (itemIndex !== -1) {
         state.cart[itemIndex].totalPrice =
-          Number(item.price.split(" ")[1]).toFixed(3) * (item.quantity + 1);
-        state.cart[itemIndex].quantity = item.quantity + 1;
+          Number(item.price.split(" ")[1]).toFixed(3) * item.quantity;
+        state.cart[itemIndex].quantity = item.quantity;
+        state.cart[itemIndex].variants = item.variants;
       }
 
       state.totalQuantity = state.cart.reduce(
@@ -125,6 +126,14 @@ const cartSlice = createSlice({
 
       if (itemIndex !== -1) {
         state.cart[itemIndex].extraToppings = extraToppings;
+      }
+    },
+    addExtraCustom: (state, action) => {
+      const { id, extraCustom } = action.payload;
+      const itemIndex = state.cart.findIndex((cartItem) => cartItem.id === id);
+
+      if (itemIndex !== -1) {
+        state.cart[itemIndex].extraCustom = extraCustom;
       }
     },
 
@@ -161,6 +170,7 @@ export const {
   removeFromCart,
   addSizeVariant,
   addExtraToppings,
+  addExtraCustom,
   addExtraSides,
   updateCartInfo,
   resetCart,

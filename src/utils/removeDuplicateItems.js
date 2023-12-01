@@ -8,6 +8,7 @@ export const removeDuplicateItem = (array) => {
           "side_variant",
           "size_variant",
           "topping_variant",
+          "custom_variant",
           "menu_item",
         ])
       )

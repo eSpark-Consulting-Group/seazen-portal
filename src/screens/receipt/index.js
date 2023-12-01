@@ -52,9 +52,11 @@ const Receipt = () => {
   demo.forEach((item) => {
     const totalSidePrice = calculateTotalVariantPrice(item.side_variant);
     const totalToppingPrice = calculateTotalVariantPrice(item.topping_variant);
+    const totalCustomPrice = calculateTotalVariantPrice(item.custom_variant);
     const totalSizePrice = calculateTotalVariantPrice(item.size_variant);
 
-    item.totalOfVariants = totalSidePrice + totalToppingPrice + totalSizePrice;
+    item.totalOfVariants =
+      totalSidePrice + totalToppingPrice + totalSizePrice + totalCustomPrice;
   });
 
   const sumWithVariantsPrice = demo.map((val) => {

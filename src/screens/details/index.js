@@ -88,6 +88,7 @@ export const Details = () => {
   const [quantity, setQuantity] = React.useState(1);
   const [sizeVariant, setSizeVariant] = React.useState();
   const [toppingVariant, setToppingVariant] = React.useState([]);
+  const [customVariant, setCustomVariant] = React.useState([]);
   const [sideVariant, setSideVariant] = React.useState([]);
   const [totalPrice, setTotalPrice] = React.useState();
   const [notDeliver, setNotDeliver] = React.useState(false);
@@ -99,6 +100,7 @@ export const Details = () => {
   const [restaurantDetail, setRestaurantDetail] = useState({});
   const [specialInstructions, setSpecialInstructions] = React.useState("");
   const [extraToppingCount, setExtraToppingCount] = React.useState(0);
+  const [customCount, setCustomCount] = React.useState(0);
   const [openAddressPopup, setOpenAddressPopup] = useState(false);
   const [fullAddress, setFullAddress] = useState(null);
   const [distanceIsFar, setDistanceIsFar] = useState(false);
@@ -256,6 +258,19 @@ export const Details = () => {
 
     return sum;
   };
+  const calculateCustomVariantTotal = (customVariantData) => {
+    const eachCustomTotal = customVariantData
+      .map((custom, index) => {
+        return custom.quantity && custom.unit_price * custom.quantity;
+      })
+      .filter((item) => !!item);
+    const sum = eachCustomTotal.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+
+    return sum;
+  };
 
   const calculateSidesVariantTotal = (sidesVariantData) => {
     const totalUnitPrice = sidesVariantData.reduce(
@@ -270,6 +285,7 @@ export const Details = () => {
     const calculateTotal = () => {
       let itemTotal =
         calculateToppingVariantTotal(toppingVariant) +
+        calculateCustomVariantTotal(customVariant) +
         calculateSidesVariantTotal(sideVariant) +
         +sizeVariant?.unit_price +
         Number(menuItemPriceWithoutCurrency());
@@ -294,27 +310,40 @@ export const Details = () => {
 
     const total = calculateTotal();
     setTotalPrice(total);
-  }, [toppingVariant, sizeVariant, quantity, sideVariant, menuItemDetails]);
+  }, [
+    toppingVariant,
+    sizeVariant,
+    quantity,
+    sideVariant,
+    customVariant,
+    menuItemDetails,
+  ]);
 
   React.useEffect(() => {
     const cartItem = cart.find(
-      (item) =>
-        item.item_code === searchParams.get("item_code") || item.id === +id
+      (item) => item.item_code === location.state.item_code
     );
-
-    setCartItem(cartItem);
-    setQuantity(cartItem?.quantity || 1);
-    setSizeVariant(cartItem?.variants?.sizeVariant || null);
-    setToppingVariant(cartItem?.variants?.toppingVariant || []);
-    setSideVariant(cartItem?.variants?.sideVariant || []);
-    setTotalPrice(cartItem?.totalPrice);
-  }, [searchParams, cart]);
+    if (cartItem) {
+      setCartItem(cartItem);
+      setQuantity(cartItem?.quantity || 1);
+      setSizeVariant(cartItem?.variants?.sizeVariant || null);
+      setToppingVariant(cartItem?.variants?.toppingVariant || []);
+      setCustomVariant(cartItem?.variants?.customVariant || []);
+      setSideVariant(cartItem?.variants?.sideVariant || []);
+      setTotalPrice(cartItem?.totalPrice);
+    }
+    if (cartItem) {
+      setCustomCount(
+        cartItem.variants.customVariant.reduce(
+          (total, obj) => total + obj.quantity,
+          0
+        )
+      );
+    }
+  }, [searchParams, cart, location]);
 
   const checkIfItemIsInCart = () => {
-    return cart.find(
-      (item) =>
-        item.item_code === searchParams.get("item_code") || item.id === +id
-    );
+    return cart.find((item) => item.item_code === location.state.item_code);
   };
 
   const getCartItemQuantity = () => {
@@ -337,6 +366,9 @@ export const Details = () => {
   const checkIfToppingIsAdded = (name_en) => {
     return toppingVariant.find((item) => item.name_en === name_en);
   };
+  const checkIfCustomIsAdded = (name_en) => {
+    return customVariant.find((item) => item.name_en === name_en);
+  };
 
   const checkIfSideIsAdded = (name_en) => {
     return sideVariant.find((item) => item.name_en === name_en);
@@ -358,6 +390,22 @@ export const Details = () => {
       // Add the option with the variantId and quantity
       setToppingVariant((prevToppingVariant) => [
         ...prevToppingVariant,
+        { ...option, variantId, option_id: option.id, quantity: 1 },
+      ]);
+    }
+  };
+  const handleCustomVariant = (option, variantId) => {
+    const isCustomAdded = checkIfCustomIsAdded(option?.name_en);
+
+    if (isCustomAdded) {
+      // Remove the option if it's already added
+      setCustomVariant((prevCustomVariant) =>
+        prevCustomVariant.filter((item) => item.name_en !== option?.name_en)
+      );
+    } else {
+      // Add the option with the variantId and quantity
+      setCustomVariant((prevCustomVariant) => [
+        ...prevCustomVariant,
         { ...option, variantId, option_id: option.id, quantity: 1 },
       ]);
     }
@@ -407,8 +455,14 @@ export const Details = () => {
         ?.quantity || 0
     );
   };
+  const getCustomQuantity = (option) => {
+    return (
+      customVariant.find((item) => item.name_en === option?.name_en)
+        ?.quantity || 0
+    );
+  };
 
-  const handleAddToppingQuantity = (option) => {
+  const handleAddToppingQuantity = (variantId, option) => {
     setToppingVariant((prevToppingVariant) => {
       // Find the index of the topping with the same name_en
       const index = prevToppingVariant.findIndex(
@@ -428,7 +482,33 @@ export const Details = () => {
         // If the topping doesn't exist, add it with quantity 1
         return [
           ...prevToppingVariant,
-          { ...option, option_id: option.id, quantity: 1 },
+          { ...option, option_id: option.id, quantity: 1, variantId },
+        ];
+      }
+    });
+  };
+
+  const handleAddCustomQuantity = (variantId, option) => {
+    setCustomVariant((prevCustomVariant) => {
+      // Find the index of the Custom with the same name_en
+      const index = prevCustomVariant.findIndex(
+        (item) => item.name_en === option.name_en
+      );
+      setCustomCount((prev) => prev + 1);
+
+      // If the Custom with the same name_en exists, update its quantity
+      if (index !== -1) {
+        const updatedCustomVariant = [...prevCustomVariant];
+        updatedCustomVariant[index] = {
+          ...updatedCustomVariant[index],
+          quantity: (updatedCustomVariant[index].quantity || 0) + 1,
+        };
+        return updatedCustomVariant;
+      } else {
+        // If the Custom doesn't exist, add it with quantity 1
+        return [
+          ...prevCustomVariant,
+          { ...option, option_id: option.id, quantity: 1, variantId },
         ];
       }
     });
@@ -463,6 +543,34 @@ export const Details = () => {
       return prevToppingVariant; // No change if topping doesn't exist
     });
   };
+  const handleRemoveCustomQuantity = (option) => {
+    setCustomVariant((prevCustomVariant) => {
+      // Find the index of the Custom with the same name_en
+      const index = prevCustomVariant.findIndex(
+        (item) => item.name_en === option.name_en
+      );
+      setCustomCount((prev) => prev - 1);
+      if (index !== -1) {
+        const updatedCustomVariant = [...prevCustomVariant];
+        const updatedQuantity = (updatedCustomVariant[index].quantity || 0) - 1;
+
+        if (updatedQuantity > 0) {
+          // If the updated quantity is greater than 0, update it
+          updatedCustomVariant[index] = {
+            ...updatedCustomVariant[index],
+            quantity: updatedQuantity,
+          };
+        } else {
+          // If the updated quantity is 0 or less, remove the custom
+          updatedCustomVariant.splice(index, 1);
+        }
+
+        return updatedCustomVariant;
+      }
+
+      return prevCustomVariant; // No change if custom doesn't exist
+    });
+  };
 
   const variantsForApi = (variantID, optionId, quantity) => {
     const { data } = menuItemDetails;
@@ -488,14 +596,15 @@ export const Details = () => {
     const sideVariant = cartItem.variants?.sideVariant[0]?.variantId;
     const sizeVariant = cartItem.variants?.sizeVariant?.variantId;
     const toppingVariant = cartItem.variants?.toppingVariant[0]?.variantId;
-
+    const customVariant = cartItem.variants?.customVariant[0]?.variantId;
     let cartItemDataForApi = {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
       quantity: cartItem.quantity,
-      topping_variant_id: toppingVariant || 0,
-      side_variant_id: sideVariant || 0,
-      size_variant_id: sizeVariant || 0,
+      topping_variant_id: toppingVariant || null,
+      side_variant_id: sideVariant || null,
+      size_variant_id: sizeVariant || null,
+      custom_variant_id: customVariant || null,
       size_variant: variantsForApi(
         sizeVariant,
         cartItem.variants?.sizeVariant?.id
@@ -504,6 +613,11 @@ export const Details = () => {
         toppingVariant,
         getSelectedItemsIds(cartItem.variants?.toppingVariant),
         cartItem.variants?.toppingVariant[0]?.quantity
+      ),
+      custom_variant: variantsForApi(
+        customVariant,
+        getSelectedItemsIds(cartItem.variants?.customVariant),
+        cartItem.variants?.customVariant[0]?.quantity
       ),
       side_variant: variantsForApi(
         sideVariant,
@@ -544,7 +658,9 @@ export const Details = () => {
 
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
-
+    const hasSizeVariant = data?.variants.find(
+      (val) => val.variant_type == "size"
+    );
     if (
       cart.length > 0 &&
       data.restaurant_id !== cart[0]?.restaurant_id &&
@@ -554,7 +670,7 @@ export const Details = () => {
       return;
     }
 
-    if (menuItemDetails?.data.has_variants && !sizeVariant) {
+    if (hasSizeVariant && !sizeVariant) {
       setErrorShow(true);
       return;
     }
@@ -569,6 +685,7 @@ export const Details = () => {
         sizeVariant: sizeVariant,
         toppingVariant: toppingVariant,
         sideVariant: sideVariant,
+        customVariant: customVariant,
       },
       totalPrice: Number(totalPrice).toFixed(3),
       specialInstructions: specialInstructions,
@@ -582,6 +699,7 @@ export const Details = () => {
       ItemDataObject.has_variants &&
       (ItemDataObject?.variants?.sizeVariant ||
         ItemDataObject?.variants?.toppingVariant ||
+        ItemDataObject?.variants?.customVariant ||
         ItemDataObject.variants?.sideVariant)
         ? cart.find(
             (item) =>
@@ -603,7 +721,8 @@ export const Details = () => {
       dispatch(updateCartItem(ItemDataObject));
       addToCartApiHandler(ItemDataObject);
 
-      navigate(paths.cart);
+      // navigate(paths.cart);
+      navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`);
     } else {
       const item_code = uuidv4();
 
@@ -639,6 +758,7 @@ export const Details = () => {
       variants: {
         sizeVariant: sizeVariant,
         toppingVariant: toppingVariant,
+        customVariant: customVariant,
         sideVariant: sideVariant,
       },
       totalPrice: Number(totalPrice).toFixed(3),
@@ -691,6 +811,7 @@ export const Details = () => {
       variants: {
         sizeVariant: sizeVariant,
         toppingVariant: toppingVariant,
+        customVariant: customVariant,
         sideVariant: sideVariant,
       },
       totalPrice: Number(totalPrice).toFixed(3),
@@ -839,6 +960,36 @@ export const Details = () => {
   const currentRestaurant = restaurantsData?.find((val) => {
     return val.id == restaurant_id;
   });
+
+  const getVariantValidate = (variantName) => {
+    if (variantName === "Choose the Size") {
+      return "(Required)";
+    } else if (
+      variantName === "Extra Topping" ||
+      variantName === "Extra Sides"
+    ) {
+      return "(Optional)";
+    } else {
+      return "";
+    }
+  };
+
+  const labelDisableHandler = (variant, optionsName) => {
+    if (
+      variant.name_en == "Extra Topping" ||
+      variant.variant_type == "custom"
+    ) {
+      if (
+        !checkIfToppingIsAdded(optionsName) &&
+        !checkIfCustomIsAdded(optionsName)
+      ) {
+        if (extraToppingCount == 7 || customCount == variant.upto_limit) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
 
   return (
     <>
@@ -1062,13 +1213,9 @@ export const Details = () => {
                                 top: "-1px",
                               }}
                             >
-                              {variant.name_en === "Choose the Size"
+                              {variant.variant_type == "size"
                                 ? "(Choose 1)"
-                                : variant.name_en === "Extra Topping"
-                                ? "(Choose up to 7)"
-                                : variant.name_en === "Extra Sides"
-                                ? "(Choose up to 2)"
-                                : ""}
+                                : `(Choose up to ${variant.upto_limit})`}
                             </Typography>
                           </Typography>
 
@@ -1090,21 +1237,9 @@ export const Details = () => {
                                   alt="error_icon"
                                 />
                               )}
-                            {variant.name_en === "Choose the Size" ? (
-                              <span style={{ marginBottom: 2 }}>
-                                (Required)
-                              </span>
-                            ) : variant.name_en === "Extra Topping" ? (
-                              <span style={{ marginBottom: 2 }}>
-                                (Optional)
-                              </span>
-                            ) : variant.name_en === "Extra Sides" ? (
-                              <span style={{ marginBottom: 2 }}>
-                                (Optional)
-                              </span>
-                            ) : (
-                              ""
-                            )}
+                            <span style={{ marginBottom: 2 }}>
+                              {getVariantValidate(variant.name_en)}
+                            </span>
                           </Typography>
                         </Stack>
 
@@ -1143,12 +1278,15 @@ export const Details = () => {
                                       ? handleSizeVariant(option, variant.id)
                                       : variant.name_en === "Extra Topping"
                                       ? handleToppingVariant(option, variant.id)
+                                      : variant.variant_type === "custom"
+                                      ? handleCustomVariant(option, variant.id)
                                       : variant.name_en === "Extra Sides"
                                       ? handleSideVariant(option, variant.id)
                                       : () => {};
                                   }}
                                   control={
-                                    variant.name_en !== "Extra Topping" ? (
+                                    variant.name_en !== "Extra Topping" &&
+                                    variant.variant_type !== "custom" ? (
                                       <Checkbox color="themeColor" />
                                     ) : (
                                       <span
@@ -1161,19 +1299,18 @@ export const Details = () => {
                                     )
                                   }
                                   label={option?.name_en}
-                                  disabled={
-                                    variant.name_en === "Extra Topping" &&
-                                    !checkIfToppingIsAdded(option?.name_en)
-                                      ? extraToppingCount == 7
-                                      : false
-                                  }
+                                  disabled={labelDisableHandler(
+                                    variant,
+                                    option?.name_en
+                                  )}
+                                  sx={{ width: "100%" }}
                                 />
-
-                                {variant.name_en === "Extra Topping" && (
-                                  <div className="extra-topping-price-wrapper">
-                                    <p className="extra-topping-price">{`(Each +KWD ${option?.unit_price})`}</p>
-                                  </div>
-                                )}
+                                {variant.name_en === "Extra Topping" ||
+                                  (variant.variant_type === "custom" && (
+                                    <div className="extra-topping-price-wrapper">
+                                      <p className="extra-topping-price">{`(Each +KWD ${option?.unit_price})`}</p>
+                                    </div>
+                                  ))}
 
                                 {variant.name_en === "Extra Topping" ? (
                                   <IncDec
@@ -1188,10 +1325,37 @@ export const Details = () => {
                                     }}
                                     quantity={getExtraToppingQuantity(option)}
                                     onIncrease={() => {
-                                      handleAddToppingQuantity(option);
+                                      handleAddToppingQuantity(
+                                        variant.id,
+                                        option
+                                      );
                                     }}
                                     onDecrease={() => {
                                       handleRemoveToppingQuantity(option);
+                                    }}
+                                  />
+                                ) : null}
+                                {variant.variant_type === "custom" ? (
+                                  <IncDec
+                                    IncButtonProps={{
+                                      disabled:
+                                        customCount == variant.upto_limit,
+                                    }}
+                                    DecButtonProps={{
+                                      disabled: !checkIfCustomIsAdded(
+                                        option?.name_en ||
+                                          getCustomQuantity(option) === 0
+                                      ),
+                                    }}
+                                    quantity={getCustomQuantity(option)}
+                                    onIncrease={() => {
+                                      handleAddCustomQuantity(
+                                        variant.id,
+                                        option
+                                      );
+                                    }}
+                                    onDecrease={() => {
+                                      handleRemoveCustomQuantity(option);
                                     }}
                                   />
                                 ) : null}
@@ -1387,9 +1551,7 @@ export const Details = () => {
                             mr: 1,
                           }}
                         />
-                        {checkIfItemIsInCart() && search
-                          ? "Update Cart"
-                          : "Add to Cart"}
+                        {checkIfItemIsInCart() ? "Update Cart" : "Add to Cart"}
                       </Typography>
                       <Typography
                         variant="body1"
