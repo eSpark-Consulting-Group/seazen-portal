@@ -108,6 +108,7 @@ export const Details = () => {
   const [addressId, setAddressID] = useState();
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
+  const [minOrderAmount, setMinOrderAmount] = useState();
   const [sharedItemForCart, setSharedItemForCart] = useState({});
   const [clearCartModal, setClearCartModal] = useState(false);
   const [menuItemDetails, setMenuItemDetails] = useState();
@@ -747,6 +748,8 @@ export const Details = () => {
       item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
     );
     setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
+    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
+
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -764,6 +767,7 @@ export const Details = () => {
             addressId,
             delivery_charges,
             delivery_time,
+            minOrderAmount,
           })
         );
 
@@ -808,6 +812,7 @@ export const Details = () => {
         addressId,
         delivery_charges,
         delivery_time,
+        minOrderAmount,
       })
     );
 

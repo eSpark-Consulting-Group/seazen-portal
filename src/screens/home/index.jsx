@@ -191,6 +191,7 @@ const Home = () => {
   const [addressId, setAddressID] = useState();
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
+  const [minOrderAmount, setMinOrderAmount] = useState();
 
   useEffect(() => {
     if (userLocation !== null && userSelected === null) {
@@ -211,6 +212,9 @@ const Home = () => {
           );
           setDeliveryTime(
             addressData[i]?.delivery_charge_area_info?.delivery_time
+          );
+          setMinOrderAmount(
+            addressData[i]?.delivery_zone_info?.minimum_order_amount
           );
           getFullAddress(
             +addressData[i].latitude,
@@ -319,6 +323,8 @@ const Home = () => {
       item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
     );
     setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
+    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
+
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -331,6 +337,7 @@ const Home = () => {
       item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
     );
     setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
+    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
     getFullAddress(lat, lng, setChooseFullAddress);
   };
 
@@ -348,6 +355,7 @@ const Home = () => {
             addressId,
             delivery_charges,
             delivery_time,
+            minOrderAmount,
           })
         );
 
@@ -396,6 +404,7 @@ const Home = () => {
         addressId,
         delivery_charges,
         delivery_time,
+        minOrderAmount,
       })
     );
 
@@ -469,6 +478,7 @@ const Home = () => {
                   addressId,
                   delivery_charges,
                   delivery_time,
+                  minOrderAmount,
                 })
               );
 
@@ -503,6 +513,7 @@ const Home = () => {
             addressId,
             delivery_charges,
             delivery_time,
+            minOrderAmount,
           })
         );
         setOpenAddressPopup(false);

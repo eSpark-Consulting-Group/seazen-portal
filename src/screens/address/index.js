@@ -214,6 +214,7 @@ const AddressForm = () => {
               res?.data?.delivery_charge_area_info?.delivery_charges?.split(
                 " "
               )[1],
+            minOrderAmount: res?.data?.delivery_zone_info?.minimum_order_amount,
           };
 
           localStorage.setItem("selected", JSON.stringify(addToStorage));
@@ -292,6 +293,7 @@ const AddressForm = () => {
                 " "
               )[1],
             addressId: res?.data?.id,
+            minOrderAmount: res?.data?.delivery_zone_info?.minimum_order_amount,
           };
 
           if (
