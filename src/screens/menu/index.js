@@ -98,6 +98,7 @@ const Menu = () => {
   const [branchesAndHoursResponse, setBranchesAndHoursResponse] = useState();
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
+  const [minOrderAmount, setMinOrderAmount] = useState();
 
   const {
     data: restaurantDetailResponse,
@@ -236,6 +237,7 @@ const Menu = () => {
       item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
     );
     setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
+    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -253,6 +255,7 @@ const Menu = () => {
             addressId: addressID,
             delivery_charges,
             delivery_time,
+            minOrderAmount,
           })
         );
 
@@ -308,6 +311,7 @@ const Menu = () => {
         addressId: addressID,
         delivery_charges,
         delivery_time,
+        minOrderAmount,
       })
     );
 

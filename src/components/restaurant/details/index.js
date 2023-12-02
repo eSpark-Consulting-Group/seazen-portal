@@ -11,6 +11,9 @@ const StyledItemPrice = styled("div")(({ theme }) => ({
 
 const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
   const navigate = useNavigate();
+
+  const selected = JSON.parse(localStorage?.getItem("selected"));
+
   const handleBranchHoursClick = () => {
     navigate(paths.branches + restaurantDetail?.id + "/branches");
   };
@@ -68,7 +71,8 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
                 font: "normal normal 10px/20px Titillium Web",
               }}
             >
-              Min. order: 7 KWD
+              Min. order: {selected !== null ? selected?.minOrderAmount : "7"}{" "}
+              KWD
             </span>
           </StyledItemPrice>
         </div>

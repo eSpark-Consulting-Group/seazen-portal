@@ -114,6 +114,7 @@ const DeliveryDetails = (props) => {
   const [addressID, setAddressID] = useState();
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
+  const [minOrderAmount, setMinOrderAmount] = useState();
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
 
@@ -347,6 +348,7 @@ const DeliveryDetails = (props) => {
           addressId: addressID,
           delivery_charges,
           delivery_time,
+          minOrderAmount,
         })
       );
 
@@ -504,6 +506,9 @@ const DeliveryDetails = (props) => {
                             setDeliveryTime(
                               address?.delivery_charge_area_info?.delivery_time
                             );
+                            setMinOrderAmount(
+                              address?.delivery_zone_info?.minimum_order_amount
+                            );
                             fetchNearbyRestaurant(
                               address.latitude,
                               address.longitude
@@ -624,7 +629,7 @@ const DeliveryDetails = (props) => {
               </Dropdown.Menu>
             </Dropdown>
           </div>
-          {(currentLocation !== null || selected !== null) && (
+          {selected !== null && (
             <Stack
               justifyContent="center"
               alignItems="center"

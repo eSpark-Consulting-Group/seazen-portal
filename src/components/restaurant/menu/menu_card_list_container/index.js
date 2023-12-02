@@ -79,6 +79,7 @@ const MenuCardListContainer = ({
   const [addressID, setAddressID] = useState();
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
+  const [minOrderAmount, setMinOrderAmount] = useState();
 
   const currentLocation = JSON.parse(localStorage.getItem("location"));
 
@@ -177,6 +178,7 @@ const MenuCardListContainer = ({
       item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
     );
     setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
+    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
 
     getFullAddress(lat, lng, setFullAddress);
   };
@@ -249,6 +251,7 @@ const MenuCardListContainer = ({
         addressId: addressID,
         delivery_charges,
         delivery_time,
+        minOrderAmount,
       })
     );
 
