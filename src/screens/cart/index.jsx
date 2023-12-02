@@ -590,7 +590,9 @@ function CartPage() {
   };
 
   const getDeliveryCharge = () => {
-    return Number(deliveryPrice).toFixed(3);
+    return Number(
+      selectedAdd !== null ? Number(selectedAdd?.delivery_charges) : 0
+    ).toFixed(3);
   };
 
   const getPromoDiscount = () => {
@@ -639,7 +641,8 @@ function CartPage() {
     tip_amount: tipValue,
     pick_from_store: "",
     pickup_from_car: "",
-    delivery_charges: deliveryPrice,
+    delivery_charges:
+      selectedAdd !== null ? Number(selectedAdd?.delivery_charges) : 0,
     promo_code: "Test1",
     comments: specialIns,
     delivery_schedule: {
@@ -938,6 +941,7 @@ function CartPage() {
                       borderRadius: "8px",
                     }}
                     spacing={0}
+                    className="delivery-time"
                   >
                     <Typography
                       variant="h4"
@@ -946,7 +950,7 @@ function CartPage() {
                         lineHeight: 1,
                       }}
                     >
-                      30
+                      {selectedAdd?.delivery_time?.split(" ")[1]}
                     </Typography>
                     <Typography
                       variant="caption"

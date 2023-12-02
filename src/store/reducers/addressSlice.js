@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   addressData: [],
+  allAreas: [],
   addressDetail: {},
   error: "",
   isLoading: false,
@@ -23,9 +24,13 @@ const addressSlice = createSlice({
         state.addressDetail = payload.currentAdd;
       }
     },
+    getAreas: (state, { payload }) => {
+      state.allAreas = payload;
+    },
   },
 });
 
-export const { isLoaded, getAddress, addAddressDetail } = addressSlice.actions;
+export const { isLoaded, getAddress, addAddressDetail, getAreas } =
+  addressSlice.actions;
 
 export default addressSlice.reducer;

@@ -38,6 +38,7 @@ const API_ENDPOINTS = {
   },
   ADDRESS: {
     ADDRESS: "/address",
+    AREA: "/delivery-zones/areas",
   },
   COMMON: {
     GET_ALL_COUNTRIES: "/common/countries",

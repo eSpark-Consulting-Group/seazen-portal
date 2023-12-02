@@ -96,6 +96,9 @@ const Menu = () => {
   const [restaurantName, setRestaurantName] = useState("");
   const [addressID, setAddressID] = useState();
   const [branchesAndHoursResponse, setBranchesAndHoursResponse] = useState();
+  const [delivery_charges, setDeliveryCharge] = useState();
+  const [delivery_time, setDeliveryTime] = useState();
+  const [minOrderAmount, setMinOrderAmount] = useState();
 
   const {
     data: restaurantDetailResponse,
@@ -230,6 +233,11 @@ const Menu = () => {
     const lng = +item.longitude;
 
     setAddressID(item.id);
+    setDeliveryCharge(
+      item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+    );
+    setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
+    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -242,7 +250,13 @@ const Menu = () => {
       if (cart?.length === 0) {
         localStorage.setItem(
           "selected",
-          JSON.stringify({ ...fullAddress, addressId: addressID })
+          JSON.stringify({
+            ...fullAddress,
+            addressId: addressID,
+            delivery_charges,
+            delivery_time,
+            minOrderAmount,
+          })
         );
 
         navigate(paths.cart);
@@ -292,7 +306,13 @@ const Menu = () => {
   const checkNearByRest = (branch) => {
     localStorage.setItem(
       "selected",
-      JSON.stringify({ ...fullAddress, addressId: addressID })
+      JSON.stringify({
+        ...fullAddress,
+        addressId: addressID,
+        delivery_charges,
+        delivery_time,
+        minOrderAmount,
+      })
     );
 
     if (branch?.length === 0) {

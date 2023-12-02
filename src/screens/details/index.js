@@ -108,6 +108,9 @@ export const Details = () => {
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [addressId, setAddressID] = useState();
+  const [delivery_charges, setDeliveryCharge] = useState();
+  const [delivery_time, setDeliveryTime] = useState();
+  const [minOrderAmount, setMinOrderAmount] = useState();
   const [sharedItemForCart, setSharedItemForCart] = useState({});
   const [clearCartModal, setClearCartModal] = useState(false);
   const [menuItemDetails, setMenuItemDetails] = useState();
@@ -880,6 +883,12 @@ export const Details = () => {
     const lng = +item.longitude;
 
     setAddressID(item.id);
+    setDeliveryCharge(
+      item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+    );
+    setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
+    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
+
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -892,7 +901,13 @@ export const Details = () => {
       if (cart?.length === 0) {
         localStorage.setItem(
           "selected",
-          JSON.stringify({ ...fullAddress, addressId })
+          JSON.stringify({
+            ...fullAddress,
+            addressId,
+            delivery_charges,
+            delivery_time,
+            minOrderAmount,
+          })
         );
 
         navigate(paths.cart);
@@ -931,7 +946,13 @@ export const Details = () => {
   const checkNearByRest = (branch) => {
     localStorage.setItem(
       "selected",
-      JSON.stringify({ ...fullAddress, addressId })
+      JSON.stringify({
+        ...fullAddress,
+        addressId,
+        delivery_charges,
+        delivery_time,
+        minOrderAmount,
+      })
     );
 
     if (branch?.length === 0) {
