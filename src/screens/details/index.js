@@ -658,9 +658,11 @@ export const Details = () => {
 
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
+
     const hasSizeVariant = data?.variants.find(
       (val) => val.variant_type == "size"
     );
+
     if (
       cart.length > 0 &&
       data.restaurant_id !== cart[0]?.restaurant_id &&
@@ -744,11 +746,19 @@ export const Details = () => {
   const openNotDelivered = () => {
     const { data } = menuItemDetails;
 
-    if (menuItemDetails?.data.has_variants && !sizeVariant) {
-      setErrorShow(true);
-      return;
+    if (menuItemDetails?.data?.has_variants) {
+      if (customVariant.length !== 0 || sizeVariant !== undefined) {
+        createAndAddState(data);
+      } else {
+        setErrorShow(true);
+        return;
+      }
+    } else {
+      createAndAddState(data);
     }
+  };
 
+  const createAndAddState = (data) => {
     var ItemDataObject = {
       id: data?.id,
       itemName: data?.name_en,
@@ -797,11 +807,19 @@ export const Details = () => {
   const moveToLocation = () => {
     const { data } = menuItemDetails;
 
-    if (menuItemDetails?.data.has_variants && !sizeVariant) {
-      setErrorShow(true);
-      return;
+    if (menuItemDetails?.data?.has_variants) {
+      if (customVariant.length !== 0 || sizeVariant !== undefined) {
+        createAndAddWithNavigation(data);
+      } else {
+        setErrorShow(true);
+        return;
+      }
+    } else {
+      createAndAddWithNavigation(data);
     }
+  };
 
+  const createAndAddWithNavigation = (data) => {
     var ItemDataObject = {
       id: data?.id,
       itemName: data?.name_en,
@@ -1468,11 +1486,13 @@ export const Details = () => {
                   size="large"
                   variant="contained"
                   fullWidth
-                  // disabled={
-                  //   location?.state?.locationDeliver || farRestaurant
-                  //     ? false
-                  //     : menuItemDetails?.data.has_variants && !sizeVariant
-                  // }
+                  disabled={
+                    menuItemDetails?.data.has_variants
+                      ? customCount === 10 || sizeVariant !== undefined
+                        ? false
+                        : true
+                      : false
+                  }
                   sx={{
                     py: 2,
                     display: "flex",
