@@ -173,6 +173,8 @@ const ReOrderCard = (props) => {
             size_variant_id: item.size_variant_id,
             topping_variant: item.topping_variant,
             topping_variant_id: item.topping_variant_id,
+            custom_variant: item.custom_variant,
+            custom_variant_id: item.custom_variant_id,
             branch_id: item?.branch_id,
           };
 
@@ -194,6 +196,7 @@ const ReOrderCard = (props) => {
                   const has_variants =
                     val?.size_variant_id === "" &&
                     val.side_variant_id === "" &&
+                    val.custom_variant_id === "" &&
                     val.topping_variant_id === ""
                       ? false
                       : true;
@@ -201,6 +204,7 @@ const ReOrderCard = (props) => {
                   const variants =
                     val?.size_variant_id === "" &&
                     val.side_variant_id === "" &&
+                    val.custom_variant_id === "" &&
                     val.topping_variant_id === ""
                       ? null
                       : {
@@ -215,6 +219,10 @@ const ReOrderCard = (props) => {
                           sideVariant: val.side_variant.map((value) => ({
                             ...value,
                             variantId: val.side_variant_id,
+                          })),
+                          customVariant: val.custom_variant.map((value) => ({
+                            ...value,
+                            customId: val.side_custom_id,
                           })),
                         };
 

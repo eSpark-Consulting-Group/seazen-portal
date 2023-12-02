@@ -546,6 +546,10 @@ function CartPage() {
                     ...value,
                     variantId: val.topping_variant_id,
                   })),
+                  customVariant: val.custom_variant.map((value) => ({
+                    ...value,
+                    variantId: val.custom_variant_id,
+                  })),
                   sideVariant: val.side_variant.map((value) => ({
                     ...value,
                     variantId: val.side_variant_id,

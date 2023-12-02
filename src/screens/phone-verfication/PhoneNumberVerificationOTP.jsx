@@ -124,14 +124,16 @@ function PhoneNumberVerificationOTP() {
     const sideVariant = cartItem?.variants?.sideVariant[0]?.variantId;
     const sizeVariant = cartItem?.variants?.sizeVariant?.variantId;
     const toppingVariant = cartItem?.variants?.toppingVariant[0]?.variantId;
+    const customVariant = cartItem?.variants?.customVariant[0]?.variantId;
 
     const cartItemDataForApi = {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
       quantity: cartItem.quantity,
-      topping_variant_id: toppingVariant || 0,
-      side_variant_id: sideVariant || 0,
-      size_variant_id: sizeVariant || 0,
+      topping_variant_id: toppingVariant || null,
+      side_variant_id: sideVariant || null,
+      size_variant_id: sizeVariant || null,
+      custom_variant_id: customVariant || null,
       size_variant: variantsForApi(
         sizeVariant,
         cartItem.variants?.sizeVariant?.id
@@ -140,6 +142,11 @@ function PhoneNumberVerificationOTP() {
         toppingVariant,
         getSelectedItemsIds(cartItem.variants?.toppingVariant),
         cartItem.variants?.toppingVariant[0]?.quantity
+      ),
+      custom_variant: variantsForApi(
+        customVariant,
+        getSelectedItemsIds(cartItem.variants?.customVariant),
+        cartItem.variants?.customVariant[0]?.quantity
       ),
       side_variant: variantsForApi(
         sideVariant,

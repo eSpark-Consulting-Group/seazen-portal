@@ -200,7 +200,7 @@ function CartItem(props) {
               localStorage.setItem("restaurantID", cart[0]?.restaurant_id);
 
               navigate(`${paths.details}/${id}?item_code=${item_code}`, {
-                state: { branch_id },
+                state: { branch_id, item_code },
               });
             }}
             sx={{

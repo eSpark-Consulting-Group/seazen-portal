@@ -204,8 +204,8 @@ const MenuCard = (props) => {
     // for each item, get the sideVariant, sizeVariant and toppingVariant
     items.forEach((element) => {
       if (element?.variants) {
-        const { sideVariant, sizeVariant, toppingVariant } = element.variants;
-
+        const { sideVariant, sizeVariant, toppingVariant, customVariant } =
+          element.variants;
         let menuItemVariant = {
           id: element.id,
           item_code: element.item_code,
@@ -222,6 +222,12 @@ const MenuCard = (props) => {
             quantity: sizeVariant?.quantity,
           },
           toppingVariants: toppingVariant?.map((variant) => {
+            return {
+              name_en: variant?.name_en,
+              quantity: variant?.quantity,
+            };
+          }),
+          customVariants: customVariant?.map((variant) => {
             return {
               name_en: variant?.name_en,
               quantity: variant?.quantity,
@@ -353,8 +359,10 @@ const MenuCard = (props) => {
         topping_variant_id: 0,
         side_variant_id: 0,
         size_variant_id: 0,
+        custom_variant_id: 0,
         size_variant: [],
         topping_variant: [],
+        custom_variant: [],
         side_variant: [],
         branch_id: allData.branch_id,
       };
@@ -420,8 +428,10 @@ const MenuCard = (props) => {
           topping_variant_id: 0,
           side_variant_id: 0,
           size_variant_id: 0,
+          custom_variant_id: 0,
           size_variant: [],
           topping_variant: [],
+          custom_variant: [],
           side_variant: [],
           branch_id: allData.branch_id,
         };
@@ -442,6 +452,9 @@ const MenuCard = (props) => {
 
     if (foodItemQuantity === 1) {
       dispatch(removeFromCart(id));
+      if (cart.length == 1) {
+        clearCartItems();
+      }
     }
 
     if (foodItemQuantity > 1) {
@@ -480,7 +493,8 @@ const MenuCard = (props) => {
   };
 
   const getExtraItemNames = (menuItemsVariant) => {
-    const { sizeVariant, sideVariants, toppingVariants } = menuItemsVariant;
+    const { sizeVariant, sideVariants, toppingVariants, customVariants } =
+      menuItemsVariant;
 
     let extraItemNames = [];
 
@@ -494,6 +508,9 @@ const MenuCard = (props) => {
 
     if (toppingVariants && toppingVariants.length > 0) {
       extraItemNames.push(...toppingVariants.map((variant) => variant.name_en));
+    }
+    if (customVariants && customVariants.length > 0) {
+      extraItemNames.push(...customVariants.map((variant) => variant.name_en));
     }
 
     return extraItemNames.join(", ");
@@ -518,6 +535,7 @@ const MenuCard = (props) => {
       sideVariants: obj.sideVariants,
       sizeVariant: obj.sizeVariant,
       toppingVariants: obj.toppingVariants,
+      customVariants: obj.customVariants,
     });
     const isUnique = !uniqueObjects.has(str);
     if (isUnique) {
@@ -801,6 +819,8 @@ const MenuCard = (props) => {
                       item={variance}
                       extraItemName={getExtraItemNames(variance)}
                       extraItemCount={variance.quantity}
+                      item_code={variance.item_code}
+                      id={id}
                     />
                   );
                 }

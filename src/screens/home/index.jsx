@@ -74,6 +74,7 @@ const Home = () => {
                   const has_variants =
                     val?.size_variant_id === "" &&
                     val.side_variant_id === "" &&
+                    val.custom_variant_id === "" &&
                     val.topping_variant_id === ""
                       ? false
                       : true;
@@ -81,6 +82,7 @@ const Home = () => {
                   const variants =
                     val?.size_variant_id === "" &&
                     val.side_variant_id === "" &&
+                    val.custom_variant_id === "" &&
                     val.topping_variant_id === ""
                       ? null
                       : {
@@ -91,6 +93,10 @@ const Home = () => {
                           toppingVariant: val.topping_variant.map((value) => ({
                             ...value,
                             variantId: val.topping_variant_id,
+                          })),
+                          customVariant: val.custom_variant.map((value) => ({
+                            ...value,
+                            variantId: val.custom_variant_id,
                           })),
                           sideVariant: val.side_variant.map((value) => ({
                             ...value,

@@ -19,6 +19,7 @@ const API_ENDPOINTS = {
     VERIFY_OTP: "/customer/verify-otp",
     RESEND_OTP: "/customer/resend-otp",
     INFO: "/customer",
+    LOGOUT: "/customer/logout",
   },
   CART: {
     ADD_TO_CART: "/add-to-cart",

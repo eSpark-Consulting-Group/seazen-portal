@@ -93,9 +93,9 @@ const AddressForm = () => {
     company_name: "",
     country_code: "",
     mobile_number: "",
-    address_type: "house",
-    latitude: location?.state?.latlng.lat.toString(),
-    longitude: location?.state?.latlng.lng.toString(),
+    address_type: addressType,
+    latitude: location?.state?.latlng.lat?.toString(),
+    longitude: location?.state?.latlng.lng?.toString(),
   });
   const [errorState, setErrorState] = useState({
     areaErr: false,
