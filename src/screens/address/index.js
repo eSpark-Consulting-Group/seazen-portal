@@ -566,19 +566,19 @@ const AddressForm = () => {
         )}
         <form onSubmit={handleSubmit}>
           {/* Add the form element and onSubmit handler */}
-          {/* {addressType === "house" && ( */}
-          <HomeAdress
-            handleChange={handleChange}
-            address={address}
-            setAddress={setAddress}
-            areaErr={errorState.areaErr}
-            blockErr={errorState.blockErr}
-            streetErr={errorState.streetErr}
-            houseNoErr={errorState.houseNoErr}
-            area={area}
-            setArea={setArea}
-          />
-          {/* )} */}
+          {addressType === "house" && (
+            <HomeAdress
+              handleChange={handleChange}
+              address={address}
+              setAddress={setAddress}
+              areaErr={errorState.areaErr}
+              blockErr={errorState.blockErr}
+              streetErr={errorState.streetErr}
+              houseNoErr={errorState.houseNoErr}
+              area={area}
+              setArea={setArea}
+            />
+          )}
           {addressType === "apartment" && (
             <AppartmentAdress
               handleChange={handleChange}
