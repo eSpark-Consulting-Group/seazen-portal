@@ -591,7 +591,7 @@ function CartPage() {
 
   const getDeliveryCharge = () => {
     return Number(
-      selectedAdd !== null ? Number(selectedAdd?.delivery_charges) : 0
+      selectedAdd !== null ? Number(selectedAdd?.delivery_charges || 0) : 0
     ).toFixed(3);
   };
 
@@ -923,46 +923,48 @@ function CartPage() {
               <Typography>Estimated Delivery Time:</Typography>
 
               <Stack direction="row" alignItems="center" spacing={1}>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  sx={{
-                    display: "flex",
-                    maxWidth: "200px",
-                  }}
-                >
-                  <Stack
-                    justifyContent="center"
-                    alignItems="center"
+                {selectedAdd?.delivery_time && (
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
                     sx={{
-                      bgcolor: (theme) => theme.palette.themeColor.main,
-                      color: "common.white",
-                      p: 1,
-                      borderRadius: "8px",
+                      display: "flex",
+                      maxWidth: "200px",
                     }}
-                    spacing={0}
-                    className="delivery-time"
                   >
-                    <Typography
-                      variant="h4"
-                      fontWeight={600}
+                    <Stack
+                      justifyContent="center"
+                      alignItems="center"
                       sx={{
-                        lineHeight: 1,
+                        bgcolor: (theme) => theme.palette.themeColor.main,
+                        color: "common.white",
+                        p: 1,
+                        borderRadius: "8px",
                       }}
+                      spacing={0}
+                      className="delivery-time"
                     >
-                      {selectedAdd?.delivery_time?.split(" ")[1]}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      fontWeight={300}
-                      sx={{
-                        lineHeight: 1,
-                      }}
-                    >
-                      minutes
-                    </Typography>
-                  </Stack>
-                </Typography>
+                      <Typography
+                        variant="h4"
+                        fontWeight={600}
+                        sx={{
+                          lineHeight: 1,
+                        }}
+                      >
+                        {selectedAdd?.delivery_time?.split(" ")[1]}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        fontWeight={300}
+                        sx={{
+                          lineHeight: 1,
+                        }}
+                      >
+                        minutes
+                      </Typography>
+                    </Stack>
+                  </Typography>
+                )}
                 <Typography
                   variant="h5"
                   sx={{

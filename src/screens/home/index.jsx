@@ -115,7 +115,7 @@ const Home = () => {
                     item_code: val.item_code,
                     specialInstructions: "",
                     itemImage: val?.menu_item_image,
-                    restaurant_id: findRestaurant.restaurant_id,
+                    restaurant_id: findRestaurant?.restaurant_id,
                     totalPrice: Number(val.quantity * val.unit_price).toFixed(
                       3
                     ),

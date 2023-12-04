@@ -648,7 +648,7 @@ export const Details = () => {
 
   const clearCartItems = () => {
     dispatch(resetCart());
-    clearCart()
+    clearCart(token)
       .then((res) => {
         console.log(res);
       })
