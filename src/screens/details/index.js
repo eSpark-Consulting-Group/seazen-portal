@@ -601,6 +601,7 @@ export const Details = () => {
     let cartItemDataForApi = {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
+      branch_id: cartItem.branch_id,
       quantity: cartItem.quantity,
       topping_variant_id: toppingVariant || null,
       side_variant_id: sideVariant || null,
