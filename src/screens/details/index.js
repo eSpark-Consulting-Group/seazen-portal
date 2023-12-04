@@ -334,10 +334,8 @@ export const Details = () => {
       setCustomVariant(cartItem?.variants?.customVariant || []);
       setSideVariant(cartItem?.variants?.sideVariant || []);
       setTotalPrice(cartItem?.totalPrice);
-    }
-    if (cartItem) {
       setCustomCount(
-        cartItem.variants.customVariant.reduce(
+        cartItem?.variants?.customVariant?.reduce(
           (total, obj) => total + obj.quantity,
           0
         )
@@ -1030,6 +1028,18 @@ export const Details = () => {
     return false;
   };
 
+  const buttonDisableHandle = () => {
+    if (menuItemDetails?.data.has_variants) {
+      if (customCount < 10) {
+        return true;
+      }
+
+      if (sizeVariant) {
+        return true;
+      }
+    }
+    return false;
+  };
   return (
     <>
       <Dialog
@@ -1507,13 +1517,7 @@ export const Details = () => {
                   size="large"
                   variant="contained"
                   fullWidth
-                  disabled={
-                    menuItemDetails?.data.has_variants
-                      ? customCount === 10 || sizeVariant !== undefined
-                        ? false
-                        : true
-                      : false
-                  }
+                  disabled={buttonDisableHandle()}
                   sx={{
                     py: 2,
                     display: "flex",
