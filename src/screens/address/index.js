@@ -135,11 +135,13 @@ const AddressForm = () => {
           ? parseInt(state.phone_country_code)
           : "",
         mobile_number: state.phone_no ? parseInt(state.phone_no) : "",
-        address_type: "house",
+        address_type: state?.address_type
+          ? state.address_type.toLowerCase()
+          : "",
         latitude: location?.state?.latlng.lat.toString(),
         longitude: location?.state?.latlng.lng.toString(),
       });
-      setAddressType("house");
+      setAddressType(state?.address_type?.toLowerCase());
       setArea(state?.delivery_charge_area_info?.name_en);
     }
   }, [location?.state?.edit]);
@@ -179,8 +181,6 @@ const AddressForm = () => {
       setAddress((prevAddress) => ({ ...prevAddress, [key]: value }));
     }
   };
-
-  console.log(location?.state?.path);
 
   const apiCall = () => {
     let updateAddress = {};
@@ -370,17 +370,17 @@ const AddressForm = () => {
     // Handle form submission logic here, e.g., save the form data
     setClickEv(true);
 
-    // if (addressType === "house") {
-    if (
-      address.delivery_charge_area_id !== "" &&
-      address.block !== "" &&
-      address.street !== "" &&
-      address.house_no !== ""
-    ) {
-      setClickEv(false);
-      callApiAfterNumCheck();
+    if (addressType === "house") {
+      if (
+        address.delivery_charge_area_id !== "" &&
+        address.block !== "" &&
+        address.street !== "" &&
+        address.house_no !== ""
+      ) {
+        setClickEv(false);
+        callApiAfterNumCheck();
+      }
     }
-    // }
     if (addressType === "apartment") {
       if (
         address.delivery_charge_area_id !== "" &&

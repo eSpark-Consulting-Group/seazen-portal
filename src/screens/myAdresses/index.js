@@ -13,6 +13,7 @@ import {
   DialogContentText,
   DialogTitle,
   CircularProgress,
+  Typography,
 } from "@mui/material";
 
 import Card from "../../components/adressList";
@@ -261,7 +262,7 @@ const App = () => {
         ))
       ) : (
         <div className="parent-address">
-          {addressData?.length &&
+          {addressData?.length ? (
             addressData
               ?.filter((address) => {
                 const isDeliveryChargeInfoArray = !Array.isArray(
@@ -291,7 +292,18 @@ const App = () => {
                     location={location}
                   />
                 </div>
-              ))}
+              ))
+          ) : (
+            <div className="no-address">
+              <div className="location-icon">
+                <img src="/assets/img/location.png" />
+              </div>
+
+              <Typography variant="h6" className="empty-text">
+                You don&apos;t have any saved addresses yet.
+              </Typography>
+            </div>
+          )}
         </div>
       )}
       <AddressesButton

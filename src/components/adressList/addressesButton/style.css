@@ -7,6 +7,16 @@
   border: none;
   margin-top: 70px;
   margin-bottom: 15px;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.addresses-add-button:hover {
+  background: #fff;
+  border: 1px solid #98694e;
+}
+
+.addresses-add-button:hover span {
+  color: #98694e;
 }
 
 .addresses-add-button-text {
@@ -28,18 +38,17 @@
   .addresses-add-button {
     height: 50px;
     margin-top: 35px;
-
   }
 }
 
-@media screen and (max-width:500px) and (min-width:355px) {
+@media screen and (max-width: 500px) and (min-width: 355px) {
   .addresses-add-button {
     margin-top: 35px;
     margin-bottom: 0px;
   }
 }
 
-@media screen and (max-width:350px) {
+@media screen and (max-width: 350px) {
   .addresses-add-button {
     margin-top: 165px;
   }
