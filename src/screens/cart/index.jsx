@@ -1419,6 +1419,7 @@ function CartPage() {
             onClick={(e) => checkoutHandler(e)}
             variant="contained"
             size="large"
+            className="pay-now-button"
           >
             Pay Now
           </Button>
