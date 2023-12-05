@@ -474,6 +474,9 @@ const DeliveryDetails = (props) => {
                   fontWeight: "bold",
                   border: "none",
                   transform: "translate(0px, -22px)",
+                  maxHeight: "200px",
+                  overflowY: "scroll",
+                  scrollbarWidth: "none",
                 }}
               >
                 <Dropdown.Item defaultChecked onClick={addLocation}>
@@ -581,7 +584,7 @@ const DeliveryDetails = (props) => {
             <Dropdown
               onToggle={() => setIsDeliveryDropDown(!isDeliveryDropDown)}
               show={isDeliveryDropDown}
-              style={{ width: "163px" }}
+              style={{ width: "163px", scrollbarWidth: "none" }}
             >
               <Dropdown.Toggle
                 variant="success"

@@ -57,6 +57,7 @@ export const DialogComponent = (props) => {
           textAlign: "center",
           overflow: "visible",
           margin: "27px",
+          scrollbarWidth: "none",
 
           "@media (max-width: 500px)": {
             width: "375px",
@@ -73,7 +74,12 @@ export const DialogComponent = (props) => {
       <DialogTitle id="alert-dialog-title" className="dialog-title">
         <img src="/assets/img/exclaim.svg"></img>
       </DialogTitle>
-      <DialogContent className="content">
+      <DialogContent
+        className="content"
+        sx={{
+          scrollbarWidth: "none",
+        }}
+      >
         <DialogContentText id="alert-dialog-description">
           {fromDetail ? (
             <div className="text-detail">

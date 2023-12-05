@@ -133,6 +133,11 @@
   height: 190px;
   overflow-y: auto;
   padding-top: 10px;
+  scrollbar-width: none;
+}
+
+.to-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 @media only screen and (max-width: 500px) {

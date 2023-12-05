@@ -1,8 +1,10 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
+
+import Select from "react-select";
 
 import { RequestType, geocode, setKey } from "react-geocode";
 
@@ -13,6 +15,9 @@ import { AppartmentAdress } from "../../components/address/forms/appartmentForm"
 import { OfficeAdress } from "../../components/address/forms/officeForm";
 import AddressTypeSelector from "../../components/address/addressButton";
 import MyAddresses from "../../components/header/myAdresses";
+
+import { ReactComponent as Dropdown } from "../../assets/icons/dropdown.svg";
+import { ReactComponent as ErrorDropdown } from "../../assets/icons/error-icon.svg";
 
 import {
   checkIfIncludesPlus,
@@ -77,6 +82,8 @@ const AddressForm = () => {
 
   const token = localStorage.getItem("token");
 
+  const allAreas = useSelector((state) => state.address.allAreas);
+
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
   const [address, setAddress] = useState({
     delivery_charge_area_id: "",
@@ -107,7 +114,7 @@ const AddressForm = () => {
     countryCodeErr: false,
   });
   const [clickEv, setClickEv] = useState(false);
-  const [area, setArea] = useState("");
+  const [area, setArea] = useState(null);
 
   useLayoutEffect(() => {
     if (location?.state?.edit) {
@@ -511,6 +518,26 @@ const AddressForm = () => {
     }
   };
 
+  const selectHandler = (selectedOption) => {
+    setArea(selectedOption);
+    setAddress((address) => ({
+      ...address,
+      delivery_charge_area_id: selectedOption.value,
+      delivery_zone_id: selectedOption.zone_id,
+    }));
+  };
+
+  const groupedOptions = allAreas.map((zone) => ({
+    label: zone.name_en,
+    options: zone.areas.map((area) => ({
+      label: area.name_en,
+      value: area.area_id,
+      zone_id: zone.zone_id,
+    })),
+  }));
+
+  console.log(address);
+
   return (
     <>
       <MyAddresses
@@ -566,17 +593,106 @@ const AddressForm = () => {
         )}
         <form onSubmit={handleSubmit}>
           {/* Add the form element and onSubmit handler */}
+
+          <div className="container-style px-3">
+            <Select
+              value={area}
+              onChange={selectHandler}
+              options={groupedOptions}
+              isSearchable
+              placeholder="Areas"
+              components={{
+                DropdownIndicator: errorState?.areaErr
+                  ? ErrorDropdown
+                  : Dropdown,
+              }}
+              styles={{
+                option: (provided, state) => ({
+                  ...provided,
+                  cursor: "pointer",
+                  backgroundColor: state.isSelected
+                    ? "rgba(189,197,209,.3)"
+                    : "transparent",
+                  color: "#000000",
+                  ":hover": {
+                    backgroundColor: "rgba(189,197,209,.3)",
+                  },
+                }),
+                indicatorsContainer: (provided) => ({
+                  ...provided,
+                  border: "none",
+                  position: "absolute",
+                  right: "16px",
+                  top: "11px",
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  boxShadow: "0px 10px 30px rgba(49, 79, 124, 0.16)",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }),
+                indicatorSeparator: () => ({
+                  display: "none",
+                }),
+                control: (baseStyles) => ({
+                  ...baseStyles,
+                  backgroundColor: "#fafafa",
+                  border: errorState?.areaErr
+                    ? "1px solid #e02020 !important"
+                    : "1px solid #c0cdd7 !important",
+                  borderRadius: "12px !important",
+                  opacity: "1",
+                  padding: "10px",
+                  width: "100%",
+                  marginBottom: "10px",
+                  height: "64px",
+                  color: "#000000",
+                  boxShadow: "none",
+                }),
+                valueContainer: (baseStyles) => ({
+                  ...baseStyles,
+                  paddingLeft: "0px",
+                }),
+                placeholder: (baseStyles) => ({
+                  ...baseStyles,
+                  margin: "0px",
+                  color: errorState?.areaErr ? "#e02020" : "#959fa8",
+                  font: "normal normal bold 16px/28px Titillium Web",
+                }),
+                menu: (provided) => ({
+                  ...provided,
+                  color: "#000000",
+                  borderRadius: "8px",
+                  marginTop: "0px",
+                }),
+                menuList: (base) => ({
+                  ...base,
+                  scrollbarWidth: "none",
+                  "::-webkit-scrollbar": {
+                    display: "none",
+                  },
+                }),
+                group: (base) => ({
+                  ...base,
+                  padding: "0px",
+                }),
+                groupHeading: (base) => ({
+                  ...base,
+                  display: "none",
+                  padding: "0px",
+                }),
+              }}
+            />
+          </div>
+
           {addressType === "house" && (
             <HomeAdress
               handleChange={handleChange}
               address={address}
-              setAddress={setAddress}
-              areaErr={errorState.areaErr}
               blockErr={errorState.blockErr}
               streetErr={errorState.streetErr}
               houseNoErr={errorState.houseNoErr}
-              area={area}
-              setArea={setArea}
             />
           )}
           {addressType === "apartment" && (
