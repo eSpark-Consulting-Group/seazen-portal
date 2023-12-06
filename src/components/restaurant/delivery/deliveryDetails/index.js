@@ -642,7 +642,7 @@ const DeliveryDetails = (props) => {
               </Dropdown.Menu>
             </Dropdown>
           </div>
-          {selected !== null && (
+          {selected !== null && selected?.delivery_time && (
             <Stack
               justifyContent="center"
               alignItems="center"

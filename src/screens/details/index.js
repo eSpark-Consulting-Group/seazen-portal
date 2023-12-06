@@ -322,10 +322,18 @@ export const Details = () => {
     menuItemDetails,
   ]);
 
+  const checkIfItemIsInCart = () => {
+    return cart.find((item) => {
+      if (item.has_variants) {
+        return item.item_code === location.state.item_code;
+      } else {
+        return item.id === +id;
+      }
+    });
+  };
+
   React.useEffect(() => {
-    const cartItem = cart.find(
-      (item) => item.item_code === location.state.item_code
-    );
+    const cartItem = checkIfItemIsInCart();
     if (cartItem) {
       setCartItem(cartItem);
       setQuantity(cartItem?.quantity || 1);
@@ -334,20 +342,14 @@ export const Details = () => {
       setCustomVariant(cartItem?.variants?.customVariant || []);
       setSideVariant(cartItem?.variants?.sideVariant || []);
       setTotalPrice(cartItem?.totalPrice);
-    }
-    if (cartItem) {
       setCustomCount(
-        cartItem.variants.customVariant.reduce(
+        cartItem?.variants?.customVariant?.reduce(
           (total, obj) => total + obj.quantity,
           0
         )
       );
     }
   }, [searchParams, cart, location]);
-
-  const checkIfItemIsInCart = () => {
-    return cart.find((item) => item.item_code === location.state.item_code);
-  };
 
   const getCartItemQuantity = () => {
     return cartItem?.quantity;
@@ -582,8 +584,9 @@ export const Details = () => {
     const dataOptions = dataVariants.options?.map((val, index) => {
       return {
         option_id: val.id,
-        option_quantity:
-          val.id == (optionId[index] || optionId) ? quantity || 1 : 0,
+        option_quantity: optionId.find((val2) => val2 == val.id)
+          ? quantity.find((val3) => val3.id == val.id).quantity
+          : 0,
       };
     });
     return dataOptions;
@@ -603,6 +606,7 @@ export const Details = () => {
     let cartItemDataForApi = {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
+      branch_id: cartItem.branch_id,
       quantity: cartItem.quantity,
       topping_variant_id: toppingVariant || null,
       side_variant_id: sideVariant || null,
@@ -620,7 +624,7 @@ export const Details = () => {
       custom_variant: variantsForApi(
         customVariant,
         getSelectedItemsIds(cartItem.variants?.customVariant),
-        cartItem.variants?.customVariant[0]?.quantity
+        cartItem.variants?.customVariant
       ),
       side_variant: variantsForApi(
         sideVariant,
@@ -641,7 +645,9 @@ export const Details = () => {
         });
     } else {
       addToCartApiCall(cartItemDataForApi)
-        .then((res) => {})
+        .then((res) => {
+          dispatch(addToCart({ ...cartItem, cart_id: res?.data?.cart_id }));
+        })
         .catch((err) => {
           console.log(err);
         });
@@ -650,7 +656,7 @@ export const Details = () => {
 
   const clearCartItems = () => {
     dispatch(resetCart());
-    clearCart()
+    clearCart(token)
       .then((res) => {
         console.log(res);
       })
@@ -715,7 +721,7 @@ export const Details = () => {
 
     if (checkIfItemIsInCart()) {
       const item_code = cartItem?.item_code;
-      const cart_id = `${cartItem?.id}`;
+      const cart_id = cartItem?.cart_id;
 
       ItemDataObject = {
         ...ItemDataObject,
@@ -736,7 +742,7 @@ export const Details = () => {
         item_code,
       };
       if (!itemExists) {
-        dispatch(addToCart(ItemDataObject));
+        // dispatch(addToCart(ItemDataObject));
         addToCartApiHandler(ItemDataObject);
       }
       navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`);
@@ -1038,6 +1044,18 @@ export const Details = () => {
     return false;
   };
 
+  const buttonDisableHandle = () => {
+    if (menuItemDetails?.data.has_variants) {
+      if (customCount < 10) {
+        return true;
+      }
+
+      if (sizeVariant) {
+        return true;
+      }
+    }
+    return false;
+  };
   return (
     <>
       <Dialog
@@ -1515,13 +1533,7 @@ export const Details = () => {
                   size="large"
                   variant="contained"
                   fullWidth
-                  disabled={
-                    menuItemDetails?.data.has_variants
-                      ? customCount === 10 || sizeVariant !== undefined
-                        ? false
-                        : true
-                      : false
-                  }
+                  disabled={buttonDisableHandle()}
                   sx={{
                     py: 2,
                     display: "flex",
@@ -1551,7 +1563,9 @@ export const Details = () => {
                       width: "100%",
                       height: "100%",
                       position: "absolute",
-                      background: "#ffffff24",
+                      background: buttonDisableHandle()
+                        ? "#ffffff74"
+                        : "#ffffff24",
                       left: "0px",
                     }}
                   ></div>

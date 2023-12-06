@@ -111,7 +111,9 @@ function PhoneNumberVerificationOTP() {
       return {
         option_id: val.id,
         option_quantity:
-          val.id == (optionId[index] || optionId) ? quantity || 1 : 0,
+          val.id == (optionId[index] || optionId)
+            ? quantity[index]?.quantity || 1
+            : 0,
       };
     });
     return dataOptions;
@@ -149,7 +151,7 @@ function PhoneNumberVerificationOTP() {
       custom_variant: variantsForApi(
         customVariant,
         getSelectedItemsIds(cartItem.variants?.customVariant),
-        cartItem.variants?.customVariant[0]?.quantity
+        cartItem.variants?.customVariant
       ),
       side_variant: variantsForApi(
         sideVariant,
