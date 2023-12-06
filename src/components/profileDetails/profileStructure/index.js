@@ -42,6 +42,7 @@ const ProfileStructure = ({
     logout(token)
       .then(() => {
         localStorage.removeItem("token");
+        sessionStorage.removeItem("cartEmpty");
         dispatch(resetCart());
         navigate("/");
       })

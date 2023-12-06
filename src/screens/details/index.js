@@ -1555,7 +1555,9 @@ export const Details = () => {
                       width: "100%",
                       height: "100%",
                       position: "absolute",
-                      background: "#ffffff24",
+                      background: buttonDisableHandle()
+                        ? "#ffffff74"
+                        : "#ffffff24",
                       left: "0px",
                     }}
                   ></div>

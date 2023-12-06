@@ -122,6 +122,7 @@ function CartPage() {
   const [pickDay, setPickDay] = useState("");
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
+  const [isActive, setIsActive] = useState(false);
 
   const token = localStorage.getItem("token");
   const restaurantId = localStorage.getItem("restaurantID");
@@ -277,7 +278,7 @@ function CartPage() {
 
   const checkoutHandler = (event) => {
     event.preventDefault();
-
+    setIsActive(true);
     setUserTrusted(true);
     localStorage.setItem("redirectPermission", "allowed");
 
@@ -395,6 +396,9 @@ function CartPage() {
         }
       }
     }
+    setTimeout(() => {
+      setIsActive(false);
+    }, 100);
   };
 
   const [userCurrentAddress, setUserCurrentAddress] = useState({
@@ -1419,7 +1423,8 @@ function CartPage() {
             onClick={(e) => checkoutHandler(e)}
             variant="contained"
             size="large"
-            className="pay-now-button"
+            className={isActive ? "pay-now-button" : ""}
+            onTouchStart={(e) => checkoutHandler(e)}
           >
             Pay Now
           </Button>
