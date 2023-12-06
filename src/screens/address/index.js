@@ -25,6 +25,8 @@ import {
   isArabicCountryMCC,
 } from "../../utils/numberCheck";
 
+import { selectStyles } from "./selectStyles";
+
 import { paths } from "../../routes/paths";
 
 import addAddressApiCall from "../../api/address/addAddress";
@@ -149,7 +151,11 @@ const AddressForm = () => {
         longitude: location?.state?.latlng.lng.toString(),
       });
       setAddressType(state?.address_type?.toLowerCase());
-      setArea(state?.delivery_charge_area_info?.name_en);
+      setArea({
+        label: state?.delivery_charge_area_info.name_en,
+        value: state?.delivery_charge_area_info.id,
+        zone_id: state?.delivery_zone_info?.id,
+      });
     }
   }, [location?.state?.edit]);
 
@@ -203,7 +209,7 @@ const AddressForm = () => {
     }
     addAddressApiCall(updateAddress, token).then((res) => {
       if (res.success === "ok") {
-        fetchFunction();
+        // fetchFunction();
 
         if (
           location?.state?.path === "/cart" ||
@@ -289,7 +295,7 @@ const AddressForm = () => {
     updateAddressApiCall(updateAddress, location?.state?.data.id, token).then(
       (res) => {
         if (res.success === "ok") {
-          fetchFunction();
+          // fetchFunction();
 
           const commonData = {
             lat: location?.state?.latlng?.lat,
@@ -361,6 +367,13 @@ const AddressForm = () => {
               navigate(paths.cart);
             }
           } else if (location?.state?.path === "/profile") {
+            const addToStorage = {
+              address: JSON.parse(localStorage.getItem("selected")).address,
+              ...commonData,
+            };
+
+            localStorage.setItem("selected", JSON.stringify(addToStorage));
+
             navigate(paths.addresses, {
               state: { path: location?.state?.path },
             });
@@ -465,14 +478,14 @@ const AddressForm = () => {
     }
   };
 
-  const fetchFunction = async () => {
-    // setIsloading(true);
-    getAllAddress(token).then((res) => {
-      if (res.success === "ok") {
-        dispatch(getAddress(res.data));
-      }
-    });
-  };
+  // const fetchFunction = async () => {
+  //   // setIsloading(true);
+  //   getAllAddress(token).then((res) => {
+  //     if (res.success === "ok") {
+  //       dispatch(getAddress(res.data));
+  //     }
+  //   });
+  // };
 
   useEffect(() => {
     if (clickEv) {
@@ -535,8 +548,6 @@ const AddressForm = () => {
       zone_id: zone.zone_id,
     })),
   }));
-
-  console.log(address);
 
   return (
     <>
@@ -606,83 +617,7 @@ const AddressForm = () => {
                   ? ErrorDropdown
                   : Dropdown,
               }}
-              styles={{
-                option: (provided, state) => ({
-                  ...provided,
-                  cursor: "pointer",
-                  backgroundColor: state.isSelected
-                    ? "rgba(189,197,209,.3)"
-                    : "transparent",
-                  color: "#000000",
-                  ":hover": {
-                    backgroundColor: "rgba(189,197,209,.3)",
-                  },
-                }),
-                indicatorsContainer: (provided) => ({
-                  ...provided,
-                  border: "none",
-                  position: "absolute",
-                  right: "16px",
-                  top: "11px",
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  boxShadow: "0px 10px 30px rgba(49, 79, 124, 0.16)",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }),
-                indicatorSeparator: () => ({
-                  display: "none",
-                }),
-                control: (baseStyles) => ({
-                  ...baseStyles,
-                  backgroundColor: "#fafafa",
-                  border: errorState?.areaErr
-                    ? "1px solid #e02020 !important"
-                    : "1px solid #c0cdd7 !important",
-                  borderRadius: "12px !important",
-                  opacity: "1",
-                  padding: "10px",
-                  width: "100%",
-                  marginBottom: "10px",
-                  height: "64px",
-                  color: "#000000",
-                  boxShadow: "none",
-                }),
-                valueContainer: (baseStyles) => ({
-                  ...baseStyles,
-                  paddingLeft: "0px",
-                }),
-                placeholder: (baseStyles) => ({
-                  ...baseStyles,
-                  margin: "0px",
-                  color: errorState?.areaErr ? "#e02020" : "#959fa8",
-                  font: "normal normal bold 16px/28px Titillium Web",
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  color: "#000000",
-                  borderRadius: "8px",
-                  marginTop: "0px",
-                }),
-                menuList: (base) => ({
-                  ...base,
-                  scrollbarWidth: "none",
-                  "::-webkit-scrollbar": {
-                    display: "none",
-                  },
-                }),
-                group: (base) => ({
-                  ...base,
-                  padding: "0px",
-                }),
-                groupHeading: (base) => ({
-                  ...base,
-                  display: "none",
-                  padding: "0px",
-                }),
-              }}
+              styles={selectStyles(errorState)}
             />
           </div>
 
