@@ -15,7 +15,9 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
   const selected = JSON.parse(localStorage?.getItem("selected"));
 
   const handleBranchHoursClick = () => {
-    navigate(paths.branches + restaurantDetail?.id + "/branches");
+    navigate(
+      paths.branches + localStorage?.getItem("restaurantID") + "/branches"
+    );
   };
 
   const getLogoSrc = () => {

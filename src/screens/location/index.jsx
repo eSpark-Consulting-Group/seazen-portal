@@ -731,9 +731,15 @@ function LocationPage() {
           <div className="marker">
             <img
               src={
-                (distanceIsFar && noRegion) ||
-                (distanceIsFar && !noRegion) ||
-                (!distanceIsFar && noRegion)
+                (location?.state?.fromBranch === undefined &&
+                  distanceIsFar &&
+                  noRegion) ||
+                (location?.state?.fromBranch === undefined &&
+                  distanceIsFar &&
+                  !noRegion) ||
+                (location?.state?.fromBranch === undefined &&
+                  !distanceIsFar &&
+                  noRegion)
                   ? LocationRed
                   : LocationGreen
               }
@@ -766,7 +772,12 @@ function LocationPage() {
             </Box>
           ) : null}
 
-          {(distanceIsFar && noRegion) || (!distanceIsFar && noRegion) ? (
+          {(location?.state?.fromBranch === undefined &&
+            distanceIsFar &&
+            noRegion) ||
+          (location?.state?.fromBranch === undefined &&
+            !distanceIsFar &&
+            noRegion) ? (
             <Box className="info-window-box">
               <Typography variant="h5">
                 No services in your country right now

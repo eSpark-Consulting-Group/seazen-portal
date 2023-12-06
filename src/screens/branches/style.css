@@ -11,4 +11,17 @@
 .branches-screen-container {
   margin-top: 13px;
   /* position: relative; */
+  height: calc(100% - 13px);
+}
+
+.api-calling {
+  height: calc(100% - 180px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-bar {
+  width: 50px !important;
+  height: 50px !important;
 }
