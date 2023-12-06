@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
 import addToCartApiCall from "../../api/cart/addToCart";
 import { addToCart } from "../../store/reducers/cartSlice";
+import { addUserInfo } from "../../store/reducers/authSlice";
 
 const MODAL_INFO_TYPE = {
   INVALID_OTP: "invalid-otp",
@@ -73,6 +74,8 @@ function PhoneNumberVerificationOTP() {
               console.log(err);
             });
         }
+
+        dispatch(addUserInfo(res.data));
 
         first_name && last_name
           ? location?.state?.guest !== undefined ||

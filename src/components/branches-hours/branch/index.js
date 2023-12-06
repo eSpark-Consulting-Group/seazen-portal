@@ -9,6 +9,7 @@ const RestaurantInfo = ({ restaurants, branchesData }) => {
         <RestaurantCard
           key={restaurant.id}
           branchesData={branchesData[index]}
+          branchId={branchesData[index].id}
           {...restaurant}
         />
       ))}
@@ -16,41 +17,64 @@ const RestaurantInfo = ({ restaurants, branchesData }) => {
   );
 };
 
-const RestaurantCard = ({ name, weekdayHours, weekendHours, branchesData }) => {
-  const [status, setStatus] = useState("");
-  const [currentTime, setCurrentTime] = useState(new Date());
+const RestaurantCard = ({
+  branchId,
+  name,
+  weekdayHours,
+  weekendHours,
+  branchesData,
+}) => {
+  // const [status, setStatus] = useState("");
+  const [openStatus, setOpenStatus] = useState("");
+  // const [currentTime, setCurrentTime] = useState(new Date());
   const navigate = useNavigate();
 
   useEffect(() => {
-    const updateStatus = () => {
-      const currentHour = currentTime.getHours();
-      const currentMinute = currentTime.getMinutes();
-      const [openHour, closeHour] = weekdayHours
-        .split(" - ")
-        .map((time) => parseInt(time.split(":")[0]));
+    const branchHours = branchesData;
 
-      if (currentHour < openHour) {
-        setStatus("Closed");
-      } else if (currentHour === openHour && currentMinute < 30) {
-        setStatus("Closed");
-      } else if (currentHour < closeHour) {
-        setStatus("Open Now");
-      } else if (currentHour === closeHour && currentMinute < 30) {
-        setStatus("Closing Soon");
-      } else {
-        setStatus("Closed");
-      }
-    };
+    if (branchHours?.id === branchId) {
+      const date = new Date();
+      const options = { weekday: "long" };
+      const dayName = date.toLocaleDateString("en-US", options);
 
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-      updateStatus();
-    }, 60000); // Update every minute
+      const findStatus = branchesData?.branch_hours?.filter(
+        (branch) => branch.week_day === dayName
+      );
 
-    updateStatus();
+      setOpenStatus(findStatus[0].openingStatus);
+    }
+  }, [branchesData, branchId]);
 
-    return () => clearInterval(interval);
-  }, [weekdayHours, currentTime]);
+  // useEffect(() => {
+  //   const updateStatus = () => {
+  //     const currentHour = currentTime.getHours();
+  //     const currentMinute = currentTime.getMinutes();
+  //     const [openHour, closeHour] = weekdayHours
+  //       .split(" - ")
+  //       .map((time) => parseInt(time.split(":")[0]));
+
+  //     if (currentHour < openHour) {
+  //       setStatus("Closed");
+  //     } else if (currentHour === openHour && currentMinute < 30) {
+  //       setStatus("Closed");
+  //     } else if (currentHour < closeHour) {
+  //       setStatus("Open Now");
+  //     } else if (currentHour === closeHour && currentMinute < 30) {
+  //       setStatus("Closing Soon");
+  //     } else {
+  //       setStatus("Closed");
+  //     }
+  //   };
+
+  //   const interval = setInterval(() => {
+  //     setCurrentTime(new Date());
+  //     updateStatus();
+  //   }, 60000); // Update every minute
+
+  //   updateStatus();
+
+  //   return () => clearInterval(interval);
+  // }, [weekdayHours, currentTime]);
 
   const redirectLocation = () => {
     const latlng = { lat: branchesData.latitude, lng: branchesData.longitude };
@@ -65,17 +89,17 @@ const RestaurantCard = ({ name, weekdayHours, weekendHours, branchesData }) => {
           <div className="branch-status-section">
             <div className="branch-status-container">
               <div
-                className={`branch-status-tag ${status.toLowerCase()} ${
-                  status === "Closed"
+                className={`branch-status-tag ${openStatus.toLowerCase()} ${
+                  openStatus === "Close"
                     ? "branch-closed"
-                    : status === "Closing Soon"
+                    : openStatus === "Closing Soon"
                     ? "branch-closing-soon"
-                    : status === "Open Now"
+                    : openStatus === "Open"
                     ? "branch-open-now"
                     : ""
                 }`}
               >
-                {status.toUpperCase()}
+                {openStatus.toUpperCase()}
               </div>
             </div>
           </div>

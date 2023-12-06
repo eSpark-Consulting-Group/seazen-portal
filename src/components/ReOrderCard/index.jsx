@@ -241,6 +241,7 @@ const ReOrderCard = (props) => {
                     totalPrice: Number(val.quantity * val.unit_price).toFixed(
                       3
                     ),
+                    branch_id: val?.branch_id,
                     has_variants,
                   };
 
@@ -300,8 +301,12 @@ const ReOrderCard = (props) => {
 
   return (
     <div>
-      <Modal open={isVisible} onClose={handleClose}>
-        <Slide direction="up" in={isVisible}>
+      <Modal
+        open={isVisible}
+        onClose={handleClose}
+        sx={{ scrollbarWidth: "none" }}
+      >
+        <Slide direction="up" in={isVisible} sx={{ scrollbarWidth: "none" }}>
           <Stack
             spacing={2}
             sx={{
@@ -313,6 +318,7 @@ const ReOrderCard = (props) => {
               py: 2,
               pt: 3,
               borderRadius: "20px 20px 0 0",
+              scrollbarWidth: "none",
             }}
           >
             <Stack spacing={0}>

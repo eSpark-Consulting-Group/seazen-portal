@@ -123,14 +123,19 @@
 }
 
 .MuiMenu-paper {
-  top: 340px !important;
   max-height: 55% !important;
+  scrollbar-width: none;
+}
+
+.MuiMenu-paper::-webkit-scrollbar {
+  display: none;
 }
 
 #AdditionalDirection {
   resize: none;
   overflow-y: hidden;
   padding-bottom: 50px;
+  scrollbar-width: none;
 }
 
 .container-style {

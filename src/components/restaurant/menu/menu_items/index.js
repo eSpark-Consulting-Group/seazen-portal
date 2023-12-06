@@ -78,6 +78,7 @@ const MenuItems = ({ itemCategoryList }) => {
                 border: "none",
                 maxHeight: "150px",
                 overflowY: "scroll",
+                scrollbarWidth: "none",
                 borderRadius: "0 0 16px 16px",
                 position: "static",
               }}

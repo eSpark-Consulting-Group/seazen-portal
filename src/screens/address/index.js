@@ -1,8 +1,10 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
+
+import Select from "react-select";
 
 import { RequestType, geocode, setKey } from "react-geocode";
 
@@ -14,11 +16,16 @@ import { OfficeAdress } from "../../components/address/forms/officeForm";
 import AddressTypeSelector from "../../components/address/addressButton";
 import MyAddresses from "../../components/header/myAdresses";
 
+import { ReactComponent as Dropdown } from "../../assets/icons/dropdown.svg";
+import { ReactComponent as ErrorDropdown } from "../../assets/icons/error-icon.svg";
+
 import {
   checkIfIncludesPlus,
   checkNumberLength,
   isArabicCountryMCC,
 } from "../../utils/numberCheck";
+
+import { selectStyles } from "./selectStyles";
 
 import { paths } from "../../routes/paths";
 
@@ -77,6 +84,8 @@ const AddressForm = () => {
 
   const token = localStorage.getItem("token");
 
+  const allAreas = useSelector((state) => state.address.allAreas);
+
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
   const [address, setAddress] = useState({
     delivery_charge_area_id: "",
@@ -107,7 +116,7 @@ const AddressForm = () => {
     countryCodeErr: false,
   });
   const [clickEv, setClickEv] = useState(false);
-  const [area, setArea] = useState("");
+  const [area, setArea] = useState(null);
 
   useLayoutEffect(() => {
     if (location?.state?.edit) {
@@ -135,12 +144,18 @@ const AddressForm = () => {
           ? parseInt(state.phone_country_code)
           : "",
         mobile_number: state.phone_no ? parseInt(state.phone_no) : "",
-        address_type: "house",
+        address_type: state?.address_type
+          ? state.address_type.toLowerCase()
+          : "",
         latitude: location?.state?.latlng.lat.toString(),
         longitude: location?.state?.latlng.lng.toString(),
       });
-      setAddressType("house");
-      setArea(state?.delivery_charge_area_info?.name_en);
+      setAddressType(state?.address_type?.toLowerCase());
+      setArea({
+        label: state?.delivery_charge_area_info.name_en,
+        value: state?.delivery_charge_area_info.id,
+        zone_id: state?.delivery_zone_info?.id,
+      });
     }
   }, [location?.state?.edit]);
 
@@ -180,8 +195,6 @@ const AddressForm = () => {
     }
   };
 
-  console.log(location?.state?.path);
-
   const apiCall = () => {
     let updateAddress = {};
 
@@ -196,7 +209,7 @@ const AddressForm = () => {
     }
     addAddressApiCall(updateAddress, token).then((res) => {
       if (res.success === "ok") {
-        fetchFunction();
+        // fetchFunction();
 
         if (
           location?.state?.path === "/cart" ||
@@ -282,7 +295,7 @@ const AddressForm = () => {
     updateAddressApiCall(updateAddress, location?.state?.data.id, token).then(
       (res) => {
         if (res.success === "ok") {
-          fetchFunction();
+          // fetchFunction();
 
           const commonData = {
             lat: location?.state?.latlng?.lat,
@@ -354,6 +367,13 @@ const AddressForm = () => {
               navigate(paths.cart);
             }
           } else if (location?.state?.path === "/profile") {
+            const addToStorage = {
+              address: JSON.parse(localStorage.getItem("selected")).address,
+              ...commonData,
+            };
+
+            localStorage.setItem("selected", JSON.stringify(addToStorage));
+
             navigate(paths.addresses, {
               state: { path: location?.state?.path },
             });
@@ -370,17 +390,17 @@ const AddressForm = () => {
     // Handle form submission logic here, e.g., save the form data
     setClickEv(true);
 
-    // if (addressType === "house") {
-    if (
-      address.delivery_charge_area_id !== "" &&
-      address.block !== "" &&
-      address.street !== "" &&
-      address.house_no !== ""
-    ) {
-      setClickEv(false);
-      callApiAfterNumCheck();
+    if (addressType === "house") {
+      if (
+        address.delivery_charge_area_id !== "" &&
+        address.block !== "" &&
+        address.street !== "" &&
+        address.house_no !== ""
+      ) {
+        setClickEv(false);
+        callApiAfterNumCheck();
+      }
     }
-    // }
     if (addressType === "apartment") {
       if (
         address.delivery_charge_area_id !== "" &&
@@ -458,14 +478,14 @@ const AddressForm = () => {
     }
   };
 
-  const fetchFunction = async () => {
-    // setIsloading(true);
-    getAllAddress(token).then((res) => {
-      if (res.success === "ok") {
-        dispatch(getAddress(res.data));
-      }
-    });
-  };
+  // const fetchFunction = async () => {
+  //   // setIsloading(true);
+  //   getAllAddress(token).then((res) => {
+  //     if (res.success === "ok") {
+  //       dispatch(getAddress(res.data));
+  //     }
+  //   });
+  // };
 
   useEffect(() => {
     if (clickEv) {
@@ -510,6 +530,24 @@ const AddressForm = () => {
       }
     }
   };
+
+  const selectHandler = (selectedOption) => {
+    setArea(selectedOption);
+    setAddress((address) => ({
+      ...address,
+      delivery_charge_area_id: selectedOption.value,
+      delivery_zone_id: selectedOption.zone_id,
+    }));
+  };
+
+  const groupedOptions = allAreas.map((zone) => ({
+    label: zone.name_en,
+    options: zone.areas.map((area) => ({
+      label: area.name_en,
+      value: area.area_id,
+      zone_id: zone.zone_id,
+    })),
+  }));
 
   return (
     <>
@@ -566,17 +604,30 @@ const AddressForm = () => {
         )}
         <form onSubmit={handleSubmit}>
           {/* Add the form element and onSubmit handler */}
+
+          <div className="container-style px-3">
+            <Select
+              value={area}
+              onChange={selectHandler}
+              options={groupedOptions}
+              isSearchable
+              placeholder="Areas"
+              components={{
+                DropdownIndicator: errorState?.areaErr
+                  ? ErrorDropdown
+                  : Dropdown,
+              }}
+              styles={selectStyles(errorState)}
+            />
+          </div>
+
           {addressType === "house" && (
             <HomeAdress
               handleChange={handleChange}
               address={address}
-              setAddress={setAddress}
-              areaErr={errorState.areaErr}
               blockErr={errorState.blockErr}
               streetErr={errorState.streetErr}
               houseNoErr={errorState.houseNoErr}
-              area={area}
-              setArea={setArea}
             />
           )}
           {addressType === "apartment" && (

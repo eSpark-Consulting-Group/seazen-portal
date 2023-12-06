@@ -262,7 +262,15 @@ const MenuCardListContainer = ({
     } else {
       if (localStorage.getItem("isAsap") === "true") {
         for (let i = 0; i < branch?.length; i++) {
-          if (branch[i]?.branch_hours[0].openingStatus === "Open") {
+          const date = new Date();
+          const options = { weekday: "long" };
+          const dayName = date.toLocaleDateString("en-US", options);
+
+          const findStatus = branch[i]?.branch_hours?.filter(
+            (branch) => branch.week_day === dayName
+          );
+
+          if (findStatus[0].openingStatus === "Open") {
             setRestaurantIsOpen(false);
             navigate(paths?.cart);
             break;

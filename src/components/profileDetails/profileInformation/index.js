@@ -11,31 +11,36 @@ function ProfileInformation() {
   const dispatch = useDispatch();
 
   const token = localStorage.getItem("token");
-  const localUserInfo = useSelector((state)=> state.auth.user);
+  const localUserInfo = useSelector((state) => state.auth.user);
 
   const [user, setUser] = useState({
     name: localUserInfo.first_name + " " + localUserInfo.last_name,
-    phoneNumber:
-    localUserInfo.mobile_country_code + " " + localUserInfo.mobile,
+    phoneNumber: localUserInfo.mobile_country_code + " " + localUserInfo.mobile,
     email: localUserInfo.email,
     imageUrl: "/assets/img/profile image.svg",
   });
 
   useEffect(() => {
-    localUserInfo.id === null && getUserInfo(token).then((res) => {
-      if (res.statusCode === 200) {
-        const { first_name, last_name, email, mobile_country_code, mobile_no } =
-          res.data;
-        const userInfoFromApi = {
-          name: first_name + " " + last_name,
-          phoneNumber: mobile_country_code + " " + mobile_no,
-          email: email,
-        };
+    localUserInfo.id === null &&
+      getUserInfo(token).then((res) => {
+        if (res.statusCode === 200) {
+          const {
+            first_name,
+            last_name,
+            email,
+            mobile_country_code,
+            mobile_no,
+          } = res.data;
+          const userInfoFromApi = {
+            name: first_name + " " + last_name,
+            phoneNumber: mobile_country_code + " " + mobile_no,
+            email: email,
+          };
 
-        dispatch(addUserInfo(res.data));
-        setUser({ ...user, ...userInfoFromApi });
-      }
-    });
+          dispatch(addUserInfo(res.data));
+          setUser({ ...user, ...userInfoFromApi });
+        }
+      });
   }, []);
 
   const handleEditClick = () => {

@@ -25,6 +25,11 @@
   overflow-y: scroll;
   padding-right: 25px; /* Increase/decrease this value for cross-browser compatibility */
   box-sizing: content-box;
+  scrollbar-width: none;
+}
+
+.menu-items-wrapper::-webkit-scrollbar {
+  display: none;
 }
 
 .comment_button_container {
@@ -213,6 +218,7 @@
   overflow: auto;
   margin-top: 10px;
   padding-right: 10px;
+  scrollbar-width: thin;
 }
 
 /* @media screen and (max-width: 500px) and (min-width: 380px) {
@@ -252,6 +258,11 @@
   -ms-overflow-style: none;
   width: 100%;
 }
+
+.scrollable-container::-webkit-scrollbar {
+  display: none;
+}
+
 .scrollable-container-wrapper {
   width: 100%;
   height: 100%;

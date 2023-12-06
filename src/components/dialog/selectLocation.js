@@ -41,6 +41,7 @@ const SelectLocation = (props) => {
         sx={{
           fontFamily: "Titillium Web, sans-serif",
           fontWeight: 600,
+          scrollbarWidth: "thin",
         }}
       >
         {addressData.map((data) => (
