@@ -46,7 +46,7 @@ export const Terms = () => {
         </p>
       </div>
       <div className="terms-footer px-3">
-        <Footer showCommentOption={false} />
+        <Footer showCommentOption={false} path="terms" />
       </div>
     </div>
   );

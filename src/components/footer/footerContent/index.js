@@ -1,11 +1,14 @@
 import React from "react";
-import "./style.css";
-import FooterSection from "../footerTextBox/footerSection";
 import { useNavigate } from "react-router";
+
+import FooterSection from "../footerTextBox/footerSection";
+
 import { paths } from "../../../routes/paths";
 
+import "./style.css";
+
 export const Footer = (props) => {
-  const { showFooterSection } = props;
+  const { showFooterSection, path } = props;
   const navigate = useNavigate();
 
   return (
@@ -18,7 +21,9 @@ export const Footer = (props) => {
         <p className="terms-style">
           <span
             onClick={() => {
-              navigate(paths.terms);
+              navigate(paths.terms, {
+                replace: (path === "terms" || path === "privacy") && true,
+              });
             }}
           >
             Terms & Conditions
@@ -26,7 +31,9 @@ export const Footer = (props) => {
           |{" "}
           <span
             onClick={() => {
-              navigate(paths.privacy_policy);
+              navigate(paths.privacy_policy, {
+                replace: (path === "terms" || path === "privacy") && true,
+              });
             }}
           >
             Privacy Policy
