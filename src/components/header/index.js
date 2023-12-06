@@ -132,7 +132,7 @@ const Navbar = (props) => {
                   } else {
                     navigate(paths.home);
                   }
-                } else if (register !== undefined) {
+                } else if (register !== undefined || backIconURL === -1) {
                   navigate(-1);
                 } else if (
                   autoRedirect !== undefined &&
@@ -180,7 +180,6 @@ const Navbar = (props) => {
                 } else if (location?.notSelected !== undefined) {
                   navigate(-1);
                 } else {
-                  console.log(backIconURL);
                   navigate(backIconURL || paths.profile, backIconURLState);
                 }
               }

@@ -322,14 +322,22 @@ const Menu = () => {
     } else {
       if (localStorage.getItem("isAsap") === "true") {
         for (let i = 0; i < branch?.length; i++) {
-          if (branch[i]?.branch_hours[0]?.openingStatus === "Open") {
+          const date = new Date();
+          const options = { weekday: "long" };
+          const dayName = date.toLocaleDateString("en-US", options);
+
+          const findStatus = branch[i]?.branch_hours?.filter(
+            (branch) => branch.week_day === dayName
+          );
+
+          if (findStatus[0].openingStatus === "Open") {
             setRestaurantOpen(false);
             navigate(paths?.cart, {
               state: { fromMenu: true, path: "/home" },
             });
 
             break;
-          } else if (branch[i]?.branch_hours[0]?.openingStatus === "Close") {
+          } else if (findStatus[0].openingStatus === "Close") {
             setRestaurantOpen(true);
           }
         }

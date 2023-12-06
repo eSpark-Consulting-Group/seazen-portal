@@ -429,7 +429,15 @@ const Home = () => {
     } else {
       if (localStorage.getItem("isAsap") === "true") {
         for (let i = 0; i < filterRestaurant?.length; i++) {
-          if (filterRestaurant[i]?.branch_hours[0].openingStatus === "Open") {
+          const date = new Date();
+          const options = { weekday: "long" };
+          const dayName = date.toLocaleDateString("en-US", options);
+
+          const findStatus = filterRestaurant[i]?.branch_hours?.filter(
+            (branch) => branch.week_day === dayName
+          );
+
+          if (findStatus[0].openingStatus === "Open") {
             setRestaurantOpen(false);
             navigate(paths?.cart, {
               state: { fromHome: true, path: "/home" },

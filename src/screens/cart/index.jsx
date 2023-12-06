@@ -317,10 +317,15 @@ function CartPage() {
 
               if (isAsap === "true") {
                 for (let j = 0; j < filterRestaurant?.length; j++) {
-                  if (
-                    filterRestaurant[j]?.branch_hours[0].openingStatus ===
-                    "Open"
-                  ) {
+                  const date = new Date();
+                  const options = { weekday: "long" };
+                  const dayName = date.toLocaleDateString("en-US", options);
+
+                  const findStatus = filterRestaurant[j]?.branch_hours?.filter(
+                    (branch) => branch.week_day === dayName
+                  );
+
+                  if (findStatus[0].openingStatus === "Open") {
                     setRestaurantOpen(false);
 
                     const data = {
@@ -353,10 +358,7 @@ function CartPage() {
                       });
 
                     break;
-                  } else if (
-                    filterRestaurant[j]?.branch_hours[0].openingStatus ===
-                    "Close"
-                  ) {
+                  } else if (findStatus[0].openingStatus === "Close") {
                     setRestaurantOpen(true);
                   }
                 }
@@ -475,7 +477,15 @@ function CartPage() {
     );
 
     for (let i = 0; i < filterRestaurant?.length; i++) {
-      if (filterRestaurant[i]?.branch_hours[0].openingStatus === "Open") {
+      const date = new Date();
+      const options = { weekday: "long" };
+      const dayName = date.toLocaleDateString("en-US", options);
+
+      const findStatus = filterRestaurant[i]?.branch_hours?.filter(
+        (branch) => branch.week_day === dayName
+      );
+
+      if (findStatus[0].openingStatus === "Open") {
         const currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes() + 30);
 
@@ -490,9 +500,7 @@ function CartPage() {
         setRestaurantOpen(false);
 
         break;
-      } else if (
-        filterRestaurant[i]?.branch_hours[0].openingStatus === "Close"
-      ) {
+      } else if (findStatus[0].openingStatus === "Close") {
         setRestaurantOpen(true);
         setOpenPopup(false);
       }
@@ -950,7 +958,7 @@ function CartPage() {
                         lineHeight: 1,
                       }}
                     >
-                      {selectedAdd?.delivery_time?.split(" ")[1]}
+                      {selectedAdd?.delivery_time?.trim()?.split(" ")[0]}
                     </Typography>
                     <Typography
                       variant="caption"

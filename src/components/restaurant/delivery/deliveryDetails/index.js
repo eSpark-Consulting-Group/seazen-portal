@@ -129,16 +129,20 @@ const DeliveryDetails = (props) => {
           );
 
           for (let i = 0; i < filterRestaurant?.length; i++) {
-            if (
-              filterRestaurant[i]?.branch_hours[0]?.openingStatus === "Open"
-            ) {
+            const date = new Date();
+            const options = { weekday: "long" };
+            const dayName = date.toLocaleDateString("en-US", options);
+
+            const findStatus = filterRestaurant[i]?.branch_hours?.filter(
+              (branch) => branch.week_day === dayName
+            );
+
+            if (findStatus[0]?.openingStatus === "Open") {
               setRestaurantOpen(false);
               break;
 
               //
-            } else if (
-              filterRestaurant[i]?.branch_hours[0]?.openingStatus === "Close"
-            ) {
+            } else if (findStatus[0].openingStatus === "Close") {
               setRestaurantOpen(true);
               //
             }
@@ -273,14 +277,20 @@ const DeliveryDetails = (props) => {
       );
 
       for (let i = 0; i < filterRestaurant?.length; i++) {
-        if (filterRestaurant[i]?.branch_hours[0].openingStatus === "Open") {
+        const date = new Date();
+        const options = { weekday: "long" };
+        const dayName = date.toLocaleDateString("en-US", options);
+
+        const findStatus = filterRestaurant[i]?.branch_hours?.filter(
+          (branch) => branch.week_day === dayName
+        );
+
+        if (findStatus[0]?.openingStatus === "Open") {
           asapCall();
           break;
 
           //
-        } else if (
-          filterRestaurant[i]?.branch_hours[0].openingStatus === "Close"
-        ) {
+        } else if (findStatus[0]?.openingStatus === "Close") {
           setRestaurantOpen(true);
           //
         }
@@ -658,7 +668,7 @@ const DeliveryDetails = (props) => {
                   fontSize: "19px",
                 }}
               >
-                {selected?.delivery_time?.split(" ")[1]}
+                {selected?.delivery_time?.trim()?.split(" ")[0]}
               </Typography>
               <Typography
                 variant="caption"
