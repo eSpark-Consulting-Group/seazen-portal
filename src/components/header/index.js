@@ -180,6 +180,7 @@ const Navbar = (props) => {
                 } else if (location?.notSelected !== undefined) {
                   navigate(-1);
                 } else {
+                  console.log(backIconURL);
                   navigate(backIconURL || paths.profile, backIconURLState);
                 }
               }
