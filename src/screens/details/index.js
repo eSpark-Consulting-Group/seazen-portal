@@ -322,10 +322,18 @@ export const Details = () => {
     menuItemDetails,
   ]);
 
+  const checkIfItemIsInCart = () => {
+    return cart.find((item) => {
+      if (item.has_variants) {
+        return item.item_code === location.state.item_code;
+      } else {
+        return item.id === +id;
+      }
+    });
+  };
+
   React.useEffect(() => {
-    const cartItem = cart.find(
-      (item) => item.item_code === location.state.item_code
-    );
+    const cartItem = checkIfItemIsInCart();
     if (cartItem) {
       setCartItem(cartItem);
       setQuantity(cartItem?.quantity || 1);
@@ -342,10 +350,6 @@ export const Details = () => {
       );
     }
   }, [searchParams, cart, location]);
-
-  const checkIfItemIsInCart = () => {
-    return cart.find((item) => item.item_code === location.state.item_code);
-  };
 
   const getCartItemQuantity = () => {
     return cartItem?.quantity;
@@ -580,8 +584,9 @@ export const Details = () => {
     const dataOptions = dataVariants.options?.map((val, index) => {
       return {
         option_id: val.id,
-        option_quantity:
-          val.id == (optionId[index] || optionId) ? quantity || 1 : 0,
+        option_quantity: optionId.find((val2) => val2 == val.id)
+          ? quantity.find((val3) => val3.id == val.id).quantity
+          : 0,
       };
     });
     return dataOptions;
@@ -619,7 +624,7 @@ export const Details = () => {
       custom_variant: variantsForApi(
         customVariant,
         getSelectedItemsIds(cartItem.variants?.customVariant),
-        cartItem.variants?.customVariant[0]?.quantity
+        cartItem.variants?.customVariant
       ),
       side_variant: variantsForApi(
         sideVariant,
@@ -640,7 +645,9 @@ export const Details = () => {
         });
     } else {
       addToCartApiCall(cartItemDataForApi)
-        .then((res) => {})
+        .then((res) => {
+          dispatch(addToCart({ ...cartItem, cart_id: res?.data?.cart_id }));
+        })
         .catch((err) => {
           console.log(err);
         });
@@ -714,7 +721,7 @@ export const Details = () => {
 
     if (checkIfItemIsInCart()) {
       const item_code = cartItem?.item_code;
-      const cart_id = `${cartItem?.id}`;
+      const cart_id = cartItem?.cart_id;
 
       ItemDataObject = {
         ...ItemDataObject,
@@ -735,7 +742,7 @@ export const Details = () => {
         item_code,
       };
       if (!itemExists) {
-        dispatch(addToCart(ItemDataObject));
+        // dispatch(addToCart(ItemDataObject));
         addToCartApiHandler(ItemDataObject);
       }
       navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`);

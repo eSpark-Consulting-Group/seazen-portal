@@ -38,6 +38,9 @@ import {
 import { paths } from "../../../../routes/paths";
 import CloseIcon from "@mui/icons-material/Close";
 import "./style.css";
+import updateCartApiCall from "../../../../api/cart/updateCart";
+import { useQuery } from "@tanstack/react-query";
+import deleteCart from "../../../../api/cart/deleteCartItem";
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[16],
@@ -106,11 +109,13 @@ const MenuCard = (props) => {
     (state) => state.resturants.resturantsData
   );
 
+  const cartItem = cart.find((val) => val.id == id);
+
   useEffect(() => {
     const quantity = getItemQuantity();
     setFoodItemQuantity(quantity);
     return () => setFoodItemQuantity(0);
-  }, [id]);
+  }, [id, cart]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -399,6 +404,27 @@ const MenuCard = (props) => {
     } else {
       setFoodItemQuantity(foodItemQuantity + 1);
       if (checkIfItemIsInCart()) {
+        const updateDataForApi = {
+          item_code: cartItem.item_code,
+          item_id: cartItem.id,
+          quantity: foodItemQuantity + 1,
+          topping_variant_id: null,
+          side_variant_id: null,
+          size_variant_id: null,
+          custom_variant_id: null,
+          size_variant: [],
+          topping_variant: [],
+          custom_variant: [],
+          side_variant: [],
+          branch_id: cartItem.branch_id,
+          cart_id: cartItem.cart_id,
+        };
+        updateCartApiCall(updateDataForApi, token)
+          .then((res) => {})
+          .catch((err) => {
+            console.log(err);
+          });
+
         dispatch(
           updateCartMenuItemQuantity({
             id: id,
@@ -409,18 +435,6 @@ const MenuCard = (props) => {
       } else {
         const itemCode = uuidv4();
 
-        dispatch(
-          addToCart({
-            id: id,
-            itemName: foodItem,
-            restaurant_id,
-            totalPrice: foodPriceWithoutCurrency(),
-            quantity: foodItemQuantity + 1,
-            itemImage: foodImage,
-            item_code: itemCode,
-            branch_id: allData.branch_id,
-          })
-        );
         const cartItemDataForApi = {
           item_code: itemCode,
           item_id: id,
@@ -438,6 +452,19 @@ const MenuCard = (props) => {
 
         addToCartApiCall(cartItemDataForApi)
           .then((res) => {
+            dispatch(
+              addToCart({
+                id: id,
+                itemName: foodItem,
+                restaurant_id,
+                totalPrice: foodPriceWithoutCurrency(),
+                quantity: foodItemQuantity + 1,
+                itemImage: foodImage,
+                item_code: itemCode,
+                branch_id: allData.branch_id,
+                cart_id: res?.data?.cart_id,
+              })
+            );
             console.log(res);
           })
           .catch((err) => {
@@ -447,10 +474,27 @@ const MenuCard = (props) => {
     }
   };
 
+  const { data, refetch } = useQuery({
+    queryFn: () =>
+      deleteCart(
+        {
+          cart_id: cartItem.cart_id,
+          item_id: cartItem.id,
+          item_code: cartItem.item_code,
+        },
+        token
+      ),
+    onSuccess: (data) => {
+      console.log(data, "data");
+    },
+    enabled: false,
+  });
+
   function handleClickSubtract() {
     setFoodItemQuantity(foodItemQuantity - 1);
 
     if (foodItemQuantity === 1) {
+      refetch();
       dispatch(removeFromCart(id));
       if (cart.length == 1) {
         clearCartItems();
@@ -458,6 +502,27 @@ const MenuCard = (props) => {
     }
 
     if (foodItemQuantity > 1) {
+      const updateDataForApi = {
+        item_code: cartItem.item_code,
+        item_id: cartItem.id,
+        quantity: foodItemQuantity - 1,
+        topping_variant_id: null,
+        side_variant_id: null,
+        size_variant_id: null,
+        custom_variant_id: null,
+        size_variant: [],
+        topping_variant: [],
+        custom_variant: [],
+        side_variant: [],
+        branch_id: cartItem.branch_id,
+        cart_id: cartItem.cart_id,
+      };
+      updateCartApiCall(updateDataForApi, token)
+        .then((res) => {})
+        .catch((err) => {
+          console.log(err);
+        });
+
       dispatch(
         updateCartMenuItemQuantity({
           id: id,
@@ -760,7 +825,7 @@ const MenuCard = (props) => {
                 <>
                   <AddToCartButton
                     onClick={() => handleClickAdd(id)}
-                    className="menu_card_add_to_cart_button pointer"
+                    className="menu_card_add_to_cart_button pointer wewe"
                   >
                     <img
                       src={plusIcon}
@@ -771,7 +836,7 @@ const MenuCard = (props) => {
                   {foodItemQuantity > 0 && (
                     <AddToCartButton
                       onClick={handleClickSubtract}
-                      className="menu_card_add_to_cart_button pointer"
+                      className="menu_card_add_to_cart_button pointer qqq"
                     >
                       <img src={conditionalIcon} alt="button_icon" />
                     </AddToCartButton>
@@ -780,7 +845,7 @@ const MenuCard = (props) => {
               ) : (
                 <AddToCartButton
                   onClick={() => autoRedirect(id)}
-                  className="menu_card_add_to_cart_button pointer"
+                  className="menu_card_add_to_cart_button pointer vvv"
                 >
                   <img
                     src={plusIcon}
@@ -813,6 +878,7 @@ const MenuCard = (props) => {
             <Stack>
               {resultArray?.map((variance, index) => {
                 if (variance.has_variants) {
+                  console.log(variance, "vvvvvvvvvv");
                   return (
                     <ExtraItems
                       key={index}
