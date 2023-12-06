@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -17,6 +17,7 @@ import updateCartApiCall from "../../../api/cart/updateCart";
 import * as reduxCart from "../../../store/reducers/cartSlice";
 
 import { paths } from "../../../routes/paths";
+import getMenuItemDetails from "../../../api/menu/getMenuItemDetails";
 
 function CartItem(props) {
   const {
@@ -31,6 +32,7 @@ function CartItem(props) {
     variants,
     cartRefetch,
     item_code,
+    restaurant_id,
     item_id,
     branch_id,
   } = props;
@@ -46,6 +48,43 @@ function CartItem(props) {
 
   const [updatedQuantity, setUpdatedQuantity] = React.useState(quantity);
   const [imageNotFound, setImageNotFound] = useState(false);
+  const [menuItemDetails, setMenuItemDetails] = useState();
+
+  const getItemDetails = () => {
+    getMenuItemDetails(id, restaurant_id, branch_id)
+      .then((res) => {
+        setMenuItemDetails(res);
+      })
+      .catch((err) => console.error(err));
+  };
+
+  useEffect(() => {
+    getItemDetails();
+  }, []);
+
+  const cartItem = cart.find((val) => val.cart_id == cart_id);
+
+  const variantsForApi = (variantID, optionId, quantity) => {
+    const data = menuItemDetails?.data;
+    const dataVariants = data.variants?.find((val) => val.id === variantID);
+    if (!dataVariants) return [];
+    const dataOptions = dataVariants.options?.map((val, index) => {
+      return {
+        option_id: val.id,
+        option_quantity:
+          val.id == (optionId[index] || optionId)
+            ? quantity[index]?.quantity || 1
+            : 0,
+      };
+    });
+    return dataOptions;
+  };
+
+  const getSelectedItemsIds = (selectedItems) => {
+    const idsArr = selectedItems?.map((val) => val.id);
+
+    return idsArr;
+  };
 
   // const updateCartHandler = useQuery({
   //   queryFn: () =>
@@ -62,7 +101,58 @@ function CartItem(props) {
   //   enabled: false,
   // });
 
+  const getDataForUpdateApi = (action) => {
+    const sideVariant = cartItem.variants?.sideVariant[0]?.variantId;
+    const sizeVariant = cartItem.variants?.sizeVariant?.variantId;
+    const toppingVariant = cartItem.variants?.toppingVariant[0]?.variantId;
+    const customVariant = cartItem.variants?.customVariant[0]?.variantId;
+
+    let cartItemDataForApi = {
+      item_code: cartItem.item_code,
+      cart_id,
+      item_id: cartItem.id,
+      branch_id: cartItem.branch_id,
+      topping_variant_id: toppingVariant || null,
+      side_variant_id: sideVariant || null,
+      size_variant_id: sizeVariant || null,
+      custom_variant_id: customVariant || null,
+      size_variant: variantsForApi(
+        sizeVariant,
+        cartItem.variants?.sizeVariant?.id
+      ),
+      topping_variant: variantsForApi(
+        toppingVariant,
+        getSelectedItemsIds(cartItem.variants?.toppingVariant),
+        cartItem.variants?.toppingVariant[0]?.quantity
+      ),
+      custom_variant: variantsForApi(
+        customVariant,
+        getSelectedItemsIds(cartItem.variants?.customVariant),
+        cartItem.variants?.customVariant
+      ),
+      side_variant: variantsForApi(
+        sideVariant,
+        getSelectedItemsIds(cartItem.variants?.sideVariant)
+      ),
+    };
+
+    if (action == "dec") {
+      cartItemDataForApi.quantity = cartItem.quantity - 1;
+    }
+    if (action == "inc") {
+      cartItemDataForApi.quantity = cartItem.quantity + 1;
+    }
+    return cartItemDataForApi;
+  };
+
   function onIncrease() {
+    const updateAPIData = getDataForUpdateApi("inc");
+    updateCartApiCall(updateAPIData, token)
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
+
     dispatch(
       reduxCart.updateCartItemQuantity({
         itemCode: item_code,
@@ -114,6 +204,12 @@ function CartItem(props) {
   };
 
   function onDecrease() {
+    const updateAPIData = getDataForUpdateApi("dec");
+    updateCartApiCall(updateAPIData, token)
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
     dispatch(
       reduxCart.updateCartItemQuantity({
         itemCode: item_code,

@@ -157,7 +157,7 @@ const ReOrderCard = (props) => {
   const reorderItems = () => {
     dispatch(resetCart());
 
-    clearCart().then((res) => {
+    clearCart(token).then((res) => {
       if (res.status === "ok") {
         let promises = [];
 
