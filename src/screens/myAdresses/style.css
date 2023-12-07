@@ -77,10 +77,33 @@
   padding-top: 10px;
   width: 375px;
   margin: auto;
+  scrollbar-width: none;
 }
 
 .parent-address::-webkit-scrollbar {
   display: none;
+}
+
+.no-address {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.location-icon {
+  margin-bottom: 32px;
+}
+
+.empty-text {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  color: #1f2933;
+  width: 188px;
+  display: block;
+  text-align: center;
+  font-family: Titillium Web !important;
 }
 
 @media only screen and (min-width: 1366px) and (max-width: 1366px) {

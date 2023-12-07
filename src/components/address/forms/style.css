@@ -122,10 +122,20 @@
   padding-bottom: 100px;
 }
 
+.MuiMenu-paper {
+  max-height: 55% !important;
+  scrollbar-width: none;
+}
+
+.MuiMenu-paper::-webkit-scrollbar {
+  display: none;
+}
+
 #AdditionalDirection {
   resize: none;
   overflow-y: hidden;
   padding-bottom: 50px;
+  scrollbar-width: none;
 }
 
 .container-style {
@@ -144,6 +154,10 @@
   transform: translateY(-100%);
   font: normal normal bold 16px/28px Titillium Web;
   color: #959fa8;
+}
+
+.errorinputwrapper::after {
+  color: #e02020;
 }
 
 .inputwrapper:has(> .form-style:not(:placeholder-shown))::after {

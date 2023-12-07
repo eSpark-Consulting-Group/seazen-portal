@@ -62,8 +62,8 @@ export const UpdateCustomerProfile = () => {
     onSuccess: () => {
       navigate(paths.profile);
     },
-    onError:(error) => {
-      const errorMessage = error || 'An unknown error occurred';
+    onError: (error) => {
+      const errorMessage = error || "An unknown error occurred";
       toast.error(errorMessage, {
         position: "top-right",
         autoClose: 5000,
@@ -73,8 +73,8 @@ export const UpdateCustomerProfile = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-        });
-    }
+      });
+    },
   });
 
   const formikUpdateCustomerProfile = useFormik({
@@ -211,7 +211,7 @@ export const UpdateCustomerProfile = () => {
               fullWidth
               id="mobile_country_code"
               variant="outlined"
-              placeholder="+365"
+              placeholder="+965"
               sx={{
                 flex: 1,
               }}

@@ -157,7 +157,7 @@ const ReOrderCard = (props) => {
   const reorderItems = () => {
     dispatch(resetCart());
 
-    clearCart().then((res) => {
+    clearCart(token).then((res) => {
       if (res.status === "ok") {
         let promises = [];
 
@@ -173,6 +173,8 @@ const ReOrderCard = (props) => {
             size_variant_id: item.size_variant_id,
             topping_variant: item.topping_variant,
             topping_variant_id: item.topping_variant_id,
+            custom_variant: item.custom_variant,
+            custom_variant_id: item.custom_variant_id,
             branch_id: item?.branch_id,
           };
 
@@ -194,6 +196,7 @@ const ReOrderCard = (props) => {
                   const has_variants =
                     val?.size_variant_id === "" &&
                     val.side_variant_id === "" &&
+                    val.custom_variant_id === "" &&
                     val.topping_variant_id === ""
                       ? false
                       : true;
@@ -201,6 +204,7 @@ const ReOrderCard = (props) => {
                   const variants =
                     val?.size_variant_id === "" &&
                     val.side_variant_id === "" &&
+                    val.custom_variant_id === "" &&
                     val.topping_variant_id === ""
                       ? null
                       : {
@@ -215,6 +219,10 @@ const ReOrderCard = (props) => {
                           sideVariant: val.side_variant.map((value) => ({
                             ...value,
                             variantId: val.side_variant_id,
+                          })),
+                          customVariant: val.custom_variant.map((value) => ({
+                            ...value,
+                            customId: val.side_custom_id,
                           })),
                         };
 
@@ -233,6 +241,7 @@ const ReOrderCard = (props) => {
                     totalPrice: Number(val.quantity * val.unit_price).toFixed(
                       3
                     ),
+                    branch_id: val?.branch_id,
                     has_variants,
                   };
 
@@ -292,8 +301,12 @@ const ReOrderCard = (props) => {
 
   return (
     <div>
-      <Modal open={isVisible} onClose={handleClose}>
-        <Slide direction="up" in={isVisible}>
+      <Modal
+        open={isVisible}
+        onClose={handleClose}
+        sx={{ scrollbarWidth: "none" }}
+      >
+        <Slide direction="up" in={isVisible} sx={{ scrollbarWidth: "none" }}>
           <Stack
             spacing={2}
             sx={{
@@ -305,6 +318,7 @@ const ReOrderCard = (props) => {
               py: 2,
               pt: 3,
               borderRadius: "20px 20px 0 0",
+              scrollbarWidth: "none",
             }}
           >
             <Stack spacing={0}>

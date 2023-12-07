@@ -16,6 +16,9 @@ import { Footer } from "../../footer/footerContent";
 import { paths } from "../../../routes/paths";
 
 import "./style.css";
+import logout from "../../../api/customer/logout";
+import { useDispatch } from "react-redux";
+import { resetCart } from "../../../store/reducers/cartSlice";
 
 const ProfileStructure = ({
   name,
@@ -26,6 +29,7 @@ const ProfileStructure = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
@@ -34,8 +38,17 @@ const ProfileStructure = ({
   };
 
   const handleLogoutConfirm = () => {
-    localStorage.removeItem("token");
-    navigate("/");
+    const token = localStorage.getItem("token");
+    logout(token)
+      .then(() => {
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("cartEmpty");
+        dispatch(resetCart());
+        navigate("/");
+      })
+      .catch((e) => {
+        console.error(e);
+      });
 
     setOpenLogoutDialog(false);
   };

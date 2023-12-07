@@ -3,6 +3,11 @@
   position: relative;
   overflow-y: scroll;
   max-height: 100vh;
+  scrollbar-width: none;
+}
+
+.my_orderscreen::-webkit-scrollbar {
+  display: none;
 }
 
 .my_orderscreen_nav {

@@ -77,6 +77,9 @@ const MenuCardListContainer = ({
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
   const [addressID, setAddressID] = useState();
+  const [delivery_charges, setDeliveryCharge] = useState();
+  const [delivery_time, setDeliveryTime] = useState();
+  const [minOrderAmount, setMinOrderAmount] = useState();
 
   const currentLocation = JSON.parse(localStorage.getItem("location"));
 
@@ -171,6 +174,11 @@ const MenuCardListContainer = ({
     const lat = +item.latitude;
     const lng = +item.longitude;
     setAddressID(item.id);
+    setDeliveryCharge(
+      item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+    );
+    setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
+    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
 
     getFullAddress(lat, lng, setFullAddress);
   };
@@ -238,7 +246,13 @@ const MenuCardListContainer = ({
   const checkNearByRest = (branch) => {
     localStorage.setItem(
       "selected",
-      JSON.stringify({ ...fullAddress, addressId: addressID })
+      JSON.stringify({
+        ...fullAddress,
+        addressId: addressID,
+        delivery_charges,
+        delivery_time,
+        minOrderAmount,
+      })
     );
 
     if (branch?.length === 0) {
@@ -248,7 +262,15 @@ const MenuCardListContainer = ({
     } else {
       if (localStorage.getItem("isAsap") === "true") {
         for (let i = 0; i < branch?.length; i++) {
-          if (branch[i]?.branch_hours[0].openingStatus === "Open") {
+          const date = new Date();
+          const options = { weekday: "long" };
+          const dayName = date.toLocaleDateString("en-US", options);
+
+          const findStatus = branch[i]?.branch_hours?.filter(
+            (branch) => branch.week_day === dayName
+          );
+
+          if (findStatus[0].openingStatus === "Open") {
             setRestaurantIsOpen(false);
             navigate(paths?.cart);
             break;

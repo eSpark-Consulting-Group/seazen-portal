@@ -98,6 +98,7 @@ function CartPage() {
   const [updateText, setUpdateText] = useState("");
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [userTrusted, setUserTrusted] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   const token = localStorage.getItem("token");
   const restaurantId = localStorage.getItem("restaurantID");
@@ -223,7 +224,7 @@ function CartPage() {
 
   const checkoutHandler = (event) => {
     event.preventDefault();
-
+    setIsActive(true);
     setUserTrusted(true);
     localStorage.setItem("redirectPermission", "allowed");
 
@@ -263,10 +264,15 @@ function CartPage() {
 
               if (isAsap === "true") {
                 for (let j = 0; j < filterRestaurant?.length; j++) {
-                  if (
-                    filterRestaurant[j]?.branch_hours[0].openingStatus ===
-                    "Open"
-                  ) {
+                  const date = new Date();
+                  const options = { weekday: "long" };
+                  const dayName = date.toLocaleDateString("en-US", options);
+
+                  const findStatus = filterRestaurant[j]?.branch_hours?.filter(
+                    (branch) => branch.week_day === dayName
+                  );
+
+                  if (findStatus[0].openingStatus === "Open") {
                     setRestaurantOpen(false);
 
                     const data = {
@@ -299,10 +305,7 @@ function CartPage() {
                       });
 
                     break;
-                  } else if (
-                    filterRestaurant[j]?.branch_hours[0].openingStatus ===
-                    "Close"
-                  ) {
+                  } else if (findStatus[0].openingStatus === "Close") {
                     setRestaurantOpen(true);
                   }
                 }
@@ -341,6 +344,9 @@ function CartPage() {
         }
       }
     }
+    setTimeout(() => {
+      setIsActive(false);
+    }, 100);
   };
 
   const [userCurrentAddress, setUserCurrentAddress] = useState({
@@ -421,7 +427,15 @@ function CartPage() {
     );
 
     for (let i = 0; i < filterRestaurant?.length; i++) {
-      if (filterRestaurant[i]?.branch_hours[0].openingStatus === "Open") {
+      const date = new Date();
+      const options = { weekday: "long" };
+      const dayName = date.toLocaleDateString("en-US", options);
+
+      const findStatus = filterRestaurant[i]?.branch_hours?.filter(
+        (branch) => branch.week_day === dayName
+      );
+
+      if (findStatus[0].openingStatus === "Open") {
         const currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes() + 30);
 
@@ -436,9 +450,7 @@ function CartPage() {
         setRestaurantOpen(false);
 
         break;
-      } else if (
-        filterRestaurant[i]?.branch_hours[0].openingStatus === "Close"
-      ) {
+      } else if (findStatus[0].openingStatus === "Close") {
         setRestaurantOpen(true);
         setOpenPopup(false);
       }
@@ -492,6 +504,10 @@ function CartPage() {
                     ...value,
                     variantId: val.topping_variant_id,
                   })),
+                  customVariant: val.custom_variant.map((value) => ({
+                    ...value,
+                    variantId: val.custom_variant_id,
+                  })),
                   sideVariant: val.side_variant.map((value) => ({
                     ...value,
                     variantId: val.side_variant_id,
@@ -532,7 +548,9 @@ function CartPage() {
   };
 
   const getDeliveryCharge = () => {
-    return Number(deliveryPrice).toFixed(3);
+    return Number(
+      selectedAdd !== null ? Number(selectedAdd?.delivery_charges || 0) : 0
+    ).toFixed(3);
   };
 
   const getPromoDiscount = () => {
@@ -581,7 +599,8 @@ function CartPage() {
     tip_amount: tipValue,
     pick_from_store: "",
     pickup_from_car: "",
-    delivery_charges: deliveryPrice,
+    delivery_charges:
+      selectedAdd !== null ? Number(selectedAdd?.delivery_charges) : 0,
     promo_code: "Test1",
     comments: specialIns,
     delivery_schedule: {
@@ -824,45 +843,48 @@ function CartPage() {
               <Typography>Estimated Delivery Time:</Typography>
 
               <Stack direction="row" alignItems="center" spacing={1}>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  sx={{
-                    display: "flex",
-                    maxWidth: "200px",
-                  }}
-                >
-                  <Stack
-                    justifyContent="center"
-                    alignItems="center"
+                {selectedAdd?.delivery_time && (
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
                     sx={{
-                      bgcolor: (theme) => theme.palette.themeColor.main,
-                      color: "common.white",
-                      p: 1,
-                      borderRadius: "8px",
+                      display: "flex",
+                      maxWidth: "200px",
                     }}
-                    spacing={0}
                   >
-                    <Typography
-                      variant="h4"
-                      fontWeight={600}
+                    <Stack
+                      justifyContent="center"
+                      alignItems="center"
                       sx={{
-                        lineHeight: 1,
+                        bgcolor: (theme) => theme.palette.themeColor.main,
+                        color: "common.white",
+                        p: 1,
+                        borderRadius: "8px",
                       }}
+                      spacing={0}
+                      className="delivery-time"
                     >
-                      30
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      fontWeight={300}
-                      sx={{
-                        lineHeight: 1,
-                      }}
-                    >
-                      minutes
-                    </Typography>
-                  </Stack>
-                </Typography>
+                      <Typography
+                        variant="h4"
+                        fontWeight={600}
+                        sx={{
+                          lineHeight: 1,
+                        }}
+                      >
+                        {selectedAdd?.delivery_time?.trim()?.split(" ")[0]}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        fontWeight={300}
+                        sx={{
+                          lineHeight: 1,
+                        }}
+                      >
+                        minutes
+                      </Typography>
+                    </Stack>
+                  </Typography>
+                )}
                 <Typography
                   variant="h5"
                   sx={{
@@ -1290,6 +1312,8 @@ function CartPage() {
             onClick={(e) => checkoutHandler(e)}
             variant="contained"
             size="large"
+            className={isActive ? "pay-now-button" : ""}
+            onTouchStart={(e) => checkoutHandler(e)}
           >
             Pay Now
           </Button>

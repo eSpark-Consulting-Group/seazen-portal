@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Icon_-_Chevron_Background_Mask_" data-name="Icon - Chevron (Background/Mask)" width="24" height="24" transform="translate(24 0) rotate(90)" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Icon_-_Chevron" data-name="Icon - Chevron" transform="translate(0 0)" clip-path="url(#clip-path)">
+    <path id="Vector" d="M.293,1.707,5.586,7,.293,12.293a1,1,0,0,0,1.414,1.414l6-6a1,1,0,0,0,0-1.414l-6-6A1,1,0,0,0,.293,1.707Z" transform="translate(19 8) rotate(90)" fill="#e02020"/>
+  </g>
+</svg>

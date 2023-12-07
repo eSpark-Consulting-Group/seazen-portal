@@ -47,7 +47,7 @@ export const PrivacyPolicy = () => {
         </p>
       </div>
       <div className="privacy-policy-footer px-3">
-        <Footer showCommentOption={false} />
+        <Footer showCommentOption={false} path="privacy" />
       </div>
     </div>
   );

@@ -68,7 +68,8 @@
   border-radius: 16px;
   width: 68px;
   height: 16px;
-  margin-right: 21px;
+  /* margin-right: 21px; */
+  margin-left: auto;
 }
 
 .branch-closing-soon {
@@ -136,7 +137,8 @@
 }
 
 .branch-timings {
-  display: flex; /* Display children side by side */
+  display: flex;
+  /* Display children side by side */
   align-items: center;
   margin-left: -265px;
 }

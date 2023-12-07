@@ -8,11 +8,9 @@ import { Footer } from "../../components/footer/footerContent";
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../api/restaurant/branches/getBranchesAndHours";
-import { useParams } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 
 export const Branches = () => {
-  const { id } = useParams();
-
   const [branchesAndHours, setBranchesAndHours] = React.useState(null);
 
   const {
@@ -20,11 +18,14 @@ export const Branches = () => {
     isLoading,
     isSuccess,
   } = useQuery({
-    queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, id],
+    queryKey: [
+      GET_BRANCHES_AND_HOURS_QUERY_KEY,
+      localStorage.getItem("restaurantID"),
+    ],
     queryFn: () => {
-      return getBranchesAndHours(id);
+      return getBranchesAndHours(localStorage.getItem("restaurantID"));
     },
-    enabled: !!id,
+    enabled: !!localStorage.getItem("restaurantID"),
     onSuccess: (response) => {
       let branchesAndHours = [];
       if (response.data && response.data.length > 0) {
@@ -58,18 +59,26 @@ export const Branches = () => {
   return (
     <div className="branches-screen-container">
       <BranchHeader />
-      <BranchContent />
-      {branchesAndHours && (
-        <RestaurantInfo
-          restaurants={branchesAndHours}
-          branchesData={branchesAndHoursResponse.data}
-        />
-      )}
-      <div className="branches-footer">
-        <div className="profile-footer">
-          <Footer showFooterSection />
+      {isLoading ? (
+        <div className="api-calling">
+          <CircularProgress className="progress-bar" />
         </div>
-      </div>
+      ) : (
+        <>
+          <BranchContent />
+          {branchesAndHours && (
+            <RestaurantInfo
+              restaurants={branchesAndHours}
+              branchesData={branchesAndHoursResponse.data}
+            />
+          )}
+          <div className="branches-footer">
+            <div className="profile-footer">
+              <Footer showFooterSection />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

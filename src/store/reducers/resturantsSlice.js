@@ -45,6 +45,11 @@ const resturantsSlice = createSlice({
         extraToppings: action.payload,
       });
     },
+    setExtraCustom: (state, action) => {
+      state.details.push({
+        extraCustom: action.payload,
+      });
+    },
     setExtraToppingsCount: (state, action) => {
       state.details.extraToppings = state.details.extraToppings.map(
         (item, index) =>
@@ -56,6 +61,20 @@ const resturantsSlice = createSlice({
               }
       );
       state.details.toppingsTotalCount = state.details.extraToppings.reduce(
+        (acc, curr) => acc + curr.quantity,
+        0
+      );
+    },
+    setExtraCustomCount: (state, action) => {
+      state.details.extraCustom = state.details.extraCustom.map((item, index) =>
+        index !== action.payload.index
+          ? item
+          : {
+              ...item,
+              quantity: action.payload.updateQuantityBy,
+            }
+      );
+      state.details.customTotalCount = state.details.extraCustom.reduce(
         (acc, curr) => acc + curr.quantity,
         0
       );
@@ -103,8 +122,10 @@ export const {
   getCategoryItemList,
   setVariantSize,
   setExtraToppings,
+  setExtraCustom,
   getRestaurantsBanner,
   setExtraToppingsCount,
+  setExtraCustomCount,
   setSlides,
   setSlidesCount,
   changeItemQuantity,

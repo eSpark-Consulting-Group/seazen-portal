@@ -1,92 +1,18 @@
 import React from "react";
 
-// import {
-//   OutlinedInput,
-//   Select,
-//   MenuItem,
-//   FormControl,
-//   InputLabel,
-//   TextField,
-// } from "@mui/material";
-
 import "./style.css";
 
-// const ITEM_HEIGHT = 48;
-// const ITEM_PADDING_TOP = 8;
-
 export const HomeAdress = (props) => {
-  const {
-    handleChange,
-    address,
-    //  areaErr,
-    blockErr,
-    streetErr,
-    houseNoErr,
-  } = props;
-  // const [open, setOpen] = React.useState(false);
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
-
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const areas = ["Area"];
+  const { handleChange, address, blockErr, streetErr, houseNoErr } = props;
 
   return (
     <form className="container-style px-3">
-      {/* <Select
-        displayEmpty
-        value={address.area}
-        onChange={(e) => handleChange("area", e.target.value)}
-        input={<OutlinedInput />}
-        renderValue={(selected) => {
-          if (selected.length === 0) {
-            return (
-              <span
-                className={
-                  areaErr
-                    ? ["dropdown-placeholder", "error-placeholder"].join(" ")
-                    : "dropdown-placeholder"
-                }
-              >
-                Area
-              </span>
-            );
-          }
-
-          return selected;
-        }}
-        inputProps={{ "aria-label": "Without label" }}
-        className={areaErr ? ["form-style", "error"].join(" ") : "form-style"}
-        open={open}
-        onClose={handleClose}
-        onOpen={handleOpen}
-        IconComponent={() => {
-          return (
-            <div className="area-dropdown" onClick={handleOpen}>
-              <img src="/assets/img/dropdown.png" alt="Dropdown" />
-            </div>
-          );
-        }}
+      <div
+        className={`inputwrapper ${blockErr ? "errorinputwrapper" : ""}`}
+        data-required="(Required)"
       >
-        <MenuItem disabled value="">
-          Area
-        </MenuItem>
-        {areas.map((name) => (
-          <MenuItem key={name} value={name} className="select-menuitem">
-            {name}
-          </MenuItem>
-        ))}
-      </Select> */}
-
-      <div className="inputwrapper" data-required="(Required)">
         <input
-          className={
-            blockErr ? ["form-style", "error"].join(" ") : "form-style"
-          }
+          className={`form-style ${blockErr ? "error" : ""}`}
           type="text"
           name="Block"
           placeholder="Block"
@@ -95,11 +21,12 @@ export const HomeAdress = (props) => {
         />
       </div>
 
-      <div className="inputwrapper" data-required="(Required)">
+      <div
+        className={`inputwrapper ${streetErr ? "errorinputwrapper" : ""}`}
+        data-required="(Required)"
+      >
         <input
-          className={
-            streetErr ? ["form-style", "error"].join(" ") : "form-style"
-          }
+          className={`form-style ${streetErr ? "error" : ""}`}
           type="text"
           name="Street"
           placeholder="Street"
@@ -117,11 +44,12 @@ export const HomeAdress = (props) => {
         value={address.avenue}
       />
 
-      <div className="inputwrapper" data-required="(Required)">
+      <div
+        className={`inputwrapper ${houseNoErr ? "errorinputwrapper" : ""}`}
+        data-required="(Required)"
+      >
         <input
-          className={
-            houseNoErr ? ["form-style", "error"].join(" ") : "form-style"
-          }
+          className={`form-style ${houseNoErr ? "error" : ""}`}
           type="text"
           name="House Number"
           placeholder="House Number"
