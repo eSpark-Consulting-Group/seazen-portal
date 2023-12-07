@@ -8,6 +8,7 @@ import getMenuItemDetails from "../../../../api/menu/getMenuItemDetails";
 import updateCartApiCall from "../../../../api/cart/updateCart";
 import { useQuery } from "@tanstack/react-query";
 import deleteCart from "../../../../api/cart/deleteCartItem";
+import { getVariantAPIFormat } from "../../../../utils/getVariantFormat";
 
 const ExtraItems = ({ extraItemName, extraItemCount, item, item_code, id }) => {
   const navigate = useNavigate();
@@ -29,60 +30,38 @@ const ExtraItems = ({ extraItemName, extraItemCount, item, item_code, id }) => {
     getItemDetails();
   }, []);
 
-  const variantsForApi = (variantID, optionId, quantity) => {
-    const data = menuItemDetails?.data;
-    const dataVariants = data.variants?.find((val) => val.id === variantID);
-    if (!dataVariants) return [];
-    const dataOptions = dataVariants.options?.map((val, index) => {
-      return {
-        option_id: val.id,
-        option_quantity:
-          val.id == (optionId[index] || optionId)
-            ? quantity[index]?.quantity || 1
-            : 0,
-      };
-    });
-    return dataOptions;
-  };
-
-  const getSelectedItemsIds = (selectedItems) => {
-    const idsArr = selectedItems?.map((val) => val.id);
-
-    return idsArr;
-  };
-
   const getDataForUpdateApi = (action) => {
-    const sideVariant = cartItem.variants?.sideVariant[0]?.variantId;
-    const sizeVariant = cartItem.variants?.sizeVariant?.variantId;
-    const toppingVariant = cartItem.variants?.toppingVariant[0]?.variantId;
-    const customVariant = cartItem.variants?.customVariant[0]?.variantId;
+    const sideVariantId = cartItem.variants?.sideVariant[0]?.variantId;
+    const sizeVariantId = cartItem.variants?.sizeVariant?.variantId;
+    const toppingVariantId = cartItem.variants?.toppingVariant[0]?.variantId;
+    const customVariantId = cartItem.variants?.customVariant[0]?.variantId;
 
     let cartItemDataForApi = {
       item_code: cartItem.item_code,
       cart_id: cartItem.cart_id,
       item_id: cartItem.id,
       branch_id: cartItem.branch_id,
-      topping_variant_id: toppingVariant || null,
-      side_variant_id: sideVariant || null,
-      size_variant_id: sizeVariant || null,
-      custom_variant_id: customVariant || null,
-      size_variant: variantsForApi(
-        sizeVariant,
+      topping_variant_id: toppingVariantId || null,
+      side_variant_id: sideVariantId || null,
+      size_variant_id: sizeVariantId || null,
+      custom_variant_id: customVariantId || null,
+      size_variant: getVariantAPIFormat(
+        sizeVariantId,
         cartItem.variants?.sizeVariant?.id
       ),
-      topping_variant: variantsForApi(
-        toppingVariant,
-        getSelectedItemsIds(cartItem.variants?.toppingVariant),
-        cartItem.variants?.toppingVariant[0]?.quantity
+      topping_variant: getVariantAPIFormat(
+        toppingVariantId,
+        cartItem.variants?.toppingVariant,
+        menuItemDetails
       ),
-      custom_variant: variantsForApi(
-        customVariant,
-        getSelectedItemsIds(cartItem.variants?.customVariant),
-        cartItem.variants?.customVariant
+      custom_variant: getVariantAPIFormat(
+        customVariantId,
+        cartItem.variants?.customVariant,
+        menuItemDetails
       ),
-      side_variant: variantsForApi(
-        sideVariant,
-        getSelectedItemsIds(cartItem.variants?.sideVariant)
+      side_variant: getVariantAPIFormat(
+        sideVariantId,
+        cartItem.variants?.sideVariant
       ),
     };
 
