@@ -150,3 +150,14 @@ input[type="number"]::-webkit-outer-spin-button {
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 999; /* Adjust the z-index to make sure the overlay is above other elements */
 }
+
+.reorder-slide {
+  max-height: 50%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+.reorder-slide::-webkit-scrollbar {
+  display: none;
+}

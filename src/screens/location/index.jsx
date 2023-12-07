@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   GoogleMap,
@@ -53,8 +53,11 @@ import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantBranchHours";
 // import { addAddressDetail } from "../../store/reducers/addressSlice";
+import getAllArea from "../../api/address/areas";
 
 import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
+
+import { getAreas } from "../../store/reducers/addressSlice";
 
 import { paths } from "../../routes/paths";
 
@@ -86,8 +89,10 @@ const lib = ["places"];
 function LocationPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const countries = useSelector((state) => state.auth.countries);
+  const allAreas = useSelector((state) => state.address.allAreas);
 
   const selectedAdd = JSON.parse(localStorage.getItem("selected"));
   const token = localStorage.getItem("token");
@@ -98,6 +103,15 @@ function LocationPage() {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     libraries: lib,
   });
+  // const { data: areas } = useQuery({
+  //   queryFn: () => getAllArea(token),
+  // });
+
+  // useEffect(() => {
+  //   if (areas?.data?.length) {
+  //     dispatch(getAreas(areas.data));
+  //   }
+  // }, [areas?.data]);
 
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [address, setAddress] = useState("");
@@ -258,6 +272,51 @@ function LocationPage() {
       getAdd(+location?.state?.latlng?.lat, +location?.state?.latlng?.lng);
     }
   }, [location?.state]);
+  // const findOperationalArea = (addresses) => {
+  //   const resultArray = addresses.map((address) => {
+  //     let foundMatchingArea = null;
+
+  //     allAreas.forEach((zone) => {
+  //       const matchingArea = zone.areas.find((area) => {
+  //         return (
+  //           area.name_en.trim().toLowerCase() ===
+  //             address.long_name.trim().toLowerCase() ||
+  //           area.name_en.includes(address.long_name)
+  //         );
+  //       });
+
+  //       if (matchingArea) {
+  //         foundMatchingArea = {
+  //           area_id: matchingArea.area_id,
+  //           name_en: matchingArea.name_en,
+  //           name_ar: matchingArea.name_ar,
+  //           delivery_charges: matchingArea.delivery_charges,
+  //           delivery_time: matchingArea.delivery_time,
+  //           minimum_order_amount: zone.minimum_order_amount,
+  //           zone_id: zone.zone_id,
+  //         };
+  //       }
+  //     });
+
+  //     if (foundMatchingArea === null) {
+  //       return null;
+  //     } else {
+  //       allAreas;
+  //       return foundMatchingArea;
+  //     }
+  //   });
+
+  //   const myresult = resultArray.filter((result) => result !== null);
+
+  //   if (allAreas.length) {
+  //     if (!myresult?.length) {
+  //       setDistanceIsFar(true);
+  //     } else {
+  //       console.log(myresult[0]);
+  //       setDistanceIsFar(false);
+  //     }
+  //   }
+  // };
 
   const getAdd = async (latitude, longitude) => {
     // eslint-disable-next-line no-undef
@@ -267,6 +326,8 @@ function LocationPage() {
     })
       .then(({ results }) => {
         const address = results[0].formatted_address;
+
+        // findOperationalArea(results[0]?.address_components);
 
         setAddress(address);
         setCenter({ lat: +latitude, lng: +longitude });
@@ -411,13 +472,14 @@ function LocationPage() {
   const onPlaceChanged = () => {
     setPlaceChanged(true);
     if (autocomplete) {
+      // findOperationalArea(autocomplete.getPlace()?.address_components);
+
       const lat = autocomplete.getPlace().geometry.location.lat();
       const lng = autocomplete.getPlace().geometry.location.lng();
 
       const restrictToRegion = autocomplete
         .getPlace()
         .formatted_address.split(",");
-
       const lastElem = restrictToRegion[restrictToRegion.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
@@ -601,7 +663,7 @@ function LocationPage() {
         color: "text.primary",
         position: "relative",
       }}
-      className="parent-stack"
+      className={`parent-stack ${!isLoaded ? "load-center" : ""}`}
     >
       <Stack
         spacing={2}
@@ -691,7 +753,6 @@ function LocationPage() {
                 onPlaceChanged={onPlaceChanged}
               >
                 <div className="dp-fl">
-                  {/* <img src={SearchIcon} alt="Search Icon" className="icon" /> */}
                   <input
                     id="autocomplete"
                     type="text"
@@ -714,7 +775,7 @@ function LocationPage() {
         </Stack>
       </Stack>
       {!isLoaded ? (
-        <div className="progress-bar">
+        <div className="map-progress-bar">
           <CircularProgress className="bar" />
         </div>
       ) : (

@@ -24,13 +24,14 @@ import Navbar from "../../components/header";
 import getAllAddress from "../../api/address/getAddress";
 import deleteAddressApiCall from "../../api/address/deleteAddress";
 
-import { getAddress } from "../../store/reducers/addressSlice";
+import { getAddress, getAreas } from "../../store/reducers/addressSlice";
 
 import { getFullAddress } from "../../utils/getAddress";
 
 import { paths } from "../../routes/paths";
 
 import "./style.css";
+import getAllArea from "../../api/address/areas";
 
 const App = () => {
   const isToken = localStorage.getItem("token");

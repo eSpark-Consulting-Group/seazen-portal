@@ -31,10 +31,13 @@ import { paths } from "../../routes/paths";
 
 import addAddressApiCall from "../../api/address/addAddress";
 import updateAddressApiCall from "../../api/address/updateAddress";
-import getAllAddress from "../../api/address/getAddress";
+// import getAllAddress from "../../api/address/getAddress";
 import getAllArea from "../../api/address/areas";
 
-import { getAreas, getAddress } from "../../store/reducers/addressSlice";
+import {
+  getAreas,
+  //, getAddress
+} from "../../store/reducers/addressSlice";
 
 import "./style.css";
 

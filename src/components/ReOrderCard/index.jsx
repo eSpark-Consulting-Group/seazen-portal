@@ -1,8 +1,5 @@
 import React, { useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
-// import { useMutation } from "@tanstack/react-query";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -43,7 +40,6 @@ const ReOrderCard = (props) => {
 
   const dispatch = useDispatch();
 
-  // const cart = useSelector((state) => state.cart.cart);
   const branchHours = useSelector((state) => state.resturants.branchHours);
 
   const [selectedItems, setSelectedItems] = React.useState([]);
@@ -51,34 +47,6 @@ const ReOrderCard = (props) => {
 
   const getOrderItemPrice = (item) => {
     let itemUnitPrice = item?.unit_price;
-
-    // check which size is selected
-    // const itemSize = item?.size_variant.find(
-    //   (size) => size.option_quantity > 0
-    // );
-
-    // if (itemSize) {
-    //   itemUnitPrice = parseFloat(itemSize.unit_price);
-    // }
-
-    // // add side price
-    // if (item.side_variant && item.side_variant.length > 0) {
-    //   forEach(item.side_variant, (side) => {
-    //     if (side.option_quantity > 0) {
-    //       itemUnitPrice += parseFloat(side.unit_price) * side.option_quantity;
-    //     }
-    //   });
-    // }
-
-    // // add topping price
-    // if (item.topping_variant && item.topping_variant.length > 0) {
-    //   forEach(item.topping_variant, (topping) => {
-    //     if (topping.option_quantity > 0) {
-    //       itemUnitPrice +=
-    //         parseFloat(topping.unit_price) * topping.option_quantity;
-    //     }
-    //   });
-    // }
 
     let itemTotalPrice = itemUnitPrice * item.quantity;
 
@@ -94,11 +62,6 @@ const ReOrderCard = (props) => {
       );
     }
   };
-
-  // const clearCartItems = async () => {
-  //   dispatch(resetCart());
-  //   // await emptyCart();
-  // };
 
   const handleAddItemsToCart = async () => {
     setIsLoading(true);
@@ -181,7 +144,6 @@ const ReOrderCard = (props) => {
           promises.push(addToCartApiCall(cartItem));
         });
 
-        // wait for all items to be added to cart Promise to finish - then close modal
         Promise.all(promises)
           .then(() => {
             cartList(token)
@@ -256,13 +218,6 @@ const ReOrderCard = (props) => {
               .catch((err) => {
                 console.error(err);
               });
-
-            // navigate(paths.cart, {
-            //   state: {
-            //     back: paths.myorder,
-            //     hitCart: true,
-            //   },
-            // });
           })
           .catch(() => {
             setIsLoading(false);
@@ -272,55 +227,33 @@ const ReOrderCard = (props) => {
     });
   };
 
-  // const addItemToCart = (item) => {
-  //   const cartItem = {
-  //     item_code: uuidv4(),
-  //     item_id: item.item_id,
-  //     quantity: item.quantity,
-  //     topping_variant_id: item.topping_variant_id,
-  //     side_variant_id: item.side_variant_id,
-  //     size_variant_id: item.size_variant_id,
-  //     size_variant: item.size_variant,
-  //     topping_variant: item.topping_variant,
-  //     side_variant: item.side_variant,
-  //     restaurant_id: item.restaurant_id,
-  //   };
-
-  //   dispatch(addToCart(cartItem));
-  //   promises.push(addToCartApiCall(cartItem));
-  // };
-
-  // const { mutate: apiCall } = useMutation(addToCartApiCall);
-  // const { mutate: emptyCart } = useMutation(clearCart);
-
   useEffect(() => {
     const incQuantity = removeDuplicateItem(items);
 
     setSelectedItems(incQuantity);
   }, [items]);
 
+  const styles = {
+    width: "374px",
+    position: "absolute !important",
+    bottom: 0,
+    background: "#fff",
+    px: 2,
+    py: 2,
+    pt: 3,
+    borderRadius: "20px 20px 0 0",
+  };
+
   return (
     <div>
-      <Modal
-        open={isVisible}
-        onClose={handleClose}
-        sx={{ scrollbarWidth: "none" }}
-      >
-        <Slide direction="up" in={isVisible} sx={{ scrollbarWidth: "none" }}>
-          <Stack
-            spacing={2}
-            sx={{
-              width: "374px",
-              position: "absolute",
-              bottom: 0,
-              background: "#fff",
-              px: 2,
-              py: 2,
-              pt: 3,
-              borderRadius: "20px 20px 0 0",
-              scrollbarWidth: "none",
-            }}
-          >
+      <Modal open={isVisible} onClose={handleClose}>
+        <Slide
+          direction="up"
+          in={isVisible}
+          sx={styles}
+          className="reorder-slide"
+        >
+          <Stack spacing={2}>
             <Stack spacing={0}>
               {removeDuplicateItem(
                 items?.map((item) => {
