@@ -115,6 +115,7 @@ const DeliveryDetails = (props) => {
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
+  const [name_en, setNameEn] = useState();
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
 
@@ -359,6 +360,7 @@ const DeliveryDetails = (props) => {
           delivery_charges,
           delivery_time,
           minOrderAmount,
+          name_en,
         })
       );
 
@@ -439,6 +441,19 @@ const DeliveryDetails = (props) => {
     }
   };
 
+  const onSelectLocatiom = (address) => {
+    getUserAddress(address.latitude, address.longitude);
+    setAddressID(address.id);
+    setDeliveryCharge(
+      address?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+    );
+    setDeliveryTime(address?.delivery_charge_area_info?.delivery_time);
+    setMinOrderAmount(address?.delivery_zone_info?.minimum_order_amount);
+    setNameEn(address?.delivery_charge_area_info?.name_en);
+
+    fetchNearbyRestaurant(address.latitude, address.longitude);
+  };
+
   return (
     <>
       {openSchedulePopup && <Overlay />}
@@ -502,23 +517,7 @@ const DeliveryDetails = (props) => {
                     return (
                       <Dropdown.Item
                         onClick={() => {
-                          getUserAddress(address.latitude, address.longitude);
-                          setAddressID(address.id);
-                          setDeliveryCharge(
-                            address?.delivery_charge_area_info?.delivery_charges?.split(
-                              " "
-                            )[1]
-                          );
-                          setDeliveryTime(
-                            address?.delivery_charge_area_info?.delivery_time
-                          );
-                          setMinOrderAmount(
-                            address?.delivery_zone_info?.minimum_order_amount
-                          );
-                          fetchNearbyRestaurant(
-                            address.latitude,
-                            address.longitude
-                          );
+                          onSelectLocatiom(address);
                           localStorage.setItem("selectCurrent", false);
                         }}
                         style={{

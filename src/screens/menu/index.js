@@ -102,6 +102,7 @@ const Menu = () => {
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
+  const [name_en, setNameEn] = useState();
 
   const token = localStorage.getItem("token");
 
@@ -259,6 +260,8 @@ const Menu = () => {
     );
     setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
     setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
+    setNameEn(item?.delivery_charge_area_info?.name_en);
+
     getFullAddress(lat, lng, setFullAddress);
   };
 
@@ -277,6 +280,7 @@ const Menu = () => {
             delivery_charges,
             delivery_time,
             minOrderAmount,
+            name_en,
           })
         );
 
@@ -333,6 +337,7 @@ const Menu = () => {
         delivery_charges,
         delivery_time,
         minOrderAmount,
+        name_en,
       })
     );
 

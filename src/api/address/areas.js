@@ -14,12 +14,7 @@ const getAllArea = async (token) => {
 
     // Make the GET request to fetch all addresses.
     const { data } = await axiosInstance.get(
-      `${API_ENDPOINTS.ADDRESS.AREA}/${country_id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      `${API_ENDPOINTS.ADDRESS.AREA}/${country_id}`
     );
     return data;
   } catch (error) {
