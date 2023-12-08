@@ -40,6 +40,7 @@ import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant.js";
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../api/restaurant/branches/getBranchesAndHours.js";
+import cartList from "../../api/cart/cartList.js";
 
 import {
   getNearByRest,
@@ -48,11 +49,13 @@ import {
 } from "../../store/reducers/resturantsSlice.js";
 import { setThemeColor } from "../../store/reducers/themeSlice.js";
 import { closeReorderModal } from "../../store/reducers/orderSlice.js";
+import { addToCart } from "../../store/reducers/cartSlice.js";
 
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../utils/getAddress.js";
+import { cartListApiHit } from "../../utils/carlistApiCall.js";
 
 import { paths } from "../../routes/paths.jsx";
 
@@ -100,6 +103,8 @@ const Menu = () => {
   const [delivery_time, setDeliveryTime] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
 
+  const token = localStorage.getItem("token");
+
   const {
     data: restaurantDetailResponse,
     isLoading,
@@ -142,6 +147,22 @@ const Menu = () => {
     longitude: 0,
     service_type: "dinein",
   });
+
+  // useEffect(() => {
+  //   if (sessionStorage.getItem("cartEmpty") === null) {
+  //     if (token !== null) {
+  //       if (restaurantBranchHours?.data?.length) {
+  //         cartListApiHit(
+  //           cartList,
+  //           restaurantBranchHours?.data,
+  //           dispatch,
+  //           addToCart,
+  //           token
+  //         );
+  //       }
+  //     }
+  //   }
+  // }, [cart, token, restaurantBranchHours?.data?.length]);
 
   useEffect(() => {
     const userSelected = localStorage.getItem("selected");

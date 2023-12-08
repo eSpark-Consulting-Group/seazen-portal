@@ -95,6 +95,7 @@ function LocationPage() {
   const allAreas = useSelector((state) => state.address.allAreas);
 
   const selectedAdd = JSON.parse(localStorage.getItem("selected"));
+  const current = JSON.parse(localStorage.getItem("location"));
   const token = localStorage.getItem("token");
 
   const { isLoaded } = useLoadScript({
@@ -103,15 +104,19 @@ function LocationPage() {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     libraries: lib,
   });
-  // const { data: areas } = useQuery({
-  //   queryFn: () => getAllArea(token),
-  // });
 
-  // useEffect(() => {
-  //   if (areas?.data?.length) {
-  //     dispatch(getAreas(areas.data));
-  //   }
-  // }, [areas?.data]);
+  const { refetch } = useQuery({
+    queryFn: () => getAllArea(token),
+    onSuccess: (data) => {
+      dispatch(getAreas(data.data));
+    },
+  });
+
+  useEffect(() => {
+    if (allAreas?.length === 0) {
+      refetch();
+    }
+  }, [allAreas]);
 
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [address, setAddress] = useState("");
@@ -120,6 +125,9 @@ function LocationPage() {
   const [noRegion, setNoRegion] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [placeChanged, setPlaceChanged] = useState(false);
+  const [addressComponents, setAddressComponents] = useState([]);
+  const [notOperational, setNotOperational] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState({});
 
   const mapRef = useRef();
 
@@ -206,7 +214,7 @@ function LocationPage() {
             }
           }
         });
-  }, []);
+  }, [allAreas]);
 
   const { data } = useQuery({
     queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY],
@@ -225,7 +233,7 @@ function LocationPage() {
         }
       }
     }
-  }, [data, center, location]);
+  }, [data, center, location, allAreas]);
 
   const watchBranchHours = (array) => {
     if (array.length) {
@@ -244,6 +252,9 @@ function LocationPage() {
           if (distance > 50) {
             setDistanceIsFar(true);
           } else {
+            if (selectedAdd !== null) {
+              findOperationalArea(addressComponents);
+            }
             setDistanceIsFar(false);
             break;
           }
@@ -262,7 +273,7 @@ function LocationPage() {
 
       getAdd(lat, lng);
     }
-  }, [location?.state]);
+  }, [location?.state, allAreas]);
 
   useEffect(() => {
     if (
@@ -271,52 +282,68 @@ function LocationPage() {
     ) {
       getAdd(+location?.state?.latlng?.lat, +location?.state?.latlng?.lng);
     }
-  }, [location?.state]);
-  // const findOperationalArea = (addresses) => {
-  //   const resultArray = addresses.map((address) => {
-  //     let foundMatchingArea = null;
+  }, [location?.state, allAreas]);
 
-  //     allAreas.forEach((zone) => {
-  //       const matchingArea = zone.areas.find((area) => {
-  //         return (
-  //           area.name_en.trim().toLowerCase() ===
-  //             address.long_name.trim().toLowerCase() ||
-  //           area.name_en.includes(address.long_name)
-  //         );
-  //       });
+  const findOperationalArea = (addresses) => {
+    const resultArray = addresses?.address_components?.map((address) => {
+      let foundMatchingArea = null;
 
-  //       if (matchingArea) {
-  //         foundMatchingArea = {
-  //           area_id: matchingArea.area_id,
-  //           name_en: matchingArea.name_en,
-  //           name_ar: matchingArea.name_ar,
-  //           delivery_charges: matchingArea.delivery_charges,
-  //           delivery_time: matchingArea.delivery_time,
-  //           minimum_order_amount: zone.minimum_order_amount,
-  //           zone_id: zone.zone_id,
-  //         };
-  //       }
-  //     });
+      allAreas.forEach((zone) => {
+        const matchingArea = zone.areas.find((area) => {
+          return (
+            area.name_en.trim().toLowerCase() ===
+              address.long_name.trim().toLowerCase() ||
+            (area?.name_en?.includes("-")
+              ? area?.name_en
+                  .split("-")
+                  ?.join(" ")
+                  ?.includes(address.long_name.split("-")?.join(" "))
+              : area?.name_en?.includes(" - ") &&
+                area?.name_en
+                  .split(" - ")
+                  ?.join(" ")
+                  ?.includes(address.long_name.split("-")?.join(" ")))
+          );
+        });
 
-  //     if (foundMatchingArea === null) {
-  //       return null;
-  //     } else {
-  //       allAreas;
-  //       return foundMatchingArea;
-  //     }
-  //   });
+        if (matchingArea) {
+          foundMatchingArea = {
+            area_id: matchingArea.area_id,
+            name_en: matchingArea.name_en,
+            delivery_charges: matchingArea.delivery_charges,
+            delivery_time: matchingArea.delivery_time,
+            minOrderAmount: zone.minimum_order_amount,
+            zone_id: zone.zone_id,
+          };
+        }
+      });
 
-  //   const myresult = resultArray.filter((result) => result !== null);
+      if (foundMatchingArea === null) {
+        return null;
+      } else {
+        allAreas;
+        return foundMatchingArea;
+      }
+    });
 
-  //   if (allAreas.length) {
-  //     if (!myresult?.length) {
-  //       setDistanceIsFar(true);
-  //     } else {
-  //       console.log(myresult[0]);
-  //       setDistanceIsFar(false);
-  //     }
-  //   }
-  // };
+    const myresult = resultArray?.filter((result) => result !== null);
+
+    if (allAreas?.length) {
+      if (myresult !== undefined) {
+        if (!myresult?.length) {
+          setNotOperational(true);
+        } else {
+          // if (token !== null && current !== null) {
+          setSelectedAddress({
+            ...myresult[0],
+            address: addresses?.formatted_address,
+          });
+          setNotOperational(false);
+          // }
+        }
+      }
+    }
+  };
 
   const getAdd = async (latitude, longitude) => {
     // eslint-disable-next-line no-undef
@@ -327,7 +354,11 @@ function LocationPage() {
       .then(({ results }) => {
         const address = results[0].formatted_address;
 
-        // findOperationalArea(results[0]?.address_components);
+        if (addressComponents.length !== 0) {
+          findOperationalArea(results[0]);
+        } else {
+          setAddressComponents(results[0]);
+        }
 
         setAddress(address);
         setCenter({ lat: +latitude, lng: +longitude });
@@ -449,7 +480,7 @@ function LocationPage() {
       }
     }
     // }
-  }, [localStorage, address, placeChanged, location]);
+  }, [localStorage, address, placeChanged, location, allAreas]);
 
   const servicePlaceCheck = (fullAddress) => {
     let countriesName = [];
@@ -459,6 +490,7 @@ function LocationPage() {
     }
 
     if (countriesName.includes(fullAddress)) {
+      findOperationalArea(addressComponents);
       setNoRegion(false);
     } else {
       setNoRegion(true);
@@ -472,8 +504,6 @@ function LocationPage() {
   const onPlaceChanged = () => {
     setPlaceChanged(true);
     if (autocomplete) {
-      // findOperationalArea(autocomplete.getPlace()?.address_components);
-
       const lat = autocomplete.getPlace().geometry.location.lat();
       const lng = autocomplete.getPlace().geometry.location.lng();
 
@@ -499,6 +529,7 @@ function LocationPage() {
       }
 
       if (countriesName.includes(forCondition)) {
+        findOperationalArea(autocomplete.getPlace());
         setNoRegion(false);
       } else {
         setNoRegion(true);
@@ -579,6 +610,7 @@ function LocationPage() {
               path: location?.state?.path,
               restaurant_id: +location?.state?.restaurant_id,
               addNew: true,
+              selectedAddress: selectedAddress,
             },
           });
         } else if (location?.state?.fromMenu !== undefined) {
@@ -589,6 +621,7 @@ function LocationPage() {
               path: location?.state?.path,
               restaurant_id: +location?.state?.restaurant_id,
               fromMenu: location?.state?.fromMenu,
+              selectedAddress: selectedAddress,
             },
           });
         } else if (location?.state?.fromDetail !== undefined) {
@@ -599,11 +632,12 @@ function LocationPage() {
               path: location?.state?.path,
               restaurant_id: +location?.state?.restaurant_id,
               fromDetail: location?.state?.fromDetail,
+              selectedAddress: selectedAddress,
             },
           });
         } else if (location?.state?.noAddress !== undefined) {
           navigate(paths.address, {
-            state: location?.state,
+            state: { ...location?.state, selectedAddress: selectedAddress },
           });
         } else {
           navigate(paths.address, {
@@ -613,6 +647,7 @@ function LocationPage() {
               path: location?.state?.path,
               restaurant_id: +location?.state?.restaurant_id,
               addFromDropdown: location?.state?.addFromDropdown,
+              selectedAddress: selectedAddress,
             },
           });
         }
@@ -624,6 +659,7 @@ function LocationPage() {
             path: "/cart",
             restaurant_id: +location?.state?.restaurant_id,
             notSelected: location?.state?.notSelected,
+            selectedAddress: selectedAddress,
           },
         });
       } else if (location?.state?.fromHome !== undefined) {
@@ -633,11 +669,17 @@ function LocationPage() {
             latlng: center,
             path: location?.state?.path,
             fromHome: location?.state?.fromHome,
+            selectedAddress: selectedAddress,
           },
         });
       } else {
         navigate(paths.address, {
-          state: { name: address, latlng: center, path: location?.state?.path },
+          state: {
+            name: address,
+            latlng: center,
+            path: location?.state?.path,
+            selectedAddress: selectedAddress,
+          },
         });
       }
     } else {
@@ -650,6 +692,7 @@ function LocationPage() {
           fromMenu: location?.state?.fromMenu,
           fromDetail: location?.state?.fromDetail,
           editLocation: location?.state?.editLocation,
+          selectedAddress: selectedAddress,
         },
       });
     }
@@ -800,7 +843,8 @@ function LocationPage() {
                   !noRegion) ||
                 (location?.state?.fromBranch === undefined &&
                   !distanceIsFar &&
-                  noRegion)
+                  noRegion) ||
+                notOperational
                   ? LocationRed
                   : LocationGreen
               }
@@ -846,6 +890,14 @@ function LocationPage() {
             </Box>
           ) : null}
 
+          {!distanceIsFar && notOperational ? (
+            <Box className="info-window-box">
+              <Typography variant="h5">
+                We don&apos;t deliver to this Area
+              </Typography>
+            </Box>
+          ) : null}
+
           <div
             className={clicked ? "recenter-div clicked" : "recenter-div"}
             onClick={() => makeCenter()}
@@ -876,7 +928,9 @@ function LocationPage() {
             variant="contained"
             className="confirm-button"
             onClick={() => confirmLocation()}
-            disabled={address === "" || distanceIsFar || noRegion}
+            disabled={
+              address === "" || distanceIsFar || noRegion || notOperational
+            }
           >
             Confirm Your Location
           </Button>

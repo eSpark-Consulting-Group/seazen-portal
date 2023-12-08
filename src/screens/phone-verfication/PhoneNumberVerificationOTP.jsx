@@ -157,6 +157,7 @@ function PhoneNumberVerificationOTP() {
         sideVariant,
         getSelectedItemsIds(cartItem.variants?.sideVariant)
       ),
+      branch_id: cartItem?.branch_id,
     };
 
     addToCartApiCall(cartItemDataForApi, token)

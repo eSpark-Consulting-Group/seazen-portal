@@ -777,12 +777,13 @@ export const Details = () => {
       variants: {
         sizeVariant: sizeVariant,
         toppingVariant: toppingVariant,
-        customVariant: customVariant,
         sideVariant: sideVariant,
+        customVariant: customVariant,
       },
       totalPrice: Number(totalPrice).toFixed(3),
       specialInstructions: specialInstructions,
       itemImage: data?.image,
+      has_variants: data?.has_variants,
       restaurant_id: data.restaurant_id,
       branch_id: data?.branch_id,
     };
@@ -838,12 +839,13 @@ export const Details = () => {
       variants: {
         sizeVariant: sizeVariant,
         toppingVariant: toppingVariant,
-        customVariant: customVariant,
         sideVariant: sideVariant,
+        customVariant: customVariant,
       },
       totalPrice: Number(totalPrice).toFixed(3),
       specialInstructions: specialInstructions,
       itemImage: data?.image,
+      has_variants: data?.has_variants,
       restaurant_id: data.restaurant_id,
       branch_id: data?.branch_id,
     };
