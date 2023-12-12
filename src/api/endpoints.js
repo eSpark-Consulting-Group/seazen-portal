@@ -10,6 +10,7 @@ const API_ENDPOINTS = {
     GET_BRANCHES_AND_HOURS(restaurantId, language = "en") {
       return `/restaurant/${restaurantId}/branches?language=${language}`;
     },
+    GET_BRANCH_BY_AREA: "/find-branch-by-delivery-area",
   },
   USER: {
     EMAIL_LOGIN: "/email-login",

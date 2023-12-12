@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 
-import { useQuery } from "@tanstack/react-query";
-
 import Navbar from "../../components/header/index";
 import Slider from "../../components/carousel/slider/index";
 import DraggableSlider from "../../components/draggableSlider";
@@ -18,23 +16,26 @@ import ScheduleDialog from "../../components/dialog/scheduleDialog";
 import SchedulePicker from "../../components/shared/schedulePicker";
 import SelectLocation from "../../components/dialog/selectLocation";
 
-import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import countryList from "../../api/common/getAllCountries";
 import cartList from "../../api/cart/cartList";
+import getAllArea from "../../api/address/areas";
+import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 
 import { addCountry } from "../../store/reducers/authSlice";
 import { addToCart } from "../../store/reducers/cartSlice";
-
 import {
   getBranchHours,
-  getNearByRest,
+  setBranchID,
 } from "../../store/reducers/resturantsSlice";
+import { getAreas } from "../../store/reducers/addressSlice";
 
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
+  selectChooseAddress,
 } from "../../utils/getAddress";
+import { cartListApiHit } from "../../utils/carlistApiCall";
 
 import { paths } from "../../routes/paths";
 
@@ -55,149 +56,23 @@ const Home = () => {
     (state) => state.resturants.resturantsData
   );
   const cart = useSelector((state) => state.cart.cart);
-  // const nearbyRestaurants = useSelector(
-  //   (state) => state.resturants.nearbyRestaurants
-  // );
 
   useEffect(() => {
     if (sessionStorage.getItem("cartEmpty") === null) {
       if (token !== null) {
         if (cart?.length === 0 && branchHours?.length) {
-          cartList(token)
-            .then((res) => {
-              res.data.map((val) => {
-                if (branchHours?.length) {
-                  const findRestaurant = branchHours?.find(
-                    (branch) => branch.id === val?.branch_id
-                  );
-
-                  const has_variants =
-                    val?.size_variant_id === "" &&
-                    val.side_variant_id === "" &&
-                    val.custom_variant_id === "" &&
-                    val.topping_variant_id === ""
-                      ? false
-                      : true;
-
-                  const variants =
-                    val?.size_variant_id === "" &&
-                    val.side_variant_id === "" &&
-                    val.custom_variant_id === "" &&
-                    val.topping_variant_id === ""
-                      ? null
-                      : {
-                          sizeVariant: {
-                            ...val.size_variant[0],
-                            variantId: val.size_variant_id,
-                          },
-                          toppingVariant: val.topping_variant.map((value) => ({
-                            ...value,
-                            variantId: val.topping_variant_id,
-                          })),
-                          customVariant: val.custom_variant.map((value) => ({
-                            ...value,
-                            variantId: val.custom_variant_id,
-                          })),
-                          sideVariant: val.side_variant.map((value) => ({
-                            ...value,
-                            variantId: val.side_variant_id,
-                          })),
-                        };
-
-                  const obj = {
-                    id: val?.item_id,
-                    cart_id: val.cart_id,
-                    itemName: val?.menu_item_name_en,
-                    discountedPrice: val?.discounted_price,
-                    price: val?.unit_price,
-                    quantity: val.quantity,
-                    variants,
-                    item_code: val.item_code,
-                    specialInstructions: "",
-                    itemImage: val?.menu_item_image,
-                    restaurant_id: findRestaurant?.restaurant_id,
-                    totalPrice: Number(val.quantity * val.unit_price).toFixed(
-                      3
-                    ),
-                    has_variants,
-                    branch_id: val?.branch_id,
-                  };
-
-                  obj.has_variants === false && delete obj.has_variants;
-                  obj.variants === null && delete obj.variants;
-
-                  dispatch(addToCart(obj));
-                  sessionStorage.setItem("cartEmpty", true);
-                }
-              });
-            })
-            .catch((err) => {
-              console.error(err);
-            });
+          cartListApiHit(cartList, branchHours, dispatch, addToCart, token);
         }
       }
     }
   }, [cart, token, branchHours]);
-
-  // const [userCurrentAddress, setUserCurrentAddress] = useState({
-  //   latitude: 0,
-  //   longitude: 0,
-  //   service_type: "dinein",
-  // });
-
-  // useEffect(() => {
-  //   const defaultLocation = { lat: 29.3140728, lng: 47.68022 };
-
-  //   if (userSelected === null && userLocation === null) {
-  //     setUserCurrentAddress({
-  //       latitude: defaultLocation.lat,
-  //       longitude: defaultLocation.lng,
-  //       service_type: "dinein",
-  //     });
-  //     //
-  //   } else if (userSelected === null && userLocation !== null) {
-  //     const parsedUserLocation = JSON.parse(userLocation);
-
-  //     setUserCurrentAddress({
-  //       latitude: parsedUserLocation.lat,
-  //       longitude: parsedUserLocation.lng,
-  //       service_type: "dinein",
-  //     });
-  //     //
-  //   } else if (userSelected !== null && userLocation !== null) {
-  //     const parsedUserLocation = JSON.parse(userSelected);
-
-  //     setUserCurrentAddress({
-  //       latitude: parsedUserLocation.lat,
-  //       longitude: parsedUserLocation.lng,
-  //       service_type: "dinein",
-  //     });
-  //     //
-  //   }
-  // }, [localStorage]);
-
-  // const { refetch: recall } = useQuery({
-  //   queryFn: () => getNearByRestaurants(userCurrentAddress),
-  //   onSuccess: (data) => {
-  //     dispatch(getNearByRest(data.data));
-  //   },
-  //   enabled: false,
-  // });
-
-  // useEffect(() => {
-  //   if (
-  //     userCurrentAddress.latitude !== 0 &&
-  //     userCurrentAddress.longitude !== 0
-  //   ) {
-  //     recall();
-  //   }
-  // }, [userCurrentAddress]);
 
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [addressId, setAddressID] = useState();
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
+  const [name_en, setNameEn] = useState();
 
   useEffect(() => {
     if (userLocation !== null && userSelected === null) {
@@ -259,7 +134,18 @@ const Home = () => {
       .then((res) => {
         const defaultCountry = res.data.find((val) => val.is_default == "Yes");
         localStorage.setItem("country", JSON.stringify(defaultCountry));
+        fetchAllAreas();
         dispatch(addCountry(defaultCountry));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const fetchAllAreas = () => {
+    getAllArea()
+      .then((res) => {
+        dispatch(getAreas(res.data));
       })
       .catch((err) => {
         console.log(err);
@@ -321,30 +207,53 @@ const Home = () => {
   }, [resturantsData]);
 
   const chooseAddress = (item) => {
-    const lat = +item.latitude;
-    const lng = +item.longitude;
-
-    setAddressID(item.id);
-    setDeliveryCharge(
-      item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+    selectChooseAddress(
+      item,
+      setAddressID,
+      setDeliveryCharge,
+      setDeliveryTime,
+      setMinOrderAmount,
+      setNameEn,
+      getFullAddress,
+      setFullAddress
     );
-    setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
-    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
-
-    getFullAddress(lat, lng, setFullAddress);
   };
 
   const onChooseFullAddress = (item) => {
-    const lat = +item.latitude;
-    const lng = +item.longitude;
+    const object = {
+      country_id: JSON.parse(localStorage.getItem("country"))?.id,
+      delivery_charge_area_id: item?.delivery_charge_area_info.id,
+    };
 
-    setAddressID(item.id);
-    setDeliveryCharge(
-      item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+    getBranchByArea(cart[0]?.restaurant_id, object, dispatch)
+      .then((res) => {
+        if (res?.data?.length === 0) {
+          getBranchIdNearToLocation();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    selectChooseAddress(
+      item,
+      setAddressID,
+      setDeliveryCharge,
+      setDeliveryTime,
+      setMinOrderAmount,
+      setNameEn,
+      getFullAddress,
+      setChooseFullAddress
     );
-    setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
-    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
-    getFullAddress(lat, lng, setChooseFullAddress);
+  };
+
+  const getBranchIdNearToLocation = () => {
+    const filterBranch = branchHours?.data?.find(
+      (rest) => rest.restaurant_id === cart[0]?.restaurant_id
+    );
+
+    localStorage.setItem("branchId", filterBranch?.id);
+    dispatch(setBranchID(filterBranch?.id));
   };
 
   useEffect(() => {
@@ -362,6 +271,7 @@ const Home = () => {
             delivery_charges,
             delivery_time,
             minOrderAmount,
+            name_en,
           })
         );
 
@@ -411,6 +321,7 @@ const Home = () => {
         delivery_charges,
         delivery_time,
         minOrderAmount,
+        name_en,
       })
     );
 
@@ -493,6 +404,7 @@ const Home = () => {
                   delivery_charges,
                   delivery_time,
                   minOrderAmount,
+                  name_en,
                 })
               );
 
@@ -528,6 +440,7 @@ const Home = () => {
             delivery_charges,
             delivery_time,
             minOrderAmount,
+            name_en,
           })
         );
         setOpenAddressPopup(false);
@@ -649,21 +562,6 @@ const Home = () => {
     navigate(paths.menu + `/restaurant/${id}`);
   };
 
-  // const distanceCheck = (resLat, resLng, location) => {
-  //   const distance = getDistanceFromLatLonInKm(
-  //     resLat,
-  //     resLng,
-  //     location.lat,
-  //     location.lng
-  //   );
-
-  //   if (distance > 50) {
-  //     removeClasses();
-  //   } else {
-  //     addClasses();
-  //   }
-  // };
-
   useEffect(() => {
     if (
       branchHours?.length &&
@@ -679,7 +577,6 @@ const Home = () => {
           const resLng = +branchHours[i].longitude;
 
           if (fullAddress !== null && userSelected === null) {
-            // distanceCheck(resLat, resLng, fullAddress);
             const distance = getDistanceFromLatLonInKm(
               resLat,
               resLng,
@@ -715,7 +612,6 @@ const Home = () => {
               break;
             }
 
-            // distanceCheck(resLat, resLng, selected);
             //
           } else if (
             (fullAddress !== null || fullAddress === null) &&
@@ -739,7 +635,6 @@ const Home = () => {
               break;
             }
 
-            // distanceCheck(resLat, resLng, location);
             //
           } else if (
             (fullAddress !== null || fullAddress === null) &&

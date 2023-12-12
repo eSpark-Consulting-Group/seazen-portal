@@ -9,9 +9,13 @@ import "react-toastify/dist/ReactToastify.css";
 
 import RouteProvider from "./routes/routes";
 
+import countryList from "./api/common/getAllCountries";
+import getAllArea from "./api/address/areas";
+
+import { getAreas } from "./store/reducers/addressSlice";
 import { addCountry, allCountries } from "./store/reducers/authSlice";
 
-import countryList from "./api/common/getAllCountries";
+import { savingAreaIdForMatchingArea } from "./utils/checkOperationalArea";
 
 import "./App.css";
 
@@ -21,12 +25,11 @@ const LazyChatScript = React.lazy(() =>
 
 function App() {
   const currentURL = useLocation();
+
   const userLocation = localStorage.getItem("location");
+  const restaurantId = localStorage.getItem("restaurantID");
 
-  // const getChatURLs = (URL) => {
-  //   return URL.includes("/delivery");
-  // };
-
+  const allAreas = useSelector((state) => state.address.allAreas);
   const countryCode = useSelector(
     (state) => state.auth.user.mobile_country_code
   );
@@ -48,12 +51,23 @@ function App() {
         localStorage.setItem("country", JSON.stringify(countryByCode));
         dispatch(addCountry(countryByCode));
         dispatch(allCountries(res.data));
+        fetchAllAreas();
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  const restaurantId = localStorage.getItem("restaurantID");
+
+  const fetchAllAreas = () => {
+    getAllArea()
+      .then((res) => {
+        dispatch(getAreas(res.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     fetchAllCountries();
   }, []);
@@ -117,6 +131,8 @@ function App() {
                 const address = results[0].formatted_address;
                 const lat = results[0].geometry.location.lat;
                 const lng = results[0].geometry.location.lng;
+
+                savingAreaIdForMatchingArea(results[0], allAreas);
 
                 addToStorage = {
                   lat: lat,

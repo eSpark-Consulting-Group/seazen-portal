@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -33,13 +33,17 @@ import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../../../api/restaurant/branches/getBranchesAndHours";
 import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant";
+import getBranchByArea from "../../../../api/restaurant/branches/getBranchByArea";
 
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../../../utils/getAddress";
 
-import { getNearByRest } from "../../../../store/reducers/resturantsSlice";
+import {
+  getNearByRest,
+  setBranchID,
+} from "../../../../store/reducers/resturantsSlice";
 
 import { paths } from "../../../../routes/paths";
 
@@ -59,6 +63,7 @@ const DeliveryDetails = (props) => {
   const { setLocationDeliver, restaurantBranchHours, onDelivery } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const dropdownRef = useRef(null);
 
   const addressData = useSelector((state) => state.address.addressData);
   const nearbyRestaurants = useSelector(
@@ -115,8 +120,10 @@ const DeliveryDetails = (props) => {
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
+  const [name_en, setNameEn] = useState();
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
+  const [disableMenu, setDisableMenu] = useState(false);
 
   const { id: restaurant_id } = useParams();
 
@@ -359,6 +366,7 @@ const DeliveryDetails = (props) => {
           delivery_charges,
           delivery_time,
           minOrderAmount,
+          name_en,
         })
       );
 
@@ -373,10 +381,20 @@ const DeliveryDetails = (props) => {
     }
   }, [fullAddress]);
 
+  const getBranchIdNearToLocation = () => {
+    const filterBranch = branchesAndHoursResponse?.data?.find(
+      (rest) => rest.restaurant_id === restaurantDetail?.id
+    );
+
+    localStorage.setItem("branchId", filterBranch?.id);
+    dispatch(setBranchID(filterBranch?.id));
+  };
+
   const toggleDropdown = () => {
-    if (fullAddress === null) {
-      setOpendropdown(!openDropdown);
-    }
+    setOpendropdown(true);
+    // if (fullAddress === null) {
+    // setOpendropdown(true);
+    // }
   };
 
   const addLocation = () => {
@@ -439,6 +457,63 @@ const DeliveryDetails = (props) => {
     }
   };
 
+  const onSelectLocatiom = (address) => {
+    setDisableMenu(true);
+
+    const country_id = JSON.parse(localStorage.getItem("country"))?.id;
+
+    const object = {
+      country_id,
+      delivery_charge_area_id: address?.delivery_charge_area_info.id,
+    };
+
+    getBranchByArea(restaurant_id, object, dispatch)
+      .then((res) => {
+        if (res.data?.length === 0) {
+          getBranchIdNearToLocation();
+        }
+        setDisableMenu(false);
+
+        getUserAddress(address.latitude, address.longitude);
+        setAddressID(address.id);
+        setDeliveryCharge(
+          address?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+        );
+        setDeliveryTime(address?.delivery_charge_area_info?.delivery_time);
+        setMinOrderAmount(address?.delivery_zone_info?.minimum_order_amount);
+        setNameEn(address?.delivery_charge_area_info?.name_en);
+
+        localStorage.setItem("area_id", address?.delivery_charge_area_info.id);
+
+        fetchNearbyRestaurant(address.latitude, address.longitude);
+      })
+      .catch((err) => {
+        setDisableMenu(false);
+        console.log(err);
+      });
+  };
+
+  const handleDocumentClick = useCallback(
+    (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpendropdown(false);
+      }
+    },
+    [dropdownRef]
+  );
+
+  useEffect(() => {
+    if (openDropdown) {
+      document.addEventListener("click", handleDocumentClick);
+    } else {
+      document.removeEventListener("click", handleDocumentClick);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [openDropdown, handleDocumentClick]);
+
   return (
     <>
       {openSchedulePopup && <Overlay />}
@@ -455,6 +530,7 @@ const DeliveryDetails = (props) => {
               style={{ width: "163px" }}
               show={openDropdown}
               onToggle={toggleDropdown}
+              ref={dropdownRef}
             >
               <Dropdown.Toggle
                 variant="success"
@@ -489,83 +565,69 @@ const DeliveryDetails = (props) => {
                   scrollbarWidth: "none",
                 }}
               >
-                <Dropdown.Item defaultChecked onClick={addLocation}>
+                <Dropdown.Item
+                  defaultChecked
+                  onClick={addLocation}
+                  disabled={disableMenu}
+                >
                   Add location
                 </Dropdown.Item>
 
-                <Dropdown.Item defaultChecked onClick={addLocation}>
+                <Dropdown.Item
+                  defaultChecked
+                  onClick={addLocation}
+                  disabled={disableMenu}
+                >
                   Select current location
                 </Dropdown.Item>
 
                 {addressData?.length ? (
-                  addressData
-                    ?.filter((address) => {
-                      const isDeliveryChargeInfoArray = !Array.isArray(
-                        address.delivery_charge_area_info
-                      );
-                      return isDeliveryChargeInfoArray;
-                    })
-                    ?.map((address) => {
-                      return (
-                        <Dropdown.Item
-                          onClick={() => {
-                            getUserAddress(address.latitude, address.longitude);
-                            setAddressID(address.id);
-                            setDeliveryCharge(
-                              address?.delivery_charge_area_info?.delivery_charges?.split(
-                                " "
-                              )[1]
-                            );
-                            setDeliveryTime(
-                              address?.delivery_charge_area_info?.delivery_time
-                            );
-                            setMinOrderAmount(
-                              address?.delivery_zone_info?.minimum_order_amount
-                            );
-                            fetchNearbyRestaurant(
-                              address.latitude,
-                              address.longitude
-                            );
-                            localStorage.setItem("selectCurrent", false);
-                          }}
+                  addressData?.map((address) => {
+                    return (
+                      <Dropdown.Item
+                        onClick={() => {
+                          onSelectLocatiom(address);
+                          localStorage.setItem("selectCurrent", false);
+                        }}
+                        style={{
+                          textTransform: "capitalize",
+                        }}
+                        key={address.id}
+                        disabled={disableMenu}
+                      >
+                        {address.address_label !== ""
+                          ? address.address_label
+                          : address.address_type}{" "}
+                        {address?.address_type === "house"
+                          ? truncateString(
+                              `(Build: ${address?.building}, Bl: ${address?.block}, Str: ${address?.street})`,
+                              18
+                            )
+                          : address?.address_type === "office"
+                          ? truncateString(
+                              `(Comp: ${address?.company_name}, Bl: ${address?.block}, Floor: ${address?.floor})`,
+                              18
+                            )
+                          : truncateString(
+                              `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
+                              18
+                            )}
+                        <span
                           style={{
-                            textTransform: "capitalize",
+                            fontSize: 13,
                           }}
-                          key={address.id}
                         >
-                          {address.address_label !== ""
-                            ? address.address_label
-                            : address.address_type}{" "}
-                          {address?.address_type === "house"
-                            ? truncateString(
-                                `(Build: ${address?.building}, Bl: ${address?.block}, Str: ${address?.street})`,
-                                18
-                              )
-                            : address?.address_type === "office"
-                            ? truncateString(
-                                `(Comp: ${address?.company_name}, Bl: ${address?.block}, Floor: ${address?.floor})`,
-                                18
-                              )
-                            : truncateString(
-                                `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
-                                18
-                              )}
-                          <span
-                            style={{
-                              fontSize: 13,
-                            }}
-                          >
-                            {selected !== null &&
-                              currentLocation !== null &&
-                              parseFloat(selected?.lat) ===
-                                parseFloat(currentLocation?.lat) &&
-                              parseFloat(selected?.lng) ===
-                                parseFloat(currentLocation?.lng) &&
-                              "(current location)"}
-                          </span>
-                        </Dropdown.Item>
-                      );
-                    })
+                          {selected !== null &&
+                            currentLocation !== null &&
+                            parseFloat(selected?.lat) ===
+                              parseFloat(currentLocation?.lat) &&
+                            parseFloat(selected?.lng) ===
+                              parseFloat(currentLocation?.lng) &&
+                            "(current location)"}
+                        </span>
+                      </Dropdown.Item>
+                    );
+                  })
                 ) : (
                   <Dropdown.Item
                     style={{

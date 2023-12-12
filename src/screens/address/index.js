@@ -1,8 +1,11 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  // useDispatch,
+  useSelector,
+} from "react-redux";
 
-import { useQuery } from "@tanstack/react-query";
+// import { useQuery } from "@tanstack/react-query";
 
 import Select from "react-select";
 
@@ -31,10 +34,13 @@ import { paths } from "../../routes/paths";
 
 import addAddressApiCall from "../../api/address/addAddress";
 import updateAddressApiCall from "../../api/address/updateAddress";
-import getAllAddress from "../../api/address/getAddress";
-import getAllArea from "../../api/address/areas";
+// import getAllAddress from "../../api/address/getAddress";
+// import getAllArea from "../../api/address/areas";
 
-import { getAreas, getAddress } from "../../store/reducers/addressSlice";
+// import {
+//   getAreas,
+//   getAddress
+// } from "../../store/reducers/addressSlice";
 
 import "./style.css";
 
@@ -44,16 +50,16 @@ const MAX_TOAST = 1;
 const AddressForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [addressName, setAddressName] = useState("");
 
-  const { data: areas } = useQuery({
-    queryFn: () => getAllArea(token),
-    onSuccess: (data) => {
-      dispatch(getAreas(data.data));
-    },
-  });
+  // const { data: areas } = useQuery({
+  //   queryFn: () => getAllArea(token),
+  //   onSuccess: (data) => {
+  //     dispatch(getAreas(data.data));
+  //   },
+  // });
 
   useEffect(() => {
     if (
@@ -83,13 +89,24 @@ const AddressForm = () => {
   }, [location?.state]);
 
   const token = localStorage.getItem("token");
+  const selectedAddress = JSON.parse(localStorage.getItem("selected"));
 
-  const allAreas = useSelector((state) => state.address.allAreas);
+  // const allAreas = useSelector((state) => state.address.allAreas);
 
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
   const [address, setAddress] = useState({
-    delivery_charge_area_id: "",
-    delivery_zone_id: "",
+    delivery_charge_area_id:
+      selectedAddress === null
+        ? location?.state?.selectedAddress?.area_id
+        : selectedAddress?.area_id,
+    delivery_zone_id:
+      selectedAddress === null
+        ? location?.state?.selectedAddress?.zone_id
+        : selectedAddress?.zone_id,
+    delivery_charge_area_name_en:
+      selectedAddress === null
+        ? location?.state?.selectedAddress?.name_en
+        : selectedAddress?.name_en,
     block: "",
     street: "",
     avenue: "",
@@ -107,7 +124,6 @@ const AddressForm = () => {
     longitude: location?.state?.latlng.lng?.toString(),
   });
   const [errorState, setErrorState] = useState({
-    areaErr: false,
     blockErr: false,
     buildingErr: false,
     floorErr: false,
@@ -116,7 +132,7 @@ const AddressForm = () => {
     countryCodeErr: false,
   });
   const [clickEv, setClickEv] = useState(false);
-  const [area, setArea] = useState(null);
+  // const [area, setArea] = useState(null);
 
   useLayoutEffect(() => {
     if (location?.state?.edit) {
@@ -127,6 +143,9 @@ const AddressForm = () => {
           : "",
         delivery_zone_id: state.delivery_zone_info?.id
           ? state.delivery_zone_info?.id
+          : "",
+        delivery_charge_area_name_en: state.delivery_charge_area_name_en
+          ? state.delivery_charge_area_name_en
           : "",
         block: state.block ? state.block : "",
         street: state.street ? state.street : "",
@@ -151,11 +170,11 @@ const AddressForm = () => {
         longitude: location?.state?.latlng.lng.toString(),
       });
       setAddressType(state?.address_type?.toLowerCase());
-      setArea({
-        label: state?.delivery_charge_area_info.name_en,
-        value: state?.delivery_charge_area_info.id,
-        zone_id: state?.delivery_zone_info?.id,
-      });
+      // setArea({
+      //   label: state?.delivery_charge_area_info.name_en,
+      //   value: state?.delivery_charge_area_info.id,
+      //   zone_id: state?.delivery_zone_info?.id,
+      // });
     }
   }, [location?.state?.edit]);
 
@@ -163,7 +182,6 @@ const AddressForm = () => {
     setClickEv(false);
     setAddressType(type);
     setErrorState({
-      areaErr: false,
       blockErr: false,
       streetErr: false,
       houseNoErr: false,
@@ -211,6 +229,13 @@ const AddressForm = () => {
       if (res.success === "ok") {
         // fetchFunction();
 
+        const area_id =
+          selectedAddress === null
+            ? location?.state?.selectedAddress?.area_id
+            : selectedAddress?.area_id;
+
+        localStorage.setItem("area_id", area_id);
+
         if (
           location?.state?.path === "/cart" ||
           location?.state?.path === "/home" ||
@@ -222,12 +247,11 @@ const AddressForm = () => {
             lng: location?.state?.latlng?.lng,
             address: location?.state?.name,
             addressId: res?.data?.id,
-            delivery_time: res?.data?.delivery_charge_area_info?.delivery_time,
+            delivery_time: location?.state?.selectedAddress?.delivery_time,
             delivery_charges:
-              res?.data?.delivery_charge_area_info?.delivery_charges?.split(
-                " "
-              )[1],
-            minOrderAmount: res?.data?.delivery_zone_info?.minimum_order_amount,
+              location?.state?.selectedAddress?.delivery_charges?.split(" ")[1],
+            minOrderAmount: location?.state?.selectedAddress?.minOrderAmount,
+            name_en: location?.state?.selectedAddress?.name_en,
           };
 
           localStorage.setItem("selected", JSON.stringify(addToStorage));
@@ -297,16 +321,18 @@ const AddressForm = () => {
         if (res.success === "ok") {
           // fetchFunction();
 
+          const area_id = selectedAddress?.area_id;
+
+          localStorage.setItem("area_id", area_id);
+
           const commonData = {
             lat: location?.state?.latlng?.lat,
             lng: location?.state?.latlng?.lng,
-            delivery_time: res?.data?.delivery_charge_area_info?.delivery_time,
-            delivery_charges:
-              res?.data?.delivery_charge_area_info?.delivery_charges?.split(
-                " "
-              )[1],
             addressId: res?.data?.id,
-            minOrderAmount: res?.data?.delivery_zone_info?.minimum_order_amount,
+            delivery_time: selectedAddress?.delivery_time,
+            delivery_charges: selectedAddress?.delivery_charges?.split(" ")[1],
+            minOrderAmount: selectedAddress?.minOrderAmount,
+            name_en: selectedAddress?.name_en,
           };
 
           if (
@@ -368,7 +394,7 @@ const AddressForm = () => {
             }
           } else if (location?.state?.path === "/profile") {
             const addToStorage = {
-              address: JSON.parse(localStorage.getItem("selected")).address,
+              address: selectedAddress?.address,
               ...commonData,
             };
 
@@ -392,7 +418,6 @@ const AddressForm = () => {
 
     if (addressType === "house") {
       if (
-        address.delivery_charge_area_id !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.house_no !== ""
@@ -403,7 +428,6 @@ const AddressForm = () => {
     }
     if (addressType === "apartment") {
       if (
-        address.delivery_charge_area_id !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.building !== "" &&
@@ -416,7 +440,6 @@ const AddressForm = () => {
     }
     if (addressType === "office") {
       if (
-        address.delivery_charge_area_id !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.building !== "" &&
@@ -492,7 +515,6 @@ const AddressForm = () => {
       if (addressType === "house") {
         setErrorState((prevState) => ({
           ...prevState,
-          areaErr: address.delivery_charge_area_id === "" ? true : false,
           blockErr: address.block === "" ? true : false,
           streetErr: address.street === "" ? true : false,
           houseNoErr: address.house_no === "" ? true : false,
@@ -500,7 +522,6 @@ const AddressForm = () => {
       } else if (addressType === "apartment") {
         setErrorState((prevState) => ({
           ...prevState,
-          areaErr: address.delivery_charge_area_id === "" ? true : false,
           blockErr: address.block === "" ? true : false,
           streetErr: address.street === "" ? true : false,
           buildingErr: address.building === "" ? true : false,
@@ -510,7 +531,6 @@ const AddressForm = () => {
       } else if (addressType === "office") {
         setErrorState((prevState) => ({
           ...prevState,
-          areaErr: address.delivery_charge_area_id === "" ? true : false,
           blockErr: address.block === "" ? true : false,
           streetErr: address.street === "" ? true : false,
           buildingErr: address.building === "" ? true : false,
@@ -531,23 +551,23 @@ const AddressForm = () => {
     }
   };
 
-  const selectHandler = (selectedOption) => {
-    setArea(selectedOption);
-    setAddress((address) => ({
-      ...address,
-      delivery_charge_area_id: selectedOption.value,
-      delivery_zone_id: selectedOption.zone_id,
-    }));
-  };
+  // const selectHandler = (selectedOption) => {
+  //   setArea(selectedOption);
+  //   setAddress((address) => ({
+  //     ...address,
+  //     delivery_charge_area_id: selectedOption.value,
+  //     delivery_zone_id: selectedOption.zone_id,
+  //   }));
+  // };
 
-  const groupedOptions = allAreas.map((zone) => ({
-    label: zone.name_en,
-    options: zone.areas.map((area) => ({
-      label: area.name_en,
-      value: area.area_id,
-      zone_id: zone.zone_id,
-    })),
-  }));
+  // const groupedOptions = allAreas.map((zone) => ({
+  //   label: zone.name_en,
+  //   options: zone.areas.map((area) => ({
+  //     label: area.name_en,
+  //     value: area.area_id,
+  //     zone_id: zone.zone_id,
+  //   })),
+  // }));
 
   return (
     <>
@@ -605,8 +625,21 @@ const AddressForm = () => {
         <form onSubmit={handleSubmit}>
           {/* Add the form element and onSubmit handler */}
 
-          <div className="container-style px-3">
-            <Select
+          {location?.state?.edit ? null : (
+            <div className="container-style px-3">
+              <input
+                className={`form-style m-0 disabled-input`}
+                type="text"
+                name="Area"
+                placeholder="Area"
+                value={
+                  selectedAddress === null
+                    ? location?.state?.selectedAddress?.name_en
+                    : selectedAddress?.name_en
+                }
+                disabled={true}
+              />
+              {/* <Select
               value={area}
               onChange={selectHandler}
               options={groupedOptions}
@@ -618,8 +651,9 @@ const AddressForm = () => {
                   : Dropdown,
               }}
               styles={selectStyles(errorState)}
-            />
-          </div>
+            /> */}
+            </div>
+          )}
 
           {addressType === "house" && (
             <HomeAdress
@@ -635,14 +669,11 @@ const AddressForm = () => {
               handleChange={handleChange}
               address={address}
               setAddress={setAddress}
-              areaErr={errorState.areaErr}
               blockErr={errorState.blockErr}
               streetErr={errorState.streetErr}
               buildingErr={errorState.buildingErr}
               floorErr={errorState.floorErr}
               apartmentNoerr={errorState.apartmentNoerr}
-              area={area}
-              setArea={setArea}
             />
           )}
           {addressType === "office" && (
@@ -650,14 +681,11 @@ const AddressForm = () => {
               handleChange={handleChange}
               address={address}
               setAddress={setAddress}
-              areaErr={errorState.areaErr}
               blockErr={errorState.blockErr}
               streetErr={errorState.streetErr}
               buildingErr={errorState.buildingErr}
               floorErr={errorState.floorErr}
               companyNameErr={errorState.companyNameErr}
-              area={area}
-              setArea={setArea}
             />
           )}
           <div className="contact-style">

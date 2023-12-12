@@ -19,10 +19,10 @@ import {
 import Card from "../../components/adressList";
 import MyAddresses from "../../components/header/myAdresses";
 import { AddressesButton } from "../../components/adressList/addressesButton";
-import Navbar from "../../components/header";
 
 import getAllAddress from "../../api/address/getAddress";
 import deleteAddressApiCall from "../../api/address/deleteAddress";
+import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 
 import { getAddress } from "../../store/reducers/addressSlice";
 
@@ -55,6 +55,7 @@ const App = () => {
   const [isLoading, setIsloading] = useState(false);
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
+  const [name_en, setNameEn] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
 
   const fetchFunction = async () => {
@@ -93,6 +94,7 @@ const App = () => {
     );
     setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
     setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
+    setNameEn(item.delivery_charge_area_name_en);
 
     const selectedAddress = {
       lat: +item.latitude,
@@ -100,6 +102,7 @@ const App = () => {
     };
 
     getFullAddress(selectedAddress.lat, selectedAddress.lng, setFullAddress);
+    localStorage.setItem("area_id", item?.delivery_charge_area_info.id);
   };
 
   useEffect(() => {
@@ -112,6 +115,7 @@ const App = () => {
           delivery_charges,
           delivery_time,
           minOrderAmount,
+          name_en,
         })
       );
 
@@ -263,36 +267,29 @@ const App = () => {
       ) : (
         <div className="parent-address">
           {addressData?.length ? (
-            addressData
-              ?.filter((address) => {
-                const isDeliveryChargeInfoArray = !Array.isArray(
-                  address.delivery_charge_area_info
-                );
-                return isDeliveryChargeInfoArray;
-              })
-              ?.map((data) => (
-                <div key={data.id}>
-                  <Card
-                    iconUrl={
-                      data.address_type === "house"
-                        ? "/assets/img/salmiya home.svg"
-                        : data.address_type === "appartment"
-                        ? "/assets/img/salmiya appart.svg"
-                        : "/assets/img/salmiya office.svg"
-                    }
-                    data={data}
-                    setOpen={setOpen}
-                    open={open}
-                    deleteAddress={deleteAddress}
-                    selectCurrentAddress={selectCurrentAddress}
-                    deselectCurrentAddress={deselectCurrentAddress}
-                    isSelected={isSelected}
-                    handleClickOpen={handleClickOpen}
-                    setAddressToBeDeleted={setAddressToBeDeleted}
-                    location={location}
-                  />
-                </div>
-              ))
+            addressData?.map((data) => (
+              <div key={data.id}>
+                <Card
+                  iconUrl={
+                    data.address_type === "house"
+                      ? "/assets/img/salmiya home.svg"
+                      : data.address_type === "appartment"
+                      ? "/assets/img/salmiya appart.svg"
+                      : "/assets/img/salmiya office.svg"
+                  }
+                  data={data}
+                  setOpen={setOpen}
+                  open={open}
+                  deleteAddress={deleteAddress}
+                  selectCurrentAddress={selectCurrentAddress}
+                  deselectCurrentAddress={deselectCurrentAddress}
+                  isSelected={isSelected}
+                  handleClickOpen={handleClickOpen}
+                  setAddressToBeDeleted={setAddressToBeDeleted}
+                  location={location}
+                />
+              </div>
+            ))
           ) : (
             <div className="no-address">
               <div className="location-icon">

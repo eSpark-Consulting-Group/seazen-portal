@@ -12,15 +12,17 @@
   text-align: center;
 }
 
-.progress-bar {
-  height: 530px;
+.map-progress-bar {
+  margin-top: 0px !important;
+}
+
+.load-center {
   justify-content: center;
   align-items: center;
-  display: flex;
 }
 
 .bar {
-  color: #1f2933;
+  color: #98694e;
 }
 
 .info-window-box {
@@ -121,7 +123,7 @@
   /* padding: 3px 15px; */
 }
 
-.combobox-parent .combobox-option:hover+.border {
+.combobox-parent .combobox-option:hover + .border {
   margin: 0px;
 }
 
@@ -209,8 +211,7 @@
   width: 42px !important;
   height: 42px !important;
   margin-top: -5px !important;
-  color: #1F2933 !important;
-
+  color: #1f2933 !important;
 }
 
 .right-icon {

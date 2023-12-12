@@ -258,7 +258,8 @@ const Navbar = (props) => {
                     state: stateNoAddress,
                   })
                 : addressData?.length > 0 &&
-                  localStorage.getItem("selected") === null
+                  localStorage.getItem("selected") === null &&
+                  cart.length > 0
                 ? setOpenAddressPopup(true)
                 : navigate(paths.cart, {
                     state: { fromHome: fromHome, path: "/home" },
