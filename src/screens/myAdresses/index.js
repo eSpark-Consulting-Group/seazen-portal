@@ -19,19 +19,18 @@ import {
 import Card from "../../components/adressList";
 import MyAddresses from "../../components/header/myAdresses";
 import { AddressesButton } from "../../components/adressList/addressesButton";
-import Navbar from "../../components/header";
 
 import getAllAddress from "../../api/address/getAddress";
 import deleteAddressApiCall from "../../api/address/deleteAddress";
+import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 
-import { getAddress, getAreas } from "../../store/reducers/addressSlice";
+import { getAddress } from "../../store/reducers/addressSlice";
 
 import { getFullAddress } from "../../utils/getAddress";
 
 import { paths } from "../../routes/paths";
 
 import "./style.css";
-import getAllArea from "../../api/address/areas";
 
 const App = () => {
   const isToken = localStorage.getItem("token");
@@ -75,13 +74,6 @@ const App = () => {
     fetchFunction();
   }, []);
 
-  const { data: areas } = useQuery({
-    queryFn: () => getAllArea(isToken),
-    onSuccess: (data) => {
-      dispatch(getAreas(data.data));
-    },
-  });
-
   const { refetch } = useQuery({
     queryFn: () => getAllAddress(isToken),
     onSuccess: (data) => {
@@ -110,6 +102,7 @@ const App = () => {
     };
 
     getFullAddress(selectedAddress.lat, selectedAddress.lng, setFullAddress);
+    localStorage.setItem("area_id", item?.delivery_charge_area_info.id);
   };
 
   useEffect(() => {

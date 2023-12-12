@@ -13,10 +13,10 @@ import { useQuery } from "@tanstack/react-query";
 
 import { setKey, geocode, RequestType } from "react-geocode";
 
-import usePlacesAutocomplete, {
-  getGeocode,
-  getLatLng,
-} from "use-places-autocomplete";
+// import usePlacesAutocomplete, {
+//   getGeocode,
+//   getLatLng,
+// } from "use-places-autocomplete";
 
 import {
   Box,
@@ -29,18 +29,18 @@ import {
 // import SvgIcon from "@mui/material/SvgIcon";
 // import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopover,
-  ComboboxList,
-  ComboboxOption,
-} from "@reach/combobox";
+// import {
+//   Combobox,
+//   ComboboxInput,
+//   ComboboxPopover,
+//   ComboboxList,
+//   ComboboxOption,
+// } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 
 // import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 
-import Navbar, { NavbarVariants } from "../../components/header";
+import Navbar from "../../components/header"; // , { NavbarVariants }
 
 // import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
 // import SearchIcon from "../../assets/icons/Icon - Search.jpg";
@@ -49,13 +49,15 @@ import LocationRed from "../../assets/icons/location-red.png";
 
 // import LocationOnIcon from "@mui/icons-material/LocationOn";
 
-import getRestaurantBranchHours, {
-  GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
-} from "../../api/restaurant/getRestaurantBranchHours";
+// import getRestaurantBranchHours, {
+//   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
+// } from "../../api/restaurant/getRestaurantBranchHours";
 // import { addAddressDetail } from "../../store/reducers/addressSlice";
 import getAllArea from "../../api/address/areas";
+import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 
-import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
+// import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
+import { savingAreaIdForMatchingArea } from "../../utils/checkOperationalArea";
 
 import { getAreas } from "../../store/reducers/addressSlice";
 
@@ -96,6 +98,7 @@ function LocationPage() {
 
   const selectedAdd = JSON.parse(localStorage.getItem("selected"));
   const current = JSON.parse(localStorage.getItem("location"));
+  const restaurant_id = JSON.parse(localStorage.getItem("restaurantID"));
   const token = localStorage.getItem("token");
 
   const { isLoaded } = useLoadScript({
@@ -128,6 +131,7 @@ function LocationPage() {
   const [addressComponents, setAddressComponents] = useState([]);
   const [notOperational, setNotOperational] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState({});
+  const [disableButton, setdisableButton] = useState(false);
 
   const mapRef = useRef();
 
@@ -216,52 +220,52 @@ function LocationPage() {
         });
   }, [allAreas]);
 
-  const { data } = useQuery({
-    queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY],
-    queryFn: () => getRestaurantBranchHours(location?.state?.restaurant_id),
-    onSuccess: (data) => {},
-  });
+  // const { data } = useQuery({
+  //   queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY],
+  //   queryFn: () => getRestaurantBranchHours(location?.state?.restaurant_id),
+  //   onSuccess: (data) => {},
+  // });
 
-  useLayoutEffect(() => {
-    if (
-      (location?.state?.restaurant_id !== undefined && selectedAdd !== null) ||
-      (location?.state?.restaurant_id !== undefined && location !== null)
-    ) {
-      if (data?.data?.length > 0) {
-        if (data?.status === "ok") {
-          watchBranchHours(data.data);
-        }
-      }
-    }
-  }, [data, center, location, allAreas]);
+  // useLayoutEffect(() => {
+  //   if (
+  //     (location?.state?.restaurant_id !== undefined && selectedAdd !== null) ||
+  //     (location?.state?.restaurant_id !== undefined && location !== null)
+  //   ) {
+  //     if (data?.data?.length > 0) {
+  //       if (data?.status === "ok") {
+  //           watchBranchHours(data?.data);
+  //       }
+  //     }
+  //   }
+  // }, [data, center, location, allAreas]);
 
-  const watchBranchHours = (array) => {
-    if (array.length) {
-      for (let i = 0; i < array?.length; i++) {
-        if (center.lat !== 0 && center.lng !== 0) {
-          const resLat = +array[i]?.latitude;
-          const resLng = +array[i]?.longitude;
+  // const watchBranchHours = (array) => {
+  //   if (array.length) {
+  //     for (let i = 0; i < array?.length; i++) {
+  //       if (center.lat !== 0 && center.lng !== 0) {
+  //         const resLat = +array[i]?.latitude;
+  //         const resLng = +array[i]?.longitude;
 
-          const distance = getDistanceFromLatLonInKm(
-            resLat,
-            resLng,
-            center.lat,
-            center.lng
-          );
+  //         const distance = getDistanceFromLatLonInKm(
+  //           resLat,
+  //           resLng,
+  //           center.lat,
+  //           center.lng
+  //         );
 
-          if (distance > 50) {
-            setDistanceIsFar(true);
-          } else {
-            if (selectedAdd !== null) {
-              findOperationalArea(addressComponents);
-            }
-            setDistanceIsFar(false);
-            break;
-          }
-        }
-      }
-    }
-  };
+  //         if (distance > 50) {
+  //           setDistanceIsFar(true);
+  //         } else {
+  //           if (selectedAdd !== null) {
+  //             findOperationalArea(addressComponents);
+  //           }
+  //           setDistanceIsFar(false);
+  //           break;
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     if (
@@ -283,6 +287,16 @@ function LocationPage() {
       getAdd(+location?.state?.latlng?.lat, +location?.state?.latlng?.lng);
     }
   }, [location?.state, allAreas]);
+
+  useEffect(() => {
+    if (
+      allAreas?.length &&
+      addressComponents?.address_components?.length &&
+      noRegion === false
+    ) {
+      findOperationalArea(addressComponents);
+    }
+  }, [allAreas, addressComponents?.address_components, noRegion]);
 
   const findOperationalArea = (addresses) => {
     const resultArray = addresses?.address_components?.map((address) => {
@@ -321,7 +335,6 @@ function LocationPage() {
       if (foundMatchingArea === null) {
         return null;
       } else {
-        allAreas;
         return foundMatchingArea;
       }
     });
@@ -330,16 +343,23 @@ function LocationPage() {
 
     if (allAreas?.length) {
       if (myresult !== undefined) {
-        if (!myresult?.length) {
-          setNotOperational(true);
+        if (myresult && myresult?.length === 0) {
+          if (!noRegion) {
+            if (location?.state?.restaurant_id !== undefined) {
+              setDistanceIsFar(true);
+            } else {
+              setDistanceIsFar(false);
+              setNotOperational(true);
+            }
+          }
         } else {
-          // if (token !== null && current !== null) {
+          savingAreaIdForMatchingArea(addresses, allAreas);
           setSelectedAddress({
             ...myresult[0],
             address: addresses?.formatted_address,
           });
           setNotOperational(false);
-          // }
+          setDistanceIsFar(false);
         }
       }
     }
@@ -354,11 +374,11 @@ function LocationPage() {
       .then(({ results }) => {
         const address = results[0].formatted_address;
 
-        if (addressComponents.length !== 0) {
-          findOperationalArea(results[0]);
-        } else {
-          setAddressComponents(results[0]);
-        }
+        // if (addressComponents.length !== 0) {
+        // findOperationalArea(results[0]);
+        // } else {
+        setAddressComponents(results[0]);
+        // }
 
         setAddress(address);
         setCenter({ lat: +latitude, lng: +longitude });
@@ -490,10 +510,12 @@ function LocationPage() {
     }
 
     if (countriesName.includes(fullAddress)) {
-      findOperationalArea(addressComponents);
       setNoRegion(false);
+      setAddressComponents(addressComponents);
+      // findOperationalArea(addressComponents);
     } else {
       setNoRegion(true);
+      setNotOperational(false);
     }
   };
 
@@ -529,10 +551,16 @@ function LocationPage() {
       }
 
       if (countriesName.includes(forCondition)) {
-        findOperationalArea(autocomplete.getPlace());
         setNoRegion(false);
+        setAddressComponents(autocomplete.getPlace());
+
+        // if (addressComponents.length !== 0) {
+        //   findOperationalArea(autocomplete.getPlace());
+        // } else {
+        // }
       } else {
         setNoRegion(true);
+        setNotOperational(false);
       }
 
       setCenter({ lat, lng });
@@ -571,131 +599,150 @@ function LocationPage() {
   };
 
   const confirmLocation = () => {
-    if (token === null) {
-      const fullAddress = {
-        address,
-        lat: center.lat,
-        lng: center.lng,
-      };
+    setdisableButton(true);
+    const area_id = localStorage?.getItem("area_id");
+    const country_id = JSON.parse(localStorage.getItem("country"))?.id;
 
-      localStorage.setItem("location", JSON.stringify(fullAddress));
+    const object = {
+      country_id,
+      delivery_charge_area_id: area_id,
+    };
 
-      if (location?.state?.guestUser) {
-        if (location?.state?.path === "menu/restaurant") {
-          navigate(
-            `${paths.menu}/restaurant/${+location?.state
-              ?.restaurant_id}/delivery`
-          );
+    getBranchByArea(restaurant_id, object, dispatch)
+      .then((res) => {
+        setdisableButton(false);
+
+        if (token === null) {
+          const fullAddress = {
+            address,
+            lat: center.lat,
+            lng: center.lng,
+          };
+
+          localStorage.setItem("location", JSON.stringify(fullAddress));
+
+          if (location?.state?.guestUser) {
+            if (location?.state?.path === "menu/restaurant") {
+              navigate(
+                `${paths.menu}/restaurant/${+location?.state
+                  ?.restaurant_id}/delivery`
+              );
+            } else {
+              navigate(paths.home);
+            }
+          } else {
+            navigate(paths.phone_verification_index, {
+              state: location?.state,
+            });
+          }
+        } else if (
+          location?.state?.path === "/cart" ||
+          location?.state?.path === "/home" ||
+          location?.state?.path?.includes("menu-item-details") ||
+          location?.state?.path === "menu/restaurant"
+        ) {
+          if (
+            location?.state?.path?.includes("menu-item-details") ||
+            location?.state?.path === "menu/restaurant"
+          ) {
+            if (location?.state?.addNew !== undefined) {
+              navigate(paths.address, {
+                state: {
+                  name: address,
+                  latlng: center,
+                  path: location?.state?.path,
+                  restaurant_id: +location?.state?.restaurant_id,
+                  addNew: true,
+                  selectedAddress: selectedAddress,
+                },
+              });
+            } else if (location?.state?.fromMenu !== undefined) {
+              navigate(paths.address, {
+                state: {
+                  name: address,
+                  latlng: center,
+                  path: location?.state?.path,
+                  restaurant_id: +location?.state?.restaurant_id,
+                  fromMenu: location?.state?.fromMenu,
+                  selectedAddress: selectedAddress,
+                },
+              });
+            } else if (location?.state?.fromDetail !== undefined) {
+              navigate(paths.address, {
+                state: {
+                  name: address,
+                  latlng: center,
+                  path: location?.state?.path,
+                  restaurant_id: +location?.state?.restaurant_id,
+                  fromDetail: location?.state?.fromDetail,
+                  selectedAddress: selectedAddress,
+                },
+              });
+            } else if (location?.state?.noAddress !== undefined) {
+              navigate(paths.address, {
+                state: { ...location?.state, selectedAddress: selectedAddress },
+              });
+            } else {
+              navigate(paths.address, {
+                state: {
+                  name: address,
+                  latlng: center,
+                  path: location?.state?.path,
+                  restaurant_id: +location?.state?.restaurant_id,
+                  addFromDropdown: location?.state?.addFromDropdown,
+                  selectedAddress: selectedAddress,
+                },
+              });
+            }
+          } else if (location?.state?.notSelected !== undefined) {
+            navigate(paths.address, {
+              state: {
+                name: address,
+                latlng: center,
+                path: "/cart",
+                restaurant_id: +location?.state?.restaurant_id,
+                notSelected: location?.state?.notSelected,
+                selectedAddress: selectedAddress,
+              },
+            });
+          } else if (location?.state?.fromHome !== undefined) {
+            navigate(paths.address, {
+              state: {
+                name: address,
+                latlng: center,
+                path: location?.state?.path,
+                fromHome: location?.state?.fromHome,
+                selectedAddress: selectedAddress,
+              },
+            });
+          } else {
+            navigate(paths.address, {
+              state: {
+                name: address,
+                latlng: center,
+                path: location?.state?.path,
+                selectedAddress: selectedAddress,
+              },
+            });
+          }
         } else {
-          navigate(paths.home);
-        }
-      } else {
-        navigate(paths.phone_verification_index, { state: location?.state });
-      }
-    } else if (
-      location?.state?.path === "/cart" ||
-      location?.state?.path === "/home" ||
-      location?.state?.path?.includes("menu-item-details") ||
-      location?.state?.path === "menu/restaurant"
-    ) {
-      if (
-        location?.state?.path?.includes("menu-item-details") ||
-        location?.state?.path === "menu/restaurant"
-      ) {
-        if (location?.state?.addNew !== undefined) {
           navigate(paths.address, {
             state: {
               name: address,
               latlng: center,
               path: location?.state?.path,
-              restaurant_id: +location?.state?.restaurant_id,
-              addNew: true,
-              selectedAddress: selectedAddress,
-            },
-          });
-        } else if (location?.state?.fromMenu !== undefined) {
-          navigate(paths.address, {
-            state: {
-              name: address,
-              latlng: center,
-              path: location?.state?.path,
-              restaurant_id: +location?.state?.restaurant_id,
+              fromHome: location?.state?.fromHome,
               fromMenu: location?.state?.fromMenu,
-              selectedAddress: selectedAddress,
-            },
-          });
-        } else if (location?.state?.fromDetail !== undefined) {
-          navigate(paths.address, {
-            state: {
-              name: address,
-              latlng: center,
-              path: location?.state?.path,
-              restaurant_id: +location?.state?.restaurant_id,
               fromDetail: location?.state?.fromDetail,
-              selectedAddress: selectedAddress,
-            },
-          });
-        } else if (location?.state?.noAddress !== undefined) {
-          navigate(paths.address, {
-            state: { ...location?.state, selectedAddress: selectedAddress },
-          });
-        } else {
-          navigate(paths.address, {
-            state: {
-              name: address,
-              latlng: center,
-              path: location?.state?.path,
-              restaurant_id: +location?.state?.restaurant_id,
-              addFromDropdown: location?.state?.addFromDropdown,
+              editLocation: location?.state?.editLocation,
               selectedAddress: selectedAddress,
             },
           });
         }
-      } else if (location?.state?.notSelected !== undefined) {
-        navigate(paths.address, {
-          state: {
-            name: address,
-            latlng: center,
-            path: "/cart",
-            restaurant_id: +location?.state?.restaurant_id,
-            notSelected: location?.state?.notSelected,
-            selectedAddress: selectedAddress,
-          },
-        });
-      } else if (location?.state?.fromHome !== undefined) {
-        navigate(paths.address, {
-          state: {
-            name: address,
-            latlng: center,
-            path: location?.state?.path,
-            fromHome: location?.state?.fromHome,
-            selectedAddress: selectedAddress,
-          },
-        });
-      } else {
-        navigate(paths.address, {
-          state: {
-            name: address,
-            latlng: center,
-            path: location?.state?.path,
-            selectedAddress: selectedAddress,
-          },
-        });
-      }
-    } else {
-      navigate(paths.address, {
-        state: {
-          name: address,
-          latlng: center,
-          path: location?.state?.path,
-          fromHome: location?.state?.fromHome,
-          fromMenu: location?.state?.fromMenu,
-          fromDetail: location?.state?.fromDetail,
-          editLocation: location?.state?.editLocation,
-          selectedAddress: selectedAddress,
-        },
+      })
+      .catch((err) => {
+        setdisableButton(false);
       });
-    }
   };
 
   return (
@@ -929,7 +976,11 @@ function LocationPage() {
             className="confirm-button"
             onClick={() => confirmLocation()}
             disabled={
-              address === "" || distanceIsFar || noRegion || notOperational
+              address === "" ||
+              distanceIsFar ||
+              noRegion ||
+              notOperational ||
+              disableButton
             }
           >
             Confirm Your Location
@@ -942,84 +993,84 @@ function LocationPage() {
 
 export default LocationPage;
 
-const PlacesAutocomplete = ({ setSelected, setAddress, address, location }) => {
-  const {
-    ready,
-    value,
-    setValue,
-    suggestions: { status, data },
-    clearSuggestions,
-  } = usePlacesAutocomplete();
+// const PlacesAutocomplete = ({ setSelected, setAddress, address, location }) => {
+//   const {
+//     ready,
+//     value,
+//     setValue,
+//     suggestions: { status, data },
+//     clearSuggestions,
+//   } = usePlacesAutocomplete();
 
-  const [remov, setRemov] = useState(false);
+//   const [remov, setRemov] = useState(false);
 
-  const handleSelect = async (address) => {
-    setRemov(true);
-    setAddress(address);
-    setValue(address, false);
-    clearSuggestions();
+//   const handleSelect = async (address) => {
+//     setRemov(true);
+//     setAddress(address);
+//     setValue(address, false);
+//     clearSuggestions();
 
-    const results = await getGeocode({ address });
-    const { lat, lng } = await getLatLng(results[0]);
-    setSelected({ lat, lng });
-  };
+//     const results = await getGeocode({ address });
+//     const { lat, lng } = await getLatLng(results[0]);
+//     setSelected({ lat, lng });
+//   };
 
-  useEffect(() => {
-    if (address !== "") {
-      setValue(address, false);
-    }
-  }, [address]);
+//   useEffect(() => {
+//     if (address !== "") {
+//       setValue(address, false);
+//     }
+//   }, [address]);
 
-  const [loc, setLoc] = useState(null);
+//   const [loc, setLoc] = useState(null);
 
-  useEffect(() => {
-    if (address === "") {
-      setLoc(null);
-    } else {
-      setLoc(location);
-    }
-  }, [address]);
+//   useEffect(() => {
+//     if (address === "") {
+//       setLoc(null);
+//     } else {
+//       setLoc(location);
+//     }
+//   }, [address]);
 
-  useEffect(() => {
-    if (loc === null) {
-      setRemov(true);
-    }
-  }, [loc]);
+//   useEffect(() => {
+//     if (loc === null) {
+//       setRemov(true);
+//     }
+//   }, [loc]);
 
-  return (
-    <Combobox onSelect={handleSelect} className="combobox">
-      <ComboboxInput
-        value={loc === null ? value : address}
-        onChange={(e) => {
-          setRemov(false);
-          loc === null ? setValue(e.target.value) : setAddress(e.target.value);
-        }}
-        disabled={!ready}
-        className="combobox-input"
-        placeholder="Search an address"
-        onClick={() => loc === null && setRemov(false)}
-      />
+//   return (
+//     <Combobox onSelect={handleSelect} className="combobox">
+//       <ComboboxInput
+//         value={loc === null ? value : address}
+//         onChange={(e) => {
+//           setRemov(false);
+//           loc === null ? setValue(e.target.value) : setAddress(e.target.value);
+//         }}
+//         disabled={!ready}
+//         className="combobox-input"
+//         placeholder="Search an address"
+//         onClick={() => loc === null && setRemov(false)}
+//       />
 
-      {!remov ? (
-        <ComboboxPopover className="combobox-popover">
-          <ComboboxList className="combobox-list">
-            {status === "OK" &&
-              data.map(({ place_id, description }, index) => (
-                <div key={place_id} className="combobox-parent">
-                  <ComboboxOption
-                    value={description}
-                    className="combobox-option"
-                  />
-                  {data.length - 1 === index ? null : (
-                    <span className="border" />
-                  )}
-                </div>
-              ))}
-          </ComboboxList>
-        </ComboboxPopover>
-      ) : (
-        false
-      )}
-    </Combobox>
-  );
-};
+//       {!remov ? (
+//         <ComboboxPopover className="combobox-popover">
+//           <ComboboxList className="combobox-list">
+//             {status === "OK" &&
+//               data.map(({ place_id, description }, index) => (
+//                 <div key={place_id} className="combobox-parent">
+//                   <ComboboxOption
+//                     value={description}
+//                     className="combobox-option"
+//                   />
+//                   {data.length - 1 === index ? null : (
+//                     <span className="border" />
+//                   )}
+//                 </div>
+//               ))}
+//           </ComboboxList>
+//         </ComboboxPopover>
+//       ) : (
+//         false
+//       )}
+//     </Combobox>
+//   );
+// };

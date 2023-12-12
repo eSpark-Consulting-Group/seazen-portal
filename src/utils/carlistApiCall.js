@@ -7,6 +7,8 @@ export const cartListApiHit = (
 ) => {
   cartList(token)
     .then((res) => {
+      sessionStorage.setItem("cartEmpty", true);
+
       res.data.map((val) => {
         if (branchHours?.length) {
           const findRestaurant = branchHours?.find(
@@ -67,7 +69,6 @@ export const cartListApiHit = (
           obj.variants === null && delete obj.variants;
 
           dispatch(addToCart(obj));
-          sessionStorage.setItem("cartEmpty", true);
         }
       });
     })

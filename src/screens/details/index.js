@@ -23,7 +23,8 @@ import {
   Dialog,
   DialogTitle,
 } from "@mui/material";
-import { AddShoppingCartRounded, Label } from "@mui/icons-material";
+import { AddShoppingCartRounded } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { DetailsHeader } from "../../components/header/detailsHeader";
 import IncDec from "../../components/Input/InputWithIncDec";
@@ -32,21 +33,18 @@ import SelectLocation from "../../components/dialog/selectLocation";
 import SchedulePicker from "../../components/shared/schedulePicker";
 import ScheduleDialog from "../../components/dialog/scheduleDialog";
 
-import getMenuItemDetails, {
-  GET_MENU_ITEM_DETAILS_QUERY_KEY,
-} from "../../api/menu/getMenuItemDetails";
+import getMenuItemDetails from "../../api/menu/getMenuItemDetails";
 import addToCartApiCall from "../../api/cart/addToCart";
 import updateCartApiCall from "../../api/cart/updateCart";
 import clearCart from "../../api/cart/clearCart";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import {
-  getNearByRest,
   getResturants,
+  setBranchID,
 } from "../../store/reducers/resturantsSlice";
-import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import getAllRestaurants from "../../api/home/getAllRestaurants";
 import { GET_ALL_RESTAURANTS_QUERY_KEY } from "../../api/home/getAllRestaurantsBanner";
-import CloseIcon from "@mui/icons-material/Close";
+import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 
 import {
   updateCartItem,
@@ -57,6 +55,7 @@ import {
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
+  selectChooseAddress,
 } from "../../utils/getAddress";
 
 import { paths } from "../../routes/paths";
@@ -78,11 +77,38 @@ export const Details = () => {
   const nearbyRestaurants = useSelector(
     (state) => state.resturants.nearbyRestaurants
   );
+
   const branchHours = useSelector((state) => state.resturants.branchHours);
   const country = useSelector((state) => state.auth.country);
 
   const token = localStorage.getItem("token");
   const restaurant_id = localStorage.getItem("restaurantID");
+  const selected = JSON.parse(localStorage?.getItem("selected"));
+  const currentLocation = JSON.parse(localStorage.getItem("location"));
+
+  useEffect(() => {
+    const country_id = JSON.parse(localStorage.getItem("country")).id;
+    const area_id = localStorage.getItem("area_id");
+
+    if (area_id !== null && country_id !== null && restaurant_id) {
+      const object = {
+        country_id,
+        delivery_charge_area_id: area_id,
+      };
+
+      getBranchByArea(restaurant_id, object, dispatch)
+        .then((res) => {
+          if (res?.data?.length === 0) {
+            getBranchIdNearToLocation();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      getBranchIdNearToLocation();
+    }
+  }, [restaurant_id, localStorage]);
 
   const [cartItem, setCartItem] = React.useState();
   const [quantity, setQuantity] = React.useState(1);
@@ -180,7 +206,7 @@ export const Details = () => {
   const fetchBranchHours = () => {
     const restaurantId =
       location?.state?.restaurant_id === undefined
-        ? localStorage.getItem("restaurantID")
+        ? restaurant_id
         : location?.state?.restaurant_id;
 
     if (branchHours?.length === 0) {
@@ -201,9 +227,6 @@ export const Details = () => {
   };
 
   const calculateDistance = (array) => {
-    const selected = JSON.parse(localStorage?.getItem("selected"));
-    const currentLocation = JSON.parse(localStorage.getItem("location"));
-
     if (array?.length) {
       for (let i = 0; i < array?.length; i++) {
         const resLat = +array[i]?.latitude;
@@ -888,18 +911,40 @@ export const Details = () => {
   };
 
   const chooseAddress = (item) => {
-    const lat = +item.latitude;
-    const lng = +item.longitude;
+    const object = {
+      country_id: JSON.parse(localStorage.getItem("country"))?.id,
+      delivery_charge_area_id: item?.delivery_charge_area_info.id,
+    };
 
-    setAddressID(item.id);
-    setDeliveryCharge(
-      item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+    getBranchByArea(restaurant_id, object, dispatch)
+      .then((res) => {
+        if (res?.data?.length === 0) {
+          getBranchIdNearToLocation();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    selectChooseAddress(
+      item,
+      setAddressID,
+      setDeliveryCharge,
+      setDeliveryTime,
+      setMinOrderAmount,
+      setNameEn,
+      getFullAddress,
+      setFullAddress
     );
-    setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
-    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
-    setNameEn(item?.delivery_charge_area_info?.name_en);
+  };
 
-    getFullAddress(lat, lng, setFullAddress);
+  const getBranchIdNearToLocation = () => {
+    const filterBranch = branchHours?.data?.find(
+      (rest) => rest.restaurant_id === restaurant_id
+    );
+
+    localStorage.setItem("branchId", filterBranch?.id);
+    dispatch(setBranchID(filterBranch?.id));
   };
 
   useEffect(() => {

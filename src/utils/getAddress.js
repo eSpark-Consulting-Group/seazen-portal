@@ -23,6 +23,32 @@ export const getFullAddress = (latitude, longitude, setFullAddress) => {
     });
 };
 
+export const selectChooseAddress = (
+  item,
+  setAddressID,
+  setDeliveryCharge,
+  setDeliveryTime,
+  setMinOrderAmount,
+  setNameEn,
+  getFullAddress,
+  setFunction
+) => {
+  const lat = +item.latitude;
+  const lng = +item.longitude;
+
+  setAddressID(item.id);
+  setDeliveryCharge(
+    item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+  );
+  setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
+  setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
+  setNameEn(item?.delivery_charge_area_info?.name_en);
+
+  localStorage.setItem("area_id", item?.delivery_charge_area_info.id);
+
+  getFullAddress(lat, lng, setFunction);
+};
+
 export const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2 - lat1);

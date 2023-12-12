@@ -229,6 +229,13 @@ const AddressForm = () => {
       if (res.success === "ok") {
         // fetchFunction();
 
+        const area_id =
+          selectedAddress === null
+            ? location?.state?.selectedAddress?.area_id
+            : selectedAddress?.area_id;
+
+        localStorage.setItem("area_id", area_id);
+
         if (
           location?.state?.path === "/cart" ||
           location?.state?.path === "/home" ||
@@ -313,6 +320,10 @@ const AddressForm = () => {
       (res) => {
         if (res.success === "ok") {
           // fetchFunction();
+
+          const area_id = selectedAddress?.area_id;
+
+          localStorage.setItem("area_id", area_id);
 
           const commonData = {
             lat: location?.state?.latlng?.lat,

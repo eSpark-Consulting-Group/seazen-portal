@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -33,13 +33,17 @@ import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../../../api/restaurant/branches/getBranchesAndHours";
 import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant";
+import getBranchByArea from "../../../../api/restaurant/branches/getBranchByArea";
 
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
 } from "../../../../utils/getAddress";
 
-import { getNearByRest } from "../../../../store/reducers/resturantsSlice";
+import {
+  getNearByRest,
+  setBranchID,
+} from "../../../../store/reducers/resturantsSlice";
 
 import { paths } from "../../../../routes/paths";
 
@@ -59,6 +63,7 @@ const DeliveryDetails = (props) => {
   const { setLocationDeliver, restaurantBranchHours, onDelivery } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const dropdownRef = useRef(null);
 
   const addressData = useSelector((state) => state.address.addressData);
   const nearbyRestaurants = useSelector(
@@ -118,6 +123,7 @@ const DeliveryDetails = (props) => {
   const [name_en, setNameEn] = useState();
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
+  const [disableMenu, setDisableMenu] = useState(false);
 
   const { id: restaurant_id } = useParams();
 
@@ -375,10 +381,20 @@ const DeliveryDetails = (props) => {
     }
   }, [fullAddress]);
 
+  const getBranchIdNearToLocation = () => {
+    const filterBranch = branchesAndHoursResponse?.data?.find(
+      (rest) => rest.restaurant_id === restaurantDetail?.id
+    );
+
+    localStorage.setItem("branchId", filterBranch?.id);
+    dispatch(setBranchID(filterBranch?.id));
+  };
+
   const toggleDropdown = () => {
-    if (fullAddress === null) {
-      setOpendropdown(!openDropdown);
-    }
+    setOpendropdown(true);
+    // if (fullAddress === null) {
+    // setOpendropdown(true);
+    // }
   };
 
   const addLocation = () => {
@@ -442,17 +458,61 @@ const DeliveryDetails = (props) => {
   };
 
   const onSelectLocatiom = (address) => {
-    getUserAddress(address.latitude, address.longitude);
-    setAddressID(address.id);
-    setDeliveryCharge(
-      address?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
-    );
-    setDeliveryTime(address?.delivery_charge_area_info?.delivery_time);
-    setMinOrderAmount(address?.delivery_zone_info?.minimum_order_amount);
-    setNameEn(address?.delivery_charge_area_info?.name_en);
+    setDisableMenu(true);
 
-    fetchNearbyRestaurant(address.latitude, address.longitude);
+    const country_id = JSON.parse(localStorage.getItem("country"))?.id;
+
+    const object = {
+      country_id,
+      delivery_charge_area_id: address?.delivery_charge_area_info.id,
+    };
+
+    getBranchByArea(restaurant_id, object, dispatch)
+      .then((res) => {
+        if (res.data?.length === 0) {
+          getBranchIdNearToLocation();
+        }
+        setDisableMenu(false);
+
+        getUserAddress(address.latitude, address.longitude);
+        setAddressID(address.id);
+        setDeliveryCharge(
+          address?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+        );
+        setDeliveryTime(address?.delivery_charge_area_info?.delivery_time);
+        setMinOrderAmount(address?.delivery_zone_info?.minimum_order_amount);
+        setNameEn(address?.delivery_charge_area_info?.name_en);
+
+        localStorage.setItem("area_id", address?.delivery_charge_area_info.id);
+
+        fetchNearbyRestaurant(address.latitude, address.longitude);
+      })
+      .catch((err) => {
+        setDisableMenu(false);
+        console.log(err);
+      });
   };
+
+  const handleDocumentClick = useCallback(
+    (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpendropdown(false);
+      }
+    },
+    [dropdownRef]
+  );
+
+  useEffect(() => {
+    if (openDropdown) {
+      document.addEventListener("click", handleDocumentClick);
+    } else {
+      document.removeEventListener("click", handleDocumentClick);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [openDropdown, handleDocumentClick]);
 
   return (
     <>
@@ -470,6 +530,7 @@ const DeliveryDetails = (props) => {
               style={{ width: "163px" }}
               show={openDropdown}
               onToggle={toggleDropdown}
+              ref={dropdownRef}
             >
               <Dropdown.Toggle
                 variant="success"
@@ -504,11 +565,19 @@ const DeliveryDetails = (props) => {
                   scrollbarWidth: "none",
                 }}
               >
-                <Dropdown.Item defaultChecked onClick={addLocation}>
+                <Dropdown.Item
+                  defaultChecked
+                  onClick={addLocation}
+                  disabled={disableMenu}
+                >
                   Add location
                 </Dropdown.Item>
 
-                <Dropdown.Item defaultChecked onClick={addLocation}>
+                <Dropdown.Item
+                  defaultChecked
+                  onClick={addLocation}
+                  disabled={disableMenu}
+                >
                   Select current location
                 </Dropdown.Item>
 
@@ -524,6 +593,7 @@ const DeliveryDetails = (props) => {
                           textTransform: "capitalize",
                         }}
                         key={address.id}
+                        disabled={disableMenu}
                       >
                         {address.address_label !== ""
                           ? address.address_label

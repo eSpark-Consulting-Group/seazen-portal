@@ -19,16 +19,19 @@ import { resetCart } from "../../../../store/reducers/cartSlice.js";
 import {
   getBranchHours,
   getNearByRest,
+  setBranchID,
   setCategoryElementID,
 } from "../../../../store/reducers/resturantsSlice.js";
 
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
+  selectChooseAddress,
 } from "../../../../utils/getAddress.js";
 
 import getRestaurantBranchHours from "../../../../api/restaurant/getRestaurantBranchHours.js";
 import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant.js";
+import getBranchByArea from "../../../../api/restaurant/branches/getBranchByArea.js";
 
 import "./style.css";
 
@@ -172,17 +175,40 @@ const MenuCardListContainer = ({
   };
 
   const chooseAddress = (item) => {
-    const lat = +item.latitude;
-    const lng = +item.longitude;
-    setAddressID(item.id);
-    setDeliveryCharge(
-      item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
-    );
-    setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
-    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
-    setNameEn(item?.delivery_charge_area_info?.name_en);
+    const object = {
+      country_id: JSON.parse(localStorage.getItem("country"))?.id,
+      delivery_charge_area_id: item?.delivery_charge_area_info.id,
+    };
 
-    getFullAddress(lat, lng, setFullAddress);
+    getBranchByArea(restaurantDetail?.id, object, dispatch)
+      .then((res) => {
+        if (res?.data?.length === 0) {
+          getBranchIdNearToLocation();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    selectChooseAddress(
+      item,
+      setAddressID,
+      setDeliveryCharge,
+      setDeliveryTime,
+      setMinOrderAmount,
+      setNameEn,
+      getFullAddress,
+      setFullAddress
+    );
+  };
+
+  const getBranchIdNearToLocation = () => {
+    const filterBranch = branchHours?.data?.find(
+      (rest) => rest.restaurant_id === restaurantDetail?.id
+    );
+
+    localStorage.setItem("branchId", filterBranch?.id);
+    dispatch(setBranchID(filterBranch?.id));
   };
 
   const fetchBranchHours = () => {

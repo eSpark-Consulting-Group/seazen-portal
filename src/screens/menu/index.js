@@ -11,8 +11,6 @@ import {
   DialogContent,
   DialogTitle,
   DialogContentText,
-  Stack,
-  Typography,
 } from "@mui/material";
 
 import dayjs from "dayjs";
@@ -37,10 +35,8 @@ import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantBranchHours.js";
 import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant.js";
-import getBranchesAndHours, {
-  GET_BRANCHES_AND_HOURS_QUERY_KEY,
-} from "../../api/restaurant/branches/getBranchesAndHours.js";
-import cartList from "../../api/cart/cartList.js";
+import getBranchesAndHours from "../../api/restaurant/branches/getBranchesAndHours.js";
+import getBranchByArea from "../../api/restaurant/branches/getBranchByArea.js";
 
 import {
   getNearByRest,
@@ -49,13 +45,12 @@ import {
 } from "../../store/reducers/resturantsSlice.js";
 import { setThemeColor } from "../../store/reducers/themeSlice.js";
 import { closeReorderModal } from "../../store/reducers/orderSlice.js";
-import { addToCart } from "../../store/reducers/cartSlice.js";
 
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
+  selectChooseAddress,
 } from "../../utils/getAddress.js";
-import { cartListApiHit } from "../../utils/carlistApiCall.js";
 
 import { paths } from "../../routes/paths.jsx";
 
@@ -127,6 +122,41 @@ const Menu = () => {
       secondary: restaurantDetail?.secondary_color,
     })
   );
+
+  useEffect(() => {
+    const restId = localStorage?.getItem("restaurantID");
+
+    if (restId === null) {
+      localStorage.setItem("restaurantID", restaurant_id);
+    }
+
+    const country_id = JSON.parse(localStorage.getItem("country"))?.id;
+    const area_id = localStorage.getItem("area_id");
+
+    if (area_id !== null && country_id !== null && restaurant_id) {
+      const object = {
+        country_id,
+        delivery_charge_area_id: area_id,
+      };
+
+      getBranchByArea(restaurant_id, object, dispatch).then((res) => {
+        if (res.data?.length === 0) {
+          if (branchesAndHoursResponse?.data?.length && restaurantDetail) {
+            getBranchIdNearToLocation();
+          }
+        }
+      });
+    } else {
+      if (branchesAndHoursResponse?.data?.length && restaurantDetail) {
+        getBranchIdNearToLocation();
+      }
+    }
+  }, [
+    restaurant_id,
+    localStorage,
+    restaurantDetail,
+    branchesAndHoursResponse?.data,
+  ]);
 
   const {
     data: restaurantBranchHours,
@@ -251,18 +281,31 @@ const Menu = () => {
   };
 
   const chooseAddress = (item) => {
-    const lat = +item.latitude;
-    const lng = +item.longitude;
+    const object = {
+      country_id: JSON.parse(localStorage.getItem("country"))?.id,
+      delivery_charge_area_id: item?.delivery_charge_area_info.id,
+    };
 
-    setAddressID(item.id);
-    setDeliveryCharge(
-      item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+    getBranchByArea(restaurant_id, object, dispatch)
+      .then((res) => {
+        if (res?.data?.length === 0) {
+          getBranchIdNearToLocation();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    selectChooseAddress(
+      item,
+      setAddressID,
+      setDeliveryCharge,
+      setDeliveryTime,
+      setMinOrderAmount,
+      setNameEn,
+      getFullAddress,
+      setFullAddress
     );
-    setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
-    setMinOrderAmount(item?.delivery_zone_info?.minimum_order_amount);
-    setNameEn(item?.delivery_charge_area_info?.name_en);
-
-    getFullAddress(lat, lng, setFullAddress);
   };
 
   useEffect(() => {
@@ -376,51 +419,13 @@ const Menu = () => {
     }
   };
 
-  useEffect(() => {
-    getBranchIdNearToLocation();
-  }, [branchesAndHoursResponse, restaurantDetail]);
-
   const getBranchIdNearToLocation = () => {
-    const filterBranch = branchesAndHoursResponse?.data?.filter(
+    const filterBranch = branchesAndHoursResponse?.data?.find(
       (rest) => rest.restaurant_id === restaurantDetail?.id
     );
 
-    if (branchesAndHoursResponse?.data.length && filterBranch?.length) {
-      for (let i = 0; i < filterBranch?.length; i++) {
-        // const resLat = +filterBranch[i]?.latitude;
-        // const resLng = +filterBranch[i]?.longitude;
-
-        // const selected = JSON.parse(localStorage.getItem("selected"));
-        // const currentLocation = JSON.parse(localStorage.getItem("location"));
-
-        // let fromLocation;
-        // if (selected === null && currentLocation !== null) {
-        //   fromLocation = currentLocation;
-        // } else if (selected !== null && currentLocation !== null) {
-        //   fromLocation = selected;
-        // }
-
-        // const distance = getDistanceFromLatLonInKm(
-        //   resLat,
-        //   resLng,
-        //   fromLocation?.lat || 29.3140728,
-        //   fromLocation?.lng || 47.68022
-        // );
-
-        localStorage.setItem("branchId", branchesAndHoursResponse.data[i].id);
-        dispatch(setBranchID(branchesAndHoursResponse.data[i].id));
-
-        break;
-
-        // if (distance > 50) {
-
-        // } else {
-        //   localStorage.setItem("branchId", branchesAndHoursResponse.data[i].id);
-
-        //   break;
-        // }
-      }
-    }
+    localStorage.setItem("branchId", filterBranch?.id);
+    dispatch(setBranchID(filterBranch?.id));
   };
 
   return (
