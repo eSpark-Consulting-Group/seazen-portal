@@ -303,7 +303,7 @@ function LocationPage() {
       let foundMatchingArea = null;
 
       allAreas.forEach((zone) => {
-        const matchingArea = zone.areas.find((area) => {
+        const matchingArea = zone?.areas?.find((area) => {
           return (
             area.name_en.trim().toLowerCase() ===
               address.long_name.trim().toLowerCase() ||
