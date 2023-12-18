@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import { useMutation, useQuery } from "@tanstack/react-query";
+
 import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 import Navbar from "../../components/header/index";
@@ -35,7 +37,7 @@ import {
   getFullAddress,
   selectChooseAddress,
 } from "../../utils/getAddress";
-import { cartListApiHit } from "../../utils/carlistApiCall";
+import { cartListWithQuery } from "../../utils/carlistApiCall";
 
 import { paths } from "../../routes/paths";
 
@@ -61,11 +63,20 @@ const Home = () => {
     if (sessionStorage.getItem("cartEmpty") === null) {
       if (token !== null) {
         if (cart?.length === 0 && branchHours?.length) {
-          cartListApiHit(cartList, branchHours, dispatch, addToCart, token);
+          refetch();
         }
       }
     }
   }, [cart, token, branchHours]);
+
+  const { refetch } = useQuery({
+    queryKey: [token],
+    queryFn: () => cartList(token),
+    onSuccess: (res) => {
+      cartListWithQuery(branchHours, dispatch, addToCart, res);
+    },
+    enabled: !!token && sessionStorage.getItem("cartEmpty") === null,
+  });
 
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [addressId, setAddressID] = useState();

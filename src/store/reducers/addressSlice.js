@@ -6,6 +6,7 @@ const initialState = {
   addressDetail: {},
   error: "",
   isLoading: false,
+  areaData: {},
 };
 
 const addressSlice = createSlice({
@@ -27,10 +28,18 @@ const addressSlice = createSlice({
     getAreas: (state, { payload }) => {
       state.allAreas = payload;
     },
+    storeAreaDetail: (state, { payload }) => {
+      state.areaData = payload;
+    },
   },
 });
 
-export const { isLoaded, getAddress, addAddressDetail, getAreas } =
-  addressSlice.actions;
+export const {
+  isLoaded,
+  getAddress,
+  addAddressDetail,
+  getAreas,
+  storeAreaDetail,
+} = addressSlice.actions;
 
 export default addressSlice.reducer;

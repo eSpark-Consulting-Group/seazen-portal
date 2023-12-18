@@ -11,13 +11,12 @@
 }
 
 .addresses-add-button:hover {
-  background: #fff;
-  border: 1px solid #98694e;
+  background-color: rgb(106, 73, 54);
 }
 
-.addresses-add-button:hover span {
+/* .addresses-add-button:hover span {
   color: #98694e;
-}
+} */
 
 .addresses-add-button-text {
   text-align: center;

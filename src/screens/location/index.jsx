@@ -2,12 +2,7 @@ import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  GoogleMap,
-  // MarkerF,
-  useLoadScript,
-  Autocomplete,
-} from "@react-google-maps/api";
+import { GoogleMap, useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -23,11 +18,8 @@ import {
   Stack,
   Button,
   Typography,
-  // IconButton,
   CircularProgress,
 } from "@mui/material";
-// import SvgIcon from "@mui/material/SvgIcon";
-// import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
 // import {
 //   Combobox,
@@ -42,21 +34,12 @@ import "@reach/combobox/styles.css";
 
 import Navbar from "../../components/header"; // , { NavbarVariants }
 
-// import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
-// import SearchIcon from "../../assets/icons/Icon - Search.jpg";
 import LocationGreen from "../../assets/icons/location-green.png";
 import LocationRed from "../../assets/icons/location-red.png";
 
-// import LocationOnIcon from "@mui/icons-material/LocationOn";
-
-// import getRestaurantBranchHours, {
-//   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
-// } from "../../api/restaurant/getRestaurantBranchHours";
-// import { addAddressDetail } from "../../store/reducers/addressSlice";
 import getAllArea from "../../api/address/areas";
 import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 
-// import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
 import { savingAreaIdForMatchingArea } from "../../utils/checkOperationalArea";
 
 import { getAreas } from "../../store/reducers/addressSlice";
@@ -150,14 +133,23 @@ function LocationPage() {
                 // If User selected any location
                 const selected = JSON.parse(localStorage.getItem("selected"));
 
-                getAdd(selected.lat, selected.lng);
+                if (location?.state?.toCurrent !== undefined) {
+                  makeCenter();
+                } else {
+                  getAdd(selected.lat, selected.lng);
+                }
+
                 // If User didn't selected any location
               } else if (localStorage.getItem("location") !== null) {
                 const currentLocation = JSON.parse(
                   localStorage.getItem("location")
                 );
 
-                getAdd(currentLocation.lat, currentLocation.lng);
+                if (location?.state?.toCurrent !== undefined) {
+                  makeCenter();
+                } else {
+                  getAdd(currentLocation.lat, currentLocation.lng);
+                }
               }
             }
             //
@@ -180,7 +172,11 @@ function LocationPage() {
                 localStorage.getItem("location")
               );
 
-              getAdd(currentLocation.lat, currentLocation.lng);
+              if (location?.state?.toCurrent !== undefined) {
+                makeCenter();
+              } else {
+                getAdd(currentLocation.lat, currentLocation.lng);
+              }
             } else if (
               token !== null &&
               localStorage.getItem("selected") === null &&
@@ -208,7 +204,11 @@ function LocationPage() {
                 localStorage.getItem("location")
               );
 
-              getAdd(currentLocation.lat, currentLocation.lng);
+              if (location?.state?.toCurrent !== undefined) {
+                makeCenter();
+              } else {
+                getAdd(currentLocation.lat, currentLocation.lng);
+              }
             } else if (
               token !== null &&
               localStorage.getItem("selected") === null &&
@@ -303,7 +303,7 @@ function LocationPage() {
       let foundMatchingArea = null;
 
       allAreas.forEach((zone) => {
-        const matchingArea = zone.areas.find((area) => {
+        const matchingArea = zone?.areas?.find((area) => {
           return (
             area.name_en.trim().toLowerCase() ===
               address.long_name.trim().toLowerCase() ||
@@ -432,6 +432,8 @@ function LocationPage() {
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
 
+      // let forCondition = checkCountry(parsedUserLocation);
+
       if (forCondition === "Arabia") {
         forCondition = "Saudia Arabia";
       }
@@ -458,6 +460,8 @@ function LocationPage() {
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
+
+      // let forCondition = checkCountry(parsedUserLocation);
 
       if (forCondition === "Arabia") {
         forCondition = "Saudia Arabia";
@@ -486,6 +490,7 @@ function LocationPage() {
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
+      // let forCondition = checkCountry(parsedUserLocation);
 
       if (forCondition === "Arabia") {
         forCondition = "Saudia Arabia";
@@ -532,6 +537,7 @@ function LocationPage() {
       const restrictToRegion = autocomplete
         .getPlace()
         .formatted_address.split(",");
+
       const lastElem = restrictToRegion[restrictToRegion.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
@@ -597,6 +603,19 @@ function LocationPage() {
       setClicked(false);
     }, 100);
   };
+
+  useEffect(() => {
+    if (token === null) {
+      if (selectedAddress?.area_id) {
+        const storeAddress = {
+          ...selectedAddress,
+          addNewAddress: true,
+        };
+
+        sessionStorage.setItem("storeAddress", JSON.stringify(storeAddress));
+      }
+    }
+  }, [token, selectedAddress]);
 
   const confirmLocation = () => {
     setdisableButton(true);
@@ -675,6 +694,7 @@ function LocationPage() {
                   path: location?.state?.path,
                   restaurant_id: +location?.state?.restaurant_id,
                   fromDetail: location?.state?.fromDetail,
+                  detailPath: location?.state?.detailPath,
                   selectedAddress: selectedAddress,
                 },
               });
@@ -826,6 +846,7 @@ function LocationPage() {
               autoRedirect={location?.state?.autoRedirect}
               path={location?.state?.path}
               location={location?.state}
+              locationNavbar={true}
             />
           </div>
         </Stack>

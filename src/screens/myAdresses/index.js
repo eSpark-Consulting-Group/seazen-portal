@@ -22,7 +22,7 @@ import { AddressesButton } from "../../components/adressList/addressesButton";
 
 import getAllAddress from "../../api/address/getAddress";
 import deleteAddressApiCall from "../../api/address/deleteAddress";
-import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
+// import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 
 import { getAddress } from "../../store/reducers/addressSlice";
 
@@ -186,6 +186,7 @@ const App = () => {
         fromMenu={location?.state?.fromMenu}
         fromHome={location?.state?.fromHome}
         fromDetail={location?.state?.fromDetail}
+        detailPath={location?.state?.detailPath}
         backToCart={location?.state?.backToCart}
         backCart={location?.state?.backCart}
         editLocation={location?.state?.editLocation}
@@ -388,6 +389,8 @@ const App = () => {
               opacity: "1",
               width: "116px",
               height: "29px",
+              transition:
+                "background-color 0.3s ease, color 0.3s ease, border 0.3s ease",
             }}
             onClick={() => deleteAddress(addressId)}
             disabled={deleteAdd}

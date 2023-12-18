@@ -35,6 +35,7 @@ const Navbar = (props) => {
     location,
     autoRedirect,
     register,
+    locationNavbar,
   } = props;
 
   const navigate = useNavigate();
@@ -43,6 +44,9 @@ const Navbar = (props) => {
 
   const token = localStorage.getItem("token");
   const currentLocation = JSON.parse(localStorage.getItem("location"));
+  const isAfterNewLocation = JSON.parse(
+    sessionStorage?.getItem("storeAddress")
+  );
 
   const cart = useSelector((state) => state.cart.cart);
   const addressData = useSelector((state) => state.address.addressData);
@@ -77,6 +81,7 @@ const Navbar = (props) => {
     fromDetail: location?.fromDetail,
     fromHome: location?.fromHome,
     backCart: location?.backCart,
+    detailPath: location?.detailPath,
     path: path,
     editLocation: location?.editLocation,
   };
@@ -148,7 +153,7 @@ const Navbar = (props) => {
                 }
               } else {
                 if (path === "/profile") {
-                  navigate(paths.addresses, { state: { path: "/profile" } });
+                  navigate(paths.addresses, { state: { path } });
                   //
                 } else if (location?.addNew !== undefined) {
                   navigate(paths?.home);
@@ -177,6 +182,8 @@ const Navbar = (props) => {
                   navigate(paths.addresses, {
                     state: passState,
                   });
+                } else if (locationNavbar) {
+                  navigate(-1, { state: { locationNavbar } });
                 } else if (location?.notSelected !== undefined) {
                   navigate(-1);
                 } else {
@@ -253,6 +260,19 @@ const Navbar = (props) => {
             onClick={() => {
               token === null
                 ? navigate(paths.cart)
+                : isAfterNewLocation !== null &&
+                  isAfterNewLocation?.addNewAddress === true
+                ? navigate(paths.address, {
+                    state: {
+                      latlng: {
+                        lat: currentLocation?.lat,
+                        lng: currentLocation?.lng,
+                      },
+                      name: currentLocation?.address,
+                      path: "menu/restaurant",
+                      restaurant_id: cart[0]?.restaurant_id,
+                    },
+                  })
                 : addressData?.length === 0 && cart.length
                 ? navigate(paths.location, {
                     state: stateNoAddress,

@@ -1,10 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  useSearchParams,
+  // , useLocation
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -24,16 +29,21 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import dayjs from "dayjs";
 
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+// import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateTimePicker, MobileTimePicker } from "@mui/x-date-pickers";
+import {
+  DateTimePicker,
+  // , MobileTimePicker
+} from "@mui/x-date-pickers";
 
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../../../api/restaurant/branches/getBranchesAndHours";
-import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant";
+// import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant";
 import getBranchByArea from "../../../../api/restaurant/branches/getBranchByArea";
+import getListItemByCategory from "../../../../api/restaurant/getListItemsByCategory";
+import getItemCategoryList from "../../../../api/restaurant/getItemCategoryList";
 
 import {
   getDistanceFromLatLonInKm,
@@ -41,8 +51,11 @@ import {
 } from "../../../../utils/getAddress";
 
 import {
-  getNearByRest,
+  getCategoryItemList,
+  getCategoryList,
+  // getNearByRest,
   setBranchID,
+  toggleCategoryListLoading,
 } from "../../../../store/reducers/resturantsSlice";
 
 import { paths } from "../../../../routes/paths";
@@ -61,18 +74,21 @@ const StyledOuterContainerIcon = styled("div")(({ theme }) => ({
 
 const DeliveryDetails = (props) => {
   const { setLocationDeliver, restaurantBranchHours, onDelivery } = props;
+
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
 
   const addressData = useSelector((state) => state.address.addressData);
-  const nearbyRestaurants = useSelector(
-    (state) => state.resturants.nearbyRestaurants
-  );
+  // const nearbyRestaurants = useSelector(
+  //   (state) => state.resturants.nearbyRestaurants
+  // );
   const restaurantDetail = useSelector(
     (state) => state.resturants.restaurantDetail
   );
   const branchHours = useSelector((state) => state.resturants.branchHours);
+  const country = useSelector((state) => state.auth.country);
 
   const selected = JSON.parse(localStorage.getItem("selected"));
   const currentLocation = JSON.parse(localStorage.getItem("location"));
@@ -80,6 +96,7 @@ const DeliveryDetails = (props) => {
   const pickDate = localStorage.getItem("pickDate");
   const isAsap = localStorage.getItem("isAsap");
   const pickTime = localStorage.getItem("pickTime");
+  const branchId = localStorage.getItem("branchId");
 
   const truncateString = (str, len) => {
     if (str) {
@@ -263,19 +280,19 @@ const DeliveryDetails = (props) => {
     getFullAddress(lat, lng, setFullAddress);
   };
 
-  const fetchNearbyRestaurant = (lat, lng) => {
-    const address = {
-      latitude: lat,
-      longitude: lng,
-      service_type: "dinein",
-    };
+  // const fetchNearbyRestaurant = (lat, lng) => {
+  //   const address = {
+  //     latitude: lat,
+  //     longitude: lng,
+  //     service_type: "dinein",
+  //   };
 
-    getNearByRestaurants(address).then((res) => {
-      if (res.status === "ok") {
-        dispatch(getNearByRest(res?.data));
-      }
-    });
-  };
+  //   getNearByRestaurants(address).then((res) => {
+  //     if (res.status === "ok") {
+  //       dispatch(getNearByRest(res?.data));
+  //     }
+  //   });
+  // };
 
   const asapHandler = () => {
     if (branchHours?.length !== 0) {
@@ -326,8 +343,6 @@ const DeliveryDetails = (props) => {
       return getBranchesAndHours(restaurant_id);
     },
   });
-
-  const branchId = localStorage.getItem("branchId");
 
   const timeByDate = branchesAndHoursResponse?.data
     ?.find((val) => (val.id = branchId))
@@ -383,11 +398,15 @@ const DeliveryDetails = (props) => {
 
   const getBranchIdNearToLocation = () => {
     const filterBranch = branchesAndHoursResponse?.data?.find(
-      (rest) => rest.restaurant_id === restaurantDetail?.id
+      (rest) =>
+        rest.restaurant_id === restaurantDetail?.id && rest?.id !== "undefined"
     );
 
     localStorage.setItem("branchId", filterBranch?.id);
     dispatch(setBranchID(filterBranch?.id));
+
+    fetchAllCategories();
+    fetchAllItems(filterBranch?.id);
   };
 
   const toggleDropdown = () => {
@@ -416,6 +435,32 @@ const DeliveryDetails = (props) => {
           restaurant_id: restaurant_id,
           restaurantName: restaurantDetail?.page_title_en,
           addFromDropdown: true,
+        },
+      });
+    }
+  };
+
+  const setCurrentLocation = () => {
+    if (token === null) {
+      const restaurant_id = restaurantDetail?.id;
+
+      navigate(paths.location, {
+        state: {
+          path: "menu/restaurant",
+          guestUser: true,
+          restaurant_id: restaurant_id,
+          restaurantName: restaurantDetail?.page_title_en,
+          toCurrent: true,
+        },
+      });
+    } else {
+      navigate(paths.location, {
+        state: {
+          path: "menu/restaurant",
+          restaurant_id: restaurant_id,
+          restaurantName: restaurantDetail?.page_title_en,
+          addFromDropdown: true,
+          toCurrent: true,
         },
       });
     }
@@ -469,10 +514,8 @@ const DeliveryDetails = (props) => {
 
     getBranchByArea(restaurant_id, object, dispatch)
       .then((res) => {
-        if (res.data?.length === 0) {
-          getBranchIdNearToLocation();
-        }
         setDisableMenu(false);
+        setOpendropdown(false);
 
         getUserAddress(address.latitude, address.longitude);
         setAddressID(address.id);
@@ -485,12 +528,42 @@ const DeliveryDetails = (props) => {
 
         localStorage.setItem("area_id", address?.delivery_charge_area_info.id);
 
-        fetchNearbyRestaurant(address.latitude, address.longitude);
+        if (res?.data?.length === 0) {
+          getBranchIdNearToLocation();
+        } else {
+          fetchAllCategories();
+          fetchAllItems(res.data?.branch_id);
+        }
+
+        // fetchNearbyRestaurant(address.latitude, address.longitude);
       })
       .catch((err) => {
         setDisableMenu(false);
         console.log(err);
       });
+  };
+
+  const fetchAllItems = (branch_id) => {
+    getListItemByCategory(
+      restaurant_id,
+      branch_id,
+      searchParams.get("category"),
+      country?.id
+    )
+      .then((res) => {
+        dispatch(getCategoryItemList(res?.data));
+      })
+      .catch((e) => console.error(e));
+  };
+
+  const fetchAllCategories = () => {
+    dispatch(toggleCategoryListLoading());
+
+    getItemCategoryList(restaurant_id)
+      .then((res) => {
+        dispatch(getCategoryList(res?.data));
+      })
+      .catch((e) => console.error(e));
   };
 
   const handleDocumentClick = useCallback(
@@ -575,7 +648,7 @@ const DeliveryDetails = (props) => {
 
                 <Dropdown.Item
                   defaultChecked
-                  onClick={addLocation}
+                  onClick={setCurrentLocation}
                   disabled={disableMenu}
                 >
                   Select current location

@@ -1,7 +1,9 @@
 import React from "react";
-import "./style.css";
 import { useNavigate } from "react-router";
+
 import { paths } from "../../../routes/paths";
+
+import "./style.css";
 
 export const AddressesButton = ({
   restaurantName,
@@ -44,6 +46,7 @@ export const AddressesButton = ({
             path: "menu/restaurant",
             fromDetail: location?.state?.fromDetail,
             backCart: location?.state?.backCart,
+            detailPath: location?.state?.detailPath,
             ...initialState,
           },
         });
