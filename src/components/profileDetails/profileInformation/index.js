@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import ProfileStructure from "../profileStructure";
-import { useNavigate } from "react-router-dom";
-import { paths } from "../../../routes/paths";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import ProfileStructure from "../profileStructure";
 import getUserInfo from "../../../api/customer/getUserInfo";
 import { addUserInfo } from "../../../store/reducers/authSlice";
+
+import { paths } from "../../../routes/paths";
 
 function ProfileInformation() {
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ function ProfileInformation() {
           setUser({ ...user, ...userInfoFromApi });
         }
       });
-  }, []);
+  }, [localUserInfo]);
 
   const handleEditClick = () => {
     navigate(paths.update_profile);

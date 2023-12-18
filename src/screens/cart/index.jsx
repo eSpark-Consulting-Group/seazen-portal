@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 
 import { toast } from "react-toastify";
-import { useTheme } from "@mui/material";
+// import { useTheme } from "@mui/material";
 import {
   Box,
   Stack,
@@ -17,7 +17,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  CloseIcon,
+  // CloseIcon,
   CircularProgress,
 } from "@mui/material";
 
@@ -25,12 +25,15 @@ import dayjs from "dayjs";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker, MobileTimePicker } from "@mui/x-date-pickers";
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import {
+  DateTimePicker,
+  // , MobileTimePicker
+} from "@mui/x-date-pickers";
+// import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
+// import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 
@@ -50,14 +53,14 @@ import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../api/restaurant/branches/getBranchesAndHours";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
-import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
+// import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import deliveryPriceApi from "../../api/common/getDeliveryCharges";
 
 import { addToCart } from "../../store/reducers/cartSlice";
-import { setThemeColor } from "../../store/reducers/themeSlice";
+// import { setThemeColor } from "../../store/reducers/themeSlice";
 import {
   getBranchHours,
-  getNearByRest,
+  // getNearByRest,
 } from "../../store/reducers/resturantsSlice";
 
 import {
@@ -79,9 +82,9 @@ function CartPage() {
   const [searchParams] = useSearchParams();
 
   const branchHours = useSelector((state) => state.resturants.branchHours);
-  const nearbyRestaurants = useSelector(
-    (state) => state.resturants.nearbyRestaurants
-  );
+  // const nearbyRestaurants = useSelector(
+  //   (state) => state.resturants.nearbyRestaurants
+  // );
   const cart = useSelector((state) => state.cart.cart);
   const totalPrice = useSelector((state) => state.cart.total);
   const country = useSelector((state) => state.auth.country);
@@ -103,21 +106,21 @@ function CartPage() {
   const [promoCode, setPromoCode] = React.useState("");
   const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
-  const [discount, setDiscount] = React.useState(0);
-  const DISCOUNT_AMOUNT = Number(0).toFixed(3);
-  const DELIVERY_CHARGE = Number(0).toFixed(3);
+  // const [discount, setDiscount] = React.useState(0);
+  // const DISCOUNT_AMOUNT = Number(0).toFixed(3);
+  // const DELIVERY_CHARGE = Number(0).toFixed(3);
   const [isDialogOpen, setDialogOpen] = useState(false);
 
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  // const [showTimePicker, setShowTimePicker] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [notDeliver, setNotDeliver] = useState(false);
   const [restaurantOpen, setRestaurantOpen] = useState(false);
   const [updateText, setUpdateText] = useState("");
   const [openSchedulePopup, setOpenSchedulePopup] = useState(false);
   const [userTrusted, setUserTrusted] = useState(false);
-  const [selectedSchedule, setSelectedSchedule] = useState(
-    "14 August 2023, ASAP"
-  );
+  // const [selectedSchedule, setSelectedSchedule] = useState(
+  //   "14 August 2023, ASAP"
+  // );
 
   const [pickDay, setPickDay] = useState("");
   const [minTime, setMinTime] = useState(dayjs());
@@ -402,63 +405,6 @@ function CartPage() {
       setIsActive(false);
     }, 100);
   };
-
-  const [userCurrentAddress, setUserCurrentAddress] = useState({
-    latitude: 0,
-    longitude: 0,
-    service_type: "dinein",
-  });
-
-  useEffect(() => {
-    const userSelected = localStorage.getItem("selected");
-    const userLocation = localStorage.getItem("location");
-    const defaultLocation = { lat: 29.3140728, lng: 47.68022 };
-
-    if (userSelected === null && userLocation === null) {
-      setUserCurrentAddress({
-        latitude: defaultLocation.lat,
-        longitude: defaultLocation.lng,
-        service_type: "dinein",
-      });
-      //
-    } else if (userSelected === null && userLocation !== null) {
-      const parsedUserLocation = JSON.parse(userLocation);
-
-      setUserCurrentAddress({
-        latitude: parsedUserLocation.lat,
-        longitude: parsedUserLocation.lng,
-        service_type: "dinein",
-      });
-      //
-    } else if (userSelected !== null && userLocation !== null) {
-      const parsedUserLocation = JSON.parse(userSelected);
-
-      setUserCurrentAddress({
-        latitude: parsedUserLocation.lat,
-        longitude: parsedUserLocation.lng,
-        service_type: "dinein",
-      });
-      //
-    }
-  }, []);
-
-  const { refetch: recall } = useQuery({
-    queryFn: () => getNearByRestaurants(userCurrentAddress),
-    onSuccess: (data) => {
-      dispatch(getNearByRest(data.data));
-    },
-    enabled: false,
-  });
-
-  useEffect(() => {
-    if (
-      userCurrentAddress.latitude !== 0 &&
-      userCurrentAddress.longitude !== 0 &&
-      nearbyRestaurants?.length === 0
-    ) {
-      recall();
-    }
-  }, [userCurrentAddress, nearbyRestaurants]);
 
   useEffect(() => {
     let isCartEmpty = searchParams.get("empty");
@@ -745,26 +691,41 @@ function CartPage() {
             height: "42px",
           }}
           edge="start"
-          onClick={() =>
-            navigate(
+          onClick={() => {
+            if (
               location?.state?.back &&
-                location?.state?.fromHome === undefined &&
-                location?.state?.fromMenu === undefined &&
-                location?.state?.fromDetail === undefined
-                ? location?.state?.back
-                : location?.state?.noAddress && cart?.length !== 0
-                ? `${paths.menu}/restaurant/${cart[0]?.restaurant_id}/delivery`
-                : location?.state?.fromHome !== undefined
-                ? paths.home
-                : (location?.state?.fromMenu !== undefined ||
-                    location?.state?.fromDetail !== undefined) &&
-                  cart?.length !== 0
-                ? `${paths.menu}/restaurant/${restaurantId}/delivery`
-                : location?.state?.backToCart !== undefined
-                ? paths.home
-                : -1
-            )
-          }
+              location?.state?.fromHome === undefined &&
+              location?.state?.fromMenu === undefined &&
+              location?.state?.fromDetail === undefined
+            ) {
+              navigate(location?.state?.back);
+            } else if (
+              (location?.state?.noAddress && cart?.length !== 0) ||
+              (location?.state?.fromMenu !== undefined && cart?.length !== 0)
+            ) {
+              navigate(
+                `${paths.menu}/restaurant/${cart[0]?.restaurant_id}/delivery`
+              );
+            } else if (
+              location?.state?.fromHome !== undefined ||
+              location?.state?.backToCart !== undefined
+            ) {
+              navigate(paths.home);
+            } else if (
+              location?.state?.fromDetail !== undefined &&
+              cart?.length !== 0 &&
+              location?.state?.detailPath
+            ) {
+              navigate(location?.state?.detailPath, {
+                state: {
+                  ...location?.state,
+                  branch_id: localStorage.getItem("branchId"),
+                },
+              });
+            } else {
+              navigate(-1);
+            }
+          }}
         >
           <ArrowBackRoundedIcon
             fontSize="medium"
@@ -905,6 +866,7 @@ function CartPage() {
                       ...initialState,
                       fromDetail: location?.state?.fromDetail,
                       backCart: true,
+                      detailPath: location?.state?.detailPath,
                     },
                   });
                 } else {

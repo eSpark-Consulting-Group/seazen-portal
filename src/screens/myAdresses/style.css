@@ -58,17 +58,26 @@
   margin-top: 10px;
 }
 
-.delete-button:hover span {
-  color: #1f2933 !important;
+.delete-button {
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
 }
+
+.delete-button:hover {
+  background-color: rgb(106, 73, 54) !important;
+}
+
+/* .delete-button:hover span {
+  color: #1f2933 !important;
+} */
 
 .loader-button .loader {
   width: 20px !important;
   height: 20px !important;
+  color: #fff;
 }
 
 .loader-button {
-  background-color: transparent !important;
+  background-color: rgb(106, 73, 54) !important;
 }
 
 .parent-address {

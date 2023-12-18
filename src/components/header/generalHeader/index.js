@@ -17,6 +17,9 @@ const Navbar = (props) => {
 
   const token = localStorage.getItem("token");
   const currentLocation = JSON.parse(localStorage.getItem("location"));
+  const isAfterNewLocation = JSON.parse(
+    sessionStorage?.getItem("storeAddress")
+  );
 
   const defaultImagePath = "/assets/img/menu_background_image.png";
   return (
@@ -47,6 +50,19 @@ const Navbar = (props) => {
           onClick={() => {
             token === null
               ? navigate(paths.cart)
+              : isAfterNewLocation !== null &&
+                isAfterNewLocation?.addNewAddress === true
+              ? navigate(paths.address, {
+                  state: {
+                    latlng: {
+                      lat: currentLocation?.lat,
+                      lng: currentLocation?.lng,
+                    },
+                    name: currentLocation?.address,
+                    path: "menu/restaurant",
+                    restaurant_id: cart[0]?.restaurant_id,
+                  },
+                })
               : addressData?.length === 0 && cart.length
               ? navigate(paths.location, {
                   state: {

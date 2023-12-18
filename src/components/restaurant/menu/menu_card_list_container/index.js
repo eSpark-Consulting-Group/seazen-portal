@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useNavigate, useParams } from "react-router-dom";
+import {
+  // useSearchParams,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Box, Stack, Typography, Modal, CircularProgress } from "@mui/material";
@@ -18,7 +22,7 @@ import { paths } from "../../../../routes/paths.jsx";
 import { resetCart } from "../../../../store/reducers/cartSlice.js";
 import {
   getBranchHours,
-  getNearByRest,
+  // getNearByRest,
   setBranchID,
   setCategoryElementID,
 } from "../../../../store/reducers/resturantsSlice.js";
@@ -30,7 +34,7 @@ import {
 } from "../../../../utils/getAddress.js";
 
 import getRestaurantBranchHours from "../../../../api/restaurant/getRestaurantBranchHours.js";
-import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant.js";
+// import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant.js";
 import getBranchByArea from "../../../../api/restaurant/branches/getBranchByArea.js";
 
 import "./style.css";
@@ -58,9 +62,9 @@ const MenuCardListContainer = ({
   const addressData = useSelector((state) => state.address.addressData);
 
   const branchHours = useSelector((state) => state.resturants.branchHours);
-  const nearbyRestaurants = useSelector(
-    (state) => state.resturants.nearbyRestaurants
-  );
+  // const nearbyRestaurants = useSelector(
+  //   (state) => state.resturants.nearbyRestaurants
+  // );
 
   const cartTotal = cart.reduce(
     (total, item) => total + Number(item.totalPrice),
@@ -86,6 +90,9 @@ const MenuCardListContainer = ({
   const [name_en, setNameEn] = useState();
 
   const currentLocation = JSON.parse(localStorage.getItem("location"));
+  const isAfterNewLocation = JSON.parse(
+    sessionStorage?.getItem("storeAddress")
+  );
 
   const { id } = useParams();
 
@@ -350,7 +357,7 @@ const MenuCardListContainer = ({
               </div>
             </div> */}
             <>
-              {ItemsCategoryLoading && (
+              {ItemsCategoryLoading ? (
                 <Box
                   sx={{
                     display: "flex",
@@ -360,70 +367,71 @@ const MenuCardListContainer = ({
                 >
                   <CircularProgress />
                 </Box>
+              ) : (
+                <Stack>
+                  {categoryList && categoryList?.length > 0 && (
+                    <div className="searchwrapper">
+                      <img
+                        src="/assets/img/Icon - Search.svg"
+                        alt="search_icon"
+                        className="searchicon"
+                        onClick={toggleSearch}
+                      />
+                    </div>
+                  )}
+                  {Object.keys(categoriesWiseList).map((val, index) => {
+                    return (
+                      <>
+                        <div
+                          id={index + 1}
+                          className="card_list_title"
+                          style={{
+                            marginTop: index == 0 ? "-3px" : "16px",
+                          }}
+                        >
+                          {
+                            itemCategoryList?.find((item) => item.id == val)
+                              ?.name_en
+                          }
+                        </div>{" "}
+                        {categoriesWiseList[val].map((item, index) => {
+                          if (item.branch_status) {
+                            return (
+                              <MenuCard
+                                allData={item}
+                                key={index}
+                                locationDeliver={locationDeliver}
+                                resturantId={resturantId}
+                                restaurantBranchHours={restaurantBranchHours}
+                                restaurantDetail={restaurantDetail}
+                                foodItem={item.name_en}
+                                foodIngredients={item.description_en}
+                                foodPrice={item.price}
+                                foodImage={item.image}
+                                id={item.id}
+                                restaurant_id={item.restaurant_id}
+                                showSubTractButton={
+                                  item.has_extras === false &&
+                                  item.has_variants === false &&
+                                  item.has_options === false
+                                }
+                                setOpenModal={setOpenModal}
+                                setSelectedItemToDeliver={
+                                  setSelectedItemToDeliver
+                                }
+                                setNotDeliver={setNotDeliver}
+                                setRestaurantOpen={setRestaurantOpen}
+                                setOpenAddressPopup={setOpenAddressPopup}
+                                setRestaurantIsOpen={setRestaurantIsOpen}
+                              />
+                            );
+                          }
+                        })}
+                      </>
+                    );
+                  })}
+                </Stack>
               )}
-              <Stack>
-                {categoryList && categoryList?.length > 0 && (
-                  <div className="searchwrapper">
-                    <img
-                      src="/assets/img/Icon - Search.svg"
-                      alt="search_icon"
-                      className="searchicon"
-                      onClick={toggleSearch}
-                    />
-                  </div>
-                )}
-                {Object.keys(categoriesWiseList).map((val, index) => {
-                  return (
-                    <>
-                      <div
-                        id={index + 1}
-                        className="card_list_title"
-                        style={{
-                          marginTop: index == 0 ? "-3px" : "16px",
-                        }}
-                      >
-                        {
-                          itemCategoryList?.find((item) => item.id == val)
-                            ?.name_en
-                        }
-                      </div>{" "}
-                      {categoriesWiseList[val].map((item, index) => {
-                        if (item.branch_status) {
-                          return (
-                            <MenuCard
-                              allData={item}
-                              key={index}
-                              locationDeliver={locationDeliver}
-                              resturantId={resturantId}
-                              restaurantBranchHours={restaurantBranchHours}
-                              restaurantDetail={restaurantDetail}
-                              foodItem={item.name_en}
-                              foodIngredients={item.description_en}
-                              foodPrice={item.price}
-                              foodImage={item.image}
-                              id={item.id}
-                              restaurant_id={item.restaurant_id}
-                              showSubTractButton={
-                                item.has_extras === false &&
-                                item.has_variants === false &&
-                                item.has_options === false
-                              }
-                              setOpenModal={setOpenModal}
-                              setSelectedItemToDeliver={
-                                setSelectedItemToDeliver
-                              }
-                              setNotDeliver={setNotDeliver}
-                              setRestaurantOpen={setRestaurantOpen}
-                              setOpenAddressPopup={setOpenAddressPopup}
-                              setRestaurantIsOpen={setRestaurantIsOpen}
-                            />
-                          );
-                        }
-                      })}
-                    </>
-                  );
-                })}
-              </Stack>
             </>
 
             {/* <div className="comment_button_container">
@@ -455,6 +463,19 @@ const MenuCardListContainer = ({
           onClick={() => {
             localStorage.getItem("token") === null
               ? navigate(paths.cart)
+              : isAfterNewLocation !== null &&
+                isAfterNewLocation?.addNewAddress === true
+              ? navigate(paths.address, {
+                  state: {
+                    latlng: {
+                      lat: currentLocation?.lat,
+                      lng: currentLocation?.lng,
+                    },
+                    name: currentLocation?.address,
+                    path: "menu/restaurant",
+                    restaurant_id: id,
+                  },
+                })
               : addressData?.length === 0 && cart.length
               ? navigate(paths.location, {
                   state: {

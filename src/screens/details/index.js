@@ -39,6 +39,7 @@ import updateCartApiCall from "../../api/cart/updateCart";
 import clearCart from "../../api/cart/clearCart";
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 import {
+  getBranchHours,
   getResturants,
   setBranchID,
 } from "../../store/reducers/resturantsSlice";
@@ -212,6 +213,7 @@ export const Details = () => {
     if (branchHours?.length === 0) {
       getRestaurantBranchHours(restaurantId).then((res) => {
         if (res.status === "ok") {
+          dispatch(getBranchHours(res?.data));
           calculateDistance(res?.data);
           setFromPopBranch(res.data);
         }
@@ -258,19 +260,21 @@ export const Details = () => {
 
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
 
+  useEffect(() => {
+    if (localStorage?.getItem("branchId") !== undefined) {
+      getItemDetails();
+    }
+  }, [localStorage]);
+
   const getItemDetails = () => {
     setIsLoading(true);
-    getMenuItemDetails(id, restaurant_id, location.state.branch_id)
+    getMenuItemDetails(id, restaurant_id, localStorage?.getItem("branchId"))
       .then((res) => {
         setIsLoading(false);
         setMenuItemDetails(res);
       })
       .catch((err) => console.error(err));
   };
-
-  useEffect(() => {
-    getItemDetails();
-  }, []);
 
   const calculateToppingVariantTotal = (toppingVariantData) => {
     const eachToppingTotal = toppingVariantData
@@ -939,12 +943,14 @@ export const Details = () => {
   };
 
   const getBranchIdNearToLocation = () => {
-    const filterBranch = branchHours?.data?.find(
-      (rest) => rest.restaurant_id === restaurant_id
-    );
+    if (branchHours?.length) {
+      const filterBranch = branchHours?.find(
+        (rest) => rest.restaurant_id === +restaurant_id
+      );
 
-    localStorage.setItem("branchId", filterBranch?.id);
-    dispatch(setBranchID(filterBranch?.id));
+      localStorage.setItem("branchId", filterBranch?.id);
+      dispatch(setBranchID(filterBranch?.id));
+    }
   };
 
   useEffect(() => {
@@ -1193,6 +1199,7 @@ export const Details = () => {
             setOpenAddressPopup={setOpenAddressPopup}
             fromDetail={true}
             editItem={location?.state?.editItem}
+            branch_id={location?.state?.branch_id}
           />
           <div className="container-fluid section">
             <Stack

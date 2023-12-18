@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 import Navbar from "../../../components/header";
 
@@ -11,20 +12,23 @@ const MyAddresses = (props) => {
     title,
     path,
     fromAllAddresses,
-    edit,
-    noAddress,
-    addNew,
-    restaurant_id,
+    // edit,
+    // noAddress,
+    // addNew,
+    // restaurant_id,
     fromCart,
     fromHome,
     fromMenu,
     fromDetail,
     backToCart,
     backCart,
-    notSelected,
+    // notSelected,
     editLocation,
-    addFromDropdown,
+    // addFromDropdown,
+    detailPath,
   } = props;
+
+  const location = useLocation();
 
   const pathToCart = () => {
     return (
@@ -41,26 +45,26 @@ const MyAddresses = (props) => {
     );
   };
 
-  const pathToAddresses = () => {
-    return (
-      (fromHome !== undefined ||
-        fromMenu !== undefined ||
-        fromDetail !== undefined) &&
-      backToCart === undefined &&
-      backCart === undefined &&
-      editLocation === undefined
-    );
-  };
+  // const pathToAddresses = () => {
+  //   return (
+  //     (fromHome !== undefined ||
+  //       fromMenu !== undefined ||
+  //       fromDetail !== undefined) &&
+  //     backToCart === undefined &&
+  //     backCart === undefined &&
+  //     editLocation === undefined
+  //   );
+  // };
 
-  const pathToAddressWithEdit = () => {
-    return (
-      edit !== undefined ||
-      ((fromHome !== undefined ||
-        fromMenu !== undefined ||
-        fromDetail !== undefined) &&
-        backToCart !== undefined)
-    );
-  };
+  // const pathToAddressWithEdit = () => {
+  //   return (
+  //     edit !== undefined ||
+  //     ((fromHome !== undefined ||
+  //       fromMenu !== undefined ||
+  //       fromDetail !== undefined) &&
+  //       backToCart !== undefined)
+  //   );
+  // };
 
   return (
     <div style={{ padding: "20px 29px 20px 24px" }}>
@@ -80,29 +84,17 @@ const MyAddresses = (props) => {
             fromHome: fromHome,
             fromMenu: fromMenu,
             fromDetail: fromDetail,
+            detailPath: detailPath,
             backToCart: backToCart,
           },
         }}
         title={title}
         backIconURL={
-          fromAllAddresses && path === "/profile"
+          location?.state?.path === "/profile" && fromAllAddresses
             ? paths.profile
-            : !fromAllAddresses && path === "/profile"
-            ? paths.addresses
-            : pathToAddresses()
-            ? paths.addresses
             : pathToCart()
             ? paths.cart
-            : pathToAddressWithEdit()
-            ? paths.addresses
-            : noAddress !== undefined ||
-              (backCart !== undefined && path !== "/home")
-            ? -1
-            : addNew !== undefined || notSelected !== undefined
-            ? `${paths.menu}/restaurant/${restaurant_id}/delivery`
-            : addFromDropdown !== undefined
-            ? -1
-            : paths.home
+            : -1
         }
       />
     </div>

@@ -170,6 +170,9 @@ const MyOrderScreen = () => {
                   fontWeight: "500",
                   backgroundColor: "#98694E",
                   color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "rgb(106, 73, 54)",
+                  },
                 }}
                 onClick={() => {
                   navigate(paths.home);

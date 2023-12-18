@@ -1,6 +1,8 @@
 import { setBranchID } from "../../../store/reducers/resturantsSlice";
+
 import axiosInstance from "../../axiosInstance";
 import API_ENDPOINTS from "../../endpoints";
+
 import { handleApiError } from "../../utils/errorHandling";
 
 const getBranchByArea = async (restaurantId, body, dispatch) => {
@@ -12,8 +14,10 @@ const getBranchByArea = async (restaurantId, body, dispatch) => {
 
     // Check the response status code.
     if (response.status === 200) {
-      localStorage.setItem("branchId", response.data.data.branch_id);
-      dispatch(setBranchID(response.data.data.branch_id));
+      if (!Array.isArray(response?.data?.data)) {
+        localStorage.setItem("branchId", response.data.data.branch_id);
+        dispatch(setBranchID(response.data.data.branch_id));
+      }
 
       return response.data;
     } else {

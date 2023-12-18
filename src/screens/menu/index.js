@@ -34,23 +34,24 @@ import getRestaurantDetails, {
 import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantBranchHours.js";
-import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant.js";
 import getBranchesAndHours from "../../api/restaurant/branches/getBranchesAndHours.js";
 import getBranchByArea from "../../api/restaurant/branches/getBranchByArea.js";
+import cartList from "../../api/cart/cartList.js";
 
 import {
-  getNearByRest,
   getResturantsDetails,
   setBranchID,
 } from "../../store/reducers/resturantsSlice.js";
 import { setThemeColor } from "../../store/reducers/themeSlice.js";
 import { closeReorderModal } from "../../store/reducers/orderSlice.js";
+import { addToCart } from "../../store/reducers/cartSlice.js";
 
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
   selectChooseAddress,
 } from "../../utils/getAddress.js";
+import { cartListWithQuery } from "../../utils/carlistApiCall.js";
 
 import { paths } from "../../routes/paths.jsx";
 
@@ -64,14 +65,9 @@ const Menu = () => {
   const { id: restaurant_id } = useParams();
 
   const country = useSelector((state) => state.auth.country);
-  const nearbyRestaurants = useSelector(
-    (state) => state.resturants.nearbyRestaurants
-  );
-  const currentRestaurantDetail = useSelector(
-    (state) => state.resturants.restaurantDetail
-  );
   const reorder = useSelector((state) => state.order.reorder);
   const cart = useSelector((state) => state.cart.cart);
+  const branchHours = useSelector((state) => state.resturants.branchHours);
 
   const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [pickDate, setPickDate] = useState(
@@ -79,6 +75,8 @@ const Menu = () => {
   );
   const [pickTime, setPickTime] = useState(dayjs(asapTime).format("hh:mm a"));
   const [isAsap, setIsAsap] = useState(true);
+
+  const token = localStorage?.getItem("token");
 
   const [openModal, setOpenModal] = useState(false);
   const [notDeliver, setNotDeliver] = useState(false);
@@ -89,7 +87,6 @@ const Menu = () => {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [fromDetail, setFromDetail] = useState(false);
   const [openAddressPopup, setOpenAddressPopup] = useState(false);
-  const [restaurantIsOpen, setRestaurantIsOpen] = useState(false);
   const [fullAddress, setFullAddress] = useState(null);
   const [restaurantName, setRestaurantName] = useState("");
   const [addressID, setAddressID] = useState();
@@ -99,14 +96,12 @@ const Menu = () => {
   const [minOrderAmount, setMinOrderAmount] = useState();
   const [name_en, setNameEn] = useState();
 
-  const token = localStorage.getItem("token");
-
   const {
     data: restaurantDetailResponse,
     isLoading,
     error,
     isError,
-    refetch,
+    refetch: restaurantDetails,
   } = useQuery({
     queryKey: [GET_RESTAURANT_DETAILS_QUERY_KEY],
     queryFn: () => getRestaurantDetails(restaurant_id, country?.id),
@@ -166,85 +161,31 @@ const Menu = () => {
   } = useQuery({
     queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY],
     queryFn: () => getRestaurantBranchHours(restaurant_id),
-    onSuccess: (data) => {},
+    onSuccess: () => {},
   });
 
   useEffect(() => {
-    refetch();
+    restaurantDetails();
   }, [country]);
 
-  const [userCurrentAddress, setUserCurrentAddress] = useState({
-    latitude: 0,
-    longitude: 0,
-    service_type: "dinein",
-  });
-
-  // useEffect(() => {
-  //   if (sessionStorage.getItem("cartEmpty") === null) {
-  //     if (token !== null) {
-  //       if (restaurantBranchHours?.data?.length) {
-  //         cartListApiHit(
-  //           cartList,
-  //           restaurantBranchHours?.data,
-  //           dispatch,
-  //           addToCart,
-  //           token
-  //         );
-  //       }
-  //     }
-  //   }
-  // }, [cart, token, restaurantBranchHours?.data?.length]);
-
-  useEffect(() => {
-    const userSelected = localStorage.getItem("selected");
-    const userLocation = localStorage.getItem("location");
-    const defaultLocation = { lat: 29.3140728, lng: 47.68022 };
-
-    if (userSelected === null && userLocation === null) {
-      setUserCurrentAddress({
-        latitude: defaultLocation.lat,
-        longitude: defaultLocation.lng,
-        service_type: "dinein",
-      });
-      //
-    } else if (userSelected === null && userLocation !== null) {
-      const parsedUserLocation = JSON.parse(userLocation);
-
-      setUserCurrentAddress({
-        latitude: parsedUserLocation.lat,
-        longitude: parsedUserLocation.lng,
-        service_type: "dinein",
-      });
-      //
-    } else if (userSelected !== null && userLocation !== null) {
-      const parsedUserLocation = JSON.parse(userSelected);
-
-      setUserCurrentAddress({
-        latitude: parsedUserLocation.lat,
-        longitude: parsedUserLocation.lng,
-        service_type: "dinein",
-      });
-      //
-    }
-  }, [localStorage]);
-
-  const { refetch: recall } = useQuery({
-    queryFn: () => getNearByRestaurants(userCurrentAddress),
-    onSuccess: (data) => {
-      dispatch(getNearByRest(data.data));
+  const { refetch } = useQuery({
+    queryKey: [token],
+    queryFn: () => cartList(token),
+    onSuccess: (res) => {
+      cartListWithQuery(branchHours, dispatch, addToCart, res);
     },
-    enabled: false,
+    enabled: !!token && sessionStorage.getItem("cartEmpty") === null,
   });
 
   useEffect(() => {
-    if (
-      userCurrentAddress.latitude !== 0 &&
-      userCurrentAddress.longitude !== 0 &&
-      nearbyRestaurants?.length === 0
-    ) {
-      recall();
+    if (sessionStorage.getItem("cartEmpty") === null) {
+      if (token !== null) {
+        if (cart?.length === 0 && branchHours?.length) {
+          refetch();
+        }
+      }
     }
-  }, [userCurrentAddress, nearbyRestaurants]);
+  }, [cart, token, branchHours]);
 
   const fetchBranches = () => {
     getBranchesAndHours(restaurant_id)

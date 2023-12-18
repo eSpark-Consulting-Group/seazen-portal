@@ -4,7 +4,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   resturantsData: [],
   resturantsBanner: [],
-  listItemByCategory: null,
+  listItemByCategory: [],
+  listCategory: [],
   details: [],
   nearbyRestaurants: [],
   branchHours: [],
@@ -12,6 +13,7 @@ const initialState = {
   visibleCategoryElementID: 0,
   selectedService: null,
   restaurantDetail: {},
+  categoryLoading: false,
 };
 
 const resturantsSlice = createSlice({
@@ -27,8 +29,15 @@ const resturantsSlice = createSlice({
     getRestaurantsBanner: (state, action) => {
       state.resturantsBanner = action.payload;
     },
+    toggleCategoryListLoading: (state) => {
+      state.categoryLoading = true;
+    },
     getCategoryItemList: (state, action) => {
+      state.categoryLoading = false;
       state.listItemByCategory = action.payload;
+    },
+    getCategoryList: (state, action) => {
+      state.listCategory = action.payload;
     },
     getResturantsDetails: (state, action) => {
       state.restaurantDetail = action.payload;
@@ -136,6 +145,8 @@ export const {
   setSelectedService,
   removeSelectedService,
   getResturantsDetails,
+  getCategoryList,
+  toggleCategoryListLoading,
 } = resturantsSlice.actions;
 
 export default resturantsSlice.reducer;

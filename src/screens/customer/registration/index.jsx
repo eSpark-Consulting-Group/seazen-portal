@@ -1,16 +1,24 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
+import { useMutation } from "@tanstack/react-query";
+
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import Navbar, { NavbarVariants } from "../../../components/header";
+
+import { Stack, Button, TextField, Typography } from "@mui/material";
+
+import Navbar from // NavbarVariants
+"../../../components/header";
 import { Footer } from "../../../components/footer/footerContent";
-import { paths } from "../../../routes/paths";
+
 import updateProfile from "../../../api/customer/updateProfile";
-import { useMutation } from "@tanstack/react-query";
+
+import { addUserInfo } from "../../../store/reducers/authSlice";
+
+import { paths } from "../../../routes/paths";
+
 import "./style.css";
 
 const initialState = {
@@ -33,16 +41,10 @@ const registrationSchema = Yup.object().shape({
 
 function CustomerRegistration() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
 
   const token = localStorage.getItem("token");
-
-  const { mutate: updateCustomerInfo, isLoading } = useMutation({
-    mutationFn: updateProfile,
-    onSuccess: () => {
-      navigate(paths.profile);
-    },
-  });
 
   const formikCustomerRegistration = useFormik({
     initialValues: initialState,
@@ -51,16 +53,35 @@ function CustomerRegistration() {
       const mobile_country_code = "+" + searchParams.get("mobile_country_code");
       const mobile_number = searchParams.get("mobile");
 
+      const userInfo = {
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email: values.email,
+        mobile_country_code: mobile_country_code,
+        mobile_number: mobile_number,
+      };
+
       updateCustomerInfo({
         token,
-        data: {
-          first_name: values.first_name,
-          last_name: values.last_name,
-          email: values.email,
-          mobile_country_code: mobile_country_code,
-          mobile_number: mobile_number,
-        },
+        data: userInfo,
       });
+    },
+  });
+
+  const { mutate: updateCustomerInfo, isLoading } = useMutation({
+    mutationFn: updateProfile,
+    onSuccess: (data) => {
+      const info = {
+        customer_id: data?.data?.customer_id,
+        first_name: data?.data?.first_name,
+        last_name: data?.data?.last_name,
+        email: data?.data?.email,
+        mobile_country_code: data?.data?.mobile_country_code,
+        mobile_no: data?.data?.mobile_no,
+      };
+      dispatch(addUserInfo(info));
+
+      navigate(paths.profile);
     },
   });
 

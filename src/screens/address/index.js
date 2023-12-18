@@ -1,13 +1,13 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  // useDispatch,
-  useSelector,
+  useDispatch,
+  // useSelector,
 } from "react-redux";
 
-// import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
-import Select from "react-select";
+// import Select from "react-select";
 
 import { RequestType, geocode, setKey } from "react-geocode";
 
@@ -19,8 +19,8 @@ import { OfficeAdress } from "../../components/address/forms/officeForm";
 import AddressTypeSelector from "../../components/address/addressButton";
 import MyAddresses from "../../components/header/myAdresses";
 
-import { ReactComponent as Dropdown } from "../../assets/icons/dropdown.svg";
-import { ReactComponent as ErrorDropdown } from "../../assets/icons/error-icon.svg";
+// import { ReactComponent as Dropdown } from "../../assets/icons/dropdown.svg";
+// import { ReactComponent as ErrorDropdown } from "../../assets/icons/error-icon.svg";
 
 import {
   checkIfIncludesPlus,
@@ -28,19 +28,19 @@ import {
   isArabicCountryMCC,
 } from "../../utils/numberCheck";
 
-import { selectStyles } from "./selectStyles";
+// import { selectStyles } from "./selectStyles";
 
 import { paths } from "../../routes/paths";
 
 import addAddressApiCall from "../../api/address/addAddress";
 import updateAddressApiCall from "../../api/address/updateAddress";
-// import getAllAddress from "../../api/address/getAddress";
+import getAllAddress from "../../api/address/getAddress";
 // import getAllArea from "../../api/address/areas";
 
-// import {
-//   getAreas,
-//   getAddress
-// } from "../../store/reducers/addressSlice";
+import {
+  // getAreas,
+  getAddress,
+} from "../../store/reducers/addressSlice";
 
 import "./style.css";
 
@@ -50,7 +50,7 @@ const MAX_TOAST = 1;
 const AddressForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const [addressName, setAddressName] = useState("");
 
@@ -90,21 +90,29 @@ const AddressForm = () => {
 
   const token = localStorage.getItem("token");
   const selectedAddress = JSON.parse(localStorage.getItem("selected"));
-
+  const isAfterNewLocation = JSON.parse(
+    sessionStorage?.getItem("storeAddress")
+  );
   // const allAreas = useSelector((state) => state.address.allAreas);
 
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
   const [address, setAddress] = useState({
     delivery_charge_area_id:
-      selectedAddress === null
+      isAfterNewLocation !== null && isAfterNewLocation?.addNewAddress === true
+        ? isAfterNewLocation?.area_id
+        : selectedAddress === null
         ? location?.state?.selectedAddress?.area_id
         : selectedAddress?.area_id,
     delivery_zone_id:
-      selectedAddress === null
+      isAfterNewLocation !== null && isAfterNewLocation?.addNewAddress === true
+        ? isAfterNewLocation?.zone_id
+        : selectedAddress === null
         ? location?.state?.selectedAddress?.zone_id
         : selectedAddress?.zone_id,
     delivery_charge_area_name_en:
-      selectedAddress === null
+      isAfterNewLocation !== null && isAfterNewLocation?.addNewAddress === true
+        ? isAfterNewLocation?.name_en
+        : selectedAddress === null
         ? location?.state?.selectedAddress?.name_en
         : selectedAddress?.name_en,
     block: "",
@@ -227,12 +235,17 @@ const AddressForm = () => {
     }
     addAddressApiCall(updateAddress, token).then((res) => {
       if (res.success === "ok") {
-        // fetchFunction();
+        fetchFunction();
 
-        const area_id =
-          selectedAddress === null
-            ? location?.state?.selectedAddress?.area_id
-            : selectedAddress?.area_id;
+        const checkInSessionTrue =
+          isAfterNewLocation !== null &&
+          isAfterNewLocation?.addNewAddress === true;
+
+        const area_id = checkInSessionTrue
+          ? isAfterNewLocation?.area_id
+          : selectedAddress === null
+          ? location?.state?.selectedAddress?.area_id
+          : selectedAddress?.area_id;
 
         localStorage.setItem("area_id", area_id);
 
@@ -247,14 +260,40 @@ const AddressForm = () => {
             lng: location?.state?.latlng?.lng,
             address: location?.state?.name,
             addressId: res?.data?.id,
-            delivery_time: location?.state?.selectedAddress?.delivery_time,
-            delivery_charges:
-              location?.state?.selectedAddress?.delivery_charges?.split(" ")[1],
-            minOrderAmount: location?.state?.selectedAddress?.minOrderAmount,
-            name_en: location?.state?.selectedAddress?.name_en,
+            delivery_time: checkInSessionTrue
+              ? isAfterNewLocation?.delivery_time
+              : location?.state?.selectedAddress?.delivery_time,
+            delivery_charges: checkInSessionTrue
+              ? isAfterNewLocation?.delivery_charges?.split(" ")[1]
+              : location?.state?.selectedAddress?.delivery_charges?.split(
+                  " "
+                )[1],
+            minOrderAmount: checkInSessionTrue
+              ? isAfterNewLocation?.minOrderAmount
+              : location?.state?.selectedAddress?.minOrderAmount,
+            name_en: checkInSessionTrue
+              ? isAfterNewLocation?.name_en
+              : location?.state?.selectedAddress?.name_en,
           };
 
           localStorage.setItem("selected", JSON.stringify(addToStorage));
+
+          if (isAfterNewLocation !== null) {
+            const storeAddress = {
+              ...isAfterNewLocation,
+              addNewAddress: false,
+            };
+
+            sessionStorage.setItem(
+              "storeAddress",
+              JSON.stringify(storeAddress)
+            );
+          }
+
+          const checkInSessionFalse =
+            sessionStorage?.getItem("storeAddress") !== null &&
+            JSON.parse(sessionStorage?.getItem("storeAddress"))
+              ?.addNewAddress === false;
 
           if (
             location?.state?.path?.includes("menu-item-details") ||
@@ -274,6 +313,8 @@ const AddressForm = () => {
               navigate(paths.cart, {
                 state: { fromDetail: location?.state?.fromDetail },
               });
+            } else if (checkInSessionFalse) {
+              navigate(paths.cart, {});
             } else {
               navigate(
                 `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
@@ -501,14 +542,16 @@ const AddressForm = () => {
     }
   };
 
-  // const fetchFunction = async () => {
-  //   // setIsloading(true);
-  //   getAllAddress(token).then((res) => {
-  //     if (res.success === "ok") {
-  //       dispatch(getAddress(res.data));
-  //     }
-  //   });
-  // };
+  const { refetch: fetchFunction } = useQuery({
+    queryFn: () => getAllAddress(token),
+    onSuccess: (data) => {
+      dispatch(getAddress(data.data));
+    },
+    enabled:
+      !!token &&
+      JSON.parse(sessionStorage?.getItem("storeAddress"))?.addNewAddress ===
+        true,
+  });
 
   useEffect(() => {
     if (clickEv) {
@@ -583,6 +626,7 @@ const AddressForm = () => {
         fromHome={location?.state?.fromHome}
         fromMenu={location?.state?.fromMenu}
         fromDetail={location?.state?.fromDetail}
+        detailPath={location?.state?.detailPath}
         backToCart={true}
         notSelected={location?.state?.notSelected}
         addFromDropdown={location?.state?.addFromDropdown}
@@ -614,6 +658,7 @@ const AddressForm = () => {
                     fromHome: location?.state?.fromHome,
                     fromMenu: location?.state?.fromMenu,
                     fromDetail: location?.state?.fromDetail,
+                    detailPath: location?.state?.detailPath,
                   },
                 })
               }
@@ -633,9 +678,11 @@ const AddressForm = () => {
                 name="Area"
                 placeholder="Area"
                 value={
-                  selectedAddress === null
-                    ? location?.state?.selectedAddress?.name_en
-                    : selectedAddress?.name_en
+                  sessionStorage?.getItem("storeAddress") !== null &&
+                  JSON.parse(sessionStorage?.getItem("storeAddress"))
+                    ?.addNewAddress === true
+                    ? isAfterNewLocation?.name_en
+                    : location?.state?.selectedAddress?.name_en
                 }
                 disabled={true}
               />

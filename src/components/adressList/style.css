@@ -90,6 +90,11 @@
   padding-top: 0px;
   margin-right: 10px;
   z-index: 2000000;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.addresses-delete-button:hover {
+  background: #fff6f6;
 }
 
 .addresses-edit-button {
@@ -102,6 +107,11 @@
   cursor: pointer;
   padding-top: 0px;
   z-index: 2000000;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.addresses-edit-button:hover {
+  background: rgb(106, 73, 54);
 }
 
 .addresses-container hr {

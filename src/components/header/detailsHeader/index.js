@@ -13,10 +13,13 @@ export const DetailsHeader = (props) => {
   const { image, setOpenAddressPopup, fromDetail, editItem } = props;
 
   const navigate = useNavigate();
-  const currentURL = useLocation();
+  const location = useLocation();
 
   const token = localStorage.getItem("token");
   const currentLocation = JSON.parse(localStorage.getItem("location"));
+  const isAfterNewLocation = JSON.parse(
+    sessionStorage?.getItem("storeAddress")
+  );
 
   const cart = useSelector((state) => state.cart.cart);
   const addressData = useSelector((state) => state.address.addressData);
@@ -32,7 +35,15 @@ export const DetailsHeader = (props) => {
     // if (currentURL.search.includes("item_code")) {
     //   return navigate(`/menu/restaurant/${cart[0]?.restaurant_id}/delivery?`);
     // }
-    navigate(-1);
+
+    if (
+      location?.state?.detailPath !== undefined &&
+      location?.state?.detailPath?.includes("menu-item-details")
+    ) {
+      navigate(paths.home);
+    } else {
+      navigate(-1);
+    }
   };
 
   return (
@@ -78,6 +89,19 @@ export const DetailsHeader = (props) => {
         onClick={() => {
           token === null
             ? navigate(paths.cart)
+            : isAfterNewLocation !== null &&
+              isAfterNewLocation?.addNewAddress === true
+            ? navigate(paths.address, {
+                state: {
+                  latlng: {
+                    lat: currentLocation?.lat,
+                    lng: currentLocation?.lng,
+                  },
+                  name: currentLocation?.address,
+                  path: "menu/restaurant",
+                  restaurant_id: cart[0]?.restaurant_id,
+                },
+              })
             : addressData?.length === 0
             ? navigate(paths.location, {
                 state: {
@@ -99,6 +123,7 @@ export const DetailsHeader = (props) => {
                   fromDetail,
                   path: "menu/restaurant",
                   restaurant_id: cart[0]?.restaurant_id,
+                  detailPath: location?.pathname,
                 },
               });
         }}
