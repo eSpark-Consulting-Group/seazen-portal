@@ -84,7 +84,7 @@
   text-align: center;
   padding: 0px 10px;
   height: 24px;
-  width: 96px;
+  min-width: 96px;
   align-self: center;
 }
 
@@ -108,7 +108,7 @@
   color: #959fa8;
 }
 
-.orderconfirm-text-container{
+.orderconfirm-text-container {
   margin-top: 15px;
 }
 
@@ -196,7 +196,7 @@
 #whatsapp-tag {
   display: flex;
   justify-content: space-around;
-  padding:0 3px;
+  padding: 0 3px;
   align-items: center;
   width: 150.32px;
   height: 27px;
@@ -206,15 +206,12 @@
   font-weight: 600;
   font-size: 15px;
   margin-left: 8px;
-
 }
 
 #whatsapp-tag a {
   color: #ffffff;
   text-decoration: none;
 }
-
-
 
 #thanksnote {
   text-align: left;

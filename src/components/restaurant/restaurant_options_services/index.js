@@ -22,18 +22,20 @@ const RestaurantOptionsServicesContainer = ({
         restaurantDetail={restaurantDetail}
         restaurantBranchHours={restaurantBranchHours}
       />
-      <TabsDynamicConditionalComponent
-        resturantId={resturantId}
-        restaurantBranchHours={restaurantBranchHours}
-        restaurantDetail={restaurantDetail}
-        setOpenModal={setOpenModal}
-        setSelectedItemToDeliver={setSelectedItemToDeliver}
-        scheduleForLater={scheduleForLater}
-        fromDetail={fromDetail}
-        setFromDetail={setFromDetail}
-        setNotDeliver={setNotDeliver}
-        setRestaurantOpen={setRestaurantOpen}
-      />
+      <div style={{ marginTop: 25 }}>
+        <TabsDynamicConditionalComponent
+          resturantId={resturantId}
+          restaurantBranchHours={restaurantBranchHours}
+          restaurantDetail={restaurantDetail}
+          setOpenModal={setOpenModal}
+          setSelectedItemToDeliver={setSelectedItemToDeliver}
+          scheduleForLater={scheduleForLater}
+          fromDetail={fromDetail}
+          setFromDetail={setFromDetail}
+          setNotDeliver={setNotDeliver}
+          setRestaurantOpen={setRestaurantOpen}
+        />
+      </div>
     </div>
   );
 };

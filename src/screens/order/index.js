@@ -39,28 +39,30 @@ const OrderScreen = () => {
       });
   }, []);
 
-  const [updateStatus, setUpdateStatus] = useState({
-    Submitted: {
+  const orderStatus = [
+    {
       tag: "Submitted",
       text: "Confirming your order",
       tagColor: "#F7B500",
     },
-    Preparing: {
+    {
       tag: "Preparing",
       text: "Preparing your order",
       tagColor: "#0091FF",
     },
-    "On the way": {
-      tag: "On the way",
+    {
+      tag: "On The Way",
       text: "Driver is On the way",
       tagColor: "#6236FF",
     },
-    Delivered: {
+    {
       tag: "Delivered",
       text: "Your order is delivered",
       tagColor: "#4E948A",
     },
-  });
+  ];
+
+  const getOrderStatusObj = orderStatus.find((val) => val.tag == currentStatus);
 
   const navigate = useNavigate();
 
@@ -80,10 +82,10 @@ const OrderScreen = () => {
   } = useMutation({
     mutationFn: getOrderStatus,
     onSuccess: (response) => {
-      if (response.data && response.data.success === "ok") {
-        setCurrentStatus(response.data.data.order_status);
+      if (response.data && response.success === "ok") {
+        setCurrentStatus(response.data.order_status);
 
-        if (response.data.data.order_status === "Submitted") {
+        if (response.data.order_status === "Submitted") {
           setProgress([
             { done: true },
             { done: false },
@@ -91,7 +93,7 @@ const OrderScreen = () => {
             { done: false },
           ]);
         }
-        if (response.data.data.order_status === "Preparing") {
+        if (response.data.order_status === "Preparing") {
           setProgress([
             { done: true },
             { done: true },
@@ -99,7 +101,7 @@ const OrderScreen = () => {
             { done: false },
           ]);
         }
-        if (response.data.data.order_status === "On the way") {
+        if (response.data.order_status === "On The Way") {
           setProgress([
             { done: true },
             { done: true },
@@ -107,7 +109,7 @@ const OrderScreen = () => {
             { done: false },
           ]);
         }
-        if (response.data.data.order_status === "Delivered") {
+        if (response.data.order_status === "Delivered") {
           setProgress([
             { done: true },
             { done: true },
@@ -128,28 +130,28 @@ const OrderScreen = () => {
       searchParams.get("order_no") !== null &&
       searchParams.get("reference_number") !== null
     ) {
-      checkOrderStatus(
-        searchParams.get("order_no"),
-        searchParams.get("reference_number")
-      );
+      checkOrderStatus({
+        order_no: searchParams.get("order_no"),
+        reference_number: searchParams.get("reference_number"),
+      });
     }
   }, []);
 
   // send api call every 10 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (
-        searchParams.get("order_no") !== null &&
-        searchParams.get("reference_number") !== null
-      ) {
-        checkOrderStatus(
-          searchParams.get("order_no"),
-          searchParams.get("reference_number")
-        );
-      }
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     if (
+  //       searchParams.get("order_no") !== null &&
+  //       searchParams.get("reference_number") !== null
+  //     ) {
+  //       checkOrderStatus({
+  //         order_no: searchParams.get("order_no"),
+  //         reference_number: searchParams.get("reference_number"),
+  //       });
+  //     }
+  //   }, 10000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   if (!isLoading) {
     <Box
@@ -217,12 +219,14 @@ const OrderScreen = () => {
           <div className="order-status">
             <div
               id="order-status-tag"
-              style={{ backgroundColor: updateStatus[currentStatus].tagColor }}
+              style={{
+                backgroundColor: getOrderStatusObj.tagColor,
+              }}
             >
-              <p>{updateStatus[currentStatus].tag}</p>
+              <p>{getOrderStatusObj.tag}</p>
             </div>
             <div className="orderconfirm-text-container">
-              <p id="orderconfirm-text">{updateStatus[currentStatus].text}</p>
+              <p id="orderconfirm-text">{getOrderStatusObj.text}</p>
             </div>
           </div>
           <AddressSection />
