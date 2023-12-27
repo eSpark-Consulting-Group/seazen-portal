@@ -318,7 +318,7 @@ export const Details = () => {
         calculateToppingVariantTotal(toppingVariant) +
         calculateCustomVariantTotal(customVariant) +
         calculateSidesVariantTotal(sideVariant) +
-        +sizeVariant?.unit_price +
+        (sizeVariant?.unit_price || 0) +
         Number(menuItemPriceWithoutCurrency());
 
       // Check if itemTotal is NaN and set it to 0.00 if NaN
@@ -535,13 +535,22 @@ export const Details = () => {
         updatedCustomVariant[index] = {
           ...updatedCustomVariant[index],
           quantity: (updatedCustomVariant[index].quantity || 0) + 1,
+          total:
+            ((updatedCustomVariant[index].quantity || 0) + 1) *
+            updatedCustomVariant[index].unit_price,
         };
         return updatedCustomVariant;
       } else {
         // If the Custom doesn't exist, add it with quantity 1
         return [
           ...prevCustomVariant,
-          { ...option, option_id: option.id, quantity: 1, variantId },
+          {
+            ...option,
+            option_id: option.id,
+            quantity: 1,
+            variantId,
+            total: option.unit_price,
+          },
         ];
       }
     });
@@ -592,6 +601,7 @@ export const Details = () => {
           updatedCustomVariant[index] = {
             ...updatedCustomVariant[index],
             quantity: updatedQuantity,
+            total: updatedQuantity * updatedCustomVariant[index].unit_price,
           };
         } else {
           // If the updated quantity is 0 or less, remove the custom
@@ -1103,7 +1113,7 @@ export const Details = () => {
 
   const buttonDisableHandle = () => {
     if (menuItemDetails?.data.has_variants) {
-      if (customCount < 10) {
+      if (customCount < 1) {
         return true;
       }
 

@@ -95,8 +95,7 @@ const cartSlice = createSlice({
       );
 
       if (itemIndex !== -1) {
-        state.cart[itemIndex].totalPrice =
-          Number(item.price.split(" ")[1]).toFixed(3) * item.quantity;
+        state.cart[itemIndex].totalPrice = item.totalPrice;
         state.cart[itemIndex].quantity = item.quantity;
         state.cart[itemIndex].variants = item.variants;
       }
