@@ -20,21 +20,21 @@ export const Footer = (props) => {
         </div>
         <p className="terms-style">
           <span
-          // onClick={() => {
-          //   navigate(paths.terms, {
-          //     replace: (path === "terms" || path === "privacy") && true,
-          //   });
-          // }}
+            onClick={() => {
+              navigate(paths.terms, {
+                replace: (path === "terms" || path === "privacy") && true,
+              });
+            }}
           >
             Terms & Conditions
           </span>{" "}
           |{" "}
           <span
-          // onClick={() => {
-          //   navigate(paths.privacy_policy, {
-          //     replace: (path === "terms" || path === "privacy") && true,
-          //   });
-          // }}
+            onClick={() => {
+              navigate(paths.privacy_policy, {
+                replace: (path === "terms" || path === "privacy") && true,
+              });
+            }}
           >
             Privacy Policy
           </span>
