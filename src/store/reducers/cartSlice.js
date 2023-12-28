@@ -7,6 +7,7 @@ const cartSlice = createSlice({
     total: 0,
     totalItems: 0,
     totalQuantity: 0,
+    comment: "",
   },
 
   reducers: {
@@ -34,6 +35,9 @@ const cartSlice = createSlice({
       state.total = 0;
       state.totalItems = 0;
       state.totalQuantity = 0;
+    },
+    addComment: (state, action) => {
+      state.comment = action.payload;
     },
 
     updateCartItemQuantity: (state, action) => {
@@ -96,6 +100,7 @@ const cartSlice = createSlice({
 
       if (itemIndex !== -1) {
         state.cart[itemIndex].totalPrice = item.totalPrice;
+        state.cart[itemIndex].specialInstructions = item.specialInstructions;
         state.cart[itemIndex].quantity = item.quantity;
         state.cart[itemIndex].variants = item.variants;
       }
@@ -173,6 +178,7 @@ export const {
   addExtraSides,
   updateCartInfo,
   resetCart,
+  addComment,
 } = cartSlice.actions;
 
 export const selectCart = (state) => state.cart;
