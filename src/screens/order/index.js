@@ -220,13 +220,13 @@ const OrderScreen = () => {
             <div
               id="order-status-tag"
               style={{
-                backgroundColor: getOrderStatusObj.tagColor,
+                backgroundColor: getOrderStatusObj?.tagColor,
               }}
             >
-              <p>{getOrderStatusObj.tag}</p>
+              <p>{getOrderStatusObj?.tag}</p>
             </div>
             <div className="orderconfirm-text-container">
-              <p id="orderconfirm-text">{getOrderStatusObj.text}</p>
+              <p id="orderconfirm-text">{getOrderStatusObj?.text}</p>
             </div>
           </div>
           <AddressSection />
