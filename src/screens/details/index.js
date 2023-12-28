@@ -365,6 +365,7 @@ export const Details = () => {
     if (cartItem) {
       setCartItem(cartItem);
       setQuantity(cartItem?.quantity || 1);
+      setSpecialInstructions(cartItem?.specialInstructions || "");
       setSizeVariant(cartItem?.variants?.sizeVariant || null);
       setToppingVariant(cartItem?.variants?.toppingVariant || []);
       setCustomVariant(cartItem?.variants?.customVariant || []);
@@ -645,6 +646,7 @@ export const Details = () => {
       item_code: cartItem.item_code,
       item_id: cartItem.id,
       branch_id: cartItem.branch_id,
+      special_instructions: cartItem.specialInstructions,
       quantity: cartItem.quantity,
       topping_variant_id: toppingVariant || null,
       side_variant_id: sideVariant || null,
@@ -1280,7 +1282,7 @@ export const Details = () => {
                         {menuItemDetails?.data?.name_en}
                       </Typography>
 
-                      <Typography
+                      {/* <Typography
                         variant="caption"
                         component="div"
                         sx={{
@@ -1289,7 +1291,7 @@ export const Details = () => {
                         }}
                       >
                         483 Kcal
-                      </Typography>
+                      </Typography> */}
                     </Stack>
                     <Typography
                       variant="body2"
@@ -1523,6 +1525,7 @@ export const Details = () => {
 
               <TextField
                 multiline
+                value={specialInstructions}
                 rows={4}
                 placeholder="Special instructions (Optional)"
                 InputProps={{

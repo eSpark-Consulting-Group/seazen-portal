@@ -78,8 +78,6 @@ export const cartListApiHit = (
 };
 
 export const cartListWithQuery = (branchHours, dispatch, addToCart, res) => {
-  sessionStorage.setItem("cartEmpty", true);
-
   res.data.map((val) => {
     if (branchHours?.length) {
       const findRestaurant = branchHours?.find(
@@ -128,7 +126,7 @@ export const cartListWithQuery = (branchHours, dispatch, addToCart, res) => {
         quantity: val.quantity,
         variants,
         item_code: val.item_code,
-        specialInstructions: "",
+        specialInstructions: val.special_instructions,
         itemImage: val?.menu_item_image,
         restaurant_id: findRestaurant?.restaurant_id,
         totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
@@ -140,6 +138,8 @@ export const cartListWithQuery = (branchHours, dispatch, addToCart, res) => {
       obj.variants === null && delete obj.variants;
 
       dispatch(addToCart(obj));
+
+      sessionStorage.setItem("cartEmpty", true);
     }
   });
 };

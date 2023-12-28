@@ -139,6 +139,7 @@ const ReOrderCard = (props) => {
             custom_variant: item.custom_variant,
             custom_variant_id: item.custom_variant_id,
             branch_id: item?.branch_id,
+            special_instructions: item?.special_instructions,
           };
 
           promises.push(addToCartApiCall(cartItem));
@@ -197,7 +198,7 @@ const ReOrderCard = (props) => {
                     quantity: val.quantity,
                     variants,
                     item_code: val.item_code,
-                    specialInstructions: "",
+                    specialInstructions: val?.special_instructions,
                     itemImage: val?.menu_item_image,
                     restaurant_id: findRestaurant.restaurant_id,
                     totalPrice: Number(val.quantity * val.unit_price).toFixed(

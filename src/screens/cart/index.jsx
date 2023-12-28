@@ -56,7 +56,7 @@ import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHo
 // import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import deliveryPriceApi from "../../api/common/getDeliveryCharges";
 
-import { addToCart } from "../../store/reducers/cartSlice";
+import { addComment, addToCart } from "../../store/reducers/cartSlice";
 // import { setThemeColor } from "../../store/reducers/themeSlice";
 import {
   getBranchHours,
@@ -87,6 +87,7 @@ function CartPage() {
   // );
   const cart = useSelector((state) => state.cart.cart);
   const totalPrice = useSelector((state) => state.cart.total);
+  const comment = useSelector((state) => state.cart.comment);
   const country = useSelector((state) => state.auth.country);
 
   const pickDate = localStorage.getItem("pickDate");
@@ -262,6 +263,7 @@ function CartPage() {
 
   useEffect(() => {
     setCartItems(cart);
+    setSpecialIns(comment);
   }, [cart]);
 
   const getSingleDigitHour = (fullTime) => {
@@ -585,10 +587,20 @@ function CartPage() {
       });
   };
 
+  const getTotalAmount = () => {
+    let totalValue = 0;
+
+    totalValue =
+      totalPrice + tipValue - (!isEmpty(promoDiscount) && getDiscountAmount());
+    totalValue +=
+      selectedAdd !== null ? Number(selectedAdd?.delivery_charges) : 0;
+
+    return totalValue;
+  };
+
   const checkoutData = {
     payment_method_id: "1",
-    order_total_price:
-      totalPrice + tipValue - (!isEmpty(promoDiscount) && getDiscountAmount()),
+    order_total_price: getTotalAmount(),
     currency_id: "3",
     country_id: "3",
     restaurant_id: cart[0]?.restaurant_id,
@@ -659,6 +671,11 @@ function CartPage() {
     }
     setTipValue(tip);
     setTipID(tipID);
+  };
+
+  const addCommentHandler = (comment) => {
+    setSpecialIns(comment);
+    dispatch(addComment(comment));
   };
 
   return (
@@ -1108,7 +1125,7 @@ function CartPage() {
             placeholder="Special Instructions (Optional)"
             InputProps={{ disableUnderline: true }}
             multiline
-            onChange={(text) => setSpecialIns(text.target.value)}
+            onChange={(text) => addCommentHandler(text.target.value)}
             value={specialIns}
             rows={2}
             sx={{
