@@ -523,7 +523,9 @@ const DeliveryDetails = (props) => {
           address?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
         );
         setDeliveryTime(address?.delivery_charge_area_info?.delivery_time);
-        setMinOrderAmount(address?.delivery_zone_info?.minimum_order_amount);
+        setMinOrderAmount(
+          address?.delivery_charge_area_info?.minimum_order_amount
+        );
         setNameEn(address?.delivery_charge_area_info?.name_en);
 
         localStorage.setItem("area_id", address?.delivery_charge_area_info.id);

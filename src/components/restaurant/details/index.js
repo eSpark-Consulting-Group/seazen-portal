@@ -73,7 +73,10 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
                 font: "normal normal 10px/20px Titillium Web",
               }}
             >
-              Min. order: {selected !== null ? selected?.minOrderAmount : "7"}{" "}
+              Min. order:{" "}
+              {selected !== null && selected?.minOrderAmount
+                ? selected?.minOrderAmount?.split(" ")[1]?.split(".")[0]
+                : "7"}{" "}
               KWD
             </span>
           </StyledItemPrice>
