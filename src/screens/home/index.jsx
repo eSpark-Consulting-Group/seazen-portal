@@ -106,7 +106,7 @@ const Home = () => {
             addressData[i]?.delivery_charge_area_info?.delivery_time
           );
           setMinOrderAmount(
-            addressData[i]?.delivery_zone_info?.minimum_order_amount
+            addressData[i]?.delivery_charge_area_info?.minimum_order_amount
           );
           getFullAddress(
             +addressData[i].latitude,

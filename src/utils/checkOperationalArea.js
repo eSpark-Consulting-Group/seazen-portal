@@ -1,3 +1,5 @@
+import { removeDiacritics } from "../screens/location/latinWords";
+
 export const savingAreaIdForMatchingArea = (addresses, allAreas) => {
   const resultArray = addresses?.address_components?.map((address) => {
     let foundMatchingArea = null;
@@ -6,17 +8,21 @@ export const savingAreaIdForMatchingArea = (addresses, allAreas) => {
       const matchingArea = zone?.areas?.find((area) => {
         return (
           area.name_en.trim().toLowerCase() ===
-            address.long_name.trim().toLowerCase() ||
+            removeDiacritics(address.long_name).trim().toLowerCase() ||
           (area?.name_en?.includes("-")
             ? area?.name_en
                 .split("-")
                 ?.join(" ")
-                ?.includes(address.long_name.split("-")?.join(" "))
+                ?.includes(
+                  removeDiacritics(address.long_name).split("-")?.join(" ")
+                )
             : area?.name_en?.includes(" - ") &&
               area?.name_en
                 .split(" - ")
                 ?.join(" ")
-                ?.includes(address.long_name.split("-")?.join(" ")))
+                ?.includes(
+                  removeDiacritics(address.long_name).split("-")?.join(" ")
+                ))
         );
       });
 

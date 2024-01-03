@@ -41,6 +41,7 @@ import getAllArea from "../../api/address/areas";
 import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 
 import { savingAreaIdForMatchingArea } from "../../utils/checkOperationalArea";
+import { removeDiacritics } from "./latinWords";
 
 import { getAreas } from "../../store/reducers/addressSlice";
 
@@ -306,17 +307,21 @@ function LocationPage() {
         const matchingArea = zone?.areas?.find((area) => {
           return (
             area.name_en.trim().toLowerCase() ===
-              address.long_name.trim().toLowerCase() ||
+              removeDiacritics(address.long_name).trim().toLowerCase() ||
             (area?.name_en?.includes("-")
               ? area?.name_en
                   .split("-")
                   ?.join(" ")
-                  ?.includes(address.long_name.split("-")?.join(" "))
+                  ?.includes(
+                    removeDiacritics(address.long_name).split("-")?.join(" ")
+                  )
               : area?.name_en?.includes(" - ") &&
                 area?.name_en
                   .split(" - ")
                   ?.join(" ")
-                  ?.includes(address.long_name.split("-")?.join(" ")))
+                  ?.includes(
+                    removeDiacritics(address.long_name).split("-")?.join(" ")
+                  ))
           );
         });
 
