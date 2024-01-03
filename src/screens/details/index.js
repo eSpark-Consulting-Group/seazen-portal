@@ -353,7 +353,7 @@ export const Details = () => {
   const checkIfItemIsInCart = () => {
     return cart.find((item) => {
       if (item.has_variants) {
-        return item.item_code === location.state.item_code;
+        return item?.item_code === location.state?.item_code;
       } else {
         return item.id === +id;
       }
@@ -1115,9 +1115,9 @@ export const Details = () => {
 
   const buttonDisableHandle = () => {
     if (menuItemDetails?.data.has_variants) {
-      if (customCount < 1) {
-        return true;
-      }
+      // if (customCount < 1) {
+      //   return true;
+      // }
 
       if (sizeVariant) {
         return true;
