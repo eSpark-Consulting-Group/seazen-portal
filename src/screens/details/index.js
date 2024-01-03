@@ -1115,9 +1115,9 @@ export const Details = () => {
 
   const buttonDisableHandle = () => {
     if (menuItemDetails?.data.has_variants) {
-      if (customCount < 1) {
-        return true;
-      }
+      // if (customCount < 1) {
+      //   return true;
+      // }
 
       if (sizeVariant) {
         return true;
