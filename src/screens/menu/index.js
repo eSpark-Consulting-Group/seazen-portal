@@ -36,7 +36,7 @@ import getRestaurantBranchHours, {
 } from "../../api/restaurant/getRestaurantBranchHours.js";
 import getBranchesAndHours from "../../api/restaurant/branches/getBranchesAndHours.js";
 import getBranchByArea from "../../api/restaurant/branches/getBranchByArea.js";
-import cartList from "../../api/cart/cartList.js";
+// import cartList from "../../api/cart/cartList.js";
 
 import {
   getResturantsDetails,
@@ -44,14 +44,14 @@ import {
 } from "../../store/reducers/resturantsSlice.js";
 import { setThemeColor } from "../../store/reducers/themeSlice.js";
 import { closeReorderModal } from "../../store/reducers/orderSlice.js";
-import { addToCart } from "../../store/reducers/cartSlice.js";
+// import { addToCart } from "../../store/reducers/cartSlice.js";
 
 import {
   getDistanceFromLatLonInKm,
   getFullAddress,
   selectChooseAddress,
 } from "../../utils/getAddress.js";
-import { cartListWithQuery } from "../../utils/carlistApiCall.js";
+// import { cartListWithQuery } from "../../utils/carlistApiCall.js";
 
 import { paths } from "../../routes/paths.jsx";
 
@@ -67,7 +67,7 @@ const Menu = () => {
   const country = useSelector((state) => state.auth.country);
   const reorder = useSelector((state) => state.order.reorder);
   const cart = useSelector((state) => state.cart.cart);
-  const branchHours = useSelector((state) => state.resturants.branchHours);
+  // const branchHours = useSelector((state) => state.resturants.branchHours);
 
   const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [pickDate, setPickDate] = useState(
@@ -76,7 +76,7 @@ const Menu = () => {
   const [pickTime, setPickTime] = useState(dayjs(asapTime).format("hh:mm a"));
   const [isAsap, setIsAsap] = useState(true);
 
-  const token = localStorage?.getItem("token");
+  // const token = localStorage?.getItem("token");
 
   const [openModal, setOpenModal] = useState(false);
   const [notDeliver, setNotDeliver] = useState(false);
@@ -168,24 +168,24 @@ const Menu = () => {
     restaurantDetails();
   }, [country]);
 
-  const { refetch } = useQuery({
-    queryKey: [token],
-    queryFn: () => cartList(token),
-    onSuccess: (res) => {
-      cartListWithQuery(branchHours, dispatch, addToCart, res);
-    },
-    enabled: !!token && sessionStorage.getItem("cartEmpty") === null,
-  });
+  // const { refetch } = useQuery({
+  //   queryKey: [token],
+  //   queryFn: () => cartList(token),
+  //   onSuccess: (res) => {
+  //     cartListWithQuery(branchHours, dispatch, addToCart, res);
+  //   },
+  //   enabled: !!token && sessionStorage.getItem("cartEmpty") === null,
+  // });
 
-  useEffect(() => {
-    if (sessionStorage.getItem("cartEmpty") === null) {
-      if (token !== null) {
-        if (cart?.length === 0 && branchHours?.length) {
-          refetch();
-        }
-      }
-    }
-  }, [cart, token, branchHours]);
+  // useEffect(() => {
+  //   if (sessionStorage.getItem("cartEmpty") === null) {
+  //     if (token !== null) {
+  //       if (cart?.length === 0 && branchHours?.length) {
+  //         refetch();
+  //       }
+  //     }
+  //   }
+  // }, [cart, token, branchHours]);
 
   const fetchBranches = () => {
     getBranchesAndHours(restaurant_id)

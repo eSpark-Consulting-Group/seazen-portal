@@ -321,7 +321,8 @@ function LocationPage() {
                   ?.join(" ")
                   ?.includes(
                     removeDiacritics(address.long_name).split("-")?.join(" ")
-                  ))
+                  )) ||
+            removeDiacritics(address.long_name).includes(area.name_en)
           );
         });
 
