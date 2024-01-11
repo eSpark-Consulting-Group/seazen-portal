@@ -59,21 +59,25 @@ const Home = () => {
   );
   const cart = useSelector((state) => state.cart.cart);
 
-  useEffect(() => {
-    if (sessionStorage.getItem("cartEmpty") === null) {
-      if (token !== null) {
-        if (cart?.length === 0 && branchHours?.length) {
-          refetch();
-        }
-      }
-    }
-  }, [cart, token, branchHours]);
+  // useEffect(() => {
+  //   if (sessionStorage.getItem("cartEmpty") === null) {
+  //     if (token !== null) {
+  //       if (cart?.length === 0 && branchHours?.length) {
+  //         refetch();
+  //       }
+  //     }
+  //   }
+  // }, [cart, token, branchHours]);
 
   const { refetch } = useQuery({
     queryKey: [token],
     queryFn: () => cartList(token),
     onSuccess: (res) => {
-      cartListWithQuery(branchHours, dispatch, addToCart, res);
+      if (res?.status === "Error") {
+        sessionStorage.setItem("cartEmpty", true);
+      } else {
+        cartListWithQuery(branchHours, dispatch, addToCart, res);
+      }
     },
     enabled: !!token && sessionStorage.getItem("cartEmpty") === null,
   });

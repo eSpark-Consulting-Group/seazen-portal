@@ -773,7 +773,9 @@ export const Details = () => {
       addToCartApiHandler(ItemDataObject);
 
       // navigate(paths.cart);
-      navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`);
+      navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`, {
+        state: { addFromDetail: true },
+      });
     } else {
       const item_code = uuidv4();
 
@@ -785,7 +787,9 @@ export const Details = () => {
         // dispatch(addToCart(ItemDataObject));
         addToCartApiHandler(ItemDataObject);
       }
-      navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`);
+      navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`, {
+        state: { addFromDetail: true },
+      });
     }
     // dispatch(addSizeVariant({ id: id, size: sizeVariant }));
     // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));
