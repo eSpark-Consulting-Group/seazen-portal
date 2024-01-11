@@ -84,13 +84,11 @@ export const DialogComponent = (props) => {
           {fromDetail ? (
             <div className="text-detail">
               {location?.state?.restaurantDetail !== undefined
-                ? location?.state?.restaurantDetail?.page_title_en
-                : `${
-                    localStorage.getItem("restaurantName") !== null
-                      ? localStorage.getItem("restaurantName")
-                      : restaurantName
-                  } Restaurant`}{" "}
-              does not
+                ? location?.state?.restaurantDetail?.name_en
+                : localStorage.getItem("restaurantName") !== null
+                ? localStorage.getItem("restaurantName")
+                : restaurantName}{" "}
+              Restaurant does not
               <br /> deliver to your {newText ? "new " : "current"} location.
             </div>
           ) : (

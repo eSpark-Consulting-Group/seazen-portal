@@ -258,7 +258,7 @@ const AddressForm = () => {
           const addToStorage = {
             lat: location?.state?.latlng?.lat,
             lng: location?.state?.latlng?.lng,
-            address: location?.state?.name,
+            address: location?.state?.selectedAddress?.address,
             addressId: res?.data?.id,
             delivery_time: checkInSessionTrue
               ? isAfterNewLocation?.delivery_time

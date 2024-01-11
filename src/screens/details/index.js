@@ -853,6 +853,7 @@ export const Details = () => {
       guest: true,
     };
 
+    setRestaurantName(findName?.name_en);
     setSharedItemForCart(sharedState);
 
     setNotDeliver(true);
@@ -1747,6 +1748,7 @@ export const Details = () => {
             fromDetail={true}
             locationDeliver={location?.state?.locationDeliver}
             sharedItemForCart={sharedItemForCart}
+            restaurantName={restaurantName}
           />
         </div>
       ) : (
