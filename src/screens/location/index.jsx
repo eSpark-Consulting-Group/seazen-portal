@@ -41,7 +41,7 @@ import getAllArea from "../../api/address/areas";
 import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 
 import { savingAreaIdForMatchingArea } from "../../utils/checkOperationalArea";
-import { removeDiacritics } from "./latinWords";
+import { haveCommonWord, removeDiacritics } from "./stringCheck";
 
 import { getAreas } from "../../store/reducers/addressSlice";
 
@@ -306,8 +306,10 @@ function LocationPage() {
       allAreas.forEach((zone) => {
         const matchingArea = zone?.areas?.find((area) => {
           return (
-            area.name_en.trim().toLowerCase() ===
-              removeDiacritics(address.long_name).trim().toLowerCase() ||
+            haveCommonWord(
+              area.name_en.trim().toLowerCase(),
+              removeDiacritics(address.long_name).trim().toLowerCase()
+            ) ||
             (area?.name_en?.includes("-")
               ? area?.name_en
                   .split("-")
@@ -706,7 +708,11 @@ function LocationPage() {
               });
             } else if (location?.state?.noAddress !== undefined) {
               navigate(paths.address, {
-                state: { ...location?.state, selectedAddress: selectedAddress },
+                state: {
+                  ...location?.state,
+                  latlng: center,
+                  selectedAddress: selectedAddress,
+                },
               });
             } else {
               navigate(paths.address, {

@@ -1,4 +1,7 @@
-import { removeDiacritics } from "../screens/location/latinWords";
+import {
+  haveCommonWord,
+  removeDiacritics,
+} from "../screens/location/stringCheck";
 
 export const savingAreaIdForMatchingArea = (addresses, allAreas) => {
   const resultArray = addresses?.address_components?.map((address) => {
@@ -7,8 +10,10 @@ export const savingAreaIdForMatchingArea = (addresses, allAreas) => {
     allAreas.forEach((zone) => {
       const matchingArea = zone?.areas?.find((area) => {
         return (
-          area.name_en.trim().toLowerCase() ===
-            removeDiacritics(address.long_name).trim().toLowerCase() ||
+          haveCommonWord(
+            area.name_en.trim().toLowerCase(),
+            removeDiacritics(address.long_name).trim().toLowerCase()
+          ) ||
           (area?.name_en?.includes("-")
             ? area?.name_en
                 .split("-")
@@ -22,7 +27,8 @@ export const savingAreaIdForMatchingArea = (addresses, allAreas) => {
                 ?.join(" ")
                 ?.includes(
                   removeDiacritics(address.long_name).split("-")?.join(" ")
-                ))
+                )) ||
+          removeDiacritics(address.long_name).includes(area.name_en)
         );
       });
 

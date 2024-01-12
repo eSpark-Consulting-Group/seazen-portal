@@ -799,16 +799,16 @@ export const Details = () => {
   const openNotDelivered = () => {
     const { data } = menuItemDetails;
 
-    if (menuItemDetails?.data?.has_variants) {
-      if (customVariant.length !== 0 || sizeVariant !== undefined) {
-        createAndAddState(data);
-      } else {
-        setErrorShow(true);
-        return;
-      }
-    } else {
-      createAndAddState(data);
+    const hasSizeVariant = data?.variants.find(
+      (val) => val.variant_type == "size"
+    );
+
+    if (hasSizeVariant && !sizeVariant) {
+      setErrorShow(true);
+      return;
     }
+
+    createAndAddState(data);
   };
 
   const createAndAddState = (data) => {
@@ -862,16 +862,16 @@ export const Details = () => {
   const moveToLocation = () => {
     const { data } = menuItemDetails;
 
-    if (menuItemDetails?.data?.has_variants) {
-      if (customVariant.length !== 0 || sizeVariant !== undefined) {
-        createAndAddWithNavigation(data);
-      } else {
-        setErrorShow(true);
-        return;
-      }
-    } else {
-      createAndAddWithNavigation(data);
+    const hasSizeVariant = data?.variants.find(
+      (val) => val.variant_type == "size"
+    );
+
+    if (hasSizeVariant && !sizeVariant) {
+      setErrorShow(true);
+      return;
     }
+
+    createAndAddWithNavigation(data);
   };
 
   const createAndAddWithNavigation = (data) => {
@@ -1130,6 +1130,7 @@ export const Details = () => {
     }
     return false;
   };
+
   return (
     <>
       <Dialog

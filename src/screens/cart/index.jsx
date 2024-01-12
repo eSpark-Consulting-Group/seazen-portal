@@ -720,9 +720,12 @@ function CartPage() {
               (location?.state?.noAddress && cart?.length !== 0) ||
               (location?.state?.fromMenu !== undefined && cart?.length !== 0)
             ) {
-              navigate(
-                `${paths.menu}/restaurant/${cart[0]?.restaurant_id}/delivery`
-              );
+              const navigateId =
+                cart[0]?.restaurant_id === +restaurantId
+                  ? cart[0]?.restaurant_id
+                  : +restaurantId;
+
+              navigate(`${paths.menu}/restaurant/${navigateId}/delivery`);
             } else if (
               location?.state?.fromHome !== undefined ||
               location?.state?.backToCart !== undefined
