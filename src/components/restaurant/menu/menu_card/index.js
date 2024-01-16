@@ -94,6 +94,7 @@ const MenuCard = (props) => {
 
   const [imageNotFound, setImageNotFound] = useState(false);
   const [farAway, setFarAway] = useState(true);
+  const [onDisablePlus, setOnDisablePlus] = useState(false);
 
   const onImageError = () => {
     setImageNotFound(true);
@@ -240,7 +241,9 @@ const MenuCard = (props) => {
           }),
         };
 
-        menuItemsVariances.push(menuItemVariant);
+        if (menuItemVariant?.customVariants?.length > 0) {
+          menuItemsVariances.push(menuItemVariant);
+        }
       }
     });
 
@@ -433,6 +436,8 @@ const MenuCard = (props) => {
           })
         );
       } else {
+        setOnDisablePlus(true);
+
         const itemCode = uuidv4();
 
         const cartItemDataForApi = {
@@ -465,7 +470,7 @@ const MenuCard = (props) => {
                 cart_id: res?.data?.cart_id,
               })
             );
-            console.log(res);
+            setOnDisablePlus(false);
           })
           .catch((err) => {
             console.log(err);
@@ -824,7 +829,11 @@ const MenuCard = (props) => {
               {showSubTractButton ? (
                 <>
                   <AddToCartButton
-                    onClick={() => handleClickAdd(id)}
+                    onClick={() => {
+                      if (!onDisablePlus) {
+                        handleClickAdd(id);
+                      }
+                    }}
                     className="menu_card_add_to_cart_button pointer wewe"
                   >
                     <img
@@ -878,7 +887,6 @@ const MenuCard = (props) => {
             <Stack>
               {resultArray?.map((variance, index) => {
                 if (variance.has_variants) {
-                  console.log(variance, "vvvvvvvvvv");
                   return (
                     <ExtraItems
                       key={index}
