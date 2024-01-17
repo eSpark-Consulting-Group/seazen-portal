@@ -361,19 +361,18 @@ export const Details = () => {
 
   const checkIfItemIsInCart = () => {
     return cart.find((item) => {
-      if (location?.state?.item_code !== undefined) {
+      if (item.has_variants) {
         return item?.item_code === location.state?.item_code;
       } else {
         return item.id === +id;
       }
     });
   };
-
   React.useEffect(() => {
     const cartItem = checkIfItemIsInCart();
     if (cartItem) {
       setCartItem(cartItem);
-      editingFromCart && setQuantity(cartItem?.quantity || 1);
+      setQuantity(cartItem?.quantity || 1);
       setSpecialInstructions(cartItem?.specialInstructions || "");
       setSizeVariant(cartItem?.variants?.sizeVariant || null);
       setToppingVariant(cartItem?.variants?.toppingVariant || []);
@@ -387,7 +386,7 @@ export const Details = () => {
         )
       );
     }
-  }, [searchParams, cart, location, editingFromCart]);
+  }, [searchParams, cart, location]);
 
   const getCartItemQuantity = () => {
     return cartItem?.quantity;
@@ -714,11 +713,6 @@ export const Details = () => {
       });
   };
 
-  // i-e KWD 1.750 => 1.750 as a number
-  const foodPriceWithoutCurrency = (foodPrice) => {
-    return Number(foodPrice.split(" ")[1]).toFixed(3);
-  };
-
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
 
@@ -740,28 +734,19 @@ export const Details = () => {
       return;
     }
 
-    const totalPriceWhenUpdate =
-      foodPriceWithoutCurrency(data?.price) * (cartItem?.quantity + quantity);
-
     var ItemDataObject = {
       id: data?.id,
       itemName: data?.name_en,
       discountedPrice: data?.discounted_price,
       price: data?.price,
-      quantity:
-        editingFromCart === false && cartItem !== undefined
-          ? cartItem?.quantity + quantity
-          : quantity,
+      quantity: quantity,
       variants: {
         sizeVariant: sizeVariant,
         toppingVariant: toppingVariant,
         sideVariant: sideVariant,
         customVariant: customVariant,
       },
-      totalPrice:
-        editingFromCart === true || cartItem === undefined
-          ? Number(totalPrice).toFixed(3)
-          : totalPriceWhenUpdate,
+      totalPrice: Number(totalPrice).toFixed(3),
       specialInstructions: specialInstructions,
       itemImage: data?.image,
       has_variants: data?.has_variants,

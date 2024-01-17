@@ -228,6 +228,19 @@ function CartItem(props) {
     return `${menu_item_name_en || itemName}`;
   }
 
+  const getExtraItemNames = () => {
+    let extraItemNames = [];
+    const returnName = cartItem.variants?.customVariant.map(
+      (variant) => variant.name_en
+    );
+
+    if (returnName && returnName.length > 0) {
+      extraItemNames.push(...returnName.map((variant) => variant));
+    }
+
+    return extraItemNames.join(", ");
+  };
+
   return (
     <Stack
       direction="row"
@@ -280,10 +293,29 @@ function CartItem(props) {
           justifyContent="space-between"
           alignItems="flex-start"
           sx={{
-            height: "64px",
+            height: "auto",
           }}
         >
-          <Typography fontWeight={600}>{getItemName()}</Typography>
+          <Box>
+            <Typography fontWeight={600}>{getItemName()}</Typography>
+
+            {cartItem.variants?.customVariant?.length ? (
+              <Typography fontWeight={400} fontSize={13} lineHeight={1.25}>
+                {getExtraItemNames()}
+              </Typography>
+            ) : null}
+
+            {/* {cartItem.variants?.customVariant?.map((extras) => (
+              <Typography
+                fontWeight={400}
+                fontSize={13}
+                lineHeight={1.25}
+                key={extras.id}
+              >
+                {extras.name_en}
+              </Typography>
+            ))} */}
+          </Box>
 
           <Button
             variant="text"
