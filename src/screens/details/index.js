@@ -66,7 +66,7 @@ import "./style.css";
 export const Details = () => {
   const { id } = useParams();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -75,9 +75,9 @@ export const Details = () => {
   const resturantsData = useSelector(
     (state) => state.resturants.resturantsData
   );
-  const nearbyRestaurants = useSelector(
-    (state) => state.resturants.nearbyRestaurants
-  );
+  // const nearbyRestaurants = useSelector(
+  //   (state) => state.resturants.nearbyRestaurants
+  // );
 
   const branchHours = useSelector((state) => state.resturants.branchHours);
   const country = useSelector((state) => state.auth.country);
@@ -143,6 +143,7 @@ export const Details = () => {
   const [clearCartModal, setClearCartModal] = useState(false);
   const [menuItemDetails, setMenuItemDetails] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [editingFromCart, setEditingFromCart] = useState(false);
 
   const restaurantsData = useSelector(
     (state) => state.resturants.resturantsData
@@ -350,14 +351,18 @@ export const Details = () => {
     menuItemDetails,
   ]);
 
+  useEffect(() => {
+    if (location?.state?.item_code !== undefined) {
+      setEditingFromCart(true);
+    } else {
+      setEditingFromCart(false);
+    }
+  }, [location?.state]);
+
   const checkIfItemIsInCart = () => {
     return cart.find((item) => {
-      if (item.has_variants) {
-        if (location?.state?.item_code !== undefined) {
-          return item?.item_code === location.state?.item_code;
-        } else {
-          return item.id === +id;
-        }
+      if (location?.state?.item_code !== undefined) {
+        return item?.item_code === location.state?.item_code;
       } else {
         return item.id === +id;
       }
@@ -368,7 +373,7 @@ export const Details = () => {
     const cartItem = checkIfItemIsInCart();
     if (cartItem) {
       setCartItem(cartItem);
-      setQuantity(cartItem?.quantity || 1);
+      editingFromCart && setQuantity(cartItem?.quantity || 1);
       setSpecialInstructions(cartItem?.specialInstructions || "");
       setSizeVariant(cartItem?.variants?.sizeVariant || null);
       setToppingVariant(cartItem?.variants?.toppingVariant || []);
@@ -382,7 +387,7 @@ export const Details = () => {
         )
       );
     }
-  }, [searchParams, cart, location]);
+  }, [searchParams, cart, location, editingFromCart]);
 
   const getCartItemQuantity = () => {
     return cartItem?.quantity;
@@ -709,6 +714,11 @@ export const Details = () => {
       });
   };
 
+  // i-e KWD 1.750 => 1.750 as a number
+  const foodPriceWithoutCurrency = (foodPrice) => {
+    return Number(foodPrice.split(" ")[1]).toFixed(3);
+  };
+
   const handleAddToCart = () => {
     const { data } = menuItemDetails;
 
@@ -730,19 +740,28 @@ export const Details = () => {
       return;
     }
 
+    const totalPriceWhenUpdate =
+      foodPriceWithoutCurrency(data?.price) * (cartItem?.quantity + quantity);
+
     var ItemDataObject = {
       id: data?.id,
       itemName: data?.name_en,
       discountedPrice: data?.discounted_price,
       price: data?.price,
-      quantity: quantity,
+      quantity:
+        editingFromCart === false && cartItem !== undefined
+          ? cartItem?.quantity + quantity
+          : quantity,
       variants: {
         sizeVariant: sizeVariant,
         toppingVariant: toppingVariant,
         sideVariant: sideVariant,
         customVariant: customVariant,
       },
-      totalPrice: Number(totalPrice).toFixed(3),
+      totalPrice:
+        editingFromCart === true || cartItem === undefined
+          ? Number(totalPrice).toFixed(3)
+          : totalPriceWhenUpdate,
       specialInstructions: specialInstructions,
       itemImage: data?.image,
       has_variants: data?.has_variants,
@@ -750,18 +769,18 @@ export const Details = () => {
       branch_id: data?.branch_id,
     };
 
-    const itemExists =
-      ItemDataObject.has_variants &&
-      (ItemDataObject?.variants?.sizeVariant ||
-        ItemDataObject?.variants?.toppingVariant ||
-        ItemDataObject?.variants?.customVariant ||
-        ItemDataObject.variants?.sideVariant)
-        ? cart.find(
-            (item) =>
-              JSON.stringify(item.variants) ===
-              JSON.stringify(ItemDataObject.variants)
-          )
-        : false;
+    // const itemExists =
+    //   ItemDataObject.has_variants &&
+    //   (ItemDataObject?.variants?.sizeVariant ||
+    //     ItemDataObject?.variants?.toppingVariant ||
+    //     ItemDataObject?.variants?.customVariant ||
+    //     ItemDataObject.variants?.sideVariant)
+    //     ? cart.find(
+    //         (item) =>
+    //           JSON.stringify(item.variants) ===
+    //           JSON.stringify(ItemDataObject.variants)
+    //       )
+    //     : false;
 
     if (checkIfItemIsInCart()) {
       const item_code = cartItem?.item_code;
@@ -776,10 +795,13 @@ export const Details = () => {
       dispatch(updateCartItem(ItemDataObject));
       addToCartApiHandler(ItemDataObject);
 
-      // navigate(paths.cart);
-      navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`, {
-        state: { addFromDetail: true },
-      });
+      if (editingFromCart) {
+        navigate(paths.cart);
+      } else {
+        navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`, {
+          state: { addFromDetail: true },
+        });
+      }
     } else {
       const item_code = uuidv4();
 
@@ -787,10 +809,11 @@ export const Details = () => {
         ...ItemDataObject,
         item_code,
       };
-      if (!itemExists) {
-        // dispatch(addToCart(ItemDataObject));
-        addToCartApiHandler(ItemDataObject);
-      }
+
+      // if (!itemExists) {
+      // dispatch(addToCart(ItemDataObject));
+      addToCartApiHandler(ItemDataObject);
+      // }
       navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`, {
         state: { addFromDetail: true },
       });
