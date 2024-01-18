@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./style.css";
 import { paths } from "../../../routes/paths";
 import { styled } from "@mui/material/styles";
+import { isNumber } from "lodash";
 
 const StyledItemPrice = styled("div")(({ theme }) => ({
   color: theme.palette.themeColor.main,
@@ -75,7 +76,9 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
             >
               Min. order:{" "}
               {selected !== null && selected?.minOrderAmount
-                ? selected?.minOrderAmount?.split(" ")[1]?.split(".")[0]
+                ? isNumber(selected?.minOrderAmount)
+                  ? selected?.minOrderAmount
+                  : selected?.minOrderAmount?.split(" ")[1]?.split(".")[0]
                 : "7"}{" "}
               KWD
             </span>
