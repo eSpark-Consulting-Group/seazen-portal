@@ -79,7 +79,10 @@ const Home = () => {
         cartListWithQuery(branchHours, dispatch, addToCart, res);
       }
     },
-    enabled: !!token && sessionStorage.getItem("cartEmpty") === null,
+    enabled:
+      !!token &&
+      sessionStorage.getItem("cartEmpty") === null &&
+      branchHours?.length > 0,
   });
 
   const [selectedAddress, setSelectedAddress] = useState(null);

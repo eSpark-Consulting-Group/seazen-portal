@@ -230,7 +230,7 @@ function CartItem(props) {
 
   const getExtraItemNames = () => {
     let extraItemNames = [];
-    const returnName = cartItem.variants?.customVariant.map(
+    const returnName = cartItem?.variants?.customVariant.map(
       (variant) => variant.name_en
     );
 
@@ -299,7 +299,7 @@ function CartItem(props) {
           <Box>
             <Typography fontWeight={600}>{getItemName()}</Typography>
 
-            {cartItem.variants?.customVariant?.length ? (
+            {cartItem?.variants?.customVariant?.length ? (
               <Typography fontWeight={400} fontSize={13} lineHeight={1.25}>
                 {getExtraItemNames()}
               </Typography>

@@ -62,6 +62,16 @@
   width: 120px;
   font-size: 14px;
 }
+
+.receipt-items-name span {
+  display: block;
+  width: 100%;
+}
+
+.receipt-items-name .second-span {
+  font-size: 12px;
+}
+
 .receipt-items-price {
   width: 87px;
   font-weight: 400;

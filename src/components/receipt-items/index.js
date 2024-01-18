@@ -11,6 +11,18 @@ const ReceiptItem = ({ item, currency_code }) => {
   const onImageError = () => {
     setImageNotFound(true);
   };
+
+  const getExtraItemNames = () => {
+    let extraItemNames = [];
+    const returnName = item?.custom_variant?.map((variant) => variant.name_en);
+
+    if (returnName && returnName?.length > 0) {
+      extraItemNames.push(...returnName.map((variant) => variant));
+    }
+
+    return extraItemNames.join(", ");
+  };
+
   return (
     <div className="receipt-items">
       {imageNotFound ? (
@@ -48,7 +60,10 @@ const ReceiptItem = ({ item, currency_code }) => {
         />
       )}
       <div className="receipt-items-name">
-        {`${item.menu_item.name_en} x (${item.quantity})`}
+        <span>{`${item.menu_item.name_en} x (${item.quantity})`}</span>
+        {item?.custom_variant?.length ? (
+          <span className="second-span">{getExtraItemNames()}</span>
+        ) : null}
       </div>
       <div className="receipt-items-price">
         {`${currency_code} ${Number(item.unit_price * item.quantity).toFixed(
