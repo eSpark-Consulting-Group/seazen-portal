@@ -8,7 +8,12 @@ export const savingAreaIdForMatchingArea = (addresses, allAreas) => {
           areaGroup?.areas?.some(
             (area) =>
               area?.name_en.trim().toLowerCase() ===
-              removeDiacritics(addressComponent?.long_name.trim().toLowerCase())
+                removeDiacritics(
+                  addressComponent?.long_name.trim().toLowerCase()
+                ) ||
+              (addresses?.name &&
+                area?.name_en.trim().toLowerCase() ===
+                  removeDiacritics(addresses?.name?.trim().toLowerCase()))
           )
         );
 
@@ -16,7 +21,12 @@ export const savingAreaIdForMatchingArea = (addresses, allAreas) => {
           const matchingArea = matchingAreaGroup?.areas?.find((area) => {
             return (
               area?.name_en.trim().toLowerCase() ===
-              removeDiacritics(addressComponent?.long_name.trim().toLowerCase())
+                removeDiacritics(
+                  addressComponent?.long_name.trim().toLowerCase()
+                ) ||
+              (addresses?.name &&
+                area?.name_en.trim().toLowerCase() ===
+                  removeDiacritics(addresses?.name?.trim().toLowerCase()))
             );
           });
 

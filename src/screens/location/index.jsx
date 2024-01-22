@@ -260,9 +260,12 @@ function LocationPage() {
             areaGroup?.areas?.some(
               (area) =>
                 area?.name_en.trim().toLowerCase() ===
-                removeDiacritics(
-                  addressComponent?.long_name.trim().toLowerCase()
-                )
+                  removeDiacritics(
+                    addressComponent?.long_name.trim().toLowerCase()
+                  ) ||
+                (addresses?.name &&
+                  area?.name_en.trim().toLowerCase() ===
+                    removeDiacritics(addresses?.name?.trim().toLowerCase()))
             )
           );
 
@@ -270,9 +273,12 @@ function LocationPage() {
             const matchingArea = matchingAreaGroup?.areas?.find((area) => {
               return (
                 area?.name_en.trim().toLowerCase() ===
-                removeDiacritics(
-                  addressComponent?.long_name.trim().toLowerCase()
-                )
+                  removeDiacritics(
+                    addressComponent?.long_name.trim().toLowerCase()
+                  ) ||
+                (addresses?.name &&
+                  area?.name_en.trim().toLowerCase() ===
+                    removeDiacritics(addresses?.name?.trim().toLowerCase()))
               );
             });
 
@@ -281,7 +287,7 @@ function LocationPage() {
               name_en: matchingArea.name_en,
               delivery_charges: matchingArea.delivery_charges,
               delivery_time: matchingArea.delivery_time,
-              minOrderAmount: matchingAreaGroup.minimum_order_amount,
+              minOrderAmount: matchingArea.minimum_order_amount,
               zone_id: matchingAreaGroup.zone_id,
             };
           }
