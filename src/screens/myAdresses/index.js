@@ -88,6 +88,7 @@ const App = () => {
   });
 
   const selectCurrentAddress = (item) => {
+    console.log(item);
     setSelectedId(item.id);
     setSelectedAddress(item);
     setDeliveryCharge(
@@ -95,7 +96,7 @@ const App = () => {
     );
     setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
     setMinOrderAmount(item?.delivery_charge_area_info?.minimum_order_amount);
-    setNameEn(item.delivery_charge_area_name_en);
+    setNameEn(item.delivery_charge_area_info?.name_en);
 
     const selectedAddress = {
       lat: +item.latitude,
