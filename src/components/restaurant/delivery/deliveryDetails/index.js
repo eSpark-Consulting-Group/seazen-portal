@@ -73,7 +73,12 @@ const StyledOuterContainerIcon = styled("div")(({ theme }) => ({
 }));
 
 const DeliveryDetails = (props) => {
-  const { setLocationDeliver, restaurantBranchHours, onDelivery } = props;
+  const {
+    setLocationDeliver,
+    restaurantBranchHours,
+    onDelivery,
+    setOrderAmFromDelivery,
+  } = props;
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -527,6 +532,9 @@ const DeliveryDetails = (props) => {
           address?.delivery_charge_area_info?.minimum_order_amount
         );
         setNameEn(address?.delivery_charge_area_info?.name_en);
+        setOrderAmFromDelivery(
+          address?.delivery_charge_area_info?.minimum_order_amount
+        );
 
         localStorage.setItem("area_id", address?.delivery_charge_area_info.id);
 

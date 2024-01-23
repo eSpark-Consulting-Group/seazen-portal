@@ -9,10 +9,8 @@ import ErrorInformation from "../../../../errorInformation";
 import MenuCardListContainer from "../../../menu/menu_card_list_container";
 import MenuItems from "../../../menu/menu_items";
 
-import getListItemByCategory from // GET_CATEGORY_LIST_ITEM,
-"../../../../../api/restaurant/getListItemsByCategory";
-import getItemCategoryList from // GET_ITEM_CATEGORY_LIST,
-"../../../../../api/restaurant/getItemCategoryList";
+import getListItemByCategory from "../../../../../api/restaurant/getListItemsByCategory"; // GET_CATEGORY_LIST_ITEM,
+import getItemCategoryList from "../../../../../api/restaurant/getItemCategoryList"; // GET_ITEM_CATEGORY_LIST,
 
 import {
   getCategoryItemList,
@@ -37,6 +35,7 @@ const DeliveryConditionalComponent = ({
   setNotDeliver,
   setRestaurantOpen,
   onDelivery,
+  setOrderAmFromDelivery,
 }) => {
   const [searchParams] = useSearchParams();
 
@@ -126,6 +125,7 @@ const DeliveryConditionalComponent = ({
         fromDetail={fromDetail}
         setFromDetail={setFromDetail}
         onDelivery={onDelivery}
+        setOrderAmFromDelivery={setOrderAmFromDelivery}
       />
       {locationDeliver && <ErrorInformation errorMessage={errorMessage} />}
       <MenuItems itemDetail={categoryList} itemCategoryList={categories} />

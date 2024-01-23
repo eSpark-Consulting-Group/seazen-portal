@@ -18,6 +18,7 @@ const TabsDynamicConditionalComponent = ({
   setFromDetail,
   setNotDeliver,
   setRestaurantOpen,
+  setOrderAmFromDelivery,
 }) => {
   const selectedService = useSelector(
     (state) => state.resturants.selectedService
@@ -51,6 +52,7 @@ const TabsDynamicConditionalComponent = ({
           setFromDetail={setFromDetail}
           setNotDeliver={setNotDeliver}
           setRestaurantOpen={setRestaurantOpen}
+          setOrderAmFromDelivery={setOrderAmFromDelivery}
         />
       );
     }
@@ -138,6 +140,7 @@ const TabsDynamicConditionalComponent = ({
             setNotDeliver={setNotDeliver}
             setRestaurantOpen={setRestaurantOpen}
             onDelivery={true}
+            setOrderAmFromDelivery={setOrderAmFromDelivery}
           />
         </div>
       );

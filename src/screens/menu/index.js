@@ -95,6 +95,7 @@ const Menu = () => {
   const [delivery_time, setDeliveryTime] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
   const [name_en, setNameEn] = useState();
+  const [orderAmFromDelivery, setOrderAmFromDelivery] = useState();
 
   const {
     data: restaurantDetailResponse,
@@ -400,6 +401,8 @@ const Menu = () => {
         setFromDetail={setFromDetail}
         setNotDeliver={setNotDeliver}
         setRestaurantOpen={setRestaurantOpen}
+        setOrderAmFromDelivery={setOrderAmFromDelivery}
+        orderAmFromDelivery={orderAmFromDelivery}
       />
 
       <DialogComponent

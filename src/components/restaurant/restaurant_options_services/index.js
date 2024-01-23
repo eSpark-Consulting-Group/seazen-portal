@@ -14,13 +14,15 @@ const RestaurantOptionsServicesContainer = ({
   setFromDetail,
   setNotDeliver,
   setRestaurantOpen,
+  setOrderAmFromDelivery,
+  orderAmFromDelivery,
 }) => {
   return (
     <div>
       <div className="options_services_outer_container"></div>
       <RestaurantDetails
         restaurantDetail={restaurantDetail}
-        restaurantBranchHours={restaurantBranchHours}
+        orderAmFromDelivery={orderAmFromDelivery}
       />
       <div style={{ marginTop: 25 }}>
         <TabsDynamicConditionalComponent
@@ -34,6 +36,7 @@ const RestaurantOptionsServicesContainer = ({
           setFromDetail={setFromDetail}
           setNotDeliver={setNotDeliver}
           setRestaurantOpen={setRestaurantOpen}
+          setOrderAmFromDelivery={setOrderAmFromDelivery}
         />
       </div>
     </div>

@@ -1,19 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./style.css";
-import { paths } from "../../../routes/paths";
+
 import { styled } from "@mui/material/styles";
-import { isNumber } from "lodash";
+
+import { paths } from "../../../routes/paths";
+
+import "./style.css";
 
 const StyledItemPrice = styled("div")(({ theme }) => ({
   color: theme.palette.themeColor.main,
   // Add any other styles you need for the item price here
 }));
 
-const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
+const RestaurantDetails = ({ restaurantDetail, orderAmFromDelivery }) => {
   const navigate = useNavigate();
 
   const selected = JSON.parse(localStorage?.getItem("selected"));
+
+  const [orderAmount, setOrderAmount] = useState("");
 
   const handleBranchHoursClick = () => {
     navigate(
@@ -29,6 +33,16 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
       return "/assets/img/Maskof.svg";
     }
   };
+
+  useEffect(() => {
+    if (selected === null && orderAmFromDelivery === undefined) {
+      setOrderAmount("KWD 7.000");
+    } else if (selected === null && orderAmFromDelivery !== undefined) {
+      setOrderAmount(`${orderAmFromDelivery}`);
+    } else {
+      setOrderAmount(`${selected?.minOrderAmount}`);
+    }
+  }, [selected, orderAmFromDelivery]);
 
   return (
     <div className="details_outer_container px-3 px-sm-4">
@@ -74,13 +88,7 @@ const RestaurantDetails = ({ restaurantDetail, restaurantBranchHours }) => {
                 font: "normal normal 10px/20px Titillium Web",
               }}
             >
-              Min. order:{" "}
-              {selected !== null && selected?.minOrderAmount
-                ? isNumber(selected?.minOrderAmount)
-                  ? selected?.minOrderAmount
-                  : selected?.minOrderAmount?.split(" ")[1]?.split(".")[0]
-                : "7"}{" "}
-              KWD
+              Min. order: {orderAmount?.split(" ")[1]?.split(".")[0]} KWD
             </span>
           </StyledItemPrice>
         </div>
