@@ -25,6 +25,7 @@ import deleteAddressApiCall from "../../api/address/deleteAddress";
 // import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 
 import { getAddress } from "../../store/reducers/addressSlice";
+import { addSelectedAddress } from "../../store/reducers/userLocationSlice";
 
 import { getFullAddress } from "../../utils/getAddress";
 
@@ -107,17 +108,17 @@ const App = () => {
 
   useEffect(() => {
     if (fullAddress !== null) {
-      localStorage.setItem(
-        "selected",
-        JSON.stringify({
-          ...fullAddress,
-          addressId: selectedId,
-          delivery_charges,
-          delivery_time,
-          minOrderAmount,
-          name_en,
-        })
-      );
+      const addToStorage = {
+        ...fullAddress,
+        addressId: selectedId,
+        delivery_charges,
+        delivery_time,
+        minOrderAmount,
+        name_en,
+      };
+
+      localStorage.setItem("selected", JSON.stringify(addToStorage));
+      dispatch(addSelectedAddress(addToStorage));
 
       if (location?.state?.path === "/cart") {
         navigate(paths.cart, { state: { back: "back-to-cart" } });

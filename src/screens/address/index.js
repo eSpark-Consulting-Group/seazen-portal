@@ -41,6 +41,7 @@ import {
   // getAreas,
   getAddress,
 } from "../../store/reducers/addressSlice";
+import { addSelectedAddress } from "../../store/reducers/userLocationSlice";
 
 import "./style.css";
 
@@ -277,6 +278,7 @@ const AddressForm = () => {
           };
 
           localStorage.setItem("selected", JSON.stringify(addToStorage));
+          dispatch(addSelectedAddress(addToStorage));
 
           if (isAfterNewLocation !== null) {
             const storeAddress = {
@@ -394,6 +396,7 @@ const AddressForm = () => {
               };
 
               localStorage.setItem("selected", JSON.stringify(addToStorage));
+              dispatch(addSelectedAddress(addToStorage));
             } else {
               const addToStorage = {
                 address: location?.state?.name,
@@ -401,6 +404,7 @@ const AddressForm = () => {
               };
 
               localStorage.setItem("selected", JSON.stringify(addToStorage));
+              dispatch(addSelectedAddress(addToStorage));
             }
 
             if (
@@ -440,6 +444,7 @@ const AddressForm = () => {
             };
 
             localStorage.setItem("selected", JSON.stringify(addToStorage));
+            dispatch(addSelectedAddress(addToStorage));
 
             navigate(paths.addresses, {
               state: { path: location?.state?.path },

@@ -31,6 +31,7 @@ import {
   setBranchID,
 } from "../../store/reducers/resturantsSlice";
 import { getAreas } from "../../store/reducers/addressSlice";
+import { addSelectedAddress } from "../../store/reducers/userLocationSlice";
 
 import {
   getDistanceFromLatLonInKm,
@@ -115,6 +116,7 @@ const Home = () => {
           setMinOrderAmount(
             addressData[i]?.delivery_charge_area_info?.minimum_order_amount
           );
+          setNameEn(addressData[i]?.delivery_charge_area_info?.name_en);
           getFullAddress(
             +addressData[i].latitude,
             +addressData[i].longitude,
@@ -127,16 +129,19 @@ const Home = () => {
 
   useEffect(() => {
     if (selectedAddress !== null) {
-      const address = {
+      const addToStore = {
         lat: selectedAddress.lat,
         lng: selectedAddress.lng,
         address: selectedAddress.address,
         addressId,
         delivery_charges,
         delivery_time,
+        minOrderAmount,
+        name_en,
       };
 
-      localStorage?.setItem("selected", JSON.stringify(address));
+      localStorage?.setItem("selected", JSON.stringify(addToStore));
+      dispatch(addSelectedAddress(addToStore));
     }
   }, [selectedAddress]);
 
@@ -281,17 +286,17 @@ const Home = () => {
 
     if (chooseFullAddress !== null) {
       if (cart?.length === 0) {
-        localStorage.setItem(
-          "selected",
-          JSON.stringify({
-            ...chooseFullAddress,
-            addressId,
-            delivery_charges,
-            delivery_time,
-            minOrderAmount,
-            name_en,
-          })
-        );
+        const addToStore = {
+          ...chooseFullAddress,
+          addressId,
+          delivery_charges,
+          delivery_time,
+          minOrderAmount,
+          name_en,
+        };
+
+        localStorage.setItem("selected", JSON.stringify(addToStore));
+        dispatch(addSelectedAddress(addToStore));
 
         navigate(paths.cart);
         return;
@@ -331,17 +336,17 @@ const Home = () => {
   }, [chooseFullAddress, branchHours]);
 
   const checkNearByRest = () => {
-    localStorage.setItem(
-      "selected",
-      JSON.stringify({
-        ...chooseFullAddress,
-        addressId,
-        delivery_charges,
-        delivery_time,
-        minOrderAmount,
-        name_en,
-      })
-    );
+    const addToStore = {
+      ...chooseFullAddress,
+      addressId,
+      delivery_charges,
+      delivery_time,
+      minOrderAmount,
+      name_en,
+    };
+
+    localStorage.setItem("selected", JSON.stringify(addToStore));
+    dispatch(addSelectedAddress(addToStore));
 
     const restaurant = resturantsData.find(
       (res) => res.id === cart[0]?.restaurant_id
@@ -414,17 +419,18 @@ const Home = () => {
               setNewText("");
               setDistanceIsFar(false);
               setOpenAddressPopup(false);
-              localStorage.setItem(
-                "selected",
-                JSON.stringify({
-                  ...fullAddress,
-                  addressId,
-                  delivery_charges,
-                  delivery_time,
-                  minOrderAmount,
-                  name_en,
-                })
-              );
+
+              const addToStore = {
+                ...fullAddress,
+                addressId,
+                delivery_charges,
+                delivery_time,
+                minOrderAmount,
+                name_en,
+              };
+
+              localStorage.setItem("selected", JSON.stringify(addToStore));
+              dispatch(addSelectedAddress(addToStore));
 
               if (restaurantId === null) {
                 setOpenAddressPopup(false);
@@ -450,17 +456,17 @@ const Home = () => {
           }
         }
       } else {
-        localStorage.setItem(
-          "selected",
-          JSON.stringify({
-            ...fullAddress,
-            addressId,
-            delivery_charges,
-            delivery_time,
-            minOrderAmount,
-            name_en,
-          })
-        );
+        const addToStore = {
+          ...fullAddress,
+          addressId,
+          delivery_charges,
+          delivery_time,
+          minOrderAmount,
+          name_en,
+        };
+
+        localStorage.setItem("selected", JSON.stringify(addToStore));
+        dispatch(addSelectedAddress(addToStore));
         setOpenAddressPopup(false);
       }
     }

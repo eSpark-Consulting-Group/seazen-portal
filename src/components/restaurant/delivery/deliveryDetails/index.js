@@ -57,6 +57,7 @@ import {
   setBranchID,
   toggleCategoryListLoading,
 } from "../../../../store/reducers/resturantsSlice";
+import { addSelectedAddress } from "../../../../store/reducers/userLocationSlice";
 
 import { paths } from "../../../../routes/paths";
 
@@ -378,17 +379,17 @@ const DeliveryDetails = (props) => {
 
   useEffect(() => {
     if (fullAddress !== null) {
-      localStorage.setItem(
-        "selected",
-        JSON.stringify({
-          ...fullAddress,
-          addressId: addressID,
-          delivery_charges,
-          delivery_time,
-          minOrderAmount,
-          name_en,
-        })
-      );
+      const addToStore = {
+        ...fullAddress,
+        addressId: addressID,
+        delivery_charges,
+        delivery_time,
+        minOrderAmount,
+        name_en,
+      };
+
+      localStorage.setItem("selected", JSON.stringify(addToStore));
+      dispatch(addSelectedAddress(addToStore));
 
       setUserLocation(truncateString(fullAddress?.address, 15));
       setLatlng({

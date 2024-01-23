@@ -26,6 +26,7 @@ import {
   setBranchID,
   setCategoryElementID,
 } from "../../../../store/reducers/resturantsSlice.js";
+import { addSelectedAddress } from "../../../../store/reducers/userLocationSlice.js";
 
 import {
   getDistanceFromLatLonInKm,
@@ -279,17 +280,17 @@ const MenuCardListContainer = ({
   };
 
   const checkNearByRest = (branch) => {
-    localStorage.setItem(
-      "selected",
-      JSON.stringify({
-        ...fullAddress,
-        addressId: addressID,
-        delivery_charges,
-        delivery_time,
-        minOrderAmount,
-        name_en,
-      })
-    );
+    const addToStore = {
+      ...fullAddress,
+      addressId: addressID,
+      delivery_charges,
+      delivery_time,
+      minOrderAmount,
+      name_en,
+    };
+
+    localStorage.setItem("selected", JSON.stringify(addToStore));
+    dispatch(addSelectedAddress(addToStore));
 
     if (branch?.length === 0) {
       setRestaurantName(restaurantDetail?.name_en);

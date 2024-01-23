@@ -52,6 +52,7 @@ import {
   addToCart,
   resetCart,
 } from "../../store/reducers/cartSlice";
+import { addSelectedAddress } from "../../store/reducers/userLocationSlice";
 
 import {
   getDistanceFromLatLonInKm,
@@ -989,17 +990,17 @@ export const Details = () => {
 
     if (fullAddress !== null) {
       if (cart?.length === 0) {
-        localStorage.setItem(
-          "selected",
-          JSON.stringify({
-            ...fullAddress,
-            addressId,
-            delivery_charges,
-            delivery_time,
-            minOrderAmount,
-            name_en,
-          })
-        );
+        const addToStore = {
+          ...fullAddress,
+          addressId,
+          delivery_charges,
+          delivery_time,
+          minOrderAmount,
+          name_en,
+        };
+
+        localStorage.setItem("selected", JSON.stringify(addToStore));
+        dispatch(addSelectedAddress(addToStore));
 
         navigate(paths.cart);
         return;
@@ -1035,17 +1036,17 @@ export const Details = () => {
   }, [fullAddress, branchHours]);
 
   const checkNearByRest = (branch) => {
-    localStorage.setItem(
-      "selected",
-      JSON.stringify({
-        ...fullAddress,
-        addressId,
-        delivery_charges,
-        delivery_time,
-        minOrderAmount,
-        name_en,
-      })
-    );
+    const addToStore = {
+      ...fullAddress,
+      addressId,
+      delivery_charges,
+      delivery_time,
+      minOrderAmount,
+      name_en,
+    };
+
+    localStorage.setItem("selected", JSON.stringify(addToStore));
+    dispatch(addSelectedAddress(addToStore));
 
     if (branch?.length === 0) {
       setRestaurantName(restaurantDetail?.name_en);

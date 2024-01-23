@@ -6,6 +6,7 @@ import resturants from "./resturantsSlice";
 import address from "./addressSlice";
 import dateTime from "./dateTimeSlice";
 import order from "./orderSlice";
+import location from "./userLocationSlice";
 
 const rootReducer = combineReducers({
   auth,
@@ -15,5 +16,6 @@ const rootReducer = combineReducers({
   address,
   dateTime,
   order,
+  location,
 });
 export default rootReducer;

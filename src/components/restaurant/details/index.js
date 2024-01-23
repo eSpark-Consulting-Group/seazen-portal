@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { styled } from "@mui/material/styles";
 
@@ -15,7 +16,9 @@ const StyledItemPrice = styled("div")(({ theme }) => ({
 const RestaurantDetails = ({ restaurantDetail, orderAmFromDelivery }) => {
   const navigate = useNavigate();
 
-  const selected = JSON.parse(localStorage?.getItem("selected"));
+  const userSelected = useSelector((state) => state.location.selectedAddress);
+
+  // const selected = JSON.parse(localStorage?.getItem("selected"));
 
   const [orderAmount, setOrderAmount] = useState("");
 
@@ -35,14 +38,12 @@ const RestaurantDetails = ({ restaurantDetail, orderAmFromDelivery }) => {
   };
 
   useEffect(() => {
-    if (selected === null && orderAmFromDelivery === undefined) {
+    if (userSelected === null) {
       setOrderAmount("KWD 7.000");
-    } else if (selected === null && orderAmFromDelivery !== undefined) {
-      setOrderAmount(`${orderAmFromDelivery}`);
     } else {
-      setOrderAmount(`${selected?.minOrderAmount}`);
+      setOrderAmount(`${userSelected?.minOrderAmount}`);
     }
-  }, [selected, orderAmFromDelivery]);
+  }, [userSelected]);
 
   return (
     <div className="details_outer_container px-3 px-sm-4">

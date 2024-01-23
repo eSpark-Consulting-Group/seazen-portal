@@ -45,6 +45,7 @@ import {
 import { setThemeColor } from "../../store/reducers/themeSlice.js";
 import { closeReorderModal } from "../../store/reducers/orderSlice.js";
 import { addToCart } from "../../store/reducers/cartSlice.js";
+import { addSelectedAddress } from "../../store/reducers/userLocationSlice.js";
 
 import {
   getDistanceFromLatLonInKm,
@@ -270,17 +271,17 @@ const Menu = () => {
 
     if (fullAddress !== null) {
       if (cart?.length === 0) {
-        localStorage.setItem(
-          "selected",
-          JSON.stringify({
-            ...fullAddress,
-            addressId: addressID,
-            delivery_charges,
-            delivery_time,
-            minOrderAmount,
-            name_en,
-          })
-        );
+        const addToStore = {
+          ...fullAddress,
+          addressId: addressID,
+          delivery_charges,
+          delivery_time,
+          minOrderAmount,
+          name_en,
+        };
+
+        localStorage.setItem("selected", JSON.stringify(addToStore));
+        dispatch(addSelectedAddress(addToStore));
 
         navigate(paths.cart);
         return;
@@ -327,17 +328,17 @@ const Menu = () => {
   };
 
   const checkNearByRest = (branch) => {
-    localStorage.setItem(
-      "selected",
-      JSON.stringify({
-        ...fullAddress,
-        addressId: addressID,
-        delivery_charges,
-        delivery_time,
-        minOrderAmount,
-        name_en,
-      })
-    );
+    const addToStore = {
+      ...fullAddress,
+      addressId: addressID,
+      delivery_charges,
+      delivery_time,
+      minOrderAmount,
+      name_en,
+    };
+
+    localStorage.setItem("selected", JSON.stringify(addToStore));
+    dispatch(addSelectedAddress(addToStore));
 
     if (branch?.length === 0) {
       setRestaurantName(restaurantDetail?.name_en);
