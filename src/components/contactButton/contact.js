@@ -13,7 +13,7 @@ const ContactUs = () => {
   const contactInfo = useSelector((state) => state.auth.country);
   const { customer_care, whatsapp_country_code, whatsapp_no } = contactInfo;
 
-  let url = `https://web.whatsapp.com/send?phone=${whatsapp_country_code}${whatsapp_no}`;
+  let url = `https://api.whatsapp.com/send?phone=${whatsapp_country_code}${whatsapp_no}`;
 
   const handleButtonClick = () => {
     window.open(url);
