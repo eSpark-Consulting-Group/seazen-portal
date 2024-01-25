@@ -217,7 +217,11 @@ function CartPage() {
           if (distance > 50) {
             setNotDeliver(true);
           } else {
-            setNotDeliver(false);
+            if (selectedAddress?.name_en) {
+              setNotDeliver(false);
+            } else {
+              setNotDeliver(true);
+            }
             break;
           }
         }
@@ -319,82 +323,88 @@ function CartPage() {
             if (filterRestaurant?.length === 0) {
               setNotDeliver(true);
             } else {
-              setNotDeliver(false);
+              if (selectedAddress?.name_en) {
+                setNotDeliver(false);
 
-              if (isAsap === "true") {
-                for (let j = 0; j < filterRestaurant?.length; j++) {
-                  const date = new Date();
-                  const options = { weekday: "long" };
-                  const dayName = date.toLocaleDateString("en-US", options);
+                if (isAsap === "true") {
+                  for (let j = 0; j < filterRestaurant?.length; j++) {
+                    const date = new Date();
+                    const options = { weekday: "long" };
+                    const dayName = date.toLocaleDateString("en-US", options);
 
-                  const findStatus = filterRestaurant[j]?.branch_hours?.filter(
-                    (branch) => branch.week_day === dayName
-                  );
+                    const findStatus = filterRestaurant[
+                      j
+                    ]?.branch_hours?.filter(
+                      (branch) => branch.week_day === dayName
+                    );
 
-                  if (findStatus[0].openingStatus === "Open") {
-                    setRestaurantOpen(false);
+                    if (findStatus[0].openingStatus === "Open") {
+                      setRestaurantOpen(false);
 
-                    const data = {
-                      ...checkoutData,
-                      branch_id: forCurrent[i].id,
-                      discount_price: getDiscountAmount(),
-                    };
+                      const data = {
+                        ...checkoutData,
+                        branch_id: forCurrent[i].id,
+                        discount_price: getDiscountAmount(),
+                      };
 
-                    checkout(data, token)
-                      .then((res) => {
-                        if (res?.success === "error") {
-                          const parsedError = res?.message
-                            ?.split(":")[1]
-                            ?.trim();
+                      checkout(data, token)
+                        .then((res) => {
+                          if (res?.success === "error") {
+                            const parsedError = res?.message
+                              ?.split(":")[1]
+                              ?.trim();
 
-                          if (toastList.size < MAX_TOAST) {
-                            const id = toast.error(parsedError, {
-                              onClose: () => toastList.delete(id),
-                            });
-                            toastList.add(id);
+                            if (toastList.size < MAX_TOAST) {
+                              const id = toast.error(parsedError, {
+                                onClose: () => toastList.delete(id),
+                              });
+                              toastList.add(id);
+                            }
+                          } else {
+                            const checkoutRedirectUrl =
+                              res.data?.payment_methods[0].redirect_url;
+                            window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
                           }
-                        } else {
-                          const checkoutRedirectUrl =
-                            res.data?.payment_methods[0].redirect_url;
-                          window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
-                        }
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
 
-                    break;
-                  } else if (findStatus[0].openingStatus === "Close") {
-                    setRestaurantOpen(true);
+                      break;
+                    } else if (findStatus[0].openingStatus === "Close") {
+                      setRestaurantOpen(true);
+                    }
                   }
+                } else {
+                  const data = {
+                    ...checkoutData,
+                    branch_id: forCurrent[i].id,
+                    discount_price: getDiscountAmount(),
+                  };
+
+                  checkout(data, token)
+                    .then((res) => {
+                      if (res?.success === "error") {
+                        const parsedError = res?.message?.split(":")[1]?.trim();
+
+                        if (toastList.size < MAX_TOAST) {
+                          const id = toast.error(parsedError, {
+                            onClose: () => toastList.delete(id),
+                          });
+                          toastList.add(id);
+                        }
+                      } else {
+                        const checkoutRedirectUrl =
+                          res.data?.payment_methods[0].redirect_url;
+                        window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                      }
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
                 }
               } else {
-                const data = {
-                  ...checkoutData,
-                  branch_id: forCurrent[i].id,
-                  discount_price: getDiscountAmount(),
-                };
-
-                checkout(data, token)
-                  .then((res) => {
-                    if (res?.success === "error") {
-                      const parsedError = res?.message?.split(":")[1]?.trim();
-
-                      if (toastList.size < MAX_TOAST) {
-                        const id = toast.error(parsedError, {
-                          onClose: () => toastList.delete(id),
-                        });
-                        toastList.add(id);
-                      }
-                    } else {
-                      const checkoutRedirectUrl =
-                        res.data?.payment_methods[0].redirect_url;
-                      window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
-                    }
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
+                setNotDeliver(true);
               }
             }
           }
@@ -860,6 +870,7 @@ function CartPage() {
               onClick={() => {
                 const initialState = {
                   restaurant_id: cart[0].restaurant_id,
+                  branch_id: cart[0].branch_id,
                   restaurantName,
                   path: location.pathname,
                 };

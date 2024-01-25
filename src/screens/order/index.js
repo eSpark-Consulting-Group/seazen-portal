@@ -23,6 +23,7 @@ const OrderScreen = () => {
     { done: false },
     { done: false },
     { done: false },
+    { done: false },
   ]);
 
   const dispatch = useDispatch();
@@ -46,13 +47,18 @@ const OrderScreen = () => {
       tagColor: "#F7B500",
     },
     {
-      tag: "Preparing",
-      text: "Preparing your order",
-      tagColor: "#0091FF",
+      tag: "Accepted",
+      text: "Your order is accepted",
+      tagColor: "#F7B500",
+    },
+    {
+      tag: "Ready for Dispatch",
+      text: "Your order is ready for dispatch",
+      tagColor: "#F7B500",
     },
     {
       tag: "On The Way",
-      text: "Driver is On the way",
+      text: "Driver is on the way",
       tagColor: "#6236FF",
     },
     {
@@ -91,10 +97,21 @@ const OrderScreen = () => {
             { done: false },
             { done: false },
             { done: false },
+            { done: false },
           ]);
         }
-        if (response.data.order_status === "Preparing") {
+        if (response.data.order_status === "Accepted") {
           setProgress([
+            { done: true },
+            { done: true },
+            { done: false },
+            { done: false },
+            { done: false },
+          ]);
+        }
+        if (response.data.order_status === "Ready for Dispatch") {
+          setProgress([
+            { done: true },
             { done: true },
             { done: true },
             { done: false },
@@ -106,11 +123,13 @@ const OrderScreen = () => {
             { done: true },
             { done: true },
             { done: true },
+            { done: true },
             { done: false },
           ]);
         }
         if (response.data.order_status === "Delivered") {
           setProgress([
+            { done: true },
             { done: true },
             { done: true },
             { done: true },

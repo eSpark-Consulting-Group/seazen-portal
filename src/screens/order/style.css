@@ -65,7 +65,7 @@
 }
 
 .orderprogress-bar {
-  width: 65px;
+  width: 50px;
   height: 5px;
   background-color: #dcdfe3;
 }
@@ -110,6 +110,9 @@
 
 .orderconfirm-text-container {
   margin-top: 15px;
+  width: 170px;
+  display: flex;
+  justify-content: end;
 }
 
 .orderaddress-text {

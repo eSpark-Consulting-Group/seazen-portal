@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 
@@ -60,15 +60,25 @@ const Home = () => {
   );
   const cart = useSelector((state) => state.cart.cart);
 
-  // useEffect(() => {
-  //   if (sessionStorage.getItem("cartEmpty") === null) {
-  //     if (token !== null) {
-  //       if (cart?.length === 0 && branchHours?.length) {
-  //         refetch();
-  //       }
-  //     }
-  //   }
-  // }, [cart, token, branchHours]);
+  useEffect(() => {
+    localStorage.removeItem("restaurantIdForRedirect");
+    localStorage.removeItem("area_id");
+
+    if (cart?.length === 0) {
+      localStorage.removeItem("restaurantID");
+      localStorage.removeItem("branchId");
+      localStorage.removeItem("restaurantName");
+    } else {
+      localStorage.setItem("restaurantID", cart[0]?.restaurant_id);
+      localStorage.setItem("branchId", cart[0]?.branch_id);
+
+      const restName = resturantsData?.find(
+        (rest) => rest.id === cart[0]?.restaurant_id
+      );
+
+      localStorage.setItem("restaurantName", restName?.name_en);
+    }
+  }, [cart, resturantsData]);
 
   const { refetch } = useQuery({
     queryKey: [token],
@@ -105,18 +115,22 @@ const Home = () => {
             parseFloat(parsedLocation.lng)
         ) {
           setAddressID(addressData[i].id);
-          setDeliveryCharge(
-            addressData[i]?.delivery_charge_area_info?.delivery_charges?.split(
-              " "
-            )[1]
-          );
-          setDeliveryTime(
-            addressData[i]?.delivery_charge_area_info?.delivery_time
-          );
-          setMinOrderAmount(
-            addressData[i]?.delivery_charge_area_info?.minimum_order_amount
-          );
-          setNameEn(addressData[i]?.delivery_charge_area_info?.name_en);
+
+          if (!Array.isArray(addressData[i]?.delivery_charge_area_info)) {
+            setDeliveryCharge(
+              addressData[
+                i
+              ]?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+            );
+            setDeliveryTime(
+              addressData[i]?.delivery_charge_area_info?.delivery_time
+            );
+            setMinOrderAmount(
+              addressData[i]?.delivery_charge_area_info?.minimum_order_amount
+            );
+            setNameEn(addressData[i]?.delivery_charge_area_info?.name_en);
+          }
+
           getFullAddress(
             +addressData[i].latitude,
             +addressData[i].longitude,
@@ -156,8 +170,15 @@ const Home = () => {
     countryList()
       .then((res) => {
         const defaultCountry = res.data.find((val) => val.is_default == "Yes");
+
         localStorage.setItem("country", JSON.stringify(defaultCountry));
-        fetchAllAreas();
+
+        const restaurant_id = localStorage.getItem("restaurantID");
+        const branch_id = localStorage.getItem("branchId");
+
+        if (restaurant_id !== null || branch_id !== null) {
+          fetchAllAreas(restaurant_id, branch_id);
+        }
         dispatch(addCountry(defaultCountry));
       })
       .catch((err) => {
@@ -165,8 +186,8 @@ const Home = () => {
       });
   };
 
-  const fetchAllAreas = () => {
-    getAllArea()
+  const fetchAllAreas = (restaurant_id, branch_id) => {
+    getAllArea(restaurant_id, branch_id)
       .then((res) => {
         dispatch(getAreas(res.data));
       })
@@ -243,20 +264,22 @@ const Home = () => {
   };
 
   const onChooseFullAddress = (item) => {
-    const object = {
-      country_id: JSON.parse(localStorage.getItem("country"))?.id,
-      delivery_charge_area_id: item?.delivery_charge_area_info.id,
-    };
+    if (item?.delivery_charge_area_info.id) {
+      const object = {
+        country_id: JSON.parse(localStorage.getItem("country"))?.id,
+        delivery_charge_area_id: item?.delivery_charge_area_info.id,
+      };
 
-    getBranchByArea(cart[0]?.restaurant_id, object, dispatch)
-      .then((res) => {
-        if (res?.data?.length === 0) {
-          getBranchIdNearToLocation();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      getBranchByArea(cart[0]?.restaurant_id, object, dispatch)
+        .then((res) => {
+          if (res?.data?.length === 0) {
+            getBranchIdNearToLocation();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
 
     selectChooseAddress(
       item,
@@ -336,14 +359,20 @@ const Home = () => {
   }, [chooseFullAddress, branchHours]);
 
   const checkNearByRest = () => {
-    const addToStore = {
+    let addToStore = {
       ...chooseFullAddress,
       addressId,
-      delivery_charges,
-      delivery_time,
-      minOrderAmount,
-      name_en,
     };
+
+    if (name_en) {
+      addToStore = {
+        ...addToStore,
+        delivery_charges,
+        delivery_time,
+        minOrderAmount,
+        name_en,
+      };
+    }
 
     localStorage.setItem("selected", JSON.stringify(addToStore));
     dispatch(addSelectedAddress(addToStore));
@@ -420,14 +449,20 @@ const Home = () => {
               setDistanceIsFar(false);
               setOpenAddressPopup(false);
 
-              const addToStore = {
+              let addToStore = {
                 ...fullAddress,
                 addressId,
-                delivery_charges,
-                delivery_time,
-                minOrderAmount,
-                name_en,
               };
+
+              if (name_en) {
+                addToStore = {
+                  ...addToStore,
+                  delivery_charges,
+                  delivery_time,
+                  minOrderAmount,
+                  name_en,
+                };
+              }
 
               localStorage.setItem("selected", JSON.stringify(addToStore));
               dispatch(addSelectedAddress(addToStore));
@@ -456,14 +491,20 @@ const Home = () => {
           }
         }
       } else {
-        const addToStore = {
+        let addToStore = {
           ...fullAddress,
           addressId,
-          delivery_charges,
-          delivery_time,
-          minOrderAmount,
-          name_en,
         };
+
+        if (name_en) {
+          addToStore = {
+            ...addToStore,
+            delivery_charges,
+            delivery_time,
+            minOrderAmount,
+            name_en,
+          };
+        }
 
         localStorage.setItem("selected", JSON.stringify(addToStore));
         dispatch(addSelectedAddress(addToStore));

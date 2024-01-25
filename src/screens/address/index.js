@@ -91,6 +91,9 @@ const AddressForm = () => {
 
   const token = localStorage.getItem("token");
   const selectedAddress = JSON.parse(localStorage.getItem("selected"));
+  const country = JSON.parse(localStorage.getItem("country"));
+  const restaurantID = localStorage.getItem("restaurantID");
+  const branchId = localStorage.getItem("branchId");
   const isAfterNewLocation = JSON.parse(
     sessionStorage?.getItem("storeAddress")
   );
@@ -101,21 +104,27 @@ const AddressForm = () => {
     delivery_charge_area_id:
       isAfterNewLocation !== null && isAfterNewLocation?.addNewAddress === true
         ? isAfterNewLocation?.area_id
-        : selectedAddress === null
+        : selectedAddress === null || selectedAddress?.area_id === undefined
         ? location?.state?.selectedAddress?.area_id
         : selectedAddress?.area_id,
     delivery_zone_id:
       isAfterNewLocation !== null && isAfterNewLocation?.addNewAddress === true
         ? isAfterNewLocation?.zone_id
-        : selectedAddress === null
+        : selectedAddress === null || selectedAddress?.zone_id === undefined
         ? location?.state?.selectedAddress?.zone_id
         : selectedAddress?.zone_id,
     delivery_charge_area_name_en:
       isAfterNewLocation !== null && isAfterNewLocation?.addNewAddress === true
         ? isAfterNewLocation?.name_en
-        : selectedAddress === null
-        ? location?.state?.selectedAddress?.name_en
-        : selectedAddress?.name_en,
+        : selectedAddress === null || selectedAddress?.name_en === undefined
+        ? location?.state?.selectedAddress?.name_en === undefined
+          ? location?.state?.name
+          : location?.state?.selectedAddress?.name_en
+        : location?.state?.selectedAddress?.name_en,
+    country_id:
+      country === null || country?.id === undefined ? "" : String(country?.id),
+    restaurant_id: restaurantID === null ? "" : restaurantID,
+    branch_id: branchId === null ? "" : branchId,
     block: "",
     street: "",
     avenue: "",
@@ -153,8 +162,17 @@ const AddressForm = () => {
         delivery_zone_id: state.delivery_zone_info?.id
           ? state.delivery_zone_info?.id
           : "",
-        delivery_charge_area_name_en: state.delivery_charge_area_name_en
-          ? state.delivery_charge_area_name_en
+        delivery_charge_area_name_en: state.delivery_charge_area_info?.name_en
+          ? state.delivery_charge_area_info?.name_en
+          : "",
+        country_id: state.delivery_charge_area_info?.country_id
+          ? state.delivery_charge_area_info?.country_id
+          : "",
+        restaurant_id: state.delivery_charge_area_info?.restaurant_id
+          ? state.delivery_charge_area_info?.restaurant_id
+          : "",
+        branch_id: state.delivery_charge_area_info?.branch_id
+          ? state.delivery_charge_area_info?.branch_id
           : "",
         block: state.block ? state.block : "",
         street: state.street ? state.street : "",
@@ -248,7 +266,9 @@ const AddressForm = () => {
           ? location?.state?.selectedAddress?.area_id
           : selectedAddress?.area_id;
 
-        localStorage.setItem("area_id", area_id);
+        if (area_id) {
+          localStorage.setItem("area_id", area_id);
+        }
 
         if (
           location?.state?.path === "/cart" ||
@@ -256,26 +276,32 @@ const AddressForm = () => {
           location?.state?.path?.includes("menu-item-details") ||
           location?.state?.path === "menu/restaurant"
         ) {
-          const addToStorage = {
+          let addToStorage = {
             lat: location?.state?.latlng?.lat,
             lng: location?.state?.latlng?.lng,
             address: location?.state?.selectedAddress?.address,
             addressId: res?.data?.id,
-            delivery_time: checkInSessionTrue
-              ? isAfterNewLocation?.delivery_time
-              : location?.state?.selectedAddress?.delivery_time,
-            delivery_charges: checkInSessionTrue
-              ? isAfterNewLocation?.delivery_charges?.split(" ")[1]
-              : location?.state?.selectedAddress?.delivery_charges?.split(
-                  " "
-                )[1],
-            minOrderAmount: checkInSessionTrue
-              ? isAfterNewLocation?.minOrderAmount
-              : location?.state?.selectedAddress?.minOrderAmount,
-            name_en: checkInSessionTrue
-              ? isAfterNewLocation?.name_en
-              : location?.state?.selectedAddress?.name_en,
           };
+
+          if (location?.state?.selectedAddress?.name_en) {
+            addToStorage = {
+              ...addToStorage,
+              delivery_time: checkInSessionTrue
+                ? isAfterNewLocation?.delivery_time
+                : location?.state?.selectedAddress?.delivery_time,
+              delivery_charges: checkInSessionTrue
+                ? isAfterNewLocation?.delivery_charges?.split(" ")[1]
+                : location?.state?.selectedAddress?.delivery_charges?.split(
+                    " "
+                  )[1],
+              minOrderAmount: checkInSessionTrue
+                ? isAfterNewLocation?.minOrderAmount
+                : location?.state?.selectedAddress?.minOrderAmount,
+              name_en: checkInSessionTrue
+                ? isAfterNewLocation?.name_en
+                : location?.state?.selectedAddress?.name_en,
+            };
+          }
 
           localStorage.setItem("selected", JSON.stringify(addToStorage));
           dispatch(addSelectedAddress(addToStorage));
@@ -366,17 +392,26 @@ const AddressForm = () => {
 
           const area_id = selectedAddress?.area_id;
 
-          localStorage.setItem("area_id", area_id);
+          if (area_id) {
+            localStorage.setItem("area_id", area_id);
+          }
 
-          const commonData = {
+          let commonData = {
             lat: location?.state?.latlng?.lat,
             lng: location?.state?.latlng?.lng,
             addressId: res?.data?.id,
-            delivery_time: selectedAddress?.delivery_time,
-            delivery_charges: selectedAddress?.delivery_charges?.split(" ")[1],
-            minOrderAmount: selectedAddress?.minOrderAmount,
-            name_en: selectedAddress?.name_en,
           };
+
+          if (selectedAddress?.minOrderAmount) {
+            commonData = {
+              ...commonData,
+              delivery_time: selectedAddress?.delivery_time,
+              delivery_charges:
+                selectedAddress?.delivery_charges?.split(" ")[1],
+              minOrderAmount: selectedAddress?.minOrderAmount,
+              name_en: selectedAddress?.name_en,
+            };
+          }
 
           if (
             location?.state?.path === "/cart" ||
@@ -687,6 +722,8 @@ const AddressForm = () => {
                   JSON.parse(sessionStorage?.getItem("storeAddress"))
                     ?.addNewAddress === true
                     ? isAfterNewLocation?.name_en
+                    : location?.state?.selectedAddress?.name_en === undefined
+                    ? location?.state?.name
                     : location?.state?.selectedAddress?.name_en
                 }
                 disabled={true}

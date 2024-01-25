@@ -19,8 +19,9 @@ const RestaurantDetails = ({ restaurantDetail, orderAmFromDelivery }) => {
   const userSelected = useSelector((state) => state.location.selectedAddress);
 
   // const selected = JSON.parse(localStorage?.getItem("selected"));
+  const location = JSON.parse(localStorage?.getItem("location"));
 
-  const [orderAmount, setOrderAmount] = useState("");
+  const [orderAmount, setOrderAmount] = useState("KWD 7.000");
 
   const handleBranchHoursClick = () => {
     navigate(
@@ -38,12 +39,20 @@ const RestaurantDetails = ({ restaurantDetail, orderAmFromDelivery }) => {
   };
 
   useEffect(() => {
-    if (userSelected === null) {
+    if (
+      (userSelected === null || userSelected?.minOrderAmount === undefined) &&
+      location?.minOrderAmount === undefined
+    ) {
       setOrderAmount("KWD 7.000");
+    } else if (
+      (userSelected === null || userSelected?.minOrderAmount === undefined) &&
+      location?.minOrderAmount !== undefined
+    ) {
+      setOrderAmount(`${location.minOrderAmount}`);
     } else {
       setOrderAmount(`${userSelected?.minOrderAmount}`);
     }
-  }, [userSelected]);
+  }, [userSelected, location]);
 
   return (
     <div className="details_outer_container px-3 px-sm-4">

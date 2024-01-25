@@ -37,6 +37,7 @@ import getRestaurantBranchHours, {
 import getBranchesAndHours from "../../api/restaurant/branches/getBranchesAndHours.js";
 import getBranchByArea from "../../api/restaurant/branches/getBranchByArea.js";
 import cartList from "../../api/cart/cartList.js";
+import getAllArea from "../../api/address/areas.js";
 
 import {
   getResturantsDetails,
@@ -46,6 +47,7 @@ import { setThemeColor } from "../../store/reducers/themeSlice.js";
 import { closeReorderModal } from "../../store/reducers/orderSlice.js";
 import { addToCart } from "../../store/reducers/cartSlice.js";
 import { addSelectedAddress } from "../../store/reducers/userLocationSlice.js";
+import { getAreas } from "../../store/reducers/addressSlice.js";
 
 import {
   getDistanceFromLatLonInKm,
@@ -70,6 +72,10 @@ const Menu = () => {
   const cart = useSelector((state) => state.cart.cart);
   const branchHours = useSelector((state) => state.resturants.branchHours);
 
+  if (restaurant_id) {
+    localStorage.setItem("restaurantID", restaurant_id);
+  }
+
   const asapTime = new Date().setMinutes(new Date().getMinutes() + 30);
   const [pickDate, setPickDate] = useState(
     dayjs(new Date()).format("MMM DD, YYYY")
@@ -78,6 +84,8 @@ const Menu = () => {
   const [isAsap, setIsAsap] = useState(true);
 
   const token = localStorage?.getItem("token");
+  const restaurantID = localStorage?.getItem("restaurantID");
+  const branchId = localStorage?.getItem("branchId");
 
   const [openModal, setOpenModal] = useState(false);
   const [notDeliver, setNotDeliver] = useState(false);
@@ -97,6 +105,20 @@ const Menu = () => {
   const [minOrderAmount, setMinOrderAmount] = useState();
   const [name_en, setNameEn] = useState();
   const [orderAmFromDelivery, setOrderAmFromDelivery] = useState();
+
+  const fetchAllAreas = () => {
+    getAllArea(restaurantID, branchId)
+      .then((res) => {
+        dispatch(getAreas(res.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    if (restaurantID !== null && branchId !== null) fetchAllAreas();
+  }, [restaurantID, branchId]);
 
   const {
     data: restaurantDetailResponse,

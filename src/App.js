@@ -10,12 +10,12 @@ import "react-toastify/dist/ReactToastify.css";
 import RouteProvider from "./routes/routes";
 
 import countryList from "./api/common/getAllCountries";
-import getAllArea from "./api/address/areas";
+// import getAllArea from "./api/address/areas";
 
-import { getAreas } from "./store/reducers/addressSlice";
+// import { getAreas } from "./store/reducers/addressSlice";
 import { addCountry, allCountries } from "./store/reducers/authSlice";
 
-import { savingAreaIdForMatchingArea } from "./utils/checkOperationalArea";
+// import { savingAreaIdForMatchingArea } from "./utils/checkOperationalArea";
 
 import "./App.css";
 
@@ -29,7 +29,7 @@ function App() {
   const userLocation = localStorage.getItem("location");
   const restaurantId = localStorage.getItem("restaurantID");
 
-  const allAreas = useSelector((state) => state.address.allAreas);
+  // const allAreas = useSelector((state) => state.address.allAreas);
   const countryCode = useSelector(
     (state) => state.auth.user.mobile_country_code
   );
@@ -51,22 +51,27 @@ function App() {
         localStorage.setItem("country", JSON.stringify(countryByCode));
         dispatch(addCountry(countryByCode));
         dispatch(allCountries(res.data));
-        fetchAllAreas();
+        // const restaurant_id = localStorage.getItem("restaurantID");
+        // const branch_id = localStorage.getItem("branchId");
+
+        // if (restaurant_id !== null || branch_id !== null) {
+        //   fetchAllAreas(restaurant_id, branch_id);
+        // }
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const fetchAllAreas = () => {
-    getAllArea()
-      .then((res) => {
-        dispatch(getAreas(res.data));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const fetchAllAreas = (restaurant_id, branch_id) => {
+  //   getAllArea(restaurant_id, branch_id)
+  //     .then((res) => {
+  //       dispatch(getAreas(res.data));
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   useEffect(() => {
     fetchAllCountries();
@@ -132,7 +137,9 @@ function App() {
                 const lat = results[0].geometry.location.lat;
                 const lng = results[0].geometry.location.lng;
 
-                savingAreaIdForMatchingArea(results[0], allAreas);
+                // if (allAreas.length > 0) {
+                //   savingAreaIdForMatchingArea(results[0], allAreas);
+                // }
 
                 addToStorage = {
                   lat: lat,

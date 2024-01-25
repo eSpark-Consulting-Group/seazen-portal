@@ -79,9 +79,11 @@ function LocationPage() {
 
   const countries = useSelector((state) => state.auth.countries);
   const allAreas = useSelector((state) => state.address.allAreas);
-  const selectedAdd = JSON.parse(localStorage.getItem("selected"));
-  const current = JSON.parse(localStorage.getItem("location"));
+
+  const selected = JSON.parse(localStorage.getItem("selected"));
+  const currentLocation = JSON.parse(localStorage.getItem("location"));
   const restaurant_id = JSON.parse(localStorage.getItem("restaurantID"));
+  const branchId = JSON.parse(localStorage.getItem("branchId"));
   const token = localStorage.getItem("token");
 
   const { isLoaded } = useLoadScript({
@@ -92,17 +94,18 @@ function LocationPage() {
   });
 
   const { refetch } = useQuery({
-    queryFn: () => getAllArea(token),
+    queryFn: () => getAllArea(restaurant_id, branchId),
     onSuccess: (data) => {
       dispatch(getAreas(data.data));
     },
+    enabled: restaurant_id !== null && branchId !== null,
   });
 
   useEffect(() => {
-    if (allAreas?.length === 0) {
+    if (restaurant_id !== null && branchId !== null) {
       refetch();
     }
-  }, [allAreas]);
+  }, [allAreas, restaurant_id, branchId]);
 
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [address, setAddress] = useState("");
@@ -130,9 +133,9 @@ function LocationPage() {
               location?.state?.editLocation === undefined &&
               location?.state?.latlng === undefined
             ) {
-              if (localStorage.getItem("selected") !== null) {
+              if (selected !== null) {
                 // If User selected any location
-                const selected = JSON.parse(localStorage.getItem("selected"));
+                // const selected = JSON.parse(localStorage.getItem("selected"));
 
                 if (location?.state?.toCurrent !== undefined) {
                   makeCenter();
@@ -141,10 +144,10 @@ function LocationPage() {
                 }
 
                 // If User didn't selected any location
-              } else if (localStorage.getItem("location") !== null) {
-                const currentLocation = JSON.parse(
-                  localStorage.getItem("location")
-                );
+              } else if (currentLocation !== null) {
+                // const currentLocation = JSON.parse(
+                //   localStorage.getItem("location")
+                // );
 
                 if (location?.state?.toCurrent !== undefined) {
                   makeCenter();
@@ -158,20 +161,20 @@ function LocationPage() {
           } else if (PermissionStatus.state == "prompt") {
             if (
               token === null &&
-              localStorage.getItem("selected") === null &&
-              localStorage.getItem("location") === null
+              selected === null &&
+              currentLocation === null
             ) {
               getAdd(29.3140728, 47.68022);
               // If User selected any location
-            } else if (localStorage.getItem("selected") !== null) {
-              const selected = JSON.parse(localStorage.getItem("selected"));
+            } else if (selected !== null) {
+              // const selected = JSON.parse(localStorage.getItem("selected"));
 
               getAdd(selected.lat, selected.lng);
               // If User didn't selected any location
-            } else if (localStorage.getItem("location") !== null) {
-              const currentLocation = JSON.parse(
-                localStorage.getItem("location")
-              );
+            } else if (currentLocation !== null) {
+              // const currentLocation = JSON.parse(
+              //   localStorage.getItem("location")
+              // );
 
               if (location?.state?.toCurrent !== undefined) {
                 makeCenter();
@@ -180,8 +183,8 @@ function LocationPage() {
               }
             } else if (
               token !== null &&
-              localStorage.getItem("selected") === null &&
-              localStorage.getItem("location") === null
+              selected === null &&
+              currentLocation === null
             ) {
               getAdd(29.3140728, 47.68022);
             }
@@ -190,20 +193,20 @@ function LocationPage() {
           } else {
             if (
               token === null &&
-              localStorage.getItem("selected") === null &&
-              localStorage.getItem("location") === null
+              selected === null &&
+              currentLocation === null
             ) {
               getAdd(29.3140728, 47.68022);
               // If User selected any location
-            } else if (localStorage.getItem("selected") !== null) {
-              const selected = JSON.parse(localStorage.getItem("selected"));
+            } else if (selected !== null) {
+              // const selected = JSON.parse(localStorage.getItem("selected"));
 
               getAdd(selected.lat, selected.lng);
               // If User didn't selected any location
-            } else if (localStorage.getItem("location") !== null) {
-              const currentLocation = JSON.parse(
-                localStorage.getItem("location")
-              );
+            } else if (currentLocation !== null) {
+              // const currentLocation = JSON.parse(
+              //   localStorage.getItem("location")
+              // );
 
               if (location?.state?.toCurrent !== undefined) {
                 makeCenter();
@@ -212,8 +215,8 @@ function LocationPage() {
               }
             } else if (
               token !== null &&
-              localStorage.getItem("selected") === null &&
-              localStorage.getItem("location") === null
+              selected === null &&
+              currentLocation === null
             ) {
               getAdd(29.3140728, 47.68022);
             }
@@ -243,11 +246,7 @@ function LocationPage() {
   }, [location?.state, allAreas]);
 
   useEffect(() => {
-    if (
-      allAreas?.length &&
-      addressComponents?.address_components?.length &&
-      noRegion === false
-    ) {
+    if (addressComponents?.address_components?.length && noRegion === false) {
       findOperationalArea(addressComponents);
     }
   }, [allAreas, addressComponents?.address_components, noRegion]);
@@ -316,6 +315,9 @@ function LocationPage() {
           }
         }
       }
+    } else {
+      setNotOperational(false);
+      setDistanceIsFar(false);
     }
   };
 
@@ -343,13 +345,13 @@ function LocationPage() {
   };
 
   useLayoutEffect(() => {
-    const userSelected = localStorage.getItem("selected");
-    const userLocation = localStorage.getItem("location");
+    // const userSelected = localStorage.getItem("selected");
+    // const userLocation = localStorage.getItem("location");
 
     // if (token !== null) {
     if (
-      userSelected === null &&
-      userLocation === null &&
+      selected === null &&
+      currentLocation === null &&
       location?.state?.latlng === undefined &&
       location?.state?.editLocation === undefined
     ) {
@@ -373,15 +375,15 @@ function LocationPage() {
 
       //
     } else if (
-      userSelected === null &&
-      userLocation !== null &&
+      selected === null &&
+      currentLocation !== null &&
       location?.state?.latlng === undefined &&
       location?.state?.editLocation === undefined
     ) {
       //
-      const parsedUserLocation = JSON.parse(userLocation);
+      // const parsedUserLocation = JSON.parse(userLocation);
 
-      const getCountry = parsedUserLocation.address.split(",");
+      const getCountry = currentLocation.address.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
@@ -402,15 +404,15 @@ function LocationPage() {
 
       //
     } else if (
-      userSelected === null &&
-      userLocation !== null &&
+      selected === null &&
+      currentLocation !== null &&
       location?.state?.latlng !== undefined &&
       location?.state?.editLocation === undefined
     ) {
       //
-      const parsedUserLocation = JSON.parse(userLocation);
+      // const parsedUserLocation = JSON.parse(userLocation);
 
-      const getCountry = parsedUserLocation.address.split(",");
+      const getCountry = currentLocation.address.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
@@ -431,16 +433,15 @@ function LocationPage() {
 
       //
     } else if (
-      userSelected !== null &&
-      userLocation !== null &&
+      selected !== null &&
+      currentLocation !== null &&
       location?.state?.latlng === undefined &&
       location?.state?.editLocation === undefined
     ) {
       //
+      // const parsedUserLocation = JSON.parse(userSelected);
 
-      const parsedUserLocation = JSON.parse(userSelected);
-
-      const getCountry = parsedUserLocation.address.split(",");
+      const getCountry = selected.address.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
@@ -474,6 +475,7 @@ function LocationPage() {
       // findOperationalArea(addressComponents);
     } else {
       setNoRegion(true);
+
       setNotOperational(false);
     }
   };
@@ -571,91 +573,147 @@ function LocationPage() {
     }
   }, [token, selectedAddress]);
 
+  const addLocationGuest = (address) => {
+    localStorage.setItem("location", JSON.stringify(address));
+  };
+
   const confirmLocation = () => {
-    setdisableButton(true);
-    const country_id = JSON.parse(localStorage.getItem("country"))?.id;
+    if (branchId === null && restaurant_id === null) {
+      navigate(paths.address, {
+        state: {
+          name: address,
+          latlng: center,
+          path: location?.state?.path,
+          fromHome: location?.state?.fromHome,
+          fromMenu: location?.state?.fromMenu,
+          fromDetail: location?.state?.fromDetail,
+          editLocation: location?.state?.editLocation,
+          selectedAddress: selectedAddress,
+        },
+      });
+    } else {
+      setdisableButton(true);
+      const country_id = JSON.parse(localStorage.getItem("country"))?.id;
 
-    const object = {
-      country_id,
-      delivery_charge_area_id: selectedAreaId,
-    };
+      const object = {
+        country_id,
+        delivery_charge_area_id: selectedAreaId,
+      };
 
-    getBranchByArea(restaurant_id, object, dispatch)
-      .then((res) => {
-        setdisableButton(false);
+      getBranchByArea(restaurant_id, object, dispatch)
+        .then((res) => {
+          setdisableButton(false);
 
-        if (token === null) {
-          const fullAddress = {
-            address,
-            lat: center.lat,
-            lng: center.lng,
-          };
+          if (token === null) {
+            const fullAddress = {
+              address,
+              lat: center.lat,
+              lng: center.lng,
+            };
 
-          localStorage.setItem("location", JSON.stringify(fullAddress));
+            addLocationGuest(fullAddress);
 
-          if (location?.state?.guestUser) {
-            if (location?.state?.path === "menu/restaurant") {
-              navigate(
-                `${paths.menu}/restaurant/${+location?.state
-                  ?.restaurant_id}/delivery`
-              );
+            if (location?.state?.guestUser) {
+              if (location?.state?.path === "menu/restaurant") {
+                addLocationGuest({
+                  ...fullAddress,
+                  minOrderAmount: selectedAddress.minOrderAmount,
+                });
+
+                navigate(
+                  `${paths.menu}/restaurant/${+location?.state
+                    ?.restaurant_id}/delivery`
+                );
+              } else {
+                navigate(paths.home);
+              }
             } else {
-              navigate(paths.home);
+              navigate(paths.phone_verification_index, {
+                state: location?.state,
+              });
             }
-          } else {
-            navigate(paths.phone_verification_index, {
-              state: location?.state,
-            });
-          }
-        } else if (
-          location?.state?.path === "/cart" ||
-          location?.state?.path === "/home" ||
-          location?.state?.path?.includes("menu-item-details") ||
-          location?.state?.path === "menu/restaurant"
-        ) {
-          if (
+          } else if (
+            location?.state?.path === "/cart" ||
+            location?.state?.path === "/home" ||
             location?.state?.path?.includes("menu-item-details") ||
             location?.state?.path === "menu/restaurant"
           ) {
-            if (location?.state?.addNew !== undefined) {
+            if (
+              location?.state?.path?.includes("menu-item-details") ||
+              location?.state?.path === "menu/restaurant"
+            ) {
+              if (location?.state?.addNew !== undefined) {
+                navigate(paths.address, {
+                  state: {
+                    name: address,
+                    latlng: center,
+                    path: location?.state?.path,
+                    restaurant_id: +location?.state?.restaurant_id,
+                    addNew: true,
+                    selectedAddress: selectedAddress,
+                  },
+                });
+              } else if (location?.state?.fromMenu !== undefined) {
+                navigate(paths.address, {
+                  state: {
+                    name: address,
+                    latlng: center,
+                    path: location?.state?.path,
+                    restaurant_id: +location?.state?.restaurant_id,
+                    fromMenu: location?.state?.fromMenu,
+                    selectedAddress: selectedAddress,
+                  },
+                });
+              } else if (location?.state?.fromDetail !== undefined) {
+                navigate(paths.address, {
+                  state: {
+                    name: address,
+                    latlng: center,
+                    path: location?.state?.path,
+                    restaurant_id: +location?.state?.restaurant_id,
+                    fromDetail: location?.state?.fromDetail,
+                    detailPath: location?.state?.detailPath,
+                    selectedAddress: selectedAddress,
+                  },
+                });
+              } else if (location?.state?.noAddress !== undefined) {
+                navigate(paths.address, {
+                  state: {
+                    ...location?.state,
+                    latlng: center,
+                    selectedAddress: selectedAddress,
+                  },
+                });
+              } else {
+                navigate(paths.address, {
+                  state: {
+                    name: address,
+                    latlng: center,
+                    path: location?.state?.path,
+                    restaurant_id: +location?.state?.restaurant_id,
+                    addFromDropdown: location?.state?.addFromDropdown,
+                    selectedAddress: selectedAddress,
+                  },
+                });
+              }
+            } else if (location?.state?.notSelected !== undefined) {
+              navigate(paths.address, {
+                state: {
+                  name: address,
+                  latlng: center,
+                  path: "/cart",
+                  restaurant_id: +location?.state?.restaurant_id,
+                  notSelected: location?.state?.notSelected,
+                  selectedAddress: selectedAddress,
+                },
+              });
+            } else if (location?.state?.fromHome !== undefined) {
               navigate(paths.address, {
                 state: {
                   name: address,
                   latlng: center,
                   path: location?.state?.path,
-                  restaurant_id: +location?.state?.restaurant_id,
-                  addNew: true,
-                  selectedAddress: selectedAddress,
-                },
-              });
-            } else if (location?.state?.fromMenu !== undefined) {
-              navigate(paths.address, {
-                state: {
-                  name: address,
-                  latlng: center,
-                  path: location?.state?.path,
-                  restaurant_id: +location?.state?.restaurant_id,
-                  fromMenu: location?.state?.fromMenu,
-                  selectedAddress: selectedAddress,
-                },
-              });
-            } else if (location?.state?.fromDetail !== undefined) {
-              navigate(paths.address, {
-                state: {
-                  name: address,
-                  latlng: center,
-                  path: location?.state?.path,
-                  restaurant_id: +location?.state?.restaurant_id,
-                  fromDetail: location?.state?.fromDetail,
-                  detailPath: location?.state?.detailPath,
-                  selectedAddress: selectedAddress,
-                },
-              });
-            } else if (location?.state?.noAddress !== undefined) {
-              navigate(paths.address, {
-                state: {
-                  ...location?.state,
-                  latlng: center,
+                  fromHome: location?.state?.fromHome,
                   selectedAddress: selectedAddress,
                 },
               });
@@ -665,61 +723,29 @@ function LocationPage() {
                   name: address,
                   latlng: center,
                   path: location?.state?.path,
-                  restaurant_id: +location?.state?.restaurant_id,
-                  addFromDropdown: location?.state?.addFromDropdown,
                   selectedAddress: selectedAddress,
                 },
               });
             }
-          } else if (location?.state?.notSelected !== undefined) {
-            navigate(paths.address, {
-              state: {
-                name: address,
-                latlng: center,
-                path: "/cart",
-                restaurant_id: +location?.state?.restaurant_id,
-                notSelected: location?.state?.notSelected,
-                selectedAddress: selectedAddress,
-              },
-            });
-          } else if (location?.state?.fromHome !== undefined) {
+          } else {
             navigate(paths.address, {
               state: {
                 name: address,
                 latlng: center,
                 path: location?.state?.path,
                 fromHome: location?.state?.fromHome,
-                selectedAddress: selectedAddress,
-              },
-            });
-          } else {
-            navigate(paths.address, {
-              state: {
-                name: address,
-                latlng: center,
-                path: location?.state?.path,
+                fromMenu: location?.state?.fromMenu,
+                fromDetail: location?.state?.fromDetail,
+                editLocation: location?.state?.editLocation,
                 selectedAddress: selectedAddress,
               },
             });
           }
-        } else {
-          navigate(paths.address, {
-            state: {
-              name: address,
-              latlng: center,
-              path: location?.state?.path,
-              fromHome: location?.state?.fromHome,
-              fromMenu: location?.state?.fromMenu,
-              fromDetail: location?.state?.fromDetail,
-              editLocation: location?.state?.editLocation,
-              selectedAddress: selectedAddress,
-            },
-          });
-        }
-      })
-      .catch((err) => {
-        setdisableButton(false);
-      });
+        })
+        .catch((err) => {
+          setdisableButton(false);
+        });
+    }
   };
 
   return (
@@ -918,7 +944,10 @@ function LocationPage() {
           {!distanceIsFar && notOperational ? (
             <Box className="info-window-box">
               <Typography variant="h5">
-                We don&apos;t deliver to this Area
+                {localStorage?.getItem("restaurantName") !== null
+                  ? `${localStorage?.getItem("restaurantName")}`
+                  : "We"}{" "}
+                don&apos;t deliver to this area
               </Typography>
             </Box>
           ) : null}

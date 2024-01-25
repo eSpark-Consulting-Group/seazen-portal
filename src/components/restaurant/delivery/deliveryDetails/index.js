@@ -247,7 +247,12 @@ const DeliveryDetails = (props) => {
           if (distance > 50) {
             setLocationDeliver(true);
           } else {
-            setLocationDeliver(false);
+            if (fromLocation?.name_en) {
+              setLocationDeliver(false);
+            } else {
+              setLocationDeliver(true);
+            }
+
             if (fromLocation && fromLocation.address) {
               setUserLocation(truncateString(fromLocation?.address, 15));
             } else {
@@ -269,7 +274,12 @@ const DeliveryDetails = (props) => {
           if (distance > 50) {
             setLocationDeliver(true);
           } else {
-            setLocationDeliver(false);
+            if (fromLocation?.name_en) {
+              setLocationDeliver(false);
+            } else {
+              setLocationDeliver(true);
+            }
+
             if (fromLocation && fromLocation.address) {
               setUserLocation(truncateString(fromLocation?.address, 15));
             } else {
@@ -513,45 +523,57 @@ const DeliveryDetails = (props) => {
 
     const country_id = JSON.parse(localStorage.getItem("country"))?.id;
 
-    const object = {
-      country_id,
-      delivery_charge_area_id: address?.delivery_charge_area_info.id,
-    };
+    if (!Array.isArray(address?.delivery_charge_area_info)) {
+      const object = {
+        country_id,
+        delivery_charge_area_id: address?.delivery_charge_area_info.id,
+      };
 
-    getBranchByArea(restaurant_id, object, dispatch)
-      .then((res) => {
-        setDisableMenu(false);
-        setOpendropdown(false);
+      getBranchByArea(restaurant_id, object, dispatch)
+        .then((res) => {
+          setDisableMenu(false);
+          setOpendropdown(false);
 
-        getUserAddress(address.latitude, address.longitude);
-        setAddressID(address.id);
-        setDeliveryCharge(
-          address?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
-        );
-        setDeliveryTime(address?.delivery_charge_area_info?.delivery_time);
-        setMinOrderAmount(
-          address?.delivery_charge_area_info?.minimum_order_amount
-        );
-        setNameEn(address?.delivery_charge_area_info?.name_en);
-        setOrderAmFromDelivery(
-          address?.delivery_charge_area_info?.minimum_order_amount
-        );
+          getUserAddress(address.latitude, address.longitude);
+          setAddressID(address.id);
 
-        localStorage.setItem("area_id", address?.delivery_charge_area_info.id);
+          setDeliveryCharge(
+            address?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+          );
+          setDeliveryTime(address?.delivery_charge_area_info?.delivery_time);
+          setMinOrderAmount(
+            address?.delivery_charge_area_info?.minimum_order_amount
+          );
+          setNameEn(address?.delivery_charge_area_info?.name_en);
+          setOrderAmFromDelivery(
+            address?.delivery_charge_area_info?.minimum_order_amount
+          );
 
-        if (res?.data?.length === 0) {
-          getBranchIdNearToLocation();
-        } else {
-          fetchAllCategories();
-          fetchAllItems(res.data?.branch_id);
-        }
+          localStorage.setItem(
+            "area_id",
+            address?.delivery_charge_area_info.id
+          );
 
-        // fetchNearbyRestaurant(address.latitude, address.longitude);
-      })
-      .catch((err) => {
-        setDisableMenu(false);
-        console.log(err);
-      });
+          if (res?.data?.length === 0) {
+            getBranchIdNearToLocation();
+          } else {
+            fetchAllCategories();
+            fetchAllItems(res.data?.branch_id);
+          }
+
+          // fetchNearbyRestaurant(address.latitude, address.longitude);
+        })
+        .catch((err) => {
+          setDisableMenu(false);
+          console.log(err);
+        });
+    } else {
+      getUserAddress(address.latitude, address.longitude);
+      setAddressID(address.id);
+
+      setDisableMenu(false);
+      setOpendropdown(false);
+    }
   };
 
   const fetchAllItems = (branch_id) => {

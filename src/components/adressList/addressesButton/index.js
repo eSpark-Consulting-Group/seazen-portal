@@ -8,6 +8,7 @@ import "./style.css";
 export const AddressesButton = ({
   restaurantName,
   restaurant_id,
+  branch_id,
   path,
   location,
 }) => {
@@ -18,6 +19,7 @@ export const AddressesButton = ({
       const initialState = {
         restaurantName: restaurantName,
         restaurant_id: restaurant_id,
+        branch_id: branch_id,
       };
 
       if (location?.state?.fromHome !== undefined) {
