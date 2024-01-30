@@ -27,7 +27,7 @@ const Navbar = (props) => {
       className="Nav_Image_Container"
       style={{
         backgroundImage: `url(${
-          restaurantDetail?.cover_page_image || defaultImagePath
+          restaurantDetail?.main_big_image || defaultImagePath
         })`,
       }}
     >
