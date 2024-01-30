@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -22,14 +22,28 @@ const Navbar = (props) => {
   );
 
   const defaultImagePath = "/assets/img/menu_background_image.png";
+
+  useEffect(() => {
+    const contentDiv = document.querySelector(".content-section");
+
+    if (contentDiv && restaurantDetail?.main_big_image) {
+      const oldBackground = window.getComputedStyle(contentDiv).backgroundImage;
+      contentDiv.style.backgroundImage = `url('${restaurantDetail?.main_big_image}'), ${oldBackground}`;
+    } else {
+      contentDiv.style.backgroundImage = "";
+    }
+
+    return () => {
+      contentDiv.style.backgroundImage = "";
+    };
+  }, [restaurantDetail]);
+
   return (
     <div
       className="Nav_Image_Container"
       style={{
         backgroundImage: `url(${
-          restaurantDetail?.main_big_image ||
-          restaurantDetail?.cover_page_image ||
-          defaultImagePath
+          restaurantDetail?.cover_page_image || defaultImagePath
         })`,
       }}
     >
