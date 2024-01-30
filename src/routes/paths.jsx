@@ -20,6 +20,7 @@ import MyOrderScreen from "../screens/myorder";
 import Receipt from "../screens/receipt";
 import SearchScreen from "../screens/searchPage";
 import { OrderFailed } from "../screens/orderFailed";
+import CountDown from "../screens/countDown";
 
 export const paths = {
   home: "/",
@@ -44,6 +45,7 @@ export const paths = {
   addresses: "/my-addresses",
   search: "search",
   order_failed: "/order-failed",
+  countdown: "/countdown",
 };
 
 export const routes = {
@@ -69,6 +71,7 @@ export const routes = {
   addresses: "/my-addresses",
   search: "/search",
   order_failed: "/order-failed",
+  countdown: "/countdown",
 };
 
 export const publicRoutes = {
@@ -176,6 +179,11 @@ export const publicRoutes = {
     name: "Order Failed",
     path: routes.order_failed,
     component: <OrderFailed />,
+  },
+  [paths.countdown]: {
+    name: "Count Down",
+    path: routes.countdown,
+    component: <CountDown />,
   },
 };
 

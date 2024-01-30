@@ -1,0 +1,55 @@
+@font-face {
+  font-family: "Messapia-Bold";
+  src: url("../../font/Messapia-Bold.otf") format("truetype");
+}
+.countdown_container {
+  background-color: #0c1a35;
+  padding: 30px;
+  height: 100vh;
+}
+.countdown_section {
+  width: 100%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  font-family: "Messapia-Bold";
+}
+
+.countdown {
+  display: flex;
+}
+
+.top_logos {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  gap: 60px;
+}
+
+.countdown_logoLeft {
+  width: 20%;
+}
+
+.countdown_logoRight {
+  width: 60%;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 500px) {
+  .top_logos {
+    gap: 20px;
+  }
+
+  .countdown_logoLeft {
+    width: 23%;
+  }
+
+  .countdown_logoRight {
+    width: 73%;
+  }
+
+  .countdown_container {
+    padding: 10px;
+  }
+}
