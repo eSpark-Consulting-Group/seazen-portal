@@ -137,10 +137,13 @@ function LocationPage() {
   });
 
   useEffect(() => {
-    if (branchId !== null || restaurant_id !== null) {
+    if (
+      (branchId !== null && restaurant_id !== null) ||
+      restaurantID !== null
+    ) {
       fetchAreasAgain();
     }
-  }, [branchId, restaurant_id]);
+  }, [branchId, restaurant_id, restaurantID]);
 
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [address, setAddress] = useState("");
@@ -293,11 +296,22 @@ function LocationPage() {
         noRegion
       );
     }
-  }, [allAreas, addressComponents?.address_components, noRegion, branchHours]);
+  }, [
+    allAreas,
+    addressComponents?.address_components,
+    noRegion,
+    branchHours,
+    branchId,
+    restaurant_id,
+    localStorage,
+  ]);
 
   useEffect(() => {
     if (addressComponents?.address_components?.length) {
-      if (branchId !== null && restaurant_id !== null) {
+      if (
+        (branchId !== null && restaurant_id !== null) ||
+        restaurantID !== null
+      ) {
         findOperationalArea(
           addressComponents,
           allAreas,
@@ -311,7 +325,12 @@ function LocationPage() {
         );
       }
     }
-  }, [branchId, restaurant_id, addressComponents?.address_components]);
+  }, [
+    branchId,
+    restaurant_id,
+    addressComponents?.address_components,
+    restaurantID,
+  ]);
 
   const getAdd = async (latitude, longitude) => {
     // eslint-disable-next-line no-undef
@@ -492,9 +511,13 @@ function LocationPage() {
     if (autocomplete) {
       const lat = autocomplete.getPlace().geometry.location.lat();
       const lng = autocomplete.getPlace().geometry.location.lng();
+      const restId =
+        localStorage?.getItem("restaurantID") === null
+          ? restaurant_id
+          : localStorage?.getItem("restaurantID");
 
       const filterBranches = branchHours?.filter(
-        (branch) => branch?.restaurant_id === +restaurant_id
+        (branch) => branch?.restaurant_id === +restId
       );
 
       if (filterBranches?.length && restaurantID !== null) {
@@ -521,52 +544,53 @@ function LocationPage() {
               setNoRegion,
               setAddressComponents,
               setNotOperational,
+              countries,
+              setCenter,
+              setAddress
+            );
+          }
+        }
+
+        setCenter({ lat, lng });
+        setAddress(autocomplete.getPlace().formatted_address);
+
+        fetchAreasAgain();
+      } else if (
+        branchHours?.length > 0 &&
+        filterBranches?.length === 0 &&
+        localStorage?.getItem("restaurantID") === null
+      ) {
+        for (const branch of branchHours) {
+          const reslat = +branch?.latitude;
+          const reslng = +branch?.longitude;
+
+          const distance = getDistanceFromLatLonInKm(reslat, reslng, lat, lng);
+
+          if (distance > 50) {
+            setNotOperational(true);
+          } else {
+            pushedDistanceWithDetails.push({
+              ...branch,
+              distance,
+            });
+
+            branchDelivers(
+              setIsDeliveryZones,
+              pushedDistanceWithDetails,
+              setRestaurant_id,
+              setBranchId,
+              autocomplete,
+              setNoRegion,
+              setAddressComponents,
+              setNotOperational,
               countries
             );
           }
         }
+
         setCenter({ lat, lng });
         setAddress(autocomplete.getPlace().formatted_address);
         fetchAreasAgain();
-      } else {
-        if (branchHours?.length > 0) {
-          for (const branch of branchHours) {
-            const reslat = +branch?.latitude;
-            const reslng = +branch?.longitude;
-
-            const distance = getDistanceFromLatLonInKm(
-              reslat,
-              reslng,
-              lat,
-              lng
-            );
-
-            if (distance > 50) {
-              setNotOperational(true);
-            } else {
-              pushedDistanceWithDetails.push({
-                ...branch,
-                distance,
-              });
-
-              branchDelivers(
-                setIsDeliveryZones,
-                pushedDistanceWithDetails,
-                setRestaurant_id,
-                setBranchId,
-                autocomplete,
-                setNoRegion,
-                setAddressComponents,
-                setNotOperational,
-                countries
-              );
-            }
-          }
-
-          setCenter({ lat, lng });
-          setAddress(autocomplete.getPlace().formatted_address);
-          fetchAreasAgain();
-        }
       }
     }
   };

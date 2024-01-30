@@ -20,7 +20,9 @@ export const branchDelivers = (
   setNoRegion,
   setAddressComponents,
   setNotOperational,
-  countries
+  countries,
+  setCenter,
+  setAddress
 ) => {
   setIsDeliveryZones(true);
 
@@ -33,8 +35,10 @@ export const branchDelivers = (
   );
 
   if (smallestDistanceLocation) {
-    setRestaurant_id(smallestDistanceLocation.restaurant_id);
-    setBranchId(smallestDistanceLocation.id);
+    if (localStorage?.getItem("restaurantID") === null) {
+      setRestaurant_id(smallestDistanceLocation.restaurant_id);
+      setBranchId(smallestDistanceLocation.id);
+    }
 
     const restrictToRegion = autocomplete
       .getPlace()
@@ -117,11 +121,11 @@ export const findOperationalArea = (
           //   addresses &&
           //   addresses?.geometry &&
           //   addresses?.geometry?.location &&
-          //   addresses?.geometry?.location.lat() &&
-          //   addresses?.geometry?.location.lng()
+          //   addresses?.geometry?.location.lat &&
+          //   addresses?.geometry?.location.lng
           // ) {
-          //   const lat = addresses?.geometry?.location.lat();
-          //   const lng = addresses?.geometry?.location.lng();
+          //   const lat = addresses?.geometry?.location.lat;
+          //   const lng = addresses?.geometry?.location.lng;
 
           //   setCenter({ lat, lng });
           //   setAddress(addresses?.formatted_address);

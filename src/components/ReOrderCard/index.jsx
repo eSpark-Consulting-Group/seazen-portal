@@ -83,12 +83,14 @@ const ReOrderCard = (props) => {
         if (distance > 50) {
           sameFunctionCall();
         } else {
-          pushedWithDistance.push({
-            ...branchesAndHours[i],
-            distance,
-          });
+          // pushedWithDistance.push({
+          //   ...branchesAndHours[i],
+          //   distance,
+          // });
 
-          checkWithBranchIdDeliverZones(pushedWithDistance);
+          setDistanceIsFar(false);
+          reorderItems();
+          break;
         }
       }
 
@@ -103,31 +105,27 @@ const ReOrderCard = (props) => {
         if (distance > 50) {
           sameFunctionCall();
         } else {
-          pushedWithDistance.push({
-            ...branchesAndHours[i],
-            distance,
-          });
-
-          checkWithBranchIdDeliverZones(pushedWithDistance);
+          setDistanceIsFar(false);
+          reorderItems();
+          break;
         }
       }
     }
   };
 
-  const checkWithBranchIdDeliverZones = (allDistancesLessThan50) => {
-    // Find the smallest distance and associated location
-    const smallestDistance = Math.min(
-      ...allDistancesLessThan50.map((item) => item.distance)
-    );
-    const smallestDistanceLocation = allDistancesLessThan50.find(
-      (item) => item.distance === smallestDistance
-    );
+  // const checkWithBranchIdDeliverZones = (allDistancesLessThan50) => {
+  //   // Find the smallest distance and associated location
+  //   const smallestDistance = Math.min(
+  //     ...allDistancesLessThan50.map((item) => item.distance)
+  //   );
+  //   const smallestDistanceLocation = allDistancesLessThan50.find(
+  //     (item) => item.distance === smallestDistance
+  //   );
 
-    if (smallestDistanceLocation) {
-      setDistanceIsFar(false);
-      reorderItems();
-    }
-  };
+  //   if (smallestDistanceLocation) {
+
+  //   }
+  // };
 
   const sameFunctionCall = () => {
     setRestaurantName(restaurantDetail?.name_en);

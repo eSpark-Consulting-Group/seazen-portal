@@ -306,12 +306,12 @@ const MenuCardListContainer = ({
             setDistanceIsFar(true);
             setOpenAddressPopup(false);
           } else {
-            pushedWithDistance.push({
-              ...filterBranch[i],
-              distance,
-            });
+            setDistanceIsFar(false);
+            setOpenAddressPopup(false);
 
-            checkWithBranchIdDeliverZones(pushedWithDistance, filterBranch);
+            checkNearByRest(filterBranch);
+
+            break;
           }
         }
       }

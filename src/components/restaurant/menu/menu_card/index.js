@@ -193,30 +193,27 @@ const MenuCard = (props) => {
         setFarAway(false);
         setOpenModal(true);
       } else {
-        pushedWithDistance.push({
-          ...restaurantBranchHours?.data[i],
-          distance,
-        });
-
-        checkWithBranchIdDeliverZonesForAdd(pushedWithDistance);
+        setFarAway(true);
+        cartFunction(id);
+        break;
       }
     }
   };
 
-  const checkWithBranchIdDeliverZonesForAdd = (allDistancesLessThan50) => {
-    // Find the smallest distance and associated location
-    const smallestDistance = Math.min(
-      ...allDistancesLessThan50.map((item) => item.distance)
-    );
-    const smallestDistanceLocation = allDistancesLessThan50.find(
-      (item) => item.distance === smallestDistance
-    );
+  // const checkWithBranchIdDeliverZonesForAdd = (allDistancesLessThan50) => {
+  //   // Find the smallest distance and associated location
+  //   const smallestDistance = Math.min(
+  //     ...allDistancesLessThan50.map((item) => item.distance)
+  //   );
+  //   const smallestDistanceLocation = allDistancesLessThan50.find(
+  //     (item) => item.distance === smallestDistance
+  //   );
 
-    if (smallestDistanceLocation) {
-      setFarAway(true);
-      cartFunction(id);
-    }
-  };
+  //   if (smallestDistanceLocation) {
+  //     setFarAway(true);
+  //     cartFunction(id);
+  //   }
+  // };
 
   const getMenuItemsVariances = () => {
     // find all items with the specified id
@@ -324,39 +321,44 @@ const MenuCard = (props) => {
             }
             setOpenModal(true);
           } else {
-            pushedWithDistance.push({
-              ...restaurantBranchHours?.data[i],
-              distance,
+            setRestaurantIsOpen(false);
+            setOpenModal(false);
+            navigate(paths.details + "/" + id, {
+              state: {
+                id: id,
+                branch_id: allData.branch_id,
+                locationDeliver: locationDeliver,
+              },
             });
 
-            checkWithBranchIdDeliverZones(pushedWithDistance);
+            break;
           }
         }
       }
     }
   }
 
-  const checkWithBranchIdDeliverZones = (allDistancesLessThan50) => {
-    // Find the smallest distance and associated location
-    const smallestDistance = Math.min(
-      ...allDistancesLessThan50.map((item) => item.distance)
-    );
-    const smallestDistanceLocation = allDistancesLessThan50.find(
-      (item) => item.distance === smallestDistance
-    );
+  // const checkWithBranchIdDeliverZones = (allDistancesLessThan50) => {
+  //   // Find the smallest distance and associated location
+  //   const smallestDistance = Math.min(
+  //     ...allDistancesLessThan50.map((item) => item.distance)
+  //   );
+  //   const smallestDistanceLocation = allDistancesLessThan50.find(
+  //     (item) => item.distance === smallestDistance
+  //   );
 
-    if (smallestDistanceLocation) {
-      setRestaurantIsOpen(false);
-      setOpenModal(false);
-      navigate(paths.details + "/" + id, {
-        state: {
-          id: id,
-          branch_id: allData.branch_id,
-          locationDeliver: locationDeliver,
-        },
-      });
-    }
-  };
+  //   if (smallestDistanceLocation) {
+  //     setRestaurantIsOpen(false);
+  //     setOpenModal(false);
+  //     navigate(paths.details + "/" + id, {
+  //       state: {
+  //         id: id,
+  //         branch_id: allData.branch_id,
+  //         locationDeliver: locationDeliver,
+  //       },
+  //     });
+  //   }
+  // };
 
   const previousRestaurant = restaurantsData?.find((val) => {
     return val.id == cart[0]?.restaurant_id;

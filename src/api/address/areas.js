@@ -8,7 +8,7 @@ const getAllArea = async (restaurantId, branchId) => {
     const restaurant_id = localStorage.getItem("restaurantID");
     const branch_id = localStorage.getItem("branchId");
 
-    if (restaurantId !== undefined && branchId !== undefined) {
+    if (restaurantId !== null && branchId !== null) {
       attachEndpoint = updateEndpoint(restaurantId, branchId);
     } else if (restaurant_id !== null && branch_id !== null) {
       attachEndpoint = updateEndpoint(restaurant_id, branch_id);

@@ -358,7 +358,7 @@ const Menu = () => {
       setDistanceIsFar(false);
       setOpenAddressPopup(false);
 
-      checkNearByRest(filterBranch);
+      checkNearByRest(smallestDistanceLocation);
     }
   };
 
