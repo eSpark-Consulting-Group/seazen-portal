@@ -63,7 +63,7 @@ const DeliveryConditionalComponent = ({
   }, [branchId]);
 
   const fetchAllItems = () => {
-    if (branchId != null || branchId != undefined) {
+    if (branchId != null) {
       dispatch(toggleCategoryListLoading());
 
       getListItemByCategory(
@@ -85,7 +85,7 @@ const DeliveryConditionalComponent = ({
       categories?.length === 0 ||
       resturantId != categories[0]?.restaurant_id
     )
-      fetchAllCategories();
+      if (branchId !== null) fetchAllCategories();
   }, [branchId]);
 
   const fetchAllCategories = () => {

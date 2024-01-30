@@ -45,7 +45,7 @@ const MenuItems = ({ itemCategoryList }) => {
     setValue(parseInt(visibleCategoryElementID - 1));
   }, [visibleCategoryElementID]);
 
-  return (
+  return visibleCategoryElementID !== 0 ? (
     <div className="menu_item_outer_container px-3 px-sm-4">
       <div className="menu_item_inner_container">
         <div className="menu_dropdown_container">
@@ -149,7 +149,7 @@ const MenuItems = ({ itemCategoryList }) => {
         </div>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default MenuItems;

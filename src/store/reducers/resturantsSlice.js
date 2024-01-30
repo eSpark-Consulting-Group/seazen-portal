@@ -97,6 +97,9 @@ const resturantsSlice = createSlice({
     setBranchID: (state, action) => {
       state.branchId = action.payload;
     },
+    removeBranchID: (state, action) => {
+      state.branchId = null;
+    },
     setSlidesCount: (state, action) => {
       state.details.slides = state.details.slides.map((item, index) =>
         index !== action.payload.index
@@ -147,6 +150,7 @@ export const {
   getResturantsDetails,
   getCategoryList,
   toggleCategoryListLoading,
+  removeBranchID,
 } = resturantsSlice.actions;
 
 export default resturantsSlice.reducer;

@@ -91,16 +91,14 @@ const App = () => {
     setSelectedId(item.id);
     setSelectedAddress(item);
 
-    if (!Array.isArray(item?.delivery_charge_area_info)) {
-      setDeliveryCharge(
-        item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
-      );
-      setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
-      setMinOrderAmount(item?.delivery_charge_area_info?.minimum_order_amount);
-      setNameEn(item.delivery_charge_area_info?.name_en);
+    setDeliveryCharge(
+      item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+    );
+    setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
+    setMinOrderAmount(item?.delivery_charge_area_info?.minimum_order_amount);
+    setNameEn(item.delivery_charge_area_info?.name_en);
 
-      localStorage.setItem("area_id", item?.delivery_charge_area_info.id);
-    }
+    localStorage.setItem("area_id", item?.delivery_charge_area_info.id);
 
     const selectedAddress = {
       lat: +item.latitude,
