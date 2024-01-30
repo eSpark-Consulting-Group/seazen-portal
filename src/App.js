@@ -160,28 +160,35 @@ function App() {
   }, []);
 
   return (
-    <div className="container_main">
-      <div className="design-section">
-        <RouteProvider />
-        <Suspense fallback={<div>Loading...</div>}>
-          <LazyChatScript />
-        </Suspense>
+    <>
+      {currentURL.pathname === "/countdown" && <RouteProvider />}
+      {currentURL.pathname !== "/countdown" && (
+      <div className="container_main">
+          <div className="design-section">
+            {/* Design section content */}
+            <RouteProvider />
+            <Suspense fallback={<div>Loading...</div>}>
+              <LazyChatScript />
+            </Suspense>
+          </div>
+          <div className="content-section">
+            <ToastContainer
+              position="top-left"
+              autoClose={2500}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+          </div>
+        
       </div>
-      <div className="content-section"></div>
-
-      <ToastContainer
-        position="top-left"
-        autoClose={2500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-    </div>
+      )}
+    </>
   );
 }
 
