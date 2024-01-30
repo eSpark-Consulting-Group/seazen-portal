@@ -48,6 +48,20 @@ import { getAreas } from "../../store/reducers/addressSlice";
 import { paths } from "../../routes/paths";
 
 import "./style.css";
+import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
+import getRestaurantBranchHours, {
+  GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
+} from "../../api/restaurant/getRestaurantBranchHours";
+import {
+  getBranchHours,
+  setBranchID,
+} from "../../store/reducers/resturantsSlice";
+import {
+  branchDelivers,
+  checkNearestDistanceOfBranch,
+  findOperationalArea,
+} from "../../utils/checkNearestDistance";
+import { setPermissionsForLocation } from "../../utils/navigate";
 
 const containerStyle = {
   width: "100%",
@@ -79,11 +93,12 @@ function LocationPage() {
 
   const countries = useSelector((state) => state.auth.countries);
   const allAreas = useSelector((state) => state.address.allAreas);
+  const branchHours = useSelector((state) => state.resturants.branchHours);
 
   const selected = JSON.parse(localStorage.getItem("selected"));
   const currentLocation = JSON.parse(localStorage.getItem("location"));
-  const restaurant_id = JSON.parse(localStorage.getItem("restaurantID"));
-  const branchId = JSON.parse(localStorage.getItem("branchId"));
+  const restaurantID = JSON.parse(localStorage.getItem("restaurantID"));
+  // const branchId = JSON.parse(localStorage.getItem("branchId"));
   const token = localStorage.getItem("token");
 
   const { isLoaded } = useLoadScript({
@@ -93,23 +108,42 @@ function LocationPage() {
     libraries: lib,
   });
 
-  const { refetch } = useQuery({
+  const [isDeliveryZones, setIsDeliveryZones] = useState(false);
+  const [autocomplete, setAutocomplete] = useState(null);
+  const [restaurant_id, setRestaurant_id] = useState(null);
+  const [branchId, setBranchId] = useState(null);
+
+  // const { refetch: emptyState } = useQuery({
+  //   queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY, branchHours.length === 0],
+  //   queryFn: () => getRestaurantBranchHours(restaurant_id),
+  //   onSuccess: (res) => {
+  //     dispatch(getBranchHours(res.data));
+  //   },
+  //   enabled: branchHours.length === 0,
+  // });
+
+  // useEffect(() => {
+  //   if (branchHours.length === 0) {
+  //     emptyState();
+  //   }
+  // }, [branchHours, restaurant_id]);
+
+  const { refetch: fetchAreasAgain } = useQuery({
     queryFn: () => getAllArea(restaurant_id, branchId),
     onSuccess: (data) => {
+      setIsDeliveryZones(false);
       dispatch(getAreas(data.data));
     },
-    enabled: restaurant_id !== null && branchId !== null,
   });
 
   useEffect(() => {
-    if (restaurant_id !== null && branchId !== null) {
-      refetch();
+    if (branchId !== null || restaurant_id !== null) {
+      fetchAreasAgain();
     }
-  }, [allAreas, restaurant_id, branchId]);
+  }, [branchId, restaurant_id]);
 
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [address, setAddress] = useState("");
-  const [autocomplete, setAutocomplete] = useState(null);
   const [distanceIsFar, setDistanceIsFar] = useState(false);
   const [noRegion, setNoRegion] = useState(false);
   const [clicked, setClicked] = useState(false);
@@ -127,102 +161,17 @@ function LocationPage() {
       navigator.permissions
         .query({ name: "geolocation" })
         .then(function (PermissionStatus) {
-          // If user has granted permission
-          if (PermissionStatus.state == "granted") {
-            if (
-              location?.state?.editLocation === undefined &&
-              location?.state?.latlng === undefined
-            ) {
-              if (selected !== null) {
-                // If User selected any location
-                // const selected = JSON.parse(localStorage.getItem("selected"));
-
-                if (location?.state?.toCurrent !== undefined) {
-                  makeCenter();
-                } else {
-                  getAdd(selected.lat, selected.lng);
-                }
-
-                // If User didn't selected any location
-              } else if (currentLocation !== null) {
-                // const currentLocation = JSON.parse(
-                //   localStorage.getItem("location")
-                // );
-
-                if (location?.state?.toCurrent !== undefined) {
-                  makeCenter();
-                } else {
-                  getAdd(currentLocation.lat, currentLocation.lng);
-                }
-              }
-            }
-            //
-            // If user permission is off
-          } else if (PermissionStatus.state == "prompt") {
-            if (
-              token === null &&
-              selected === null &&
-              currentLocation === null
-            ) {
-              getAdd(29.3140728, 47.68022);
-              // If User selected any location
-            } else if (selected !== null) {
-              // const selected = JSON.parse(localStorage.getItem("selected"));
-
-              getAdd(selected.lat, selected.lng);
-              // If User didn't selected any location
-            } else if (currentLocation !== null) {
-              // const currentLocation = JSON.parse(
-              //   localStorage.getItem("location")
-              // );
-
-              if (location?.state?.toCurrent !== undefined) {
-                makeCenter();
-              } else {
-                getAdd(currentLocation.lat, currentLocation.lng);
-              }
-            } else if (
-              token !== null &&
-              selected === null &&
-              currentLocation === null
-            ) {
-              getAdd(29.3140728, 47.68022);
-            }
-            //
-            // If user has denied permission
-          } else {
-            if (
-              token === null &&
-              selected === null &&
-              currentLocation === null
-            ) {
-              getAdd(29.3140728, 47.68022);
-              // If User selected any location
-            } else if (selected !== null) {
-              // const selected = JSON.parse(localStorage.getItem("selected"));
-
-              getAdd(selected.lat, selected.lng);
-              // If User didn't selected any location
-            } else if (currentLocation !== null) {
-              // const currentLocation = JSON.parse(
-              //   localStorage.getItem("location")
-              // );
-
-              if (location?.state?.toCurrent !== undefined) {
-                makeCenter();
-              } else {
-                getAdd(currentLocation.lat, currentLocation.lng);
-              }
-            } else if (
-              token !== null &&
-              selected === null &&
-              currentLocation === null
-            ) {
-              getAdd(29.3140728, 47.68022);
-            }
-          }
+          setPermissionsForLocation(
+            PermissionStatus,
+            location,
+            selected,
+            makeCenter,
+            getAdd,
+            currentLocation,
+            token
+          );
         });
-  }, [allAreas]);
+  }, []);
 
   useEffect(() => {
     if (
@@ -234,7 +183,7 @@ function LocationPage() {
 
       getAdd(lat, lng);
     }
-  }, [location?.state, allAreas]);
+  }, [location?.state, allAreas, branchHours]);
 
   useEffect(() => {
     if (
@@ -243,83 +192,41 @@ function LocationPage() {
     ) {
       getAdd(+location?.state?.latlng?.lat, +location?.state?.latlng?.lng);
     }
-  }, [location?.state, allAreas]);
+  }, [location?.state, allAreas, branchHours, branchId]);
 
   useEffect(() => {
     if (addressComponents?.address_components?.length && noRegion === false) {
-      findOperationalArea(addressComponents);
+      findOperationalArea(
+        addressComponents,
+        allAreas,
+        setCenter,
+        setAddress,
+        setSelectedAreaId,
+        setSelectedAddress,
+        setNotOperational,
+        setDistanceIsFar,
+        noRegion
+      );
     }
-  }, [allAreas, addressComponents?.address_components, noRegion]);
+  }, [allAreas, addressComponents?.address_components, noRegion, branchHours]);
 
-  const findOperationalArea = (addresses) => {
-    const result =
-      addresses?.address_components
-        .map((addressComponent) => {
-          const matchingAreaGroup = allAreas?.find((areaGroup) =>
-            areaGroup?.areas?.some(
-              (area) =>
-                area?.name_en.trim().toLowerCase() ===
-                  removeDiacritics(
-                    addressComponent?.long_name.trim().toLowerCase()
-                  ) ||
-                (addresses?.name &&
-                  area?.name_en.trim().toLowerCase() ===
-                    removeDiacritics(addresses?.name?.trim().toLowerCase()))
-            )
-          );
-
-          if (matchingAreaGroup) {
-            const matchingArea = matchingAreaGroup?.areas?.find((area) => {
-              return (
-                area?.name_en.trim().toLowerCase() ===
-                  removeDiacritics(
-                    addressComponent?.long_name.trim().toLowerCase()
-                  ) ||
-                (addresses?.name &&
-                  area?.name_en.trim().toLowerCase() ===
-                    removeDiacritics(addresses?.name?.trim().toLowerCase()))
-              );
-            });
-
-            return {
-              area_id: matchingArea.area_id,
-              name_en: matchingArea.name_en,
-              delivery_charges: matchingArea.delivery_charges,
-              delivery_time: matchingArea.delivery_time,
-              minOrderAmount: matchingArea.minimum_order_amount,
-              zone_id: matchingAreaGroup.zone_id,
-            };
-          }
-
-          return null;
-        })
-        .find((result) => result !== null) || null;
-
-    if (allAreas?.length) {
-      if (result !== null) {
-        setSelectedAreaId(result?.area_id);
-        // savingAreaIdForMatchingArea(addresses, allAreas);
-        setSelectedAddress({
-          ...result,
-          address: addresses?.formatted_address,
-        });
-        setNotOperational(false);
-        setDistanceIsFar(false);
-      } else {
-        if (!noRegion) {
-          if (location?.state?.restaurant_id !== undefined) {
-            setDistanceIsFar(true);
-          } else {
-            setDistanceIsFar(false);
-            setNotOperational(true);
-          }
-        }
+  useEffect(() => {
+    if (addressComponents?.address_components?.length) {
+      if (branchId !== null && restaurant_id !== null) {
+        findOperationalArea(
+          addressComponents,
+          allAreas,
+          setCenter,
+          setAddress,
+          setSelectedAreaId,
+          setSelectedAddress,
+          setNotOperational,
+          setDistanceIsFar,
+          noRegion
+        );
       }
-    } else {
-      setNotOperational(false);
-      setDistanceIsFar(false);
     }
-  };
+  }, [branchId, restaurant_id, addressComponents?.address_components]);
 
   const getAdd = async (latitude, longitude) => {
     // eslint-disable-next-line no-undef
@@ -460,7 +367,15 @@ function LocationPage() {
       }
     }
     // }
-  }, [localStorage, address, placeChanged, location, allAreas]);
+  }, [
+    localStorage,
+    address,
+    placeChanged,
+    location,
+    allAreas,
+    branchId,
+    branchHours,
+  ]);
 
   const servicePlaceCheck = (fullAddress) => {
     let countriesName = [];
@@ -485,48 +400,89 @@ function LocationPage() {
   };
 
   const onPlaceChanged = () => {
+    let pushedDistanceWithDetails = [];
+
     setPlaceChanged(true);
+
     if (autocomplete) {
       const lat = autocomplete.getPlace().geometry.location.lat();
       const lng = autocomplete.getPlace().geometry.location.lng();
 
-      const restrictToRegion = autocomplete
-        .getPlace()
-        .formatted_address.split(",");
+      const filterBranches = branchHours?.filter(
+        (branch) => branch?.restaurant_id === +restaurant_id
+      );
 
-      const lastElem = restrictToRegion[restrictToRegion.length - 1];
-      const findCountry = lastElem?.split(" ");
-      let forCondition = findCountry[findCountry.length - 1];
+      if (filterBranches?.length && restaurantID !== null) {
+        for (const branchData of filterBranches) {
+          const reslat = +branchData?.latitude;
+          const reslng = +branchData?.longitude;
 
-      if (forCondition === "Arabia") {
-        forCondition = "Saudia Arabia";
-      }
+          const distance = getDistanceFromLatLonInKm(reslat, reslng, lat, lng);
 
-      if (forCondition == "Emirates") {
-        forCondition = "UAE";
-      }
+          if (distance > 50) {
+            setNotOperational(true);
+          } else {
+            pushedDistanceWithDetails.push({
+              ...branchData,
+              distance,
+            });
 
-      let countriesName = [];
-
-      if (countries.length) {
-        countriesName = countries.map((obj) => obj.name_en);
-      }
-
-      if (countriesName.includes(forCondition)) {
-        setNoRegion(false);
-        setAddressComponents(autocomplete.getPlace());
-
-        // if (addressComponents.length !== 0) {
-        //   findOperationalArea(autocomplete.getPlace());
-        // } else {
-        // }
+            branchDelivers(
+              setIsDeliveryZones,
+              pushedDistanceWithDetails,
+              setRestaurant_id,
+              setBranchId,
+              autocomplete,
+              setNoRegion,
+              setAddressComponents,
+              setNotOperational,
+              countries
+            );
+          }
+        }
+        setCenter({ lat, lng });
+        setAddress(autocomplete.getPlace().formatted_address);
+        fetchAreasAgain();
       } else {
-        setNoRegion(true);
-        setNotOperational(false);
-      }
+        if (branchHours?.length > 0) {
+          for (const branch of branchHours) {
+            const reslat = +branch?.latitude;
+            const reslng = +branch?.longitude;
 
-      setCenter({ lat, lng });
-      setAddress(autocomplete.getPlace().formatted_address);
+            const distance = getDistanceFromLatLonInKm(
+              reslat,
+              reslng,
+              lat,
+              lng
+            );
+
+            if (distance > 50) {
+              setNotOperational(true);
+            } else {
+              pushedDistanceWithDetails.push({
+                ...branch,
+                distance,
+              });
+
+              branchDelivers(
+                setIsDeliveryZones,
+                pushedDistanceWithDetails,
+                setRestaurant_id,
+                setBranchId,
+                autocomplete,
+                setNoRegion,
+                setAddressComponents,
+                setNotOperational,
+                countries
+              );
+            }
+          }
+
+          setCenter({ lat, lng });
+          setAddress(autocomplete.getPlace().formatted_address);
+          fetchAreasAgain();
+        }
+      }
     }
   };
 
@@ -578,21 +534,57 @@ function LocationPage() {
   };
 
   const confirmLocation = () => {
-    if (branchId === null && restaurant_id === null) {
-      navigate(paths.address, {
-        state: {
-          name: address,
-          latlng: center,
-          path: location?.state?.path,
-          fromHome: location?.state?.fromHome,
-          fromMenu: location?.state?.fromMenu,
-          fromDetail: location?.state?.fromDetail,
-          editLocation: location?.state?.editLocation,
-          selectedAddress: selectedAddress,
-        },
-      });
+    setdisableButton(true);
+
+    if (branchId === null) {
+      if (token === null) {
+        setdisableButton(false);
+        const fullAddress = {
+          address,
+          lat: center.lat,
+          lng: center.lng,
+        };
+
+        addLocationGuest(fullAddress);
+
+        if (location?.state?.guestUser) {
+          if (location?.state?.path === "menu/restaurant") {
+            if (selectedAddress.minOrderAmount !== undefined) {
+              addLocationGuest({
+                ...fullAddress,
+                minOrderAmount: selectedAddress.minOrderAmount,
+              });
+            }
+
+            navigate(
+              `${paths.menu}/restaurant/${+location?.state
+                ?.restaurant_id}/delivery`
+            );
+          } else {
+            navigate(paths.home);
+          }
+        } else {
+          navigate(paths.phone_verification_index, {
+            state: location?.state,
+          });
+        }
+      } else {
+        setdisableButton(false);
+
+        navigate(paths.address, {
+          state: {
+            name: address,
+            latlng: center,
+            path: location?.state?.path,
+            fromHome: location?.state?.fromHome,
+            fromMenu: location?.state?.fromMenu,
+            fromDetail: location?.state?.fromDetail,
+            editLocation: location?.state?.editLocation,
+            selectedAddress: { ...selectedAddress, branchId, restaurant_id },
+          },
+        });
+      }
     } else {
-      setdisableButton(true);
       const country_id = JSON.parse(localStorage.getItem("country"))?.id;
 
       const object = {
@@ -650,7 +642,11 @@ function LocationPage() {
                     path: location?.state?.path,
                     restaurant_id: +location?.state?.restaurant_id,
                     addNew: true,
-                    selectedAddress: selectedAddress,
+                    selectedAddress: {
+                      ...selectedAddress,
+                      branchId,
+                      restaurant_id,
+                    },
                   },
                 });
               } else if (location?.state?.fromMenu !== undefined) {
@@ -661,7 +657,11 @@ function LocationPage() {
                     path: location?.state?.path,
                     restaurant_id: +location?.state?.restaurant_id,
                     fromMenu: location?.state?.fromMenu,
-                    selectedAddress: selectedAddress,
+                    selectedAddress: {
+                      ...selectedAddress,
+                      branchId,
+                      restaurant_id,
+                    },
                   },
                 });
               } else if (location?.state?.fromDetail !== undefined) {
@@ -673,7 +673,11 @@ function LocationPage() {
                     restaurant_id: +location?.state?.restaurant_id,
                     fromDetail: location?.state?.fromDetail,
                     detailPath: location?.state?.detailPath,
-                    selectedAddress: selectedAddress,
+                    selectedAddress: {
+                      ...selectedAddress,
+                      branchId,
+                      restaurant_id,
+                    },
                   },
                 });
               } else if (location?.state?.noAddress !== undefined) {
@@ -681,7 +685,11 @@ function LocationPage() {
                   state: {
                     ...location?.state,
                     latlng: center,
-                    selectedAddress: selectedAddress,
+                    selectedAddress: {
+                      ...selectedAddress,
+                      branchId,
+                      restaurant_id,
+                    },
                   },
                 });
               } else {
@@ -692,7 +700,11 @@ function LocationPage() {
                     path: location?.state?.path,
                     restaurant_id: +location?.state?.restaurant_id,
                     addFromDropdown: location?.state?.addFromDropdown,
-                    selectedAddress: selectedAddress,
+                    selectedAddress: {
+                      ...selectedAddress,
+                      branchId,
+                      restaurant_id,
+                    },
                   },
                 });
               }
@@ -704,7 +716,11 @@ function LocationPage() {
                   path: "/cart",
                   restaurant_id: +location?.state?.restaurant_id,
                   notSelected: location?.state?.notSelected,
-                  selectedAddress: selectedAddress,
+                  selectedAddress: {
+                    ...selectedAddress,
+                    branchId,
+                    restaurant_id,
+                  },
                 },
               });
             } else if (location?.state?.fromHome !== undefined) {
@@ -714,7 +730,11 @@ function LocationPage() {
                   latlng: center,
                   path: location?.state?.path,
                   fromHome: location?.state?.fromHome,
-                  selectedAddress: selectedAddress,
+                  selectedAddress: {
+                    ...selectedAddress,
+                    branchId,
+                    restaurant_id,
+                  },
                 },
               });
             } else {
@@ -723,7 +743,11 @@ function LocationPage() {
                   name: address,
                   latlng: center,
                   path: location?.state?.path,
-                  selectedAddress: selectedAddress,
+                  selectedAddress: {
+                    ...selectedAddress,
+                    branchId,
+                    restaurant_id,
+                  },
                 },
               });
             }
@@ -737,7 +761,11 @@ function LocationPage() {
                 fromMenu: location?.state?.fromMenu,
                 fromDetail: location?.state?.fromDetail,
                 editLocation: location?.state?.editLocation,
-                selectedAddress: selectedAddress,
+                selectedAddress: {
+                  ...selectedAddress,
+                  branchId,
+                  restaurant_id,
+                },
               },
             });
           }
@@ -868,7 +896,7 @@ function LocationPage() {
         />  */}
         </Stack>
       </Stack>
-      {!isLoaded ? (
+      {!isLoaded || isDeliveryZones ? (
         <div className="map-progress-bar">
           <CircularProgress className="bar" />
         </div>
@@ -883,24 +911,29 @@ function LocationPage() {
           ref={mapRef}
           mapContainerClassName="GOOGLE"
         >
-          <div className="marker">
-            <img
-              src={
-                (location?.state?.fromBranch === undefined &&
-                  distanceIsFar &&
-                  noRegion) ||
-                (location?.state?.fromBranch === undefined &&
-                  distanceIsFar &&
-                  !noRegion) ||
-                (location?.state?.fromBranch === undefined &&
-                  !distanceIsFar &&
-                  noRegion) ||
-                notOperational
-                  ? LocationRed
-                  : LocationGreen
-              }
-            />
-          </div>
+          {!isDeliveryZones ? (
+            <div className="marker">
+              <img
+                src={
+                  (location?.state?.fromBranch === undefined &&
+                    distanceIsFar &&
+                    noRegion) ||
+                  (location?.state?.fromBranch === undefined &&
+                    distanceIsFar &&
+                    !noRegion) ||
+                  (location?.state?.fromBranch === undefined &&
+                    !distanceIsFar &&
+                    noRegion) ||
+                  notOperational ||
+                  (selectedAddress?.name_en !== undefined &&
+                    selected !== null &&
+                    selected?.name_en === undefined)
+                    ? LocationRed
+                    : LocationGreen
+                }
+              />
+            </div>
+          ) : null}
 
           {/* <MarkerF
             position={{
@@ -914,43 +947,50 @@ function LocationPage() {
             animation={"Drop"}
           /> */}
 
-          {distanceIsFar && !noRegion ? (
-            <Box className="info-window-box">
-              <Typography variant="h5">
-                {location?.state?.restaurantName !== undefined
-                  ? location?.state?.restaurantName
-                  : localStorage.getItem("restaurantName")}{" "}
-                dosen&apos;t deliver here
-              </Typography>
-              <Typography variant="h5">
-                Please choose another location
-              </Typography>
-            </Box>
+          {!isDeliveryZones &&
+            ((distanceIsFar && !noRegion) ||
+            (selected !== null && selected?.name_en === undefined) ? (
+              <Box className="info-window-box">
+                <Typography variant="h5">
+                  {location?.state?.restaurantName !== undefined
+                    ? location?.state?.restaurantName
+                    : localStorage.getItem("restaurantName")}{" "}
+                  dosen&apos;t deliver to this area
+                </Typography>
+                <Typography variant="h5">
+                  Please choose another location
+                </Typography>
+              </Box>
+            ) : null)}
+
+          {!isDeliveryZones ? (
+            (location?.state?.fromBranch === undefined &&
+              distanceIsFar &&
+              noRegion) ||
+            (location?.state?.fromBranch === undefined &&
+              !distanceIsFar &&
+              noRegion) ? (
+              <Box className="info-window-box">
+                <Typography variant="h5">
+                  No services in your country right now
+                </Typography>
+              </Box>
+            ) : null
           ) : null}
 
-          {(location?.state?.fromBranch === undefined &&
-            distanceIsFar &&
-            noRegion) ||
-          (location?.state?.fromBranch === undefined &&
-            !distanceIsFar &&
-            noRegion) ? (
-            <Box className="info-window-box">
-              <Typography variant="h5">
-                No services in your country right now
-              </Typography>
-            </Box>
-          ) : null}
-
-          {!distanceIsFar && notOperational ? (
-            <Box className="info-window-box">
-              <Typography variant="h5">
-                {localStorage?.getItem("restaurantName") !== null
-                  ? `${localStorage?.getItem("restaurantName")}`
-                  : "We"}{" "}
-                don&apos;t deliver to this area
-              </Typography>
-            </Box>
-          ) : null}
+          {!isDeliveryZones
+            ? !distanceIsFar &&
+              notOperational && (
+                <Box className="info-window-box">
+                  <Typography variant="h5">
+                    {localStorage?.getItem("restaurantName") !== null
+                      ? `${localStorage?.getItem("restaurantName")} dosen't`
+                      : "We don't"}{" "}
+                    deliver to this area
+                  </Typography>
+                </Box>
+              )
+            : null}
 
           <div
             className={clicked ? "recenter-div clicked" : "recenter-div"}
@@ -987,7 +1027,11 @@ function LocationPage() {
               distanceIsFar ||
               noRegion ||
               notOperational ||
-              disableButton
+              disableButton ||
+              isDeliveryZones ||
+              (selectedAddress?.name_en !== undefined &&
+                selected !== null &&
+                selected?.name_en === undefined)
             }
           >
             Confirm Your Location

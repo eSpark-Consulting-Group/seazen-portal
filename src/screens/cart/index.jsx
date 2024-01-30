@@ -90,6 +90,13 @@ function CartPage() {
   const comment = useSelector((state) => state.cart.comment);
   const country = useSelector((state) => state.auth.country);
 
+  useEffect(() => {
+    if (cart?.length > 0) {
+      localStorage.setItem("branchId", cart[0].branch_id);
+      localStorage.setItem("restaurantID", cart[0].restaurant_id);
+    }
+  }, [cart]);
+
   const pickDate = localStorage.getItem("pickDate");
   const isAsap = localStorage.getItem("isAsap");
   const pickTime = localStorage.getItem("pickTime");
@@ -196,6 +203,8 @@ function CartPage() {
   };
 
   const checkBranchHours = (array) => {
+    let pushedWithDistance = [];
+
     if (array?.length) {
       for (let i = 0; i < array?.length; i++) {
         const selectedAddress = selectedAdd;
@@ -217,14 +226,35 @@ function CartPage() {
           if (distance > 50) {
             setNotDeliver(true);
           } else {
-            if (selectedAddress?.name_en) {
-              setNotDeliver(false);
-            } else {
-              setNotDeliver(true);
-            }
-            break;
+            pushedWithDistance.push({
+              ...array[i],
+              distance,
+            });
+
+            checkWithBranchIdDeliverZones(pushedWithDistance);
           }
         }
+      }
+    }
+  };
+
+  const checkWithBranchIdDeliverZones = (
+    allDistancesLessThan50,
+    selectedAddress
+  ) => {
+    // Find the smallest distance and associated location
+    const smallestDistance = Math.min(
+      ...allDistancesLessThan50.map((item) => item.distance)
+    );
+    const smallestDistanceLocation = allDistancesLessThan50.find(
+      (item) => item.distance === smallestDistance
+    );
+
+    if (smallestDistanceLocation) {
+      if (selectedAddress?.name_en) {
+        setNotDeliver(false);
+      } else {
+        setNotDeliver(true);
       }
     }
   };
@@ -286,6 +316,8 @@ function CartPage() {
   };
 
   const checkoutHandler = (event) => {
+    let pushedWithDistance = [];
+
     event.preventDefault();
     setIsActive(true);
     setUserTrusted(true);
@@ -315,70 +347,57 @@ function CartPage() {
         if (distance > 50) {
           setNotDeliver(true);
         } else {
-          if (paymentMethod === "KNET") {
-            const filterRestaurant = branchHours.filter(
-              (branch) => branch.restaurant_id === cart[0].restaurant_id
-            );
+          pushedWithDistance.push({
+            ...forCurrent[i],
+            distance,
+          });
 
-            if (filterRestaurant?.length === 0) {
-              setNotDeliver(true);
-            } else {
-              if (selectedAddress?.name_en) {
-                setNotDeliver(false);
+          checkNearestRes(selectedAddress, pushedWithDistance);
+        }
+      }
+    }
+    setTimeout(() => {
+      setIsActive(false);
+    }, 100);
+  };
 
-                if (isAsap === "true") {
-                  for (let j = 0; j < filterRestaurant?.length; j++) {
-                    const date = new Date();
-                    const options = { weekday: "long" };
-                    const dayName = date.toLocaleDateString("en-US", options);
+  const checkNearestRes = (selectedAddress, allDistancesLessThan50) => {
+    // Find the smallest distance and associated location
+    const smallestDistance = Math.min(
+      ...allDistancesLessThan50.map((item) => item.distance)
+    );
+    const smallestDistanceLocation = allDistancesLessThan50.find(
+      (item) => item.distance === smallestDistance
+    );
 
-                    const findStatus = filterRestaurant[
-                      j
-                    ]?.branch_hours?.filter(
-                      (branch) => branch.week_day === dayName
-                    );
+    if (smallestDistanceLocation) {
+      if (paymentMethod === "KNET") {
+        const filterRestaurant = branchHours.filter(
+          (branch) => branch.restaurant_id === cart[0].restaurant_id
+        );
 
-                    if (findStatus[0].openingStatus === "Open") {
-                      setRestaurantOpen(false);
+        if (filterRestaurant?.length === 0) {
+          setNotDeliver(true);
+        } else {
+          if (selectedAddress?.name_en) {
+            setNotDeliver(false);
 
-                      const data = {
-                        ...checkoutData,
-                        branch_id: forCurrent[i].id,
-                        discount_price: getDiscountAmount(),
-                      };
+            if (isAsap === "true") {
+              for (let j = 0; j < filterRestaurant?.length; j++) {
+                const date = new Date();
+                const options = { weekday: "long" };
+                const dayName = date.toLocaleDateString("en-US", options);
 
-                      checkout(data, token)
-                        .then((res) => {
-                          if (res?.success === "error") {
-                            const parsedError = res?.message
-                              ?.split(":")[1]
-                              ?.trim();
+                const findStatus = filterRestaurant[j]?.branch_hours?.filter(
+                  (branch) => branch.week_day === dayName
+                );
 
-                            if (toastList.size < MAX_TOAST) {
-                              const id = toast.error(parsedError, {
-                                onClose: () => toastList.delete(id),
-                              });
-                              toastList.add(id);
-                            }
-                          } else {
-                            const checkoutRedirectUrl =
-                              res.data?.payment_methods[0].redirect_url;
-                            window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
-                          }
-                        })
-                        .catch((err) => {
-                          console.log(err);
-                        });
+                if (findStatus[0].openingStatus === "Open") {
+                  setRestaurantOpen(false);
 
-                      break;
-                    } else if (findStatus[0].openingStatus === "Close") {
-                      setRestaurantOpen(true);
-                    }
-                  }
-                } else {
                   const data = {
                     ...checkoutData,
-                    branch_id: forCurrent[i].id,
+                    branch_id: allDistancesLessThan50.id,
                     discount_price: getDiscountAmount(),
                   };
 
@@ -402,20 +421,46 @@ function CartPage() {
                     .catch((err) => {
                       console.log(err);
                     });
-                }
-              } else {
-                setNotDeliver(true);
-              }
-            }
-          }
 
-          break;
+                  break;
+                } else if (findStatus[0].openingStatus === "Close") {
+                  setRestaurantOpen(true);
+                }
+              }
+            } else {
+              const data = {
+                ...checkoutData,
+                branch_id: allDistancesLessThan50.id,
+                discount_price: getDiscountAmount(),
+              };
+
+              checkout(data, token)
+                .then((res) => {
+                  if (res?.success === "error") {
+                    const parsedError = res?.message?.split(":")[1]?.trim();
+
+                    if (toastList.size < MAX_TOAST) {
+                      const id = toast.error(parsedError, {
+                        onClose: () => toastList.delete(id),
+                      });
+                      toastList.add(id);
+                    }
+                  } else {
+                    const checkoutRedirectUrl =
+                      res.data?.payment_methods[0].redirect_url;
+                    window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                  }
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }
+          } else {
+            setNotDeliver(true);
+          }
         }
       }
     }
-    setTimeout(() => {
-      setIsActive(false);
-    }, 100);
   };
 
   useEffect(() => {

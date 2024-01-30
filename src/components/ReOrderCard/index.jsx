@@ -64,6 +64,8 @@ const ReOrderCard = (props) => {
   };
 
   const handleAddItemsToCart = async () => {
+    let pushedWithDistance = [];
+
     setIsLoading(true);
 
     for (let i = 0; i < branchesAndHours?.length; i++) {
@@ -81,11 +83,12 @@ const ReOrderCard = (props) => {
         if (distance > 50) {
           sameFunctionCall();
         } else {
-          setDistanceIsFar(false);
+          pushedWithDistance.push({
+            ...branchesAndHours[i],
+            distance,
+          });
 
-          reorderItems();
-
-          break;
+          checkWithBranchIdDeliverZones(pushedWithDistance);
         }
       }
 
@@ -100,13 +103,29 @@ const ReOrderCard = (props) => {
         if (distance > 50) {
           sameFunctionCall();
         } else {
-          setDistanceIsFar(false);
+          pushedWithDistance.push({
+            ...branchesAndHours[i],
+            distance,
+          });
 
-          reorderItems();
-
-          break;
+          checkWithBranchIdDeliverZones(pushedWithDistance);
         }
       }
+    }
+  };
+
+  const checkWithBranchIdDeliverZones = (allDistancesLessThan50) => {
+    // Find the smallest distance and associated location
+    const smallestDistance = Math.min(
+      ...allDistancesLessThan50.map((item) => item.distance)
+    );
+    const smallestDistanceLocation = allDistancesLessThan50.find(
+      (item) => item.distance === smallestDistance
+    );
+
+    if (smallestDistanceLocation) {
+      setDistanceIsFar(false);
+      reorderItems();
     }
   };
 

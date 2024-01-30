@@ -116,15 +116,26 @@ const AddressForm = () => {
     delivery_charge_area_name_en:
       isAfterNewLocation !== null && isAfterNewLocation?.addNewAddress === true
         ? isAfterNewLocation?.name_en
-        : selectedAddress === null || selectedAddress?.name_en === undefined
-        ? location?.state?.selectedAddress?.name_en === undefined
-          ? location?.state?.name
-          : location?.state?.selectedAddress?.name_en
-        : location?.state?.selectedAddress?.name_en,
+        : (selectedAddress === null ||
+            selectedAddress?.name_en === undefined) &&
+          location?.state?.selectedAddress?.name_en === undefined
+        ? location?.state.name
+        : location?.state?.selectedAddress?.name_en !== undefined &&
+          location?.state?.selectedAddress?.name_en,
     country_id:
       country === null || country?.id === undefined ? "" : String(country?.id),
-    restaurant_id: restaurantID === null ? "" : restaurantID,
-    branch_id: branchId === null ? "" : branchId,
+    restaurant_id:
+      restaurantID === null &&
+      location?.state?.selectedAddress !== null &&
+      location?.state?.selectedAddress?.restaurant_id !== undefined
+        ? location?.state?.selectedAddress?.restaurant_id
+        : restaurantID,
+    branch_id:
+      branchId === null &&
+      location?.state?.selectedAddress !== null &&
+      location?.state?.selectedAddress?.branchId !== undefined
+        ? location?.selectedAddress?.branchId
+        : branchId,
     block: "",
     street: "",
     avenue: "",
@@ -240,6 +251,11 @@ const AddressForm = () => {
     }
   };
 
+  const checkInSessionFalse =
+    sessionStorage?.getItem("storeAddress") !== null &&
+    JSON.parse(sessionStorage?.getItem("storeAddress"))?.addNewAddress ===
+      false;
+
   const apiCall = () => {
     let updateAddress = {};
 
@@ -317,11 +333,6 @@ const AddressForm = () => {
               JSON.stringify(storeAddress)
             );
           }
-
-          const checkInSessionFalse =
-            sessionStorage?.getItem("storeAddress") !== null &&
-            JSON.parse(sessionStorage?.getItem("storeAddress"))
-              ?.addNewAddress === false;
 
           if (
             location?.state?.path?.includes("menu-item-details") ||

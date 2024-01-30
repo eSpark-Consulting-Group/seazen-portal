@@ -62,12 +62,12 @@ const Home = () => {
 
   useEffect(() => {
     localStorage.removeItem("restaurantIdForRedirect");
-    localStorage.removeItem("area_id");
 
     if (cart?.length === 0) {
       localStorage.removeItem("restaurantID");
       localStorage.removeItem("branchId");
       localStorage.removeItem("restaurantName");
+      localStorage.removeItem("menuDetailId");
     } else {
       localStorage.setItem("restaurantID", cart[0]?.restaurant_id);
       localStorage.setItem("branchId", cart[0]?.branch_id);
@@ -214,6 +214,7 @@ const Home = () => {
   const [restaurantOpen, setRestaurantOpen] = useState(false);
   const [chooseFullAddress, setChooseFullAddress] = useState(null);
   const [openAddressToChoose, setOpenAddressToChoose] = useState(null);
+  const [distancesLessThan50, setDistancesLessThan50] = useState([]);
 
   const parentDiv = document?.getElementById("parent-of-all");
   const parentIcon = document?.getElementsByClassName("inner-svg-container");
@@ -294,15 +295,58 @@ const Home = () => {
   };
 
   const getBranchIdNearToLocation = () => {
-    const filterBranch = branchHours?.data?.find(
+    const pushedDistanceWithDetail = [];
+
+    const filterBranch = branchHours?.data?.filter(
       (rest) => rest.restaurant_id === cart[0]?.restaurant_id
     );
 
-    localStorage.setItem("branchId", filterBranch?.id);
-    dispatch(setBranchID(filterBranch?.id));
+    let fromLocation;
+    if (userSelected === null && userLocation !== null) {
+      fromLocation = userLocation;
+    } else if (userSelected !== null && userLocation !== null) {
+      fromLocation = userSelected;
+    }
+
+    if (branchHours?.data.length && filterBranch?.length) {
+      for (const filtBranch of filterBranch) {
+        const distance = getDistanceFromLatLonInKm(
+          +filtBranch?.latitude,
+          +filtBranch?.longitude,
+          fromLocation?.lat || 29.3140728,
+          fromLocation?.lng || 47.68022
+        );
+
+        if (distance < 50) {
+          pushedDistanceWithDetail.push({
+            ...filtBranch,
+            distance: distance,
+          });
+
+          setDistancesLessThan50(pushedDistanceWithDetail);
+        }
+      }
+    }
   };
 
   useEffect(() => {
+    // Find the smallest distance and associated location
+    const smallestDistance = Math.min(
+      ...distancesLessThan50.map((item) => item.distance)
+    );
+    const smallestDistanceLocation = distancesLessThan50.find(
+      (item) => item.distance === smallestDistance
+    );
+
+    if (smallestDistanceLocation) {
+      localStorage.setItem("branchId", smallestDistanceLocation.id);
+      dispatch(setBranchID(smallestDistanceLocation.id));
+    }
+  }, [localStorage, distancesLessThan50]);
+
+  useEffect(() => {
+    let pushedWithDistance = [];
+
     const filterBranch = branchHours?.filter(
       (rest) => rest.restaurant_id === cart[0]?.restaurant_id
     );
@@ -346,17 +390,34 @@ const Home = () => {
             setDistanceIsFar(true);
             setOpenAddressToChoose(false);
           } else {
-            setDistanceIsFar(false);
-            setOpenAddressToChoose(false);
+            pushedWithDistance.push({
+              ...filterBranch[i],
+              distance,
+            });
 
-            checkNearByRest();
-
-            break;
+            checkWithBranchIdDeliverZonesChoose(pushedWithDistance);
           }
         }
       }
     }
   }, [chooseFullAddress, branchHours]);
+
+  const checkWithBranchIdDeliverZonesChoose = (allDistancesLessThan50) => {
+    // Find the smallest distance and associated location
+    const smallestDistance = Math.min(
+      ...allDistancesLessThan50.map((item) => item.distance)
+    );
+    const smallestDistanceLocation = allDistancesLessThan50.find(
+      (item) => item.distance === smallestDistance
+    );
+
+    if (smallestDistanceLocation) {
+      setDistanceIsFar(false);
+      setOpenAddressToChoose(false);
+
+      checkNearByRest();
+    }
+  };
 
   const checkNearByRest = () => {
     let addToStore = {
@@ -422,6 +483,8 @@ const Home = () => {
 
   useEffect(() => {
     if (fullAddress !== null) {
+      let pushedWithDistance = [];
+
       if (filterSelectedNow === "") {
         if (branchHours.length) {
           for (let i = 0; i < branchHours.length; i++) {
@@ -445,46 +508,12 @@ const Home = () => {
               setDistanceIsFar(true);
               setOpenAddressPopup(false);
             } else {
-              setNewText("");
-              setDistanceIsFar(false);
-              setOpenAddressPopup(false);
+              pushedWithDistance.push({
+                ...branchHours[i],
+                distance,
+              });
 
-              let addToStore = {
-                ...fullAddress,
-                addressId,
-              };
-
-              if (name_en) {
-                addToStore = {
-                  ...addToStore,
-                  delivery_charges,
-                  delivery_time,
-                  minOrderAmount,
-                  name_en,
-                };
-              }
-
-              localStorage.setItem("selected", JSON.stringify(addToStore));
-              dispatch(addSelectedAddress(addToStore));
-
-              if (restaurantId === null) {
-                setOpenAddressPopup(false);
-              }
-
-              if (restaurantId !== null && !fromPopular) {
-                goToRestaurantMenuPage(restaurantId);
-              }
-
-              if (fromPopular && popularId !== null) {
-                navigate(paths.details + "/" + popularId, {
-                  state: {
-                    id: popularId,
-                    loc: "popular",
-                    restaurant_id: restaurantId,
-                    branch_id: branchId,
-                  },
-                });
-              }
+              checkWithBranchIdDeliverZonesFullAddress(pushedWithDistance);
 
               break;
             }
@@ -512,6 +541,59 @@ const Home = () => {
       }
     }
   }, [fullAddress, branchHours]);
+
+  const checkWithBranchIdDeliverZonesFullAddress = (allDistancesLessThan50) => {
+    // Find the smallest distance and associated location
+    const smallestDistance = Math.min(
+      ...allDistancesLessThan50.map((item) => item.distance)
+    );
+    const smallestDistanceLocation = allDistancesLessThan50.find(
+      (item) => item.distance === smallestDistance
+    );
+
+    if (smallestDistanceLocation) {
+      setNewText("");
+      setDistanceIsFar(false);
+      setOpenAddressPopup(false);
+
+      let addToStore = {
+        ...fullAddress,
+        addressId,
+      };
+
+      if (name_en) {
+        addToStore = {
+          ...addToStore,
+          delivery_charges,
+          delivery_time,
+          minOrderAmount,
+          name_en,
+        };
+      }
+
+      localStorage.setItem("selected", JSON.stringify(addToStore));
+      dispatch(addSelectedAddress(addToStore));
+
+      if (restaurantId === null) {
+        setOpenAddressPopup(false);
+      }
+
+      if (restaurantId !== null && !fromPopular) {
+        goToRestaurantMenuPage(restaurantId);
+      }
+
+      if (fromPopular && popularId !== null) {
+        navigate(paths.details + "/" + popularId, {
+          state: {
+            id: popularId,
+            loc: "popular",
+            restaurant_id: restaurantId,
+            branch_id: branchId,
+          },
+        });
+      }
+    }
+  };
 
   const navigateUser = () => {
     const restaurant = resturantsData.find((res) => res.id === restaurantId);
@@ -628,6 +710,8 @@ const Home = () => {
   };
 
   useEffect(() => {
+    let pushedWithDistance = [];
+
     if (
       branchHours?.length &&
       filterClassNear &&
@@ -652,8 +736,12 @@ const Home = () => {
             if (distance > 50) {
               removeClasses();
             } else {
-              addClasses();
-              break;
+              pushedWithDistance.push({
+                ...branchHours[i],
+                distance,
+              });
+
+              checkLeastDistanceToDeliver(addClasses, pushedWithDistance);
             }
 
             //
@@ -673,8 +761,12 @@ const Home = () => {
             if (distance > 50) {
               removeClasses();
             } else {
-              addClasses();
-              break;
+              pushedWithDistance.push({
+                ...branchHours[i],
+                distance,
+              });
+
+              checkLeastDistanceToDeliver(addClasses, pushedWithDistance);
             }
 
             //
@@ -696,8 +788,12 @@ const Home = () => {
             if (distance > 50) {
               removeClasses();
             } else {
-              addClasses();
-              break;
+              pushedWithDistance.push({
+                ...branchHours[i],
+                distance,
+              });
+
+              checkLeastDistanceToDeliver(addClasses, pushedWithDistance);
             }
 
             //
@@ -739,6 +835,20 @@ const Home = () => {
     selectedText,
     filterSelectedNow,
   ]);
+
+  const checkLeastDistanceToDeliver = (addClasses, allDistancesLessThan50) => {
+    // Find the smallest distance and associated location
+    const smallestDistance = Math.min(
+      ...allDistancesLessThan50.map((item) => item.distance)
+    );
+    const smallestDistanceLocation = allDistancesLessThan50.find(
+      (item) => item.distance === smallestDistance
+    );
+
+    if (smallestDistanceLocation) {
+      addClasses();
+    }
+  };
 
   return (
     <div className="home-styling container-fluid">

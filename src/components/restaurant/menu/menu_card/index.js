@@ -163,6 +163,8 @@ const MenuCard = (props) => {
   // let itemsProcessed = 0;
 
   const watchBranchHoursBeforeAdd = (id) => {
+    let pushedWithDistance = [];
+
     for (let i = 0; i < restaurantBranchHours?.data?.length; i++) {
       const resLat = +restaurantBranchHours?.data[i]?.latitude;
       const resLng = +restaurantBranchHours?.data[i]?.longitude;
@@ -191,13 +193,28 @@ const MenuCard = (props) => {
         setFarAway(false);
         setOpenModal(true);
       } else {
-        // let itemsIsCalled = 0;
+        pushedWithDistance.push({
+          ...restaurantBranchHours?.data[i],
+          distance,
+        });
 
-        setFarAway(true);
-        cartFunction(id);
-
-        break;
+        checkWithBranchIdDeliverZonesForAdd(pushedWithDistance);
       }
+    }
+  };
+
+  const checkWithBranchIdDeliverZonesForAdd = (allDistancesLessThan50) => {
+    // Find the smallest distance and associated location
+    const smallestDistance = Math.min(
+      ...allDistancesLessThan50.map((item) => item.distance)
+    );
+    const smallestDistanceLocation = allDistancesLessThan50.find(
+      (item) => item.distance === smallestDistance
+    );
+
+    if (smallestDistanceLocation) {
+      setFarAway(true);
+      cartFunction(id);
     }
   };
 
@@ -266,6 +283,8 @@ const MenuCard = (props) => {
   // let itemsProcessedRedirect = 0;
 
   function autoRedirect(id) {
+    let pushedWithDistance = [];
+
     if (token === null) {
       navigate(paths.details + "/" + id, {
         state: {
@@ -305,22 +324,39 @@ const MenuCard = (props) => {
             }
             setOpenModal(true);
           } else {
-            setRestaurantIsOpen(false);
-            setOpenModal(false);
-            navigate(paths.details + "/" + id, {
-              state: {
-                id: id,
-                branch_id: allData.branch_id,
-                locationDeliver: locationDeliver,
-              },
+            pushedWithDistance.push({
+              ...restaurantBranchHours?.data[i],
+              distance,
             });
 
-            break;
+            checkWithBranchIdDeliverZones(pushedWithDistance);
           }
         }
       }
     }
   }
+
+  const checkWithBranchIdDeliverZones = (allDistancesLessThan50) => {
+    // Find the smallest distance and associated location
+    const smallestDistance = Math.min(
+      ...allDistancesLessThan50.map((item) => item.distance)
+    );
+    const smallestDistanceLocation = allDistancesLessThan50.find(
+      (item) => item.distance === smallestDistance
+    );
+
+    if (smallestDistanceLocation) {
+      setRestaurantIsOpen(false);
+      setOpenModal(false);
+      navigate(paths.details + "/" + id, {
+        state: {
+          id: id,
+          branch_id: allData.branch_id,
+          locationDeliver: locationDeliver,
+        },
+      });
+    }
+  };
 
   const previousRestaurant = restaurantsData?.find((val) => {
     return val.id == cart[0]?.restaurant_id;

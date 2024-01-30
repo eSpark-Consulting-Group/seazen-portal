@@ -89,6 +89,7 @@ const MenuCardListContainer = ({
   const [delivery_time, setDeliveryTime] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
   const [name_en, setNameEn] = useState();
+  const [distancesLessThan50, setDistancesLessThan50] = useState([]);
 
   const currentLocation = JSON.parse(localStorage.getItem("location"));
   const isAfterNewLocation = JSON.parse(
@@ -211,13 +212,60 @@ const MenuCardListContainer = ({
   };
 
   const getBranchIdNearToLocation = () => {
-    const filterBranch = branchHours?.data?.find(
+    const selectedLoc = JSON.parse(localStorage.getItem("selected"));
+
+    const pushedDistanceWithDetail = [];
+
+    const filterBranch = branchHours?.data?.data?.filter(
       (rest) => rest.restaurant_id === restaurantDetail?.id
     );
 
-    localStorage.setItem("branchId", filterBranch?.id);
-    dispatch(setBranchID(filterBranch?.id));
+    let fromLocation;
+    if (selectedLoc === null && currentLocation !== null) {
+      fromLocation = currentLocation;
+    } else if (selectedLoc !== null && currentLocation !== null) {
+      fromLocation = selectedLoc;
+    }
+
+    if (branchHours?.data?.data.length && filterBranch?.length) {
+      for (const filtBranch of filterBranch) {
+        const resLat = +filtBranch?.latitude;
+        const resLng = +filtBranch?.longitude;
+
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          fromLocation?.lat || 29.3140728,
+          fromLocation?.lng || 47.68022
+        );
+
+        // Check if any distance is less than 50
+        if (distance < 50) {
+          pushedDistanceWithDetail.push({
+            ...filtBranch,
+            distance: distance,
+          });
+
+          setDistancesLessThan50(pushedDistanceWithDetail);
+        }
+      }
+    }
   };
+
+  useEffect(() => {
+    // Find the smallest distance and associated location
+    const smallestDistance = Math.min(
+      ...distancesLessThan50.map((item) => item.distance)
+    );
+    const smallestDistanceLocation = distancesLessThan50.find(
+      (item) => item.distance === smallestDistance
+    );
+
+    if (smallestDistanceLocation) {
+      localStorage.setItem("branchId", smallestDistanceLocation.id);
+      dispatch(setBranchID(smallestDistanceLocation.id));
+    }
+  }, [localStorage, distancesLessThan50]);
 
   const fetchBranchHours = () => {
     getRestaurantBranchHours(id).then((res) => {
@@ -234,6 +282,8 @@ const MenuCardListContainer = ({
   }, [branchHours]);
 
   useEffect(() => {
+    let pushedWithDistance = [];
+
     const filterBranch = branchHours?.filter(
       (rest) => rest.restaurant_id === +id
     );
@@ -256,17 +306,37 @@ const MenuCardListContainer = ({
             setDistanceIsFar(true);
             setOpenAddressPopup(false);
           } else {
-            setDistanceIsFar(false);
-            setOpenAddressPopup(false);
+            pushedWithDistance.push({
+              ...filterBranch[i],
+              distance,
+            });
 
-            checkNearByRest(filterBranch);
-
-            break;
+            checkWithBranchIdDeliverZones(pushedWithDistance, filterBranch);
           }
         }
       }
     }
   }, [fullAddress, branchHours]);
+
+  const checkWithBranchIdDeliverZones = (
+    allDistancesLessThan50,
+    filterBranch
+  ) => {
+    // Find the smallest distance and associated location
+    const smallestDistance = Math.min(
+      ...allDistancesLessThan50.map((item) => item.distance)
+    );
+    const smallestDistanceLocation = allDistancesLessThan50.find(
+      (item) => item.distance === smallestDistance
+    );
+
+    if (smallestDistanceLocation) {
+      setDistanceIsFar(false);
+      setOpenAddressPopup(false);
+
+      checkNearByRest(filterBranch);
+    }
+  };
 
   const navigateUser = () => {
     navigate(paths.location, {
@@ -442,6 +512,7 @@ const MenuCardListContainer = ({
         </div> */}
           </div>
         </div>
+
         <Box
           sx={{
             position: "fixed",
