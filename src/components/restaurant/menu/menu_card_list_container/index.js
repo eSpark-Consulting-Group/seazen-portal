@@ -152,6 +152,7 @@ const MenuCardListContainer = ({
   };
 
   let categoriesWiseList = {};
+  const [listState, setListState] = useState([]);
 
   categoryList?.length &&
     categoryList?.forEach(({ category_id }) => {
@@ -159,6 +160,15 @@ const MenuCardListContainer = ({
         (val) => val.category_id == category_id
       ));
     });
+
+  useEffect(() => {
+    // Filter objects based on whether their id is in the ids array
+    const filteredObjs = itemCategoryList.filter((obj) =>
+      Object.keys(categoriesWiseList).includes(obj.id.toString())
+    );
+
+    setListState(filteredObjs);
+  }, [categoryList]);
 
   const filterItems = (query) => {
     const lowercasedQuery = query.toLowerCase();
@@ -450,7 +460,11 @@ const MenuCardListContainer = ({
                       />
                     </div>
                   )}
-                  {Object.keys(categoriesWiseList).map((val, index) => {
+                  {listState?.map((val, index) => {
+                    // const names = itemCategoryList?.find(
+                    //   (item) => +item.id == +val
+                    // )?.name_en;
+
                     return (
                       <>
                         <div
@@ -458,14 +472,12 @@ const MenuCardListContainer = ({
                           className="card_list_title"
                           style={{
                             marginTop: index == 0 ? "-3px" : "16px",
+                            height: "27px",
                           }}
                         >
-                          {
-                            itemCategoryList?.find((item) => item.id == val)
-                              ?.name_en
-                          }
+                          {val.name_en}
                         </div>{" "}
-                        {categoriesWiseList[val].map((item, index) => {
+                        {categoriesWiseList[val.id].map((item, index) => {
                           if (item.branch_status) {
                             return (
                               <MenuCard
