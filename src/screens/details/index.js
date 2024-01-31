@@ -986,7 +986,7 @@ export const Details = () => {
       setAddressID,
       setDeliveryCharge,
       setDeliveryTime,
-      setMinOrderAmount,
+      // setMinOrderAmount,
       setNameEn,
       getFullAddress,
       setFullAddress
@@ -1063,7 +1063,7 @@ export const Details = () => {
           addressId,
           delivery_charges,
           delivery_time,
-          minOrderAmount,
+          // minOrderAmount,
           name_en,
         };
 
@@ -1132,7 +1132,7 @@ export const Details = () => {
       addressId,
       delivery_charges,
       delivery_time,
-      minOrderAmount,
+      // minOrderAmount,
       name_en,
     };
 

@@ -85,26 +85,27 @@ function CartPage() {
   const restaurantId = localStorage.getItem("restaurantID");
   const brId = localStorage.getItem("branchId");
 
-  const branchHours = useSelector((state) => state.resturants.branchHours);
-  // const nearbyRestaurants = useSelector(
-  //   (state) => state.resturants.nearbyRestaurants
-  // );
   const cart = useSelector((state) => state.cart.cart);
+
+  const branchHours = useSelector((state) => state.resturants.branchHours);
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
   const totalPrice = useSelector((state) => state.cart.total);
   const comment = useSelector((state) => state.cart.comment);
   const country = useSelector((state) => state.auth.country);
 
   useEffect(() => {
     if (cart?.length > 0) {
-      if (+restaurantId === cart[0].restaurant_id) {
-        localStorage.setItem("branchId", cart[0].branch_id);
-        localStorage.setItem("restaurantID", cart[0].restaurant_id);
-      } else {
-        localStorage.setItem("preserevedBranchId", +brId);
-        localStorage.setItem("preserevedRestaurantID", +restaurantId);
-      }
+      const findrestaurantName = resturantsData.find(
+        (item) => item.id === cart[0].restaurant_id
+      );
+
+      localStorage.setItem("branchId", cart[0].branch_id);
+      localStorage.setItem("restaurantID", cart[0].restaurant_id);
+      localStorage.setItem("restaurantName", findrestaurantName.name_en);
     }
-  }, [cart]);
+  }, [cart, localStorage, resturantsData]);
 
   const pickDate = localStorage.getItem("pickDate");
   const isAsap = localStorage.getItem("isAsap");
@@ -387,22 +388,22 @@ function CartPage() {
 
                       checkout(data, token)
                         .then((res) => {
-                          if (res?.success === "error") {
-                            const parsedError = res?.message
-                              ?.split(":")[1]
-                              ?.trim();
+                          // if (res?.success === "error") {
+                          //   const parsedError = res?.message
+                          //     ?.split(":")[1]
+                          //     ?.trim();
 
-                            if (toastList.size < MAX_TOAST) {
-                              const id = toast.error(parsedError, {
-                                onClose: () => toastList.delete(id),
-                              });
-                              toastList.add(id);
-                            }
-                          } else {
-                            const checkoutRedirectUrl =
-                              res.data?.payment_methods[0].redirect_url;
-                            window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
-                          }
+                          //   if (toastList.size < MAX_TOAST) {
+                          //     const id = toast.error(parsedError, {
+                          //       onClose: () => toastList.delete(id),
+                          //     });
+                          //     toastList.add(id);
+                          //   }
+                          // } else {
+                          const checkoutRedirectUrl =
+                            res.data?.payment_methods[0].redirect_url;
+                          window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                          // }
                         })
                         .catch((err) => {
                           console.log(err);

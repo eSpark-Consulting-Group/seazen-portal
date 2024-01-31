@@ -10,9 +10,9 @@ import "react-toastify/dist/ReactToastify.css";
 import RouteProvider from "./routes/routes";
 
 import countryList from "./api/common/getAllCountries";
-// import getAllArea from "./api/address/areas";
+import getAllArea from "./api/address/areas";
 
-// import { getAreas } from "./store/reducers/addressSlice";
+import { getAreas } from "./store/reducers/addressSlice";
 import { addCountry, allCountries } from "./store/reducers/authSlice";
 
 // import { savingAreaIdForMatchingArea } from "./utils/checkOperationalArea";
@@ -56,7 +56,7 @@ function App() {
         // const branch_id = localStorage.getItem("branchId");
 
         // if (restaurant_id !== null || branch_id !== null) {
-        //   fetchAllAreas(restaurant_id, branch_id);
+        fetchAllAreas();
         // }
       })
       .catch((err) => {
@@ -64,15 +64,15 @@ function App() {
       });
   };
 
-  // const fetchAllAreas = (restaurant_id, branch_id) => {
-  //   getAllArea(restaurant_id, branch_id)
-  //     .then((res) => {
-  //       dispatch(getAreas(res.data));
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
+  const fetchAllAreas = () => {
+    getAllArea()
+      .then((res) => {
+        dispatch(getAreas(res.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     fetchAllCountries();

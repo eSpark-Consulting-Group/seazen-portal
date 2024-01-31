@@ -136,7 +136,7 @@ export const findOperationalArea = (
             name_en: matchingArea.name_en,
             delivery_charges: matchingArea.delivery_charges,
             delivery_time: matchingArea.delivery_time,
-            minOrderAmount: matchingArea.minimum_order_amount,
+            // minOrderAmount: matchingArea.minimum_order_amount,
             zone_id: matchingAreaGroup.zone_id,
           };
         }

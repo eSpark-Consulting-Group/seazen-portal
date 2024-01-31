@@ -38,6 +38,17 @@ const Navbar = (props) => {
     };
   }, [restaurantDetail]);
 
+  const addPreserveToStore = () => {
+    localStorage.setItem(
+      "preserevedBranchId",
+      +localStorage?.getItem("branchId")
+    );
+    localStorage.setItem(
+      "preserevedRestaurantID",
+      +localStorage?.getItem("restaurantID")
+    );
+  };
+
   return (
     <div
       className="Nav_Image_Container"
@@ -102,6 +113,8 @@ const Navbar = (props) => {
                     restaurant_id: cart[0]?.restaurant_id,
                   },
                 });
+
+            addPreserveToStore();
           }}
         >
           <div className="shopping_icon">

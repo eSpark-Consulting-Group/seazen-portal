@@ -72,21 +72,10 @@ const Home = () => {
     dispatch(removeCategoryItemList());
     dispatch(removeCategoryList());
 
-    if (cart?.length === 0) {
-      localStorage.removeItem("restaurantID");
-      localStorage.removeItem("branchId");
-      localStorage.removeItem("restaurantName");
-      localStorage.removeItem("menuDetailId");
-    } else {
-      localStorage.setItem("restaurantID", cart[0]?.restaurant_id);
-      localStorage.setItem("branchId", cart[0]?.branch_id);
-
-      const restName = resturantsData?.find(
-        (rest) => rest.id === cart[0]?.restaurant_id
-      );
-
-      localStorage.setItem("restaurantName", restName?.name_en);
-    }
+    localStorage.removeItem("restaurantID");
+    localStorage.removeItem("branchId");
+    localStorage.removeItem("restaurantName");
+    localStorage.removeItem("menuDetailId");
   }, [cart, resturantsData]);
 
   const { refetch } = useQuery({
@@ -134,9 +123,9 @@ const Home = () => {
             setDeliveryTime(
               addressData[i]?.delivery_charge_area_info?.delivery_time
             );
-            setMinOrderAmount(
-              addressData[i]?.delivery_charge_area_info?.minimum_order_amount
-            );
+            // setMinOrderAmount(
+            //   addressData[i]?.delivery_charge_area_info?.minimum_order_amount
+            // );
             setNameEn(addressData[i]?.delivery_charge_area_info?.name_en);
           }
 
@@ -159,7 +148,7 @@ const Home = () => {
         addressId,
         delivery_charges,
         delivery_time,
-        minOrderAmount,
+        // minOrderAmount,
         name_en,
       };
 
@@ -266,7 +255,7 @@ const Home = () => {
       setAddressID,
       setDeliveryCharge,
       setDeliveryTime,
-      setMinOrderAmount,
+      // setMinOrderAmount,
       setNameEn,
       getFullAddress,
       setFullAddress
@@ -296,7 +285,7 @@ const Home = () => {
       setAddressID,
       setDeliveryCharge,
       setDeliveryTime,
-      setMinOrderAmount,
+      // setMinOrderAmount,
       setNameEn,
       getFullAddress,
       setChooseFullAddress
@@ -367,7 +356,7 @@ const Home = () => {
           addressId,
           delivery_charges,
           delivery_time,
-          minOrderAmount,
+          // minOrderAmount,
           name_en,
         };
 
@@ -439,7 +428,7 @@ const Home = () => {
         ...addToStore,
         delivery_charges,
         delivery_time,
-        minOrderAmount,
+        // minOrderAmount,
         name_en,
       };
     }
@@ -539,7 +528,7 @@ const Home = () => {
             ...addToStore,
             delivery_charges,
             delivery_time,
-            minOrderAmount,
+            // minOrderAmount,
             name_en,
           };
         }
@@ -575,7 +564,7 @@ const Home = () => {
           ...addToStore,
           delivery_charges,
           delivery_time,
-          minOrderAmount,
+          // minOrderAmount,
           name_en,
         };
       }

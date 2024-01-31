@@ -3,35 +3,46 @@ import { Box, Typography, Grid } from "@mui/material";
 import "./style.css";
 
 const CountDown = () => {
-  const calculateTimeLeft = () => {
-    const duration = 10 * 24 * 60 * 60 * 1000; 
-    const difference = duration - (new Date() - +new Date("2024-02-04"));
-    let timeLeft = {};
+  // Set the target date
+  const targetDate = new Date("2024-02-10T00:00:00");
 
-    if (difference > 0) {
-      const totalSeconds = Math.floor(difference / 1000);
-      const totalMinutes = Math.floor(totalSeconds / 60);
-      const totalHours = Math.floor(totalMinutes / 60);
-
-      timeLeft = {
-        hours: totalHours,
-        minutes: totalMinutes % 60,
-        seconds: totalSeconds % 60,
-      };
-    }
-
-    return timeLeft;
-  };
-
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  // Initial state for countdown values
+  const [countdown, setCountdown] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
+    // Function to update countdown values
+    const updateCountdown = () => {
+      // Get the current date and time
+      const currentDate = new Date();
 
-    return () => clearTimeout(timer);
-  });
+      // Calculate the time difference in milliseconds
+      const timeDifference = targetDate - currentDate;
+
+      // Calculate days, hours, minutes, and seconds
+      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor(
+        (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      const minutes = Math.floor(
+        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+      );
+      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+      // Update state with new countdown values
+      setCountdown({ days, hours, minutes, seconds });
+    };
+
+    // Update every second
+    const intervalId = setInterval(updateCountdown, 1000);
+
+    // Clear interval when the component is unmounted
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <div className="countdown_container">
@@ -62,7 +73,7 @@ const CountDown = () => {
                   fontFamily: "Messapia-Bold",
                 }}
               >
-                10
+                {countdown.days}
               </Typography>
               <br />
               <Typography
@@ -97,7 +108,7 @@ const CountDown = () => {
                   textAlign: "center",
                 }}
               >
-                {timeLeft.hours} :
+                {countdown.hours} :
                 <br />
                 <span style={{ fontFamily: "Messapia-Bold", fontSize: "4vw" }}>
                   Hr.
@@ -112,7 +123,7 @@ const CountDown = () => {
                   textAlign: "center",
                 }}
               >
-                {timeLeft.minutes} :
+                {countdown.minutes} :
                 <br />
                 <span style={{ fontFamily: "Messapia-Bold", fontSize: "4vw" }}>
                   Min.
@@ -127,7 +138,7 @@ const CountDown = () => {
                   textAlign: "center",
                 }}
               >
-                {timeLeft.seconds}
+                {countdown.seconds}
                 <br />
                 <span style={{ fontFamily: "Messapia-Bold", fontSize: "4vw" }}>
                   Sec.

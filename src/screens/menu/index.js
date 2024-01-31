@@ -307,7 +307,7 @@ const Menu = () => {
       setAddressID,
       setDeliveryCharge,
       setDeliveryTime,
-      setMinOrderAmount,
+      // setMinOrderAmount,
       setNameEn,
       getFullAddress,
       setFullAddress
@@ -328,7 +328,7 @@ const Menu = () => {
           addressId: addressID,
           delivery_charges,
           delivery_time,
-          minOrderAmount,
+          // minOrderAmount,
           name_en,
         };
 
@@ -402,7 +402,7 @@ const Menu = () => {
       addressId: addressID,
       delivery_charges,
       delivery_time,
-      minOrderAmount,
+      // minOrderAmount,
       name_en,
     };
 

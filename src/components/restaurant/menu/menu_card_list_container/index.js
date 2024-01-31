@@ -204,7 +204,7 @@ const MenuCardListContainer = ({
       setAddressID,
       setDeliveryCharge,
       setDeliveryTime,
-      setMinOrderAmount,
+      // setMinOrderAmount,
       setNameEn,
       getFullAddress,
       setFullAddress
@@ -355,7 +355,7 @@ const MenuCardListContainer = ({
       addressId: addressID,
       delivery_charges,
       delivery_time,
-      minOrderAmount,
+      // minOrderAmount,
       name_en,
     };
 

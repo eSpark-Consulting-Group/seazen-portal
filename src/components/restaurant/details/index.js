@@ -38,21 +38,21 @@ const RestaurantDetails = ({ restaurantDetail, orderAmFromDelivery }) => {
     }
   };
 
-  useEffect(() => {
-    if (
-      (userSelected === null || userSelected?.minOrderAmount === undefined) &&
-      location?.minOrderAmount === undefined
-    ) {
-      setOrderAmount("KWD 7.000");
-    } else if (
-      (userSelected === null || userSelected?.minOrderAmount === undefined) &&
-      location?.minOrderAmount !== undefined
-    ) {
-      setOrderAmount(`${location.minOrderAmount}`);
-    } else {
-      setOrderAmount(`${userSelected?.minOrderAmount}`);
-    }
-  }, [userSelected, location]);
+  // useEffect(() => {
+  //   if (
+  //     (userSelected === null || userSelected?.minOrderAmount === undefined) &&
+  //     location?.minOrderAmount === undefined
+  //   ) {
+  //     setOrderAmount("KWD 7.000");
+  //   } else if (
+  //     (userSelected === null || userSelected?.minOrderAmount === undefined) &&
+  //     location?.minOrderAmount !== undefined
+  //   ) {
+  //     setOrderAmount(`${location.minOrderAmount}`);
+  //   } else {
+  //     setOrderAmount(`${userSelected?.minOrderAmount}`);
+  //   }
+  // }, [userSelected, location]);
 
   return (
     <div className="details_outer_container px-3 px-sm-4">
@@ -91,7 +91,7 @@ const RestaurantDetails = ({ restaurantDetail, orderAmFromDelivery }) => {
                 alt="information_icon"
               />
             </span>
-            <span
+            {/* <span
               style={{
                 display: "block",
                 textAlign: "right",
@@ -99,7 +99,7 @@ const RestaurantDetails = ({ restaurantDetail, orderAmFromDelivery }) => {
               }}
             >
               Min. order: {orderAmount?.split(" ")[1]?.split(".")[0]} KWD
-            </span>
+            </span> */}
           </StyledItemPrice>
         </div>
         <StyledItemPrice className="tag_line">

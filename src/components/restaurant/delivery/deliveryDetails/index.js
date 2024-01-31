@@ -414,7 +414,7 @@ const DeliveryDetails = (props) => {
         addressId: addressID,
         delivery_charges,
         delivery_time,
-        minOrderAmount,
+        // minOrderAmount,
         name_en,
       };
 
@@ -620,9 +620,9 @@ const DeliveryDetails = (props) => {
             address?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
           );
           setDeliveryTime(address?.delivery_charge_area_info?.delivery_time);
-          setMinOrderAmount(
-            address?.delivery_charge_area_info?.minimum_order_amount
-          );
+          // setMinOrderAmount(
+          //   address?.delivery_charge_area_info?.minimum_order_amount
+          // );
           setNameEn(address?.delivery_charge_area_info?.name_en);
           setOrderAmFromDelivery(
             address?.delivery_charge_area_info?.minimum_order_amount

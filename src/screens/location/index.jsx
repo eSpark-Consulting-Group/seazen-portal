@@ -141,6 +141,8 @@ function LocationPage() {
     onSuccess: (data) => {
       setIsDeliveryZones(false);
       dispatch(getAreas(data.data));
+      setRestaurant_id(null);
+      setBranchId(null);
     },
   });
 
@@ -187,7 +189,9 @@ function LocationPage() {
                 if (location?.state?.toCurrent !== undefined) {
                   makeCenter();
                 } else {
-                  getAdd(selected.lat, selected.lng);
+                  if (restaurant_id === null) {
+                    getAdd(selected.lat, selected.lng);
+                  }
                 }
 
                 // If User didn't selected any location
@@ -668,12 +672,12 @@ function LocationPage() {
 
         if (location?.state?.guestUser) {
           if (location?.state?.path === "menu/restaurant") {
-            if (selectedAddress.minOrderAmount !== undefined) {
-              addLocationGuest({
-                ...fullAddress,
-                minOrderAmount: selectedAddress.minOrderAmount,
-              });
-            }
+            // if (selectedAddress.minOrderAmount !== undefined) {
+            //   addLocationGuest({
+            //     ...fullAddress,
+            //     minOrderAmount: selectedAddress.minOrderAmount,
+            //   });
+            // }
 
             navigate(
               `${paths.menu}/restaurant/${+location?.state
@@ -726,10 +730,10 @@ function LocationPage() {
 
             if (location?.state?.guestUser) {
               if (location?.state?.path === "menu/restaurant") {
-                addLocationGuest({
-                  ...fullAddress,
-                  minOrderAmount: selectedAddress.minOrderAmount,
-                });
+                // addLocationGuest({
+                //   ...fullAddress,
+                //   minOrderAmount: selectedAddress.minOrderAmount,
+                // });
 
                 navigate(
                   `${paths.menu}/restaurant/${+location?.state
