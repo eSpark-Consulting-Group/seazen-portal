@@ -3,7 +3,7 @@ import { Box, Typography, Grid } from "@mui/material";
 import "./style.css";
 
 const CountDown = () => {
-  // Set the target date
+  // Set the target date to February 10th midnight
   const targetDate = new Date("2024-02-10T00:00:00");
 
   // Initial state for countdown values
@@ -23,18 +23,24 @@ const CountDown = () => {
       // Calculate the time difference in milliseconds
       const timeDifference = targetDate - currentDate;
 
-      // Calculate days, hours, minutes, and seconds
-      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      const minutes = Math.floor(
-        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-      );
-      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+      // Check if the target date has not been reached
+      if (timeDifference > 0) {
+        // Calculate days, hours, minutes, and seconds
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor(
+          (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+        );
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-      // Update state with new countdown values
-      setCountdown({ days, hours, minutes, seconds });
+        // Update state with new countdown values
+        setCountdown({ days, hours, minutes, seconds });
+      } else {
+        // If the target date has been reached, set countdown to 0
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
     };
 
     // Update every second
@@ -42,7 +48,10 @@ const CountDown = () => {
 
     // Clear interval when the component is unmounted
     return () => clearInterval(intervalId);
-  }, []);
+  }, []); // Empty dependency array to run the effect only once on mount
+
+  // Helper function to add leading zeros
+  const addLeadingZero = (value) => (value < 10 ? `0${value}` : value);
 
   return (
     <div className="countdown_container">
@@ -57,13 +66,13 @@ const CountDown = () => {
         ></img>
       </div>
       <div className="countdown_section">
-        <Grid container spacing={2} justifyContent="center" alignItems="center">
-          <Grid item xs={12} sm={4} sx={{ textAlign: "center" }}>
+        <Grid container spacing={4} justifyContent="center" alignItems="center">
+          <Grid item xs={12} sm={4.5} sx={{ textAlign: "center" }}>
             <Box
               sx={{
                 border: "5px solid #fff",
                 borderRadius: "20px",
-                padding: "1.5rem",
+                padding: "0rem 1.5rem",
               }}
             >
               <Typography
@@ -88,7 +97,7 @@ const CountDown = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} sm={7.5}>
             <Box
               sx={{
                 border: "5px solid #fff",
@@ -108,7 +117,7 @@ const CountDown = () => {
                   textAlign: "center",
                 }}
               >
-                {countdown.hours} :
+                {addLeadingZero(countdown.hours)} :
                 <br />
                 <span style={{ fontFamily: "Messapia-Bold", fontSize: "4vw" }}>
                   Hr.
@@ -123,7 +132,7 @@ const CountDown = () => {
                   textAlign: "center",
                 }}
               >
-                {countdown.minutes} :
+                {addLeadingZero(countdown.minutes)} :
                 <br />
                 <span style={{ fontFamily: "Messapia-Bold", fontSize: "4vw" }}>
                   Min.
@@ -138,7 +147,7 @@ const CountDown = () => {
                   textAlign: "center",
                 }}
               >
-                {countdown.seconds}
+                {addLeadingZero(countdown.seconds)}
                 <br />
                 <span style={{ fontFamily: "Messapia-Bold", fontSize: "4vw" }}>
                   Sec.
