@@ -356,7 +356,7 @@ const AddressForm = () => {
               navigate(paths.cart, {});
             } else {
               navigate(
-                `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
+                `${paths.menu}/restaurant/${location?.state?.selectedAddress?.restaurant_id}/delivery`
               );
             }
           } else if (location?.state?.fromHome !== undefined) {
@@ -368,7 +368,7 @@ const AddressForm = () => {
               state: {
                 fromMenu: true,
                 path: "menu/restaurant",
-                restaurant_id: location?.state?.restaurant_id,
+                restaurant_id: location?.state?.selectedAddress?.restaurant_id,
               },
             });
           } else {
@@ -473,7 +473,7 @@ const AddressForm = () => {
                 });
               } else {
                 navigate(
-                  `${paths.menu}/restaurant/${location?.state?.restaurant_id}/delivery`
+                  `${paths.menu}/restaurant/${location?.state?.selectedAddress?.restaurant_id}/delivery`
                 );
               }
             } else if (location?.state?.fromHome !== undefined) {
@@ -672,7 +672,7 @@ const AddressForm = () => {
         edit={location?.state?.edit}
         noAddress={location?.state?.noAddress}
         addNew={location?.state?.addNew}
-        restaurant_id={location?.state?.restaurant_id}
+        restaurant_id={location?.state?.selectedAddress?.restaurant_id}
         fromCart={location?.state?.fromCart}
         fromHome={location?.state?.fromHome}
         fromMenu={location?.state?.fromMenu}

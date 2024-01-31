@@ -49,7 +49,7 @@ import { setThemeColor } from "../../store/reducers/themeSlice.js";
 import { closeReorderModal } from "../../store/reducers/orderSlice.js";
 import { addToCart } from "../../store/reducers/cartSlice.js";
 import { addSelectedAddress } from "../../store/reducers/userLocationSlice.js";
-import { getAreas } from "../../store/reducers/addressSlice.js";
+import { getAddress, getAreas } from "../../store/reducers/addressSlice.js";
 
 import {
   getDistanceFromLatLonInKm,
@@ -62,6 +62,7 @@ import { paths } from "../../routes/paths.jsx";
 
 import "./style.css";
 import { setToLoad } from "../../store/reducers/loaderSlice.js";
+import getAllAddress from "../../api/address/getAddress.js";
 
 const Menu = () => {
   const navigate = useNavigate();
@@ -73,6 +74,8 @@ const Menu = () => {
   const country = useSelector((state) => state.auth.country);
   const reorder = useSelector((state) => state.order.reorder);
   const cart = useSelector((state) => state.cart.cart);
+  const allAreas = useSelector((state) => state.address.allAreas);
+  const addressData = useSelector((state) => state.address.addressData);
   const branchHours = useSelector((state) => state.resturants.branchHours);
   const restaurantDetail = useSelector(
     (state) => state.resturants.restaurantDetail
@@ -115,7 +118,7 @@ const Menu = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchAllAreas = () => {
-    getAllArea(restaurantID, branchId)
+    getAllArea()
       .then((res) => {
         dispatch(getAreas(res.data));
       })
@@ -123,6 +126,18 @@ const Menu = () => {
         console.log(err);
       });
   };
+
+  const fetchFunctionAddresses = async () => {
+    getAllAddress(token).then((res) => {
+      if (res.success === "ok") {
+        dispatch(getAddress(res.data));
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchFunctionAddresses();
+  }, []);
 
   useEffect(() => {
     if (restaurantID !== null && branchId !== null) fetchAllAreas();

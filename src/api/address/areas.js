@@ -5,13 +5,18 @@ import { handleApiError } from "../utils/errorHandling";
 const getAllArea = async (restaurantId, branchId) => {
   try {
     let attachEndpoint = "";
-    const restaurant_id = localStorage.getItem("restaurantID");
-    const branch_id = localStorage.getItem("branchId");
+    // const restaurant_id = localStorage.getItem("restaurantID");
+    // const branch_id = localStorage.getItem("branchId");
 
+    // if (restaurantId !== null && branchId !== null) {
+    //   attachEndpoint = updateEndpoint(restaurantId, branchId);
+    // } else if (restaurant_id !== null && branch_id !== null) {
+    //   attachEndpoint = updateEndpoint(restaurant_id, branch_id);
+    // } else {
+    //   attachEndpoint = "";
+    // }
     if (restaurantId !== null && branchId !== null) {
       attachEndpoint = updateEndpoint(restaurantId, branchId);
-    } else if (restaurant_id !== null && branch_id !== null) {
-      attachEndpoint = updateEndpoint(restaurant_id, branch_id);
     } else {
       attachEndpoint = "";
     }

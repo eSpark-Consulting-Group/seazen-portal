@@ -767,52 +767,58 @@ const DeliveryDetails = (props) => {
                 </Dropdown.Item>
 
                 {addressData?.length ? (
-                  addressData?.map((address) => {
-                    return (
-                      <Dropdown.Item
-                        onClick={() => {
-                          onSelectLocatiom(address);
-                          localStorage.setItem("selectCurrent", false);
-                        }}
-                        style={{
-                          textTransform: "capitalize",
-                        }}
-                        key={address.id}
-                        disabled={disableMenu}
-                      >
-                        {address.address_label !== ""
-                          ? address.address_label
-                          : address.address_type}{" "}
-                        {address?.address_type === "house"
-                          ? truncateString(
-                              `(Build: ${address?.building}, Bl: ${address?.block}, Str: ${address?.street})`,
-                              18
-                            )
-                          : address?.address_type === "office"
-                          ? truncateString(
-                              `(Comp: ${address?.company_name}, Bl: ${address?.block}, Floor: ${address?.floor})`,
-                              18
-                            )
-                          : truncateString(
-                              `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
-                              18
-                            )}
-                        <span
-                          style={{
-                            fontSize: 13,
+                  addressData
+                    ?.filter(
+                      (address) =>
+                        address?.delivery_charge_area_info?.restaurant_id ===
+                        +localStorage?.getItem("restaurantID")
+                    )
+                    ?.map((address) => {
+                      return (
+                        <Dropdown.Item
+                          onClick={() => {
+                            onSelectLocatiom(address);
+                            localStorage.setItem("selectCurrent", false);
                           }}
+                          style={{
+                            textTransform: "capitalize",
+                          }}
+                          key={address.id}
+                          disabled={disableMenu}
                         >
-                          {selected !== null &&
-                            currentLocation !== null &&
-                            parseFloat(selected?.lat) ===
-                              parseFloat(currentLocation?.lat) &&
-                            parseFloat(selected?.lng) ===
-                              parseFloat(currentLocation?.lng) &&
-                            "(current location)"}
-                        </span>
-                      </Dropdown.Item>
-                    );
-                  })
+                          {address.address_label !== ""
+                            ? address.address_label
+                            : address.address_type}{" "}
+                          {address?.address_type === "house"
+                            ? truncateString(
+                                `(Build: ${address?.building}, Bl: ${address?.block}, Str: ${address?.street})`,
+                                18
+                              )
+                            : address?.address_type === "office"
+                            ? truncateString(
+                                `(Comp: ${address?.company_name}, Bl: ${address?.block}, Floor: ${address?.floor})`,
+                                18
+                              )
+                            : truncateString(
+                                `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
+                                18
+                              )}
+                          <span
+                            style={{
+                              fontSize: 13,
+                            }}
+                          >
+                            {selected !== null &&
+                              currentLocation !== null &&
+                              parseFloat(selected?.lat) ===
+                                parseFloat(currentLocation?.lat) &&
+                              parseFloat(selected?.lng) ===
+                                parseFloat(currentLocation?.lng) &&
+                              "(current location)"}
+                          </span>
+                        </Dropdown.Item>
+                      );
+                    })
                 ) : (
                   <Dropdown.Item
                     style={{

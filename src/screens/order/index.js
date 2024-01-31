@@ -239,10 +239,11 @@ const OrderScreen = () => {
             <div
               id="order-status-tag"
               style={{
-                backgroundColor: getOrderStatusObj?.tagColor,
+                backgroundColor:
+                  currentStatus === "Delivered" ? "#4E948A" : "#F7B500",
               }}
             >
-              <p>{getOrderStatusObj?.tag}</p>
+              <p>{currentStatus}</p>
             </div>
             <div className="orderconfirm-text-container">
               <p id="orderconfirm-text">{getOrderStatusObj?.text}</p>

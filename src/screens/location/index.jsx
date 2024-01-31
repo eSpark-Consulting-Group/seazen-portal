@@ -141,8 +141,8 @@ function LocationPage() {
     onSuccess: (data) => {
       setIsDeliveryZones(false);
       dispatch(getAreas(data.data));
-      setRestaurant_id(null);
-      setBranchId(null);
+      // setRestaurant_id(null);
+      // setBranchId(null);
     },
   });
 
@@ -203,7 +203,9 @@ function LocationPage() {
                 if (location?.state?.toCurrent !== undefined) {
                   makeCenter();
                 } else {
-                  getAdd(currentLocation.lat, currentLocation.lng);
+                  if (restaurant_id === null) {
+                    getAdd(currentLocation.lat, currentLocation.lng);
+                  }
                 }
               }
             }
@@ -612,6 +614,96 @@ function LocationPage() {
   const handleLoad = (map) => {
     mapRef.current = map;
   };
+
+  useEffect(() => {
+    if (
+      restaurant_id === null &&
+      localStorage.getItem("restaurantID") !== null &&
+      token !== null
+    ) {
+      let pushedDistanceWithDetails = [];
+
+      const restId = localStorage?.getItem("restaurantID");
+
+      const filterBranches = branchHours?.filter(
+        (branch) => branch?.restaurant_id === +restId
+      );
+
+      if (filterBranches?.length && restaurantID !== null) {
+        for (const branchData of filterBranches) {
+          const reslat = +branchData?.latitude;
+          const reslng = +branchData?.longitude;
+
+          const distance = getDistanceFromLatLonInKm(
+            reslat,
+            reslng,
+            center.lat,
+            center.lng
+          );
+
+          if (distance > 50) {
+            setNotOperational(true);
+          } else {
+            pushedDistanceWithDetails.push({
+              ...branchData,
+              distance,
+            });
+
+            const findedRest = checkNearestDistanceOfBranch(
+              pushedDistanceWithDetails
+            );
+
+            if (findedRest) {
+              setRestaurant_id(findedRest.restaurant_id);
+              setBranchId(findedRest.id);
+            }
+          }
+        }
+      }
+    }
+  }, [restaurant_id, localStorage, branchHours, center]);
+
+  useEffect(() => {
+    if (
+      restaurant_id === null &&
+      localStorage.getItem("restaurantID") === null &&
+      token !== null
+    ) {
+      let pushedDistanceWithDetails = [];
+
+      if (branchHours?.length) {
+        for (const branchData of branchHours) {
+          const reslat = +branchData?.latitude;
+          const reslng = +branchData?.longitude;
+
+          const distance = getDistanceFromLatLonInKm(
+            reslat,
+            reslng,
+            center.lat,
+            center.lng
+          );
+
+          if (distance > 50) {
+            setNotOperational(true);
+          } else {
+            pushedDistanceWithDetails.push({
+              ...branchData,
+              distance,
+            });
+
+            const findedRest = checkNearestDistanceOfBranch(
+              pushedDistanceWithDetails
+            );
+
+            if (findedRest) {
+              setRestaurant_id(findedRest.restaurant_id);
+              setBranchId(findedRest.id);
+            }
+          }
+        }
+      }
+    }
+  }, [restaurant_id, localStorage, branchHours, center]);
 
   const handleCenterChanged = async () => {
     if (!mapRef.current) return;

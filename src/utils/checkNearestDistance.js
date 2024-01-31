@@ -35,10 +35,8 @@ export const branchDelivers = (
   );
 
   if (smallestDistanceLocation) {
-    if (localStorage?.getItem("restaurantID") === null) {
-      setRestaurant_id(smallestDistanceLocation.restaurant_id);
-      setBranchId(smallestDistanceLocation.id);
-    }
+    setRestaurant_id(smallestDistanceLocation.restaurant_id);
+    setBranchId(smallestDistanceLocation.id);
 
     const restrictToRegion = autocomplete
       .getPlace()

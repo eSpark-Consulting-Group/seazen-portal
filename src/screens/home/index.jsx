@@ -184,8 +184,8 @@ const Home = () => {
       });
   };
 
-  const fetchAllAreas = (restaurant_id, branch_id) => {
-    getAllArea(restaurant_id, branch_id)
+  const fetchAllAreas = () => {
+    getAllArea()
       .then((res) => {
         dispatch(getAreas(res.data));
       })
