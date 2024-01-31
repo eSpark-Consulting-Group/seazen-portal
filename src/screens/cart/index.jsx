@@ -423,20 +423,20 @@ function CartPage() {
 
                   checkout(data, token)
                     .then((res) => {
-                      if (res?.success === "error") {
-                        const parsedError = res?.message?.split(":")[1]?.trim();
+                      // if (res?.success === "error") {
+                      //   const parsedError = res?.message?.split(":")[1]?.trim();
 
-                        if (toastList.size < MAX_TOAST) {
-                          const id = toast.error(parsedError, {
-                            onClose: () => toastList.delete(id),
-                          });
-                          toastList.add(id);
-                        }
-                      } else {
-                        const checkoutRedirectUrl =
-                          res.data?.payment_methods[0].redirect_url;
-                        window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
-                      }
+                      //   if (toastList.size < MAX_TOAST) {
+                      //     const id = toast.error(parsedError, {
+                      //       onClose: () => toastList.delete(id),
+                      //     });
+                      //     toastList.add(id);
+                      //   }
+                      // } else {
+                      const checkoutRedirectUrl =
+                        res.data?.payment_methods[0].redirect_url;
+                      window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                      // }
                     })
                     .catch((err) => {
                       console.log(err);
