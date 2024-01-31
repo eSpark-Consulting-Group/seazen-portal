@@ -186,7 +186,10 @@ function LocationPage() {
                 // If User selected any location
                 // const selected = JSON.parse(localStorage.getItem("selected"));
 
-                if (location?.state?.toCurrent !== undefined) {
+                if (
+                  location?.state?.toCurrent !== undefined &&
+                  restaurant_id === null
+                ) {
                   makeCenter();
                 } else {
                   if (restaurant_id === null) {
@@ -200,7 +203,10 @@ function LocationPage() {
                 //   localStorage.getItem("location")
                 // );
 
-                if (location?.state?.toCurrent !== undefined) {
+                if (
+                  location?.state?.toCurrent !== undefined &&
+                  restaurant_id === null
+                ) {
                   makeCenter();
                 } else {
                   if (restaurant_id === null) {
@@ -222,17 +228,24 @@ function LocationPage() {
             } else if (selected !== null) {
               // const selected = JSON.parse(localStorage.getItem("selected"));
 
-              getAdd(selected.lat, selected.lng);
+              if (restaurant_id === null) {
+                getAdd(selected.lat, selected.lng);
+              }
               // If User didn't selected any location
             } else if (currentLocation !== null) {
               // const currentLocation = JSON.parse(
               //   localStorage.getItem("location")
               // );
 
-              if (location?.state?.toCurrent !== undefined) {
+              if (
+                location?.state?.toCurrent !== undefined &&
+                restaurant_id === null
+              ) {
                 makeCenter();
               } else {
-                getAdd(currentLocation.lat, currentLocation.lng);
+                if (restaurant_id === null) {
+                  getAdd(currentLocation.lat, currentLocation.lng);
+                }
               }
             } else if (
               token !== null &&
@@ -254,17 +267,24 @@ function LocationPage() {
             } else if (selected !== null) {
               // const selected = JSON.parse(localStorage.getItem("selected"));
 
-              getAdd(selected.lat, selected.lng);
+              if (restaurant_id === null) {
+                getAdd(selected.lat, selected.lng);
+              }
               // If User didn't selected any location
             } else if (currentLocation !== null) {
               // const currentLocation = JSON.parse(
               //   localStorage.getItem("location")
               // );
 
-              if (location?.state?.toCurrent !== undefined) {
+              if (
+                location?.state?.toCurrent !== undefined &&
+                restaurant_id === null
+              ) {
                 makeCenter();
               } else {
-                getAdd(currentLocation.lat, currentLocation.lng);
+                if (restaurant_id === null) {
+                  getAdd(currentLocation.lat, currentLocation.lng);
+                }
               }
             } else if (
               token !== null &&
