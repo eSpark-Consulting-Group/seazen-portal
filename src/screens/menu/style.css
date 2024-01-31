@@ -3,4 +3,13 @@
   box-sizing: border-box !important;
 }
 
+.with-progress {
+  height: 100%;
+}
 
+.progress-div {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

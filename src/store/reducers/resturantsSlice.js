@@ -42,6 +42,15 @@ const resturantsSlice = createSlice({
     getResturantsDetails: (state, action) => {
       state.restaurantDetail = action.payload;
     },
+    removeResturantsDetails: (state) => {
+      state.restaurantDetail = {};
+    },
+    removeCategoryItemList: (state) => {
+      state.listItemByCategory = [];
+    },
+    removeCategoryList: (state) => {
+      state.listCategory = [];
+    },
     setVariantSize: (state, action) => {
       if (!state.details.includes(action.payload.id)) {
         state.details.push({
@@ -151,6 +160,9 @@ export const {
   getCategoryList,
   toggleCategoryListLoading,
   removeBranchID,
+  removeResturantsDetails,
+  removeCategoryItemList,
+  removeCategoryList,
 } = resturantsSlice.actions;
 
 export default resturantsSlice.reducer;

@@ -81,6 +81,10 @@ function CartPage() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
 
+  const token = localStorage.getItem("token");
+  const restaurantId = localStorage.getItem("restaurantID");
+  const brId = localStorage.getItem("branchId");
+
   const branchHours = useSelector((state) => state.resturants.branchHours);
   // const nearbyRestaurants = useSelector(
   //   (state) => state.resturants.nearbyRestaurants
@@ -92,8 +96,13 @@ function CartPage() {
 
   useEffect(() => {
     if (cart?.length > 0) {
-      localStorage.setItem("branchId", cart[0].branch_id);
-      localStorage.setItem("restaurantID", cart[0].restaurant_id);
+      if (+restaurantId === cart[0].restaurant_id) {
+        localStorage.setItem("branchId", cart[0].branch_id);
+        localStorage.setItem("restaurantID", cart[0].restaurant_id);
+      } else {
+        localStorage.setItem("preserevedBranchId", +brId);
+        localStorage.setItem("preserevedRestaurantID", +restaurantId);
+      }
     }
   }, [cart]);
 
@@ -134,9 +143,6 @@ function CartPage() {
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
   const [isActive, setIsActive] = useState(false);
-
-  const token = localStorage.getItem("token");
-  const restaurantId = localStorage.getItem("restaurantID");
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
@@ -231,7 +237,7 @@ function CartPage() {
               distance,
             });
 
-            checkWithBranchIdDeliverZones(pushedWithDistance);
+            checkWithBranchIdDeliverZones(pushedWithDistance, selectedAddress);
           }
         }
       }
@@ -775,10 +781,15 @@ function CartPage() {
               (location?.state?.noAddress && cart?.length !== 0) ||
               (location?.state?.fromMenu !== undefined && cart?.length !== 0)
             ) {
+              const preserevedRestaurantID = localStorage.getItem(
+                "preserevedRestaurantID"
+              );
+
               const navigateId =
+                preserevedRestaurantID === null &&
                 cart[0]?.restaurant_id === +restaurantId
                   ? cart[0]?.restaurant_id
-                  : +restaurantId;
+                  : preserevedRestaurantID;
 
               navigate(`${paths.menu}/restaurant/${navigateId}/delivery`);
             } else if (

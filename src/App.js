@@ -36,6 +36,7 @@ function App() {
   const restaurantData = useSelector(
     (state) => state.resturants.resturantsData
   );
+  const toLoad = useSelector((state) => state.toLoad.toLoad);
 
   const dispatch = useDispatch();
 
@@ -163,7 +164,7 @@ function App() {
     <>
       {currentURL.pathname === "/countdown" && <RouteProvider />}
       {currentURL.pathname !== "/countdown" && (
-      <div className="container_main">
+        <div className="container_main">
           <div className="design-section">
             {/* Design section content */}
             <RouteProvider />
@@ -185,8 +186,7 @@ function App() {
               theme="light"
             />
           </div>
-        
-      </div>
+        </div>
       )}
     </>
   );

@@ -7,6 +7,7 @@ import address from "./addressSlice";
 import dateTime from "./dateTimeSlice";
 import order from "./orderSlice";
 import location from "./userLocationSlice";
+import toLoad from "./loaderSlice";
 
 const rootReducer = combineReducers({
   auth,
@@ -17,5 +18,6 @@ const rootReducer = combineReducers({
   dateTime,
   order,
   location,
+  toLoad,
 });
 export default rootReducer;

@@ -11,6 +11,7 @@ import {
   DialogContent,
   DialogTitle,
   DialogContentText,
+  CircularProgress,
 } from "@mui/material";
 
 import dayjs from "dayjs";
@@ -60,6 +61,7 @@ import { cartListWithQuery } from "../../utils/carlistApiCall.js";
 import { paths } from "../../routes/paths.jsx";
 
 import "./style.css";
+import { setToLoad } from "../../store/reducers/loaderSlice.js";
 
 const Menu = () => {
   const navigate = useNavigate();
@@ -72,6 +74,9 @@ const Menu = () => {
   const reorder = useSelector((state) => state.order.reorder);
   const cart = useSelector((state) => state.cart.cart);
   const branchHours = useSelector((state) => state.resturants.branchHours);
+  const restaurantDetail = useSelector(
+    (state) => state.resturants.restaurantDetail
+  );
 
   if (restaurant_id) {
     localStorage.setItem("restaurantID", restaurant_id);
@@ -107,6 +112,7 @@ const Menu = () => {
   const [name_en, setNameEn] = useState();
   const [orderAmFromDelivery, setOrderAmFromDelivery] = useState();
   const [distancesLessThan50, setDistancesLessThan50] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchAllAreas = () => {
     getAllArea(restaurantID, branchId)
@@ -122,20 +128,36 @@ const Menu = () => {
     if (restaurantID !== null && branchId !== null) fetchAllAreas();
   }, [restaurantID, branchId]);
 
-  const {
-    data: restaurantDetailResponse,
-    isLoading,
-    error,
-    isError,
-    refetch: restaurantDetails,
-  } = useQuery({
-    queryKey: [GET_RESTAURANT_DETAILS_QUERY_KEY],
-    queryFn: () => getRestaurantDetails(restaurant_id, country?.id),
-    onSuccess: (data) => {
-      dispatch(getResturantsDetails(data.data));
-    },
-  });
-  const { data: restaurantDetail } = restaurantDetailResponse || {};
+  const restaurantDetails = () => {
+    setIsLoading(true);
+    getRestaurantDetails(restaurant_id, country?.id)
+      .then((data) => {
+        setIsLoading(false);
+        dispatch(getResturantsDetails(data.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // const {
+  //   data: restaurantDetailResponse,
+  //   isLoading,
+  //   error,
+  //   isError,
+  //   refetch: restaurantDetails,
+  // } = useQuery({
+  //   queryKey: [GET_RESTAURANT_DETAILS_QUERY_KEY],
+  //   queryFn: () => getRestaurantDetails(restaurant_id, country?.id),
+  //   onSuccess: (data) => {
+  //     dispatch(getResturantsDetails(data.data));
+  //   },
+  // });
+  // const { data: restaurantDetail } = restaurantDetailResponse || {};
+
+  useEffect(() => {
+    dispatch(setToLoad(isLoading));
+  }, [isLoading]);
 
   dispatch(
     setThemeColor({
@@ -193,7 +215,9 @@ const Menu = () => {
   });
 
   useEffect(() => {
-    restaurantDetails();
+    if (restaurantDetail?.main_big_image === undefined) {
+      restaurantDetails();
+    }
   }, [country]);
 
   useEffect(() => {
@@ -270,7 +294,6 @@ const Menu = () => {
 
     getBranchByArea(restaurant_id, object, dispatch)
       .then((res) => {
-        console.log(res);
         if (res?.data?.length === 0) {
           getBranchIdNearToLocation();
         }
@@ -485,289 +508,297 @@ const Menu = () => {
   }, [localStorage, distancesLessThan50]);
 
   return (
-    <div>
-      <Navbar
-        restaurantDetail={restaurantDetail}
-        setOpenAddressPopup={setOpenAddressPopup}
-        fromMenu={true}
-      />
-      <RestaurantOptionsServicesContainer
-        restaurantDetail={restaurantDetail}
-        restaurantBranchHours={restaurantBranchHours}
-        resturantId={restaurant_id}
-        setOpenModal={setOpenModal}
-        setSelectedItemToDeliver={setSelectedItemToDeliver}
-        scheduleForLater={scheduleForLater}
-        fromDetail={fromDetail}
-        setFromDetail={setFromDetail}
-        setNotDeliver={setNotDeliver}
-        setRestaurantOpen={setRestaurantOpen}
-        setOrderAmFromDelivery={setOrderAmFromDelivery}
-        orderAmFromDelivery={orderAmFromDelivery}
-      />
-
-      <DialogComponent
-        notDeliver={openModal}
-        setNotDeliver={setOpenModal}
-        selectedItemToDeliver={selectedItemToDeliver}
-        // location={location}
-        fromDetail={false}
-      />
-
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <MobileDatePicker
-          onChange={(date) => {
-            setPickDate(date.format("MMM DD, YYYY-dddd"));
-
-            setFromDetail(true);
-          }}
-          minDate={dayjs(new Date())}
-          open={openSchedulePopup}
-          defaultValue={dayjs(new Date().toString())}
-          onClose={() => {
-            onDateSelected();
-          }}
-          onAccept={(date) => {
-            if (date) {
-              localStorage.setItem(
-                "pickDate",
-                date.format("MMM DD, YYYY-dddd")
-              );
-              setShowTimePicker(true);
-            }
-          }}
-          sx={{
-            display: "none",
-          }}
-        />
-        {showTimePicker && (
-          <MobileTimePicker
-            minTime={dayjs(
-              new Date().setHours(
-                parseInt(timeByDate?.from_time?.split(":")[0])
-              )
-            )}
-            maxTime={dayjs(
-              new Date().setHours(
-                parseInt(timeByDate?.to_time?.split(":")[0]) + 12
-              )
-            )}
-            defaultValue={dayjs(new Date())}
-            open={showTimePicker}
-            onChange={(time) => {
-              setPickTime(time.format("hh:mm a"));
-
-              setIsAsap(false);
-              setFromDetail(true);
-              setRestaurantOpen(false);
-            }}
-            onClose={() => {
-              setShowTimePicker(false);
-            }}
-            onAccept={(time) => {
-              localStorage.setItem("isAsap", false);
-              localStorage.setItem("pickTime", time.format("hh:mm a"));
-            }}
-            sx={{
-              display: "none",
-            }}
+    <div className={isLoading ? "with-progress" : ""}>
+      {isLoading ? (
+        <div className="progress-div">
+          <CircularProgress className="circular-bar" />
+        </div>
+      ) : (
+        <>
+          <Navbar
+            restaurantDetail={restaurantDetail}
+            setOpenAddressPopup={setOpenAddressPopup}
+            fromMenu={true}
           />
-        )}
-      </LocalizationProvider>
+          <RestaurantOptionsServicesContainer
+            restaurantDetail={restaurantDetail}
+            restaurantBranchHours={restaurantBranchHours}
+            resturantId={restaurant_id}
+            setOpenModal={setOpenModal}
+            setSelectedItemToDeliver={setSelectedItemToDeliver}
+            scheduleForLater={scheduleForLater}
+            fromDetail={fromDetail}
+            setFromDetail={setFromDetail}
+            setNotDeliver={setNotDeliver}
+            setRestaurantOpen={setRestaurantOpen}
+            setOrderAmFromDelivery={setOrderAmFromDelivery}
+            orderAmFromDelivery={orderAmFromDelivery}
+          />
 
-      <Dialog
-        open={restaurantOpen}
-        onClose={() => {
-          setFromDetail(false);
-          setRestaurantOpen(false);
-        }}
-        sx={{
-          margin: "0",
-          textAlign: "center",
-        }}
-        className="cart-dialog"
-        PaperProps={{
-          sx: {
-            overflow: "visible",
-            margin: "0px 0px 0px 27px",
-            width: "327px",
+          <DialogComponent
+            notDeliver={openModal}
+            setNotDeliver={setOpenModal}
+            selectedItemToDeliver={selectedItemToDeliver}
+            // location={location}
+            fromDetail={false}
+          />
 
-            "@media (max-width: 500px)": {
-              width: "375px",
-              margin: "0px 0px 0px 0px",
-            },
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <MobileDatePicker
+              onChange={(date) => {
+                setPickDate(date.format("MMM DD, YYYY-dddd"));
 
-            "@media (max-width: 400px)": {
-              width: "90%",
-            },
-          },
-        }}
-      >
-        <DialogTitle
-          id="alert-dialog-title"
-          className="dialog-title title-cart"
-        >
-          <img src="/assets/img/exclaim.svg"></img>
-
-          <div
-            style={{
-              position: "absolute",
-              top: "8px",
-              right: "10px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onClick={() => {
-              setFromDetail(false);
-              setRestaurantOpen(false);
-              sessionStorage.setItem("popupOpened", true);
-            }}
-          >
-            <CloseIcon
+                setFromDetail(true);
+              }}
+              minDate={dayjs(new Date())}
+              open={openSchedulePopup}
+              defaultValue={dayjs(new Date().toString())}
+              onClose={() => {
+                onDateSelected();
+              }}
+              onAccept={(date) => {
+                if (date) {
+                  localStorage.setItem(
+                    "pickDate",
+                    date.format("MMM DD, YYYY-dddd")
+                  );
+                  setShowTimePicker(true);
+                }
+              }}
               sx={{
-                width: "24px",
-                fontSize: "24px",
-                cursor: "pointer",
-                color: "#707070 !important",
+                display: "none",
               }}
             />
-          </div>
-        </DialogTitle>
-        <DialogContent className="dialog-content-cart">
-          Restaurant is closed. Do you want to schedule for later?
-        </DialogContent>
+            {showTimePicker && (
+              <MobileTimePicker
+                minTime={dayjs(
+                  new Date().setHours(
+                    parseInt(timeByDate?.from_time?.split(":")[0])
+                  )
+                )}
+                maxTime={dayjs(
+                  new Date().setHours(
+                    parseInt(timeByDate?.to_time?.split(":")[0]) + 12
+                  )
+                )}
+                defaultValue={dayjs(new Date())}
+                open={showTimePicker}
+                onChange={(time) => {
+                  setPickTime(time.format("hh:mm a"));
 
-        <div className="btn-navigate">
-          <Button
-            className="common-st add-btn"
-            onClick={() => {
-              sessionStorage.setItem("popupOpened", true);
-              navigate(paths.home);
+                  setIsAsap(false);
+                  setFromDetail(true);
+                  setRestaurantOpen(false);
+                }}
+                onClose={() => {
+                  setShowTimePicker(false);
+                }}
+                onAccept={(time) => {
+                  localStorage.setItem("isAsap", false);
+                  localStorage.setItem("pickTime", time.format("hh:mm a"));
+                }}
+                sx={{
+                  display: "none",
+                }}
+              />
+            )}
+          </LocalizationProvider>
+
+          <Dialog
+            open={restaurantOpen}
+            onClose={() => {
+              setFromDetail(false);
+              setRestaurantOpen(false);
+            }}
+            sx={{
+              margin: "0",
+              textAlign: "center",
+            }}
+            className="cart-dialog"
+            PaperProps={{
+              sx: {
+                overflow: "visible",
+                margin: "0px 0px 0px 27px",
+                width: "327px",
+
+                "@media (max-width: 500px)": {
+                  width: "375px",
+                  margin: "0px 0px 0px 0px",
+                },
+
+                "@media (max-width: 400px)": {
+                  width: "90%",
+                },
+              },
             }}
           >
-            Home Page
-          </Button>
+            <DialogTitle
+              id="alert-dialog-title"
+              className="dialog-title title-cart"
+            >
+              <img src="/assets/img/exclaim.svg"></img>
 
-          <Button
-            className="common-st go-to-btn"
-            onClick={() => {
-              sessionStorage.setItem("popupOpened", true);
-              setFromDetail(true);
-              setOpenSchedulePopup(true);
-            }}
-          >
-            Schedule for later
-          </Button>
-        </div>
-      </Dialog>
-
-      <Dialog
-        open={notDeliver}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        className="not-delivered"
-        sx={{
-          overflow: "hidden",
-          "& .MuiDialog-paper": {
-            width: "327px",
-            textAlign: "center",
-            overflow: "visible",
-            margin: "27px",
-
-            "@media (max-width: 500px)": {
-              width: "375px",
-              margin: "30px",
-            },
-
-            "@media (max-width: 400px)": {
-              width: "90%",
-              margin: "25px",
-            },
-          },
-        }}
-      >
-        <DialogTitle id="alert-dialog-title" className="dialog-title">
-          <img src="/assets/img/exclaim.svg"></img>
-        </DialogTitle>
-        <DialogContent className="content">
-          <DialogContentText id="alert-dialog-description">
-            <div className="text-detail">
-              {`${restaurantDetail?.name_en} Restaurant`} does not
-              <br /> deliver to your current location.
-            </div>
-
-            <>
-              <div className="disp-flex">
-                <Button
-                  onClick={() => {
-                    navigate(paths.home);
+              <div
+                style={{
+                  position: "absolute",
+                  top: "8px",
+                  right: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={() => {
+                  setFromDetail(false);
+                  setRestaurantOpen(false);
+                  sessionStorage.setItem("popupOpened", true);
+                }}
+              >
+                <CloseIcon
+                  sx={{
+                    width: "24px",
+                    fontSize: "24px",
+                    cursor: "pointer",
+                    color: "#707070 !important",
                   }}
-                  className="btn change-button"
-                >
-                  <span>Change Restaurant</span>
-                </Button>
-
-                <Button
-                  onClick={() => {
-                    navigate(paths.location, {
-                      state: {
-                        path: "menu/restaurant",
-                        restaurantName: restaurantDetail?.name_en,
-                        restaurant_id: restaurantDetail?.id,
-                      },
-                    });
-                  }}
-                  className="btn change-button"
-                >
-                  <span>Change Location</span>
-                </Button>
+                />
               </div>
+            </DialogTitle>
+            <DialogContent className="dialog-content-cart">
+              Restaurant is closed. Do you want to schedule for later?
+            </DialogContent>
+
+            <div className="btn-navigate">
+              <Button
+                className="common-st add-btn"
+                onClick={() => {
+                  sessionStorage.setItem("popupOpened", true);
+                  navigate(paths.home);
+                }}
+              >
+                Home Page
+              </Button>
 
               <Button
-                color="primary"
-                autoFocus
-                className="btn back-button"
-                onClick={() => handleClose()}
+                className="common-st go-to-btn"
+                onClick={() => {
+                  sessionStorage.setItem("popupOpened", true);
+                  setFromDetail(true);
+                  setOpenSchedulePopup(true);
+                }}
               >
-                <span>Go to menu</span>
+                Schedule for later
               </Button>
-            </>
-          </DialogContentText>
-        </DialogContent>
-      </Dialog>
+            </div>
+          </Dialog>
 
-      <SelectLocation
-        openAddressPopup={openAddressPopup}
-        handleClose={() => setOpenAddressPopup(false)}
-        chooseAddress={chooseAddress}
-        navigateUser={navigateUser}
-      />
+          <Dialog
+            open={notDeliver}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            className="not-delivered"
+            sx={{
+              overflow: "hidden",
+              "& .MuiDialog-paper": {
+                width: "327px",
+                textAlign: "center",
+                overflow: "visible",
+                margin: "27px",
 
-      <DialogComponent
-        notDeliver={distanceIsFar}
-        setNotDeliver={setDistanceIsFar}
-        restaurantName={restaurantName}
-        fromDetail={true}
-        resturantId={restaurant_id}
-        location={location}
-        home={true}
-        menuCard={true}
-      />
+                "@media (max-width: 500px)": {
+                  width: "375px",
+                  margin: "30px",
+                },
 
-      {location?.state?.order_item !== undefined ? (
-        <ReOrderCard
-          isVisible={reorder}
-          handleClose={() => dispatch(closeReorderModal())}
-          items={location?.state?.order_item}
-          restaurant_id={restaurant_id}
-          setDistanceIsFar={setNotDeliver}
-          branchesAndHours={branchesAndHoursResponse?.data}
-          setRestaurantName={setRestaurantName}
-          restaurantDetail={restaurantDetail}
-        />
-      ) : null}
+                "@media (max-width: 400px)": {
+                  width: "90%",
+                  margin: "25px",
+                },
+              },
+            }}
+          >
+            <DialogTitle id="alert-dialog-title" className="dialog-title">
+              <img src="/assets/img/exclaim.svg"></img>
+            </DialogTitle>
+            <DialogContent className="content">
+              <DialogContentText id="alert-dialog-description">
+                <div className="text-detail">
+                  {`${restaurantDetail?.name_en} Restaurant`} does not
+                  <br /> deliver to your current location.
+                </div>
+
+                <>
+                  <div className="disp-flex">
+                    <Button
+                      onClick={() => {
+                        navigate(paths.home);
+                      }}
+                      className="btn change-button"
+                    >
+                      <span>Change Restaurant</span>
+                    </Button>
+
+                    <Button
+                      onClick={() => {
+                        navigate(paths.location, {
+                          state: {
+                            path: "menu/restaurant",
+                            restaurantName: restaurantDetail?.name_en,
+                            restaurant_id: restaurantDetail?.id,
+                          },
+                        });
+                      }}
+                      className="btn change-button"
+                    >
+                      <span>Change Location</span>
+                    </Button>
+                  </div>
+
+                  <Button
+                    color="primary"
+                    autoFocus
+                    className="btn back-button"
+                    onClick={() => handleClose()}
+                  >
+                    <span>Go to menu</span>
+                  </Button>
+                </>
+              </DialogContentText>
+            </DialogContent>
+          </Dialog>
+
+          <SelectLocation
+            openAddressPopup={openAddressPopup}
+            handleClose={() => setOpenAddressPopup(false)}
+            chooseAddress={chooseAddress}
+            navigateUser={navigateUser}
+          />
+
+          <DialogComponent
+            notDeliver={distanceIsFar}
+            setNotDeliver={setDistanceIsFar}
+            restaurantName={restaurantName}
+            fromDetail={true}
+            resturantId={restaurant_id}
+            location={location}
+            home={true}
+            menuCard={true}
+          />
+
+          {location?.state?.order_item !== undefined ? (
+            <ReOrderCard
+              isVisible={reorder}
+              handleClose={() => dispatch(closeReorderModal())}
+              items={location?.state?.order_item}
+              restaurant_id={restaurant_id}
+              setDistanceIsFar={setNotDeliver}
+              branchesAndHours={branchesAndHoursResponse?.data}
+              setRestaurantName={setRestaurantName}
+              restaurantDetail={restaurantDetail}
+            />
+          ) : null}
+        </>
+      )}
     </div>
   );
 };

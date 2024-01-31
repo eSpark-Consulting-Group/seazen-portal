@@ -129,7 +129,15 @@ function LocationPage() {
   // }, [branchHours, restaurant_id]);
 
   const { refetch: fetchAreasAgain } = useQuery({
-    queryFn: () => getAllArea(restaurant_id, branchId),
+    queryFn: () =>
+      getAllArea(
+        location?.state?.restaurant_id !== undefined
+          ? location?.state?.restaurant_id
+          : restaurant_id,
+        location?.state?.branch_id !== undefined
+          ? location?.state?.branch_id
+          : branchId
+      ),
     onSuccess: (data) => {
       setIsDeliveryZones(false);
       dispatch(getAreas(data.data));
@@ -139,7 +147,9 @@ function LocationPage() {
   useEffect(() => {
     if (
       (branchId !== null && restaurant_id !== null) ||
-      restaurantID !== null
+      restaurantID !== null ||
+      (location?.state?.restaurant_id !== undefined &&
+        location?.state?.branch_id !== undefined)
     ) {
       fetchAreasAgain();
     }

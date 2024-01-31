@@ -28,6 +28,9 @@ import { addCountry } from "../../store/reducers/authSlice";
 import { addToCart } from "../../store/reducers/cartSlice";
 import {
   getBranchHours,
+  removeCategoryItemList,
+  removeCategoryList,
+  removeResturantsDetails,
   setBranchID,
 } from "../../store/reducers/resturantsSlice";
 import { getAreas } from "../../store/reducers/addressSlice";
@@ -62,6 +65,12 @@ const Home = () => {
 
   useEffect(() => {
     localStorage.removeItem("restaurantIdForRedirect");
+    localStorage.removeItem("preserevedBranchId");
+    localStorage.removeItem("preserevedRestaurantID");
+
+    dispatch(removeResturantsDetails());
+    dispatch(removeCategoryItemList());
+    dispatch(removeCategoryList());
 
     if (cart?.length === 0) {
       localStorage.removeItem("restaurantID");
