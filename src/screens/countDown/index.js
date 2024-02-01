@@ -72,7 +72,7 @@ const CountDown = () => {
               sx={{
                 border: "5px solid #fff",
                 borderRadius: "20px",
-                padding: "0rem 1.5rem",
+                padding: "1.5rem",
               }}
             >
               <Typography
