@@ -3,8 +3,8 @@ import { Box, Typography, Grid } from "@mui/material";
 import "./style.css";
 
 const CountDown = () => {
-  // Set the target date to February 10th midnight
-  const targetDate = new Date("2024-02-10T00:00:00");
+  // Set the target date to February 10th 23:00:00
+  const targetDate = new Date("2024-02-10T23:00:00");
 
   // Initial state for countdown values
   const [countdown, setCountdown] = useState({
