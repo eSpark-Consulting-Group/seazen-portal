@@ -23,6 +23,7 @@
 .top_logos {
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 20px;
   gap: 60px;
   margin-bottom: 35px;
