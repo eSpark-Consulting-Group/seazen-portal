@@ -87,6 +87,7 @@ const DeliveryDetails = (props) => {
   const dropdownRef = useRef(null);
 
   const addressData = useSelector((state) => state.address.addressData);
+  const allAreas = useSelector((state) => state.address.allAreas);
   // const nearbyRestaurants = useSelector(
   //   (state) => state.resturants.nearbyRestaurants
   // );
@@ -295,7 +296,10 @@ const DeliveryDetails = (props) => {
 
     if (smallestDistanceLocation) {
       if (addressData?.length > 0) {
-        if (fromLocation?.name_en === undefined) {
+        if (
+          (selected !== null || currentLocation?.name_en !== undefined) &&
+          fromLocation?.name_en === undefined
+        ) {
           setLocationDeliver(true);
         } else {
           setLocationDeliver(false);
@@ -921,7 +925,21 @@ const DeliveryDetails = (props) => {
                   fontSize: "19px",
                 }}
               >
-                {selected?.delivery_time?.trim()?.split(" ")[0]}
+                {localStorage.getItem("area_id") !== null &&
+                allAreas.find(
+                  (area) =>
+                    area.name_en === selected?.name_en &&
+                    area.restaurant_id === +restaurant_id
+                )?.delivery_time !== undefined
+                  ? allAreas
+                      .find(
+                        (area) =>
+                          area.name_en === selected?.name_en &&
+                          area.restaurant_id === +restaurant_id
+                      )
+                      ?.delivery_time?.trim()
+                      ?.split(" ")[0]
+                  : selected?.delivery_time?.trim()?.split(" ")[0]}
               </Typography>
               <Typography
                 variant="caption"

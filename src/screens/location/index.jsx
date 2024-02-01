@@ -48,7 +48,10 @@ import { getAreas } from "../../store/reducers/addressSlice";
 import { paths } from "../../routes/paths";
 
 import "./style.css";
-import { getDistanceFromLatLonInKm } from "../../utils/getAddress";
+import {
+  flattenArray,
+  getDistanceFromLatLonInKm,
+} from "../../utils/getAddress";
 import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantBranchHours";
@@ -59,6 +62,7 @@ import {
 import {
   branchDelivers,
   checkNearestDistanceOfBranch,
+  findNearestBranch,
   findOperationalArea,
 } from "../../utils/checkNearestDistance";
 import { setPermissionsForLocation } from "../../utils/navigate";
@@ -97,7 +101,7 @@ function LocationPage() {
 
   const selected = JSON.parse(localStorage.getItem("selected"));
   const currentLocation = JSON.parse(localStorage.getItem("location"));
-  const restaurantID = JSON.parse(localStorage.getItem("restaurantID"));
+  // const restaurantID = JSON.parse(localStorage.getItem("restaurantID"));
   // const branchId = JSON.parse(localStorage.getItem("branchId"));
   const token = localStorage.getItem("token");
 
@@ -128,34 +132,61 @@ function LocationPage() {
   //   }
   // }, [branchHours, restaurant_id]);
 
-  const { refetch: fetchAreasAgain } = useQuery({
-    queryFn: () =>
-      getAllArea(
-        location?.state?.restaurant_id !== undefined
-          ? location?.state?.restaurant_id
-          : restaurant_id,
-        location?.state?.branch_id !== undefined
-          ? location?.state?.branch_id
-          : branchId
-      ),
-    onSuccess: (data) => {
-      setIsDeliveryZones(false);
-      dispatch(getAreas(data.data));
-      // setRestaurant_id(null);
-      // setBranchId(null);
-    },
-  });
+  // const { refetch: fetchAreasAgain } = useQuery({
+  //   queryFn: () =>
+  //     getAllArea( location?.state?.restaurant_id, location?.state?.branch_id),
+  //   onSuccess: (data) => {
+  //     setIsDeliveryZones(false);
+
+  //     const flattenedArray = flattenArray(res.data);
+
+  //     dispatch(getAreas(flattenedArray));
+  //   },
+  // });
 
   useEffect(() => {
-    if (
-      (branchId !== null && restaurant_id !== null) ||
-      restaurantID !== null ||
-      (location?.state?.restaurant_id !== undefined &&
-        location?.state?.branch_id !== undefined)
-    ) {
-      fetchAreasAgain();
+    fetchAreasAgain();
+  }, []);
+
+  const fetchAreasAgain = () => {
+    setIsDeliveryZones(true);
+
+    getAllArea(location?.state?.restaurant_id, location?.state?.branch_id)
+      .then((res) => {
+        setIsDeliveryZones(false);
+
+        const flattenedArray = flattenArray(res.data);
+        dispatch(getAreas(flattenedArray));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const [filterAllAreas, setFilterAllAreas] = useState([]);
+
+  useEffect(() => {
+    if (localStorage.getItem("restaurantID") !== null) {
+      const filterAreas = allAreas.filter(
+        (area) => area.restaurant_id === +localStorage.getItem("restaurantID")
+      );
+
+      setFilterAllAreas(filterAreas);
+    } else {
+      setFilterAllAreas(allAreas);
     }
-  }, [branchId, restaurant_id, restaurantID]);
+  }, [allAreas]);
+
+  // useEffect(() => {
+  //   if (
+  //     (branchId !== null && restaurant_id !== null) ||
+  //     restaurantID !== null ||
+  //     (location?.state?.restaurant_id !== undefined &&
+  //       location?.state?.branch_id !== undefined)
+  //   ) {
+  //     fetchAreasAgain();
+  //   }
+  // }, [branchId, restaurant_id, restaurantID]);
 
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [address, setAddress] = useState("");
@@ -295,7 +326,7 @@ function LocationPage() {
             }
           }
         });
-  }, [allAreas]);
+  }, []);
 
   useEffect(() => {
     if (
@@ -307,7 +338,7 @@ function LocationPage() {
 
       getAdd(lat, lng);
     }
-  }, [location?.state, allAreas, branchHours]);
+  }, [location?.state]);
 
   useEffect(() => {
     if (
@@ -316,57 +347,244 @@ function LocationPage() {
     ) {
       getAdd(+location?.state?.latlng?.lat, +location?.state?.latlng?.lng);
     }
-  }, [location?.state, allAreas, branchHours, branchId]);
+  }, [location?.state]);
 
   useEffect(() => {
     if (addressComponents?.address_components?.length && noRegion === false) {
-      findOperationalArea(
-        addressComponents,
-        allAreas,
-        setCenter,
-        setAddress,
-        setSelectedAreaId,
-        setSelectedAddress,
-        setNotOperational,
-        setDistanceIsFar,
-        noRegion
+      const restId = localStorage?.getItem("restaurantID");
+
+      let branches = [];
+      const filterBranches = branchHours?.filter(
+        (branch) => branch?.restaurant_id === +restId
       );
+
+      if (filterBranches?.length > 0) {
+        branches = filterBranches;
+      } else {
+        branches = branchHours;
+      }
+
+      let lat = addressComponents?.geometry?.location?.lat;
+      let lng = addressComponents?.geometry?.location?.lng;
+
+      if (typeof lat === "function") {
+        lat = addressComponents?.geometry?.location?.lat();
+        lng = addressComponents?.geometry?.location?.lng();
+      } else {
+        lat = addressComponents?.geometry?.location?.lat;
+        lng = addressComponents?.geometry?.location?.lng;
+      }
+
+      let matchingArea = null;
+      let dynamicDistances = [];
+
+      for (const branch of branches) {
+        const distance = calculateDistance(
+          lat,
+          lng,
+          +branch.latitude,
+          +branch.longitude
+        );
+
+        dynamicDistances.push(distance);
+      }
+
+      // Check if address types include "locality" or "administrative_area_level_1"
+      const localityComponents = addressComponents.address_components.filter(
+        (component) =>
+          component.types.includes("locality") ||
+          component.types.includes("sublocality_level_1") ||
+          component.types.includes("sublocality")
+      );
+
+      const addressHasAdminAreaLevel1 =
+        addressComponents.address_components.filter(
+          (component) =>
+            component.types.includes("administrative_area_level_1") &&
+            !component.types.includes("locality")
+        );
+
+      if (localityComponents.length > 0) {
+        if (dynamicDistances.length > 0) {
+          for (const dynamicDistance of dynamicDistances) {
+            // Loop through each component's long_name
+            for (const component of localityComponents) {
+              const addressLongNameNormalized = removeDiacritics(
+                component.long_name.toLowerCase().replace(/\s/g, "")
+              );
+
+              // Calculate distance for each branch and check for a match
+              for (const branch of branches) {
+                const distance = calculateDistance(
+                  lat,
+                  lng,
+                  +branch.latitude,
+                  +branch.longitude
+                );
+
+                if (distance < dynamicDistance) {
+                  // Adjust the threshold as needed
+                  // Check if any area's name_en matches the normalized address long_name
+                  for (const area of filterAllAreas) {
+                    const areaNameNormalized = removeDiacritics(
+                      area.name_en.toLowerCase().replace(/\s/g, "")
+                    );
+
+                    if (
+                      addressLongNameNormalized.includes(areaNameNormalized) &&
+                      addressLongNameNormalized.length ===
+                        areaNameNormalized.length &&
+                      branch.restaurant_id === area.restaurant_id
+                    ) {
+                      matchingArea = area;
+                      break; // Stop searching if a match is found
+                    }
+                  }
+                }
+
+                if (matchingArea) {
+                  break; // Stop searching if a match is found
+                }
+              }
+
+              if (matchingArea) {
+                break; // Stop searching if a match is found
+              }
+            }
+
+            if (matchingArea?.branch_id !== undefined) {
+              setSelectedAreaId(matchingArea?.area_id);
+              setSelectedAddress({
+                ...matchingArea,
+                address: addressComponents?.formatted_address,
+              });
+              setNotOperational(false);
+              setDistanceIsFar(false);
+            } else {
+              if (!noRegion) {
+                if (location?.state?.restaurant_id !== undefined) {
+                  setDistanceIsFar(true);
+                } else {
+                  setDistanceIsFar(false);
+
+                  setNotOperational(true);
+                }
+              }
+            }
+          }
+        } else {
+          setNotOperational(true);
+        }
+      } else if (addressHasAdminAreaLevel1.length > 0) {
+        if (dynamicDistances.length > 0) {
+          for (const dynamicDistance of dynamicDistances) {
+            // Loop through each component's long_name
+            for (const component of addressHasAdminAreaLevel1) {
+              const addressLongNameNormalized = removeDiacritics(
+                component.long_name.toLowerCase().replace(/\s/g, "")
+              );
+
+              // Calculate distance for each branch and check for a match
+              for (const branch of branches) {
+                const distance = calculateDistance(
+                  lat,
+                  lng,
+                  +branch.latitude,
+                  +branch.longitude
+                );
+
+                if (distance < dynamicDistance) {
+                  // Adjust the threshold as needed
+                  // Check if any area's name_en matches the normalized address long_name
+                  for (const area of filterAllAreas) {
+                    const areaNameNormalized = removeDiacritics(
+                      area.name_en.toLowerCase().replace(/\s/g, "")
+                    );
+
+                    if (
+                      addressLongNameNormalized.includes(areaNameNormalized) &&
+                      addressLongNameNormalized.length ===
+                        areaNameNormalized.length &&
+                      branch.restaurant_id === area.restaurant_id &&
+                      branch.id === area.branch_id
+                    ) {
+                      matchingArea = area;
+                      break; // Stop searching if a match is found
+                    }
+                  }
+                }
+
+                if (matchingArea) {
+                  break; // Stop searching if a match is found
+                }
+              }
+
+              if (matchingArea) {
+                break; // Stop searching if a match is found
+              }
+            }
+
+            if (matchingArea?.branch_id !== undefined) {
+              setSelectedAreaId(matchingArea?.area_id);
+              setSelectedAddress({
+                ...matchingArea,
+                address: addressComponents?.formatted_address,
+              });
+              setNotOperational(false);
+              setDistanceIsFar(false);
+            } else {
+              if (!noRegion) {
+                if (location?.state?.restaurant_id !== undefined) {
+                  setDistanceIsFar(true);
+                } else {
+                  setDistanceIsFar(false);
+
+                  setNotOperational(true);
+                }
+              }
+            }
+          }
+        } else {
+          setNotOperational(true);
+        }
+      } else {
+        setNotOperational(true);
+      }
+
+      // findOperationalArea(
+      //   addressComponents,
+      //   allAreas,
+      //   setSelectedAreaId,
+      //   setSelectedAddress,
+      //   setNotOperational,
+      //   setDistanceIsFar,
+      //   noRegion,
+      //   pushedDistanceWithDetails
+      // );
     }
   }, [
-    allAreas,
+    filterAllAreas,
     addressComponents?.address_components,
     noRegion,
     branchHours,
-    branchId,
-    restaurant_id,
-    localStorage,
   ]);
 
-  useEffect(() => {
-    if (addressComponents?.address_components?.length) {
-      if (
-        (branchId !== null && restaurant_id !== null) ||
-        restaurantID !== null
-      ) {
-        findOperationalArea(
-          addressComponents,
-          allAreas,
-          setCenter,
-          setAddress,
-          setSelectedAreaId,
-          setSelectedAddress,
-          setNotOperational,
-          setDistanceIsFar,
-          noRegion
-        );
-      }
-    }
-  }, [
-    branchId,
-    restaurant_id,
-    addressComponents?.address_components,
-    restaurantID,
-  ]);
+  // Function to calculate distance between two sets of coordinates using Haversine formula
+  function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+
+    return distance;
+  }
 
   const getAdd = async (latitude, longitude) => {
     // eslint-disable-next-line no-undef
@@ -377,11 +595,7 @@ function LocationPage() {
       .then(({ results }) => {
         const address = results[0].formatted_address;
 
-        // if (addressComponents.length !== 0) {
-        // findOperationalArea(results[0]);
-        // } else {
         setAddressComponents(results[0]);
-        // }
 
         setAddress(address);
         setCenter({ lat: +latitude, lng: +longitude });
@@ -392,10 +606,6 @@ function LocationPage() {
   };
 
   useLayoutEffect(() => {
-    // const userSelected = localStorage.getItem("selected");
-    // const userLocation = localStorage.getItem("location");
-
-    // if (token !== null) {
     if (
       selected === null &&
       currentLocation === null &&
@@ -428,14 +638,11 @@ function LocationPage() {
       location?.state?.editLocation === undefined
     ) {
       //
-      // const parsedUserLocation = JSON.parse(userLocation);
 
       const getCountry = currentLocation.address.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
-
-      // let forCondition = checkCountry(parsedUserLocation);
 
       if (forCondition === "Arabia") {
         forCondition = "Saudia Arabia";
@@ -457,14 +664,11 @@ function LocationPage() {
       location?.state?.editLocation === undefined
     ) {
       //
-      // const parsedUserLocation = JSON.parse(userLocation);
 
       const getCountry = currentLocation.address.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
-
-      // let forCondition = checkCountry(parsedUserLocation);
 
       if (forCondition === "Arabia") {
         forCondition = "Saudia Arabia";
@@ -486,13 +690,11 @@ function LocationPage() {
       location?.state?.editLocation === undefined
     ) {
       //
-      // const parsedUserLocation = JSON.parse(userSelected);
 
       const getCountry = selected.address.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
-      // let forCondition = checkCountry(parsedUserLocation);
 
       if (forCondition === "Arabia") {
         forCondition = "Saudia Arabia";
@@ -506,16 +708,7 @@ function LocationPage() {
         servicePlaceCheck(forCondition.trim());
       }
     }
-    // }
-  }, [
-    localStorage,
-    address,
-    placeChanged,
-    location,
-    allAreas,
-    branchId,
-    branchHours,
-  ]);
+  }, [localStorage, address, placeChanged, location?.state]);
 
   const servicePlaceCheck = (fullAddress) => {
     let countriesName = [];
@@ -539,94 +732,44 @@ function LocationPage() {
     setAutocomplete(autocompleteInstance);
   };
 
-  const onPlaceChanged = () => {
-    let pushedDistanceWithDetails = [];
-
+  const onPlaceChanged = async () => {
     setPlaceChanged(true);
 
     if (autocomplete) {
       const lat = autocomplete.getPlace().geometry.location.lat();
       const lng = autocomplete.getPlace().geometry.location.lng();
-      const restId =
-        localStorage?.getItem("restaurantID") === null
-          ? restaurant_id
-          : localStorage?.getItem("restaurantID");
 
-      const filterBranches = branchHours?.filter(
-        (branch) => branch?.restaurant_id === +restId
-      );
+      const restrictToRegion = autocomplete
+        .getPlace()
+        .formatted_address.split(",");
 
-      if (filterBranches?.length && restaurantID !== null) {
-        for (const branchData of filterBranches) {
-          const reslat = +branchData?.latitude;
-          const reslng = +branchData?.longitude;
+      const lastElem = restrictToRegion[restrictToRegion.length - 1];
+      const findCountry = lastElem?.split(" ");
+      let forCondition = findCountry[findCountry.length - 1];
 
-          const distance = getDistanceFromLatLonInKm(reslat, reslng, lat, lng);
+      if (forCondition === "Arabia") {
+        forCondition = "Saudia Arabia";
+      }
 
-          if (distance > 50) {
-            setNotOperational(true);
-          } else {
-            pushedDistanceWithDetails.push({
-              ...branchData,
-              distance,
-            });
+      if (forCondition == "Emirates") {
+        forCondition = "UAE";
+      }
 
-            branchDelivers(
-              setIsDeliveryZones,
-              pushedDistanceWithDetails,
-              setRestaurant_id,
-              setBranchId,
-              autocomplete,
-              setNoRegion,
-              setAddressComponents,
-              setNotOperational,
-              countries,
-              setCenter,
-              setAddress
-            );
-          }
-        }
+      let countriesName = [];
+
+      if (countries.length) {
+        countriesName = countries.map((obj) => obj.name_en);
+      }
+
+      if (countriesName.includes(forCondition)) {
+        setNoRegion(false);
+        setAddressComponents(autocomplete.getPlace());
 
         setCenter({ lat, lng });
         setAddress(autocomplete.getPlace().formatted_address);
-
-        fetchAreasAgain();
-      } else if (
-        branchHours?.length > 0 &&
-        filterBranches?.length === 0 &&
-        localStorage?.getItem("restaurantID") === null
-      ) {
-        for (const branch of branchHours) {
-          const reslat = +branch?.latitude;
-          const reslng = +branch?.longitude;
-
-          const distance = getDistanceFromLatLonInKm(reslat, reslng, lat, lng);
-
-          if (distance > 50) {
-            setNotOperational(true);
-          } else {
-            pushedDistanceWithDetails.push({
-              ...branch,
-              distance,
-            });
-
-            branchDelivers(
-              setIsDeliveryZones,
-              pushedDistanceWithDetails,
-              setRestaurant_id,
-              setBranchId,
-              autocomplete,
-              setNoRegion,
-              setAddressComponents,
-              setNotOperational,
-              countries
-            );
-          }
-        }
-
-        setCenter({ lat, lng });
-        setAddress(autocomplete.getPlace().formatted_address);
-        fetchAreasAgain();
+      } else {
+        setNoRegion(true);
+        setNotOperational(false);
       }
     }
   };
@@ -634,96 +777,6 @@ function LocationPage() {
   const handleLoad = (map) => {
     mapRef.current = map;
   };
-
-  useEffect(() => {
-    if (
-      restaurant_id === null &&
-      localStorage.getItem("restaurantID") !== null &&
-      token !== null
-    ) {
-      let pushedDistanceWithDetails = [];
-
-      const restId = localStorage?.getItem("restaurantID");
-
-      const filterBranches = branchHours?.filter(
-        (branch) => branch?.restaurant_id === +restId
-      );
-
-      if (filterBranches?.length && restaurantID !== null) {
-        for (const branchData of filterBranches) {
-          const reslat = +branchData?.latitude;
-          const reslng = +branchData?.longitude;
-
-          const distance = getDistanceFromLatLonInKm(
-            reslat,
-            reslng,
-            center.lat,
-            center.lng
-          );
-
-          if (distance > 50) {
-            setNotOperational(true);
-          } else {
-            pushedDistanceWithDetails.push({
-              ...branchData,
-              distance,
-            });
-
-            const findedRest = checkNearestDistanceOfBranch(
-              pushedDistanceWithDetails
-            );
-
-            if (findedRest) {
-              setRestaurant_id(findedRest.restaurant_id);
-              setBranchId(findedRest.id);
-            }
-          }
-        }
-      }
-    }
-  }, [restaurant_id, localStorage, branchHours, center]);
-
-  useEffect(() => {
-    if (
-      restaurant_id === null &&
-      localStorage.getItem("restaurantID") === null &&
-      token !== null
-    ) {
-      let pushedDistanceWithDetails = [];
-
-      if (branchHours?.length) {
-        for (const branchData of branchHours) {
-          const reslat = +branchData?.latitude;
-          const reslng = +branchData?.longitude;
-
-          const distance = getDistanceFromLatLonInKm(
-            reslat,
-            reslng,
-            center.lat,
-            center.lng
-          );
-
-          if (distance > 50) {
-            setNotOperational(true);
-          } else {
-            pushedDistanceWithDetails.push({
-              ...branchData,
-              distance,
-            });
-
-            const findedRest = checkNearestDistanceOfBranch(
-              pushedDistanceWithDetails
-            );
-
-            if (findedRest) {
-              setRestaurant_id(findedRest.restaurant_id);
-              setBranchId(findedRest.id);
-            }
-          }
-        }
-      }
-    }
-  }, [restaurant_id, localStorage, branchHours, center]);
 
   const handleCenterChanged = async () => {
     if (!mapRef.current) return;
@@ -815,7 +868,7 @@ function LocationPage() {
             fromMenu: location?.state?.fromMenu,
             fromDetail: location?.state?.fromDetail,
             editLocation: location?.state?.editLocation,
-            selectedAddress: { ...selectedAddress, branchId, restaurant_id },
+            selectedAddress,
           },
         });
       }
@@ -827,7 +880,7 @@ function LocationPage() {
         delivery_charge_area_id: selectedAreaId,
       };
 
-      getBranchByArea(restaurant_id, object, dispatch)
+      getBranchByArea(selectedAddress.restaurant_id, object, dispatch)
         .then((res) => {
           setdisableButton(false);
 
@@ -877,11 +930,7 @@ function LocationPage() {
                     path: location?.state?.path,
                     restaurant_id: +location?.state?.restaurant_id,
                     addNew: true,
-                    selectedAddress: {
-                      ...selectedAddress,
-                      branchId,
-                      restaurant_id,
-                    },
+                    selectedAddress,
                   },
                 });
               } else if (location?.state?.fromMenu !== undefined) {
@@ -892,11 +941,7 @@ function LocationPage() {
                     path: location?.state?.path,
                     restaurant_id: +location?.state?.restaurant_id,
                     fromMenu: location?.state?.fromMenu,
-                    selectedAddress: {
-                      ...selectedAddress,
-                      branchId,
-                      restaurant_id,
-                    },
+                    selectedAddress,
                   },
                 });
               } else if (location?.state?.fromDetail !== undefined) {
@@ -908,11 +953,7 @@ function LocationPage() {
                     restaurant_id: +location?.state?.restaurant_id,
                     fromDetail: location?.state?.fromDetail,
                     detailPath: location?.state?.detailPath,
-                    selectedAddress: {
-                      ...selectedAddress,
-                      branchId,
-                      restaurant_id,
-                    },
+                    selectedAddress,
                   },
                 });
               } else if (location?.state?.noAddress !== undefined) {
@@ -920,11 +961,7 @@ function LocationPage() {
                   state: {
                     ...location?.state,
                     latlng: center,
-                    selectedAddress: {
-                      ...selectedAddress,
-                      branchId,
-                      restaurant_id,
-                    },
+                    selectedAddress,
                   },
                 });
               } else {
@@ -935,11 +972,7 @@ function LocationPage() {
                     path: location?.state?.path,
                     restaurant_id: +location?.state?.restaurant_id,
                     addFromDropdown: location?.state?.addFromDropdown,
-                    selectedAddress: {
-                      ...selectedAddress,
-                      branchId,
-                      restaurant_id,
-                    },
+                    selectedAddress,
                   },
                 });
               }
@@ -951,11 +984,7 @@ function LocationPage() {
                   path: "/cart",
                   restaurant_id: +location?.state?.restaurant_id,
                   notSelected: location?.state?.notSelected,
-                  selectedAddress: {
-                    ...selectedAddress,
-                    branchId,
-                    restaurant_id,
-                  },
+                  selectedAddress,
                 },
               });
             } else if (location?.state?.fromHome !== undefined) {
@@ -965,11 +994,7 @@ function LocationPage() {
                   latlng: center,
                   path: location?.state?.path,
                   fromHome: location?.state?.fromHome,
-                  selectedAddress: {
-                    ...selectedAddress,
-                    branchId,
-                    restaurant_id,
-                  },
+                  selectedAddress,
                 },
               });
             } else {
@@ -978,11 +1003,7 @@ function LocationPage() {
                   name: address,
                   latlng: center,
                   path: location?.state?.path,
-                  selectedAddress: {
-                    ...selectedAddress,
-                    branchId,
-                    restaurant_id,
-                  },
+                  selectedAddress,
                 },
               });
             }
@@ -996,11 +1017,7 @@ function LocationPage() {
                 fromMenu: location?.state?.fromMenu,
                 fromDetail: location?.state?.fromDetail,
                 editLocation: location?.state?.editLocation,
-                selectedAddress: {
-                  ...selectedAddress,
-                  branchId,
-                  restaurant_id,
-                },
+                selectedAddress,
               },
             });
           }

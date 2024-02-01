@@ -52,6 +52,7 @@ import { addSelectedAddress } from "../../store/reducers/userLocationSlice.js";
 import { getAddress, getAreas } from "../../store/reducers/addressSlice.js";
 
 import {
+  flattenArray,
   getDistanceFromLatLonInKm,
   getFullAddress,
   selectChooseAddress,
@@ -120,7 +121,9 @@ const Menu = () => {
   const fetchAllAreas = () => {
     getAllArea()
       .then((res) => {
-        dispatch(getAreas(res.data));
+        const flattenedArray = flattenArray(res.data);
+
+        dispatch(getAreas(flattenedArray));
       })
       .catch((err) => {
         console.log(err);

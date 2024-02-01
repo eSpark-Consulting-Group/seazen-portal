@@ -475,9 +475,9 @@ const MenuCardListContainer = ({
                             height: "27px",
                           }}
                         >
-                          {val.name_en}
+                          {val?.name_en}
                         </div>{" "}
-                        {categoriesWiseList[val.id].map((item, index) => {
+                        {categoriesWiseList[val?.id].map((item, index) => {
                           if (item.branch_status) {
                             return (
                               <MenuCard

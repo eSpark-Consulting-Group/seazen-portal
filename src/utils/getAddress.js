@@ -62,6 +62,7 @@ export const getDistanceFromLatLonInKm = (lat2, lng2, lat1, lng1) => {
       Math.sin(dLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = earthRadius * c; // Distance in kilometers
+
   return distance;
 };
 
@@ -77,4 +78,34 @@ export const truncateString = (str, length) => {
       return str.slice(0, length) + "...";
     }
   }
+};
+
+export const flattenArray = (allAreas) => {
+  let result = [];
+
+  allAreas.forEach((zone) => {
+    const zoneDetails = {
+      zone_id: zone.zone_id,
+      zone_en: zone.name_en,
+      zone_ar: zone.name_ar,
+    };
+
+    zone.areas.forEach((area) => {
+      const combinedItem = {
+        ...zoneDetails,
+        area_id: area.area_id,
+        country_id: area.country_id,
+        restaurant_id: area.restaurant_id,
+        branch_id: area.branch_id,
+        name_en: area.name_en,
+        name_ar: area.name_ar,
+        delivery_charges: area.delivery_charges,
+        delivery_time: area.delivery_time,
+        minimum_order_amount: area.minimum_order_amount,
+      };
+      result.push(combinedItem);
+    });
+  });
+
+  return result;
 };

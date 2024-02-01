@@ -15,14 +15,7 @@ export const branchDelivers = (
   setIsDeliveryZones,
   pushedDistanceWithDetails,
   setRestaurant_id,
-  setBranchId,
-  autocomplete,
-  setNoRegion,
-  setAddressComponents,
-  setNotOperational,
-  countries,
-  setCenter,
-  setAddress
+  setBranchId
 ) => {
   setIsDeliveryZones(true);
 
@@ -37,107 +30,108 @@ export const branchDelivers = (
   if (smallestDistanceLocation) {
     setRestaurant_id(smallestDistanceLocation.restaurant_id);
     setBranchId(smallestDistanceLocation.id);
-
-    const restrictToRegion = autocomplete
-      .getPlace()
-      .formatted_address.split(",");
-
-    const lastElem = restrictToRegion[restrictToRegion.length - 1];
-    const findCountry = lastElem?.split(" ");
-    let forCondition = findCountry[findCountry.length - 1];
-
-    if (forCondition === "Arabia") {
-      forCondition = "Saudia Arabia";
-    }
-
-    if (forCondition == "Emirates") {
-      forCondition = "UAE";
-    }
-
-    let countriesName = [];
-
-    if (countries.length) {
-      countriesName = countries.map((obj) => obj.name_en);
-    }
-
-    if (countriesName.includes(forCondition)) {
-      setNoRegion(false);
-      setAddressComponents(autocomplete.getPlace());
-
-      // if (addressComponents.length !== 0) {
-      //   findOperationalArea(autocomplete.getPlace());
-      // } else {
-      // }
-    } else {
-      setNoRegion(true);
-      setNotOperational(false);
-    }
   }
 };
+
+export const findNearestBranch = (userLat, userLong, branches) => {
+  // Implement logic to find the nearest branch within 50km from the user's location
+  // This function now takes the array of branches as a parameter
+  let nearestBranch = null;
+  let minDistance = Number.MAX_VALUE;
+
+  for (const branch of branches) {
+    const distance = calculateDistance(
+      userLat,
+      userLong,
+      +branch.latitude,
+      +branch.longitude
+    );
+
+    if (distance < 50 && distance < minDistance) {
+      minDistance = distance;
+      nearestBranch = branch;
+    }
+  }
+
+  if (!nearestBranch) {
+    throw new Error("No branches within 50km found.");
+  }
+
+  return nearestBranch;
+};
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  // Haversine formula for calculating distance between two sets of latitude and longitude coordinates
+  const R = 6371; // Radius of the Earth in kilometers
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c;
+
+  return distance;
+}
+
+function toRad(degrees) {
+  return degrees * (Math.PI / 180);
+}
 
 export const findOperationalArea = (
   addresses,
   allAreas,
-  setCenter,
-  setAddress,
   setSelectedAreaId,
   setSelectedAddress,
   setNotOperational,
   setDistanceIsFar,
-  noRegion
+  noRegion,
+  pushedDistanceWithDetails
 ) => {
   const result =
     addresses?.address_components
       .map((addressComponent) => {
-        const matchingAreaGroup = allAreas?.find((areaGroup) =>
-          areaGroup?.areas?.some(
-            (area) =>
+        // const matchingAreaGroup = allAreas?.find((areaGroup) =>
+        //   areaGroup?.areas?.some(
+        //     (area) =>
+        //       area?.name_en.trim().toLowerCase() ===
+        //         removeDiacritics(
+        //           addressComponent?.long_name.trim().toLowerCase()
+        //         ) ||
+        //       (addresses?.name &&
+        //         area?.name_en.trim().toLowerCase() ===
+        //           removeDiacritics(addresses?.name?.trim().toLowerCase()))
+        //   )
+        // );
+
+        // if (matchingAreaGroup) {
+        const matchingArea = allAreas?.find((area) => {
+          return (
+            area?.name_en.trim().toLowerCase() ===
+              removeDiacritics(
+                addressComponent?.long_name.trim().toLowerCase()
+              ) ||
+            (addresses?.name &&
               area?.name_en.trim().toLowerCase() ===
-                removeDiacritics(
-                  addressComponent?.long_name.trim().toLowerCase()
-                ) ||
-              (addresses?.name &&
-                area?.name_en.trim().toLowerCase() ===
-                  removeDiacritics(addresses?.name?.trim().toLowerCase()))
-          )
-        );
+                removeDiacritics(addresses?.name?.trim().toLowerCase()))
+          );
+        });
 
-        if (matchingAreaGroup) {
-          const matchingArea = matchingAreaGroup?.areas?.find((area) => {
-            return (
-              area?.name_en.trim().toLowerCase() ===
-                removeDiacritics(
-                  addressComponent?.long_name.trim().toLowerCase()
-                ) ||
-              (addresses?.name &&
-                area?.name_en.trim().toLowerCase() ===
-                  removeDiacritics(addresses?.name?.trim().toLowerCase()))
-            );
-          });
-
-          // if (
-          //   addresses &&
-          //   addresses?.geometry &&
-          //   addresses?.geometry?.location &&
-          //   addresses?.geometry?.location.lat &&
-          //   addresses?.geometry?.location.lng
-          // ) {
-          //   const lat = addresses?.geometry?.location.lat;
-          //   const lng = addresses?.geometry?.location.lng;
-
-          //   setCenter({ lat, lng });
-          //   setAddress(addresses?.formatted_address);
-          // }
-
+        if (matchingArea) {
           return {
             area_id: matchingArea.area_id,
             name_en: matchingArea.name_en,
             delivery_charges: matchingArea.delivery_charges,
             delivery_time: matchingArea.delivery_time,
             // minOrderAmount: matchingArea.minimum_order_amount,
-            zone_id: matchingAreaGroup.zone_id,
+            zone_id: matchingArea.zone_id,
           };
         }
+
+        // }
 
         return null;
       })
@@ -146,7 +140,6 @@ export const findOperationalArea = (
   if (allAreas?.length) {
     if (result !== null) {
       setSelectedAreaId(result?.area_id);
-      // savingAreaIdForMatchingArea(addresses, allAreas);
       setSelectedAddress({
         ...result,
         address: addresses?.formatted_address,

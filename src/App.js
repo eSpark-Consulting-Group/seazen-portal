@@ -16,6 +16,7 @@ import { getAreas } from "./store/reducers/addressSlice";
 import { addCountry, allCountries } from "./store/reducers/authSlice";
 
 // import { savingAreaIdForMatchingArea } from "./utils/checkOperationalArea";
+import { flattenArray } from "./utils/getAddress";
 
 import "./App.css";
 
@@ -67,7 +68,9 @@ function App() {
   const fetchAllAreas = () => {
     getAllArea()
       .then((res) => {
-        dispatch(getAreas(res.data));
+        const flattenedArray = flattenArray(res.data);
+
+        dispatch(getAreas(flattenedArray));
       })
       .catch((err) => {
         console.log(err);
