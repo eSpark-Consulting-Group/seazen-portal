@@ -85,7 +85,7 @@ const DeliveryConditionalComponent = ({
       categories?.length === 0 ||
       resturantId != categories[0]?.restaurant_id
     )
-      if (branchId !== null) fetchAllCategories();
+      fetchAllCategories();
   }, [branchId]);
 
   const fetchAllCategories = () => {

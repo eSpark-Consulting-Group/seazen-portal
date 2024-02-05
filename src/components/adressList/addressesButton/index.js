@@ -11,6 +11,7 @@ export const AddressesButton = ({
   branch_id,
   path,
   location,
+  isLoading,
 }) => {
   const navigate = useNavigate();
 
@@ -71,6 +72,7 @@ export const AddressesButton = ({
       <button
         className="addresses-add-button container"
         onClick={() => sendToLocation()}
+        disabled={isLoading}
       >
         <span className="addresses-add-button-text">Add New Address</span>
       </button>

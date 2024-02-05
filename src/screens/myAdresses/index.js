@@ -313,6 +313,7 @@ const App = () => {
         branch_id={location?.state?.branch_id}
         path={location?.state?.path}
         location={location}
+        isLoading={isLoading}
       />
 
       {/* Delete Confirmation Dialog */}
