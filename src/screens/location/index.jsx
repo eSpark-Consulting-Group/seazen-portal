@@ -351,7 +351,8 @@ function LocationPage() {
           component.types.includes("locality") ||
           component.types.includes("sublocality_level_1") ||
           component.types.includes("sublocality") ||
-          component.types.includes("natural_feature")
+          component.types.includes("natural_feature") ||
+          component.types.includes("route")
       );
 
       const addressHasAdminAreaLevel1 =
