@@ -59,23 +59,34 @@
   height: 72px;
 }
 .receipt-items-name {
-  width: 120px;
-  font-size: 14px;
+  width: 100%;
+  padding-left: 12px;
 }
 
 .receipt-items-name span {
-  display: block;
-  width: 100%;
+  font-size: 14px;
+}
+
+.items-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.items-div .first-span {
+  width: 150px;
 }
 
 .receipt-items-name .second-span {
-  font-size: 12px;
+  text-align: end;
 }
 
 .receipt-items-price {
   width: 87px;
   font-weight: 400;
-  font-size: 16;
+  font-size: 14px;
+  text-align: end;
+  display: block;
 }
 .receipt-comment-section {
   margin-left: 80%;

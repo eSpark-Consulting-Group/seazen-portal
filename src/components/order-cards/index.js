@@ -68,16 +68,16 @@ const OrderCard = ({ item }) => {
     switch (status) {
       case "Submitted":
         return "#F7B500";
-      case "Preparing":
-        return "#0091FF";
-      case "On the way":
+      case "Accepted":
+        return "#02BBD5";
+      case "Ready for Dispatch":
+        return "#F7B500";
+      case "On The Way":
         return "#6236FF";
       case "Delivered":
         return "#4E948A";
       case "Canceled":
         return "#E02020";
-      case "Accepted":
-        return "#02BBD5";
       default:
         return "#F7B500";
     }

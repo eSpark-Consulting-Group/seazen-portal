@@ -157,20 +157,21 @@ const OrderScreen = () => {
   }, []);
 
   // send api call every 10 seconds
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (
-  //       searchParams.get("order_no") !== null &&
-  //       searchParams.get("reference_number") !== null
-  //     ) {
-  //       checkOrderStatus({
-  //         order_no: searchParams.get("order_no"),
-  //         reference_number: searchParams.get("reference_number"),
-  //       });
-  //     }
-  //   }, 10000);
-  //   return () => clearInterval(interval);
-  // }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (
+        searchParams.get("order_no") !== null &&
+        searchParams.get("reference_number") !== null
+      ) {
+        checkOrderStatus({
+          order_no: searchParams.get("order_no"),
+          reference_number: searchParams.get("reference_number"),
+        });
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   if (!isLoading) {
     <Box

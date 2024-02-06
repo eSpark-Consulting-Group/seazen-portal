@@ -228,14 +228,30 @@ function CartItem(props) {
     return `${menu_item_name_en || itemName}`;
   }
 
+  const capitalizedTextFunc = (text) => {
+    const capitalizedText = text
+      .toLowerCase()
+      .replace(/(^|\s)\S/g, function (match) {
+        return match.toUpperCase();
+      });
+
+    return capitalizedText;
+  };
+
   const getExtraItemNames = () => {
     let extraItemNames = [];
-    const returnName = cartItem?.variants?.customVariant.map(
-      (variant) => variant.name_en
-    );
+    const returnName = cartItem?.variants?.customVariant.map((variant) => {
+      return { name: variant.name_en, quantity: variant.quantity };
+    });
 
     if (returnName && returnName.length > 0) {
-      extraItemNames.push(...returnName.map((variant) => variant));
+      extraItemNames.push(
+        ...returnName.map((variant) => {
+          return `${capitalizedTextFunc(variant.name)} ${
+            variant.quantity === 0 ? "" : ` x (${variant.quantity})`
+          }`;
+        })
+      );
     }
 
     return extraItemNames.join(", ");

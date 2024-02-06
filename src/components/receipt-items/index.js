@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Box, Skeleton, Typography } from "@mui/material";
+
 import { LazyLoadImage } from "react-lazy-load-image-component";
+
+import { Box, Skeleton, Typography } from "@mui/material";
 import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
 
 import "../../screens/receipt/style.css";
@@ -12,15 +14,14 @@ const ReceiptItem = ({ item, currency_code }) => {
     setImageNotFound(true);
   };
 
-  const getExtraItemNames = () => {
-    let extraItemNames = [];
-    const returnName = item?.custom_variant?.map((variant) => variant.name_en);
+  const capitalizedTextFunc = (text) => {
+    const capitalizedText = text
+      .toLowerCase()
+      .replace(/(^|\s)\S/g, function (match) {
+        return match.toUpperCase();
+      });
 
-    if (returnName && returnName?.length > 0) {
-      extraItemNames.push(...returnName.map((variant) => variant));
-    }
-
-    return extraItemNames.join(", ");
+    return capitalizedText;
   };
 
   return (
@@ -60,16 +61,34 @@ const ReceiptItem = ({ item, currency_code }) => {
         />
       )}
       <div className="receipt-items-name">
-        <span>{`${item.menu_item.name_en} x (${item.quantity})`}</span>
-        {item?.custom_variant?.length ? (
-          <span className="second-span">{getExtraItemNames()}</span>
-        ) : null}
+        <div className="items-div">
+          <span>{`${item.menu_item.name_en} x (${item.quantity})`}</span>
+          <span className="second-span">{`${currency_code} ${Number(
+            item.unit_price * item.quantity
+          ).toFixed(3)}`}</span>
+        </div>
+
+        {item?.custom_variant?.length
+          ? item?.custom_variant?.map((item) => (
+              <div key={item.option_id} className="items-div">
+                <span
+                  className="first-span"
+                  key={item?.name_en}
+                >{`${capitalizedTextFunc(item?.name_en)} x (${
+                  item?.option_quantity
+                })`}</span>
+
+                <span className="second-span" key={item?.name_en}>
+                  {`${currency_code} ${Number(
+                    item.unit_price * item.option_quantity
+                  ).toFixed(3)}`}
+                </span>
+              </div>
+            ))
+          : null}
       </div>
-      <div className="receipt-items-price">
-        {`${currency_code} ${Number(item.unit_price * item.quantity).toFixed(
-          3
-        )}`}
-      </div>
+
+      <div></div>
     </div>
   );
 };
