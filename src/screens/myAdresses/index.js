@@ -42,6 +42,9 @@ const App = () => {
   const navigate = useNavigate();
 
   const addressData = useSelector((state) => state.address.addressData);
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
 
   const [cardData, setCardData] = useState([]);
   const [open, setOpen] = useState(false);
@@ -57,7 +60,14 @@ const App = () => {
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
   const [name_en, setNameEn] = useState();
+  const [restName, setRestName] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
+
+  const addRestauantName = (id) => {
+    const restName = resturantsData?.find((rest) => rest.id === id);
+
+    return restName?.name_en;
+  };
 
   const fetchFunction = async () => {
     setIsloading(true);
@@ -97,6 +107,9 @@ const App = () => {
     setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
     // setMinOrderAmount(item?.delivery_charge_area_info?.minimum_order_amount);
     setNameEn(item.delivery_charge_area_info?.name_en);
+    setRestName(
+      addRestauantName(item.delivery_charge_area_info?.restaurant_id)
+    );
 
     localStorage.setItem("area_id", item?.delivery_charge_area_info.id);
 
@@ -117,6 +130,7 @@ const App = () => {
         delivery_time,
         // minOrderAmount,
         name_en,
+        restaurantName: restName,
       };
 
       localStorage.setItem("selected", JSON.stringify(addToStorage));

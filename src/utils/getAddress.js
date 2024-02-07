@@ -30,8 +30,10 @@ export const selectChooseAddress = (
   setDeliveryTime,
   // setMinOrderAmount,
   setNameEn,
+  setRestName,
   getFullAddress,
-  setFunction
+  setFunction,
+  addRestauantName
 ) => {
   const lat = +item.latitude;
   const lng = +item.longitude;
@@ -44,6 +46,7 @@ export const selectChooseAddress = (
   setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
   // setMinOrderAmount(item?.delivery_charge_area_info?.minimum_order_amount);
   setNameEn(item?.delivery_charge_area_info?.name_en);
+  setRestName(addRestauantName(item?.delivery_charge_area_info?.restaurant_id));
 
   localStorage.setItem("area_id", item?.delivery_charge_area_info.id);
 

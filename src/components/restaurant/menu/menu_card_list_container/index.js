@@ -63,9 +63,9 @@ const MenuCardListContainer = ({
   const addressData = useSelector((state) => state.address.addressData);
 
   const branchHours = useSelector((state) => state.resturants.branchHours);
-  // const nearbyRestaurants = useSelector(
-  //   (state) => state.resturants.nearbyRestaurants
-  // );
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
 
   const cartTotal = cart.reduce(
     (total, item) => total + Number(item.totalPrice),
@@ -89,6 +89,7 @@ const MenuCardListContainer = ({
   const [delivery_time, setDeliveryTime] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
   const [name_en, setNameEn] = useState();
+  const [restName, setRestName] = useState();
   const [distancesLessThan50, setDistancesLessThan50] = useState([]);
 
   const currentLocation = JSON.parse(localStorage.getItem("location"));
@@ -97,6 +98,12 @@ const MenuCardListContainer = ({
   );
 
   const { id } = useParams();
+
+  const addRestauantName = (id) => {
+    const restName = resturantsData?.find((rest) => rest.id === id);
+
+    return restName?.name_en;
+  };
 
   useEffect(() => {
     if (cartTotalItems === 0) {
@@ -216,8 +223,10 @@ const MenuCardListContainer = ({
       setDeliveryTime,
       // setMinOrderAmount,
       setNameEn,
+      setRestName,
       getFullAddress,
-      setFullAddress
+      setFullAddress,
+      addRestauantName
     );
   };
 
@@ -367,6 +376,7 @@ const MenuCardListContainer = ({
       delivery_time,
       // minOrderAmount,
       name_en,
+      restaurantName: restName,
     };
 
     localStorage.setItem("selected", JSON.stringify(addToStore));

@@ -1,9 +1,13 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
+
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 import { Tab, Tabs, Box } from "@mui/material";
+
 import { isEmpty } from "lodash";
+
 import "./style.css";
 
 const menu_categories = [
@@ -61,6 +65,7 @@ const MenuItems = ({ itemCategoryList }) => {
                 fontWeight: "bold",
                 border: "none",
                 padding: "0",
+                width: "100%",
               }}
             >
               <div className="dropdown_icon_container_menu">
@@ -118,7 +123,7 @@ const MenuItems = ({ itemCategoryList }) => {
               value={value === -1 ? value + 1 : value}
               onChange={handleChange}
               variant="scrollable"
-              scrollButtons={false}
+              scrollButtons={true}
               textColor="black"
               aria-label="scrollable prevent tabs example"
               TabIndicatorProps={{

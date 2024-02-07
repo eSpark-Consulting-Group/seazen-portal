@@ -316,6 +316,7 @@ const AddressForm = () => {
               name_en: checkInSessionTrue
                 ? isAfterNewLocation?.name_en
                 : location?.state?.selectedAddress?.name_en,
+              restaurantName: location?.state?.selectedAddress?.restaurantName,
             };
           }
 
@@ -413,16 +414,16 @@ const AddressForm = () => {
             addressId: res?.data?.id,
           };
 
-          if (selectedAddress?.minOrderAmount) {
-            commonData = {
-              ...commonData,
-              delivery_time: selectedAddress?.delivery_time,
-              delivery_charges:
-                selectedAddress?.delivery_charges?.split(" ")[1],
-              // minOrderAmount: selectedAddress?.minOrderAmount,
-              name_en: selectedAddress?.name_en,
-            };
-          }
+          // if (selectedAddress?.minOrderAmount) {
+          commonData = {
+            ...commonData,
+            delivery_time: selectedAddress?.delivery_time,
+            delivery_charges: selectedAddress?.delivery_charges?.split(" ")[1],
+            // minOrderAmount: selectedAddress?.minOrderAmount,
+            name_en: selectedAddress?.name_en,
+            restaurantName: selectedAddress?.restaurantName,
+          };
+          // }
 
           if (
             location?.state?.path === "/cart" ||

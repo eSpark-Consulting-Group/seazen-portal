@@ -81,6 +81,9 @@ const Menu = () => {
   const restaurantDetail = useSelector(
     (state) => state.resturants.restaurantDetail
   );
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
 
   if (restaurant_id) {
     localStorage.setItem("restaurantID", restaurant_id);
@@ -114,6 +117,7 @@ const Menu = () => {
   const [delivery_time, setDeliveryTime] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
   const [name_en, setNameEn] = useState();
+  const [restName, setRestName] = useState();
   const [orderAmFromDelivery, setOrderAmFromDelivery] = useState();
   const [distancesLessThan50, setDistancesLessThan50] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -304,6 +308,12 @@ const Menu = () => {
     setNotDeliver(false);
   };
 
+  const addRestauantName = (id) => {
+    const restName = resturantsData?.find((rest) => rest.id === id);
+
+    return restName?.name_en;
+  };
+
   const chooseAddress = (item) => {
     const object = {
       country_id: JSON.parse(localStorage.getItem("country"))?.id,
@@ -327,8 +337,10 @@ const Menu = () => {
       setDeliveryTime,
       // setMinOrderAmount,
       setNameEn,
+      setRestName,
       getFullAddress,
-      setFullAddress
+      setFullAddress,
+      addRestauantName
     );
   };
 
@@ -348,6 +360,7 @@ const Menu = () => {
           delivery_time,
           // minOrderAmount,
           name_en,
+          restaurantName: restName,
         };
 
         localStorage.setItem("selected", JSON.stringify(addToStore));
@@ -422,6 +435,7 @@ const Menu = () => {
       delivery_time,
       // minOrderAmount,
       name_en,
+      restaurantName: restName,
     };
 
     localStorage.setItem("selected", JSON.stringify(addToStore));

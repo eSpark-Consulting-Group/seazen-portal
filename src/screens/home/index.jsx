@@ -101,6 +101,13 @@ const Home = () => {
   const [delivery_time, setDeliveryTime] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
   const [name_en, setNameEn] = useState();
+  const [restName, setRestName] = useState("");
+
+  const addRestauantName = (id) => {
+    const restName = resturantsData?.find((rest) => rest.id === id);
+
+    return restName?.name_en;
+  };
 
   useEffect(() => {
     if (userLocation !== null && userSelected === null) {
@@ -128,6 +135,11 @@ const Home = () => {
             //   addressData[i]?.delivery_charge_area_info?.minimum_order_amount
             // );
             setNameEn(addressData[i]?.delivery_charge_area_info?.name_en);
+            setRestName(
+              addRestauantName(
+                addressData[i]?.delivery_charge_area_info?.restaurant_id
+              )
+            );
           }
 
           getFullAddress(
@@ -151,6 +163,7 @@ const Home = () => {
         delivery_time,
         // minOrderAmount,
         name_en,
+        restaurantName: restName,
       };
 
       localStorage?.setItem("selected", JSON.stringify(addToStore));
@@ -260,8 +273,10 @@ const Home = () => {
       setDeliveryTime,
       // setMinOrderAmount,
       setNameEn,
+      setRestName,
       getFullAddress,
-      setFullAddress
+      setFullAddress,
+      addRestauantName
     );
   };
 
@@ -290,8 +305,10 @@ const Home = () => {
       setDeliveryTime,
       // setMinOrderAmount,
       setNameEn,
+      setRestName,
       getFullAddress,
-      setChooseFullAddress
+      setChooseFullAddress,
+      addRestauantName
     );
   };
 
@@ -361,6 +378,7 @@ const Home = () => {
           delivery_time,
           // minOrderAmount,
           name_en,
+          restaurantName: restName,
         };
 
         localStorage.setItem("selected", JSON.stringify(addToStore));
@@ -433,6 +451,7 @@ const Home = () => {
         delivery_time,
         // minOrderAmount,
         name_en,
+        restaurantName: restName,
       };
     }
 
@@ -533,6 +552,7 @@ const Home = () => {
             delivery_time,
             // minOrderAmount,
             name_en,
+            restaurantName: restName,
           };
         }
 
@@ -569,6 +589,7 @@ const Home = () => {
           delivery_time,
           // minOrderAmount,
           name_en,
+          restaurantName: restName,
         };
       }
 

@@ -43,7 +43,10 @@ import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 // import { savingAreaIdForMatchingArea } from "../../utils/checkOperationalArea";
 // import { removeDiacritics } from "./stringCheck";
 import { flattenArray } from "../../utils/getAddress";
-import { returnMatchedDataToAddAddress } from "../../utils/checkNearestDistance";
+import {
+  calculateDistance,
+  returnMatchedDataToAddAddress,
+} from "../../utils/checkNearestDistance";
 
 import { getAreas } from "../../store/reducers/addressSlice";
 
@@ -90,6 +93,9 @@ function LocationPage() {
   const countries = useSelector((state) => state.auth.countries);
   const allAreas = useSelector((state) => state.address.allAreas);
   const branchHours = useSelector((state) => state.resturants.branchHours);
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
 
   const selected = JSON.parse(localStorage.getItem("selected"));
   const currentLocation = JSON.parse(localStorage.getItem("location"));
@@ -332,19 +338,6 @@ function LocationPage() {
         comparedLng = lng;
       }
 
-      // let dynamicDistances = [];
-
-      // for (const branch of branches) {
-      //   const distance = calculateDistance(
-      //     lat,
-      //     lng,
-      //     +branch.latitude,
-      //     +branch.longitude
-      //   );
-
-      //   dynamicDistances.push({ ...branch, distance });
-      // }
-
       // Check if address types include "locality" or "administrative_area_level_1"
       const localityComponents = addressComponents.address_components.filter(
         (component) =>
@@ -363,33 +356,37 @@ function LocationPage() {
         );
 
       if (localityComponents.length > 0) {
-        returnMatchedDataToAddAddress(
-          localityComponents,
-          branches,
-          comparedLat,
-          comparedLng,
-          filterAllAreas,
-          setSelectedAreaId,
-          setSelectedAddress,
-          setNotOperational,
-          setDistanceIsFar,
-          noRegion,
-          addressComponents
-        );
+        if (branches.length > 0) {
+          returnMatchedDataToAddAddress(
+            localityComponents,
+            branches,
+            comparedLat,
+            comparedLng,
+            filterAllAreas,
+            setSelectedAreaId,
+            setSelectedAddress,
+            setNotOperational,
+            setDistanceIsFar,
+            noRegion,
+            addressComponents
+          );
+        }
       } else if (addressHasAdminAreaLevel1.length > 0) {
-        returnMatchedDataToAddAddress(
-          addressHasAdminAreaLevel1,
-          branches,
-          comparedLat,
-          comparedLng,
-          filterAllAreas,
-          setSelectedAreaId,
-          setSelectedAddress,
-          setNotOperational,
-          setDistanceIsFar,
-          noRegion,
-          addressComponents
-        );
+        if (branches.length > 0) {
+          returnMatchedDataToAddAddress(
+            addressHasAdminAreaLevel1,
+            branches,
+            comparedLat,
+            comparedLng,
+            filterAllAreas,
+            setSelectedAreaId,
+            setSelectedAddress,
+            setNotOperational,
+            setDistanceIsFar,
+            noRegion,
+            addressComponents
+          );
+        }
       } else {
         setNotOperational(true);
       }
@@ -471,7 +468,7 @@ function LocationPage() {
         draggedLogation = address;
       }
 
-      const getCountry = draggedLogation.split(",");
+      const getCountry = currentLocation?.address.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
@@ -504,7 +501,7 @@ function LocationPage() {
         draggedLogation = address;
       }
 
-      const getCountry = draggedLogation.split(",");
+      const getCountry = currentLocation?.address.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
@@ -537,7 +534,7 @@ function LocationPage() {
         draggedLogation = address;
       }
 
-      const getCountry = draggedLogation.split(",");
+      const getCountry = selected.address.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
@@ -569,7 +566,6 @@ function LocationPage() {
       // findOperationalArea(addressComponents);
     } else {
       setNoRegion(true);
-
       setNotOperational(false);
     }
   };
@@ -612,6 +608,7 @@ function LocationPage() {
         setAddressComponents(autocomplete.getPlace());
       } else {
         setNoRegion(true);
+
         setNotOperational(false);
       }
 
@@ -670,6 +667,10 @@ function LocationPage() {
   const confirmLocation = () => {
     setdisableButton(true);
 
+    const restaurantName = resturantsData.find(
+      (item) => item.id === selectedAddress.restaurant_id
+    );
+
     const country_id = JSON.parse(localStorage.getItem("country"))?.id;
 
     const object = {
@@ -727,7 +728,10 @@ function LocationPage() {
                   path: location?.state?.path,
                   restaurant_id: +location?.state?.restaurant_id,
                   addNew: true,
-                  selectedAddress,
+                  selectedAddress: {
+                    ...selectedAddress,
+                    restaurantName: restaurantName.name_en,
+                  },
                 },
               });
             } else if (location?.state?.fromMenu !== undefined) {
@@ -738,7 +742,10 @@ function LocationPage() {
                   path: location?.state?.path,
                   restaurant_id: +location?.state?.restaurant_id,
                   fromMenu: location?.state?.fromMenu,
-                  selectedAddress,
+                  selectedAddress: {
+                    ...selectedAddress,
+                    restaurantName: restaurantName.name_en,
+                  },
                 },
               });
             } else if (location?.state?.fromDetail !== undefined) {
@@ -750,7 +757,10 @@ function LocationPage() {
                   restaurant_id: +location?.state?.restaurant_id,
                   fromDetail: location?.state?.fromDetail,
                   detailPath: location?.state?.detailPath,
-                  selectedAddress,
+                  selectedAddress: {
+                    ...selectedAddress,
+                    restaurantName: restaurantName.name_en,
+                  },
                 },
               });
             } else if (location?.state?.noAddress !== undefined) {
@@ -758,7 +768,10 @@ function LocationPage() {
                 state: {
                   ...location?.state,
                   latlng: center,
-                  selectedAddress,
+                  selectedAddress: {
+                    ...selectedAddress,
+                    restaurantName: restaurantName.name_en,
+                  },
                 },
               });
             } else {
@@ -769,7 +782,10 @@ function LocationPage() {
                   path: location?.state?.path,
                   restaurant_id: +location?.state?.restaurant_id,
                   addFromDropdown: location?.state?.addFromDropdown,
-                  selectedAddress,
+                  selectedAddress: {
+                    ...selectedAddress,
+                    restaurantName: restaurantName.name_en,
+                  },
                 },
               });
             }
@@ -781,7 +797,10 @@ function LocationPage() {
                 path: "/cart",
                 restaurant_id: +location?.state?.restaurant_id,
                 notSelected: location?.state?.notSelected,
-                selectedAddress,
+                selectedAddress: {
+                  ...selectedAddress,
+                  restaurantName: restaurantName.name_en,
+                },
               },
             });
           } else if (location?.state?.fromHome !== undefined) {
@@ -791,7 +810,10 @@ function LocationPage() {
                 latlng: center,
                 path: location?.state?.path,
                 fromHome: location?.state?.fromHome,
-                selectedAddress,
+                selectedAddress: {
+                  ...selectedAddress,
+                  restaurantName: restaurantName.name_en,
+                },
               },
             });
           } else {
@@ -800,7 +822,10 @@ function LocationPage() {
                 name: address,
                 latlng: center,
                 path: location?.state?.path,
-                selectedAddress,
+                selectedAddress: {
+                  ...selectedAddress,
+                  restaurantName: restaurantName.name_en,
+                },
               },
             });
           }
@@ -814,7 +839,10 @@ function LocationPage() {
               fromMenu: location?.state?.fromMenu,
               fromDetail: location?.state?.fromDetail,
               editLocation: location?.state?.editLocation,
-              selectedAddress,
+              selectedAddress: {
+                ...selectedAddress,
+                restaurantName: restaurantName.name_en,
+              },
             },
           });
         }

@@ -139,8 +139,9 @@ export const Details = () => {
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
   const [minOrderAmount, setMinOrderAmount] = useState();
-  const [name_en, setNameEn] = useState();
   const [sharedItemForCart, setSharedItemForCart] = useState({});
+  const [name_en, setNameEn] = useState();
+  const [restName, setRestName] = useState("");
   const [clearCartModal, setClearCartModal] = useState(false);
   const [menuItemDetails, setMenuItemDetails] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -965,6 +966,12 @@ export const Details = () => {
     setNotDeliver(false);
   };
 
+  const addRestauantName = (id) => {
+    const restName = resturantsData?.find((rest) => rest.id === id);
+
+    return restName?.name_en;
+  };
+
   const chooseAddress = (item) => {
     const object = {
       country_id: JSON.parse(localStorage.getItem("country"))?.id,
@@ -988,8 +995,10 @@ export const Details = () => {
       setDeliveryTime,
       // setMinOrderAmount,
       setNameEn,
+      setRestName,
       getFullAddress,
-      setFullAddress
+      setFullAddress,
+      addRestauantName
     );
   };
 
@@ -1065,6 +1074,7 @@ export const Details = () => {
           delivery_time,
           // minOrderAmount,
           name_en,
+          restaurantName: restName,
         };
 
         localStorage.setItem("selected", JSON.stringify(addToStore));
@@ -1134,6 +1144,7 @@ export const Details = () => {
       delivery_time,
       // minOrderAmount,
       name_en,
+      restaurantName: restName,
     };
 
     localStorage.setItem("selected", JSON.stringify(addToStore));

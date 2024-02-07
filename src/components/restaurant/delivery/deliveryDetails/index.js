@@ -88,9 +88,9 @@ const DeliveryDetails = (props) => {
 
   const addressData = useSelector((state) => state.address.addressData);
   const allAreas = useSelector((state) => state.address.allAreas);
-  // const nearbyRestaurants = useSelector(
-  //   (state) => state.resturants.nearbyRestaurants
-  // );
+  const resturantsData = useSelector(
+    (state) => state.resturants.resturantsData
+  );
   const restaurantDetail = useSelector(
     (state) => state.resturants.restaurantDetail
   );
@@ -149,8 +149,15 @@ const DeliveryDetails = (props) => {
   const [maxTime, setMaxTime] = useState(dayjs());
   const [disableMenu, setDisableMenu] = useState(false);
   const [distancesLessThan50, setDistancesLessThan50] = useState([]);
+  const [restName, setRestName] = useState("");
 
   const { id: restaurant_id } = useParams();
+
+  const addRestauantName = (id) => {
+    const restName = resturantsData?.find((rest) => rest.id === id);
+
+    return restName?.name_en;
+  };
 
   useEffect(() => {
     if (onDelivery) {
@@ -420,6 +427,7 @@ const DeliveryDetails = (props) => {
         delivery_time,
         // minOrderAmount,
         name_en,
+        restaurantName: restName,
       };
 
       localStorage.setItem("selected", JSON.stringify(addToStore));
@@ -631,6 +639,9 @@ const DeliveryDetails = (props) => {
           setOrderAmFromDelivery(
             address?.delivery_charge_area_info?.minimum_order_amount
           );
+          setRestName(
+            addRestauantName(address?.delivery_charge_area_info?.restaurant_id)
+          );
 
           localStorage.setItem(
             "area_id",
@@ -734,7 +745,11 @@ const DeliveryDetails = (props) => {
                   padding: "0",
                 }}
               >
-                {userLocation}{" "}
+                {token !== null &&
+                selected !== null &&
+                restaurantDetail?.name_en !== selected?.restaurantName
+                  ? "Select Address"
+                  : userLocation}{" "}
                 <StyledOuterContainerIcon className="dropdown_icon_container">
                   <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
                 </StyledOuterContainerIcon>

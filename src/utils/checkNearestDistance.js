@@ -109,7 +109,7 @@ export const returnMatchedDataToAddAddress = (
     );
 
     // Sort branches based on distance in ascending order
-    branches?.sort((a, b) => {
+    branches?.slice()?.sort((a, b) => {
       const distanceA = calculateDistance(lat, lng, +a.latitude, +a.longitude);
       const distanceB = calculateDistance(lat, lng, +b.latitude, +b.longitude);
       return distanceA - distanceB;
