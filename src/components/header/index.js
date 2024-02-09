@@ -150,6 +150,8 @@ const Navbar = (props) => {
                       paths.menu
                     }/restaurant/${+location?.restaurant_id}/delivery`
                   );
+                } else if (path?.includes("menu-item-details")) {
+                  navigate(-1);
                 }
               } else {
                 if (path === "/profile") {

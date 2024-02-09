@@ -667,6 +667,7 @@ function LocationPage() {
           ...selectedAddress,
           addNewAddress: true,
           restaurantName: restaurantName.name_en,
+          restaurantId: selectedAddress.restaurant_id,
         };
 
         sessionStorage.setItem("storeAddress", JSON.stringify(storeAddress));
@@ -703,6 +704,7 @@ function LocationPage() {
             lng: center.lng,
             areaName: selectedAddress.name_en,
             restaurantId: selectedAddress.restaurant_id,
+            restaurantName: restaurantName.name_en,
           };
 
           addLocationGuest(fullAddress);
