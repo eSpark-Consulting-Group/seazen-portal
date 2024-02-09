@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 // import { useTheme } from "@mui/material";
 import {
   Box,
@@ -72,8 +72,8 @@ import { paths } from "../../routes/paths";
 
 import "./style.css";
 
-const toastList = new Set();
-const MAX_TOAST = 1;
+// const toastList = new Set();
+// const MAX_TOAST = 1;
 
 function CartPage() {
   const navigate = useNavigate();
@@ -83,7 +83,7 @@ function CartPage() {
 
   const token = localStorage.getItem("token");
   const restaurantId = localStorage.getItem("restaurantID");
-  const brId = localStorage.getItem("branchId");
+  // const brId = localStorage.getItem("branchId");
 
   const cart = useSelector((state) => state.cart.cart);
 
@@ -388,22 +388,21 @@ function CartPage() {
 
                       checkout(data, token)
                         .then((res) => {
-                          // if (res?.success === "error") {
-                          //   const parsedError = res?.message
-                          //     ?.split(":")[1]
-                          //     ?.trim();
-
-                          //   if (toastList.size < MAX_TOAST) {
-                          //     const id = toast.error(parsedError, {
-                          //       onClose: () => toastList.delete(id),
-                          //     });
-                          //     toastList.add(id);
-                          //   }
-                          // } else {
-                          const checkoutRedirectUrl =
-                            res.data?.payment_methods[0].redirect_url;
-                          window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
-                          // }
+                          if (res?.success === "error") {
+                            //   const parsedError = res?.message
+                            //     ?.split(":")[1]
+                            //     ?.trim();
+                            //   if (toastList.size < MAX_TOAST) {
+                            //     const id = toast.error(parsedError, {
+                            //       onClose: () => toastList.delete(id),
+                            //     });
+                            //     toastList.add(id);
+                            //   }
+                          } else {
+                            const checkoutRedirectUrl =
+                              res.data?.payment_methods[0].redirect_url;
+                            window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                          }
                         })
                         .catch((err) => {
                           console.log(err);
@@ -423,20 +422,19 @@ function CartPage() {
 
                   checkout(data, token)
                     .then((res) => {
-                      // if (res?.success === "error") {
-                      //   const parsedError = res?.message?.split(":")[1]?.trim();
-
-                      //   if (toastList.size < MAX_TOAST) {
-                      //     const id = toast.error(parsedError, {
-                      //       onClose: () => toastList.delete(id),
-                      //     });
-                      //     toastList.add(id);
-                      //   }
-                      // } else {
-                      const checkoutRedirectUrl =
-                        res.data?.payment_methods[0].redirect_url;
-                      window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
-                      // }
+                      if (res?.success === "error") {
+                        //   const parsedError = res?.message?.split(":")[1]?.trim();
+                        //   if (toastList.size < MAX_TOAST) {
+                        //     const id = toast.error(parsedError, {
+                        //       onClose: () => toastList.delete(id),
+                        //     });
+                        //     toastList.add(id);
+                        //   }
+                      } else {
+                        const checkoutRedirectUrl =
+                          res.data?.payment_methods[0].redirect_url;
+                        window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                      }
                     })
                     .catch((err) => {
                       console.log(err);
@@ -613,7 +611,9 @@ function CartPage() {
 
   const getDeliveryCharge = () => {
     return Number(
-      selectedAdd !== null ? Number(selectedAdd?.delivery_charges || 0) : 0
+      selectedAdd !== null && selectedAdd.delivery_charges !== undefined
+        ? Number(selectedAdd?.delivery_charges || 0)
+        : 0
     ).toFixed(3);
   };
 
@@ -655,7 +655,9 @@ function CartPage() {
     totalValue =
       totalPrice + tipValue - (!isEmpty(promoDiscount) && getDiscountAmount());
     totalValue +=
-      selectedAdd !== null ? Number(selectedAdd?.delivery_charges) : 0;
+      selectedAdd !== null && selectedAdd.delivery_charges !== undefined
+        ? Number(selectedAdd?.delivery_charges)
+        : 0;
 
     return totalValue;
   };
@@ -674,7 +676,9 @@ function CartPage() {
     pick_from_store: "",
     pickup_from_car: "",
     delivery_charges:
-      selectedAdd !== null ? Number(selectedAdd?.delivery_charges) : 0,
+      selectedAdd !== null && selectedAdd.delivery_charges !== undefined
+        ? Number(selectedAdd?.delivery_charges)
+        : 0,
     promo_code: "Test1",
     comments: specialIns,
     delivery_schedule: {

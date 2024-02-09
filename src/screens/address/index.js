@@ -327,6 +327,7 @@ const AddressForm = () => {
             const storeAddress = {
               ...isAfterNewLocation,
               addNewAddress: false,
+              restaurantName: location?.state?.selectedAddress?.restaurantName,
             };
 
             sessionStorage.setItem(

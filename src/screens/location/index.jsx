@@ -43,10 +43,7 @@ import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 // import { savingAreaIdForMatchingArea } from "../../utils/checkOperationalArea";
 // import { removeDiacritics } from "./stringCheck";
 import { flattenArray } from "../../utils/getAddress";
-import {
-  calculateDistance,
-  returnMatchedDataToAddAddress,
-} from "../../utils/checkNearestDistance";
+import { returnMatchedDataToAddAddress } from "../../utils/checkNearestDistance";
 
 import { getAreas } from "../../store/reducers/addressSlice";
 
@@ -184,6 +181,7 @@ function LocationPage() {
   const [selectedAddress, setSelectedAddress] = useState({});
   const [disableButton, setdisableButton] = useState(false);
   const [selectedAreaId, setSelectedAreaId] = useState(null);
+  const [isDrag, setIsDrag] = useState(false);
 
   const mapRef = useRef();
 
@@ -390,17 +388,6 @@ function LocationPage() {
       } else {
         setNotOperational(true);
       }
-
-      // findOperationalArea(
-      //   addressComponents,
-      //   allAreas,
-      //   setSelectedAreaId,
-      //   setSelectedAddress,
-      //   setNotOperational,
-      //   setDistanceIsFar,
-      //   noRegion,
-      //   pushedDistanceWithDetails
-      // );
     }
   }, [
     filterAllAreas,
@@ -419,6 +406,23 @@ function LocationPage() {
         const address = results[0].formatted_address;
 
         setAddressComponents(results[0]);
+
+        if (location.state.toCurrent !== undefined && !isDrag) {
+          const getCountry = address.split(",");
+          const lastElem = getCountry[getCountry.length - 1];
+          const findCountry = lastElem?.split(" ");
+          let forCondition = findCountry[findCountry.length - 1];
+
+          if (forCondition === "Arabia") {
+            forCondition = "Saudia Arabia";
+          }
+
+          if (forCondition == "Emirates") {
+            forCondition = "UAE";
+          }
+
+          servicePlaceCheck(forCondition.trim());
+        }
 
         setAddress(address);
         setCenter({ lat: +latitude, lng: +longitude });
@@ -461,14 +465,15 @@ function LocationPage() {
       location?.state?.editLocation === undefined
     ) {
       //
-      let draggedLogation = "";
-      if (address?.toLowerCase() === currentLocation?.address.toLowerCase()) {
-        draggedLogation = currentLocation.address;
+      let draggedLocation = "";
+
+      if (!isDrag) {
+        draggedLocation = currentLocation.address;
       } else {
-        draggedLogation = address;
+        draggedLocation = address;
       }
 
-      const getCountry = currentLocation?.address.split(",");
+      const getCountry = draggedLocation.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
@@ -494,14 +499,15 @@ function LocationPage() {
     ) {
       //
 
-      let draggedLogation = "";
-      if (address?.toLowerCase() === currentLocation?.address.toLowerCase()) {
-        draggedLogation = currentLocation.address;
+      let draggedLocation = "";
+
+      if (!isDrag) {
+        draggedLocation = currentLocation.address;
       } else {
-        draggedLogation = address;
+        draggedLocation = address;
       }
 
-      const getCountry = currentLocation?.address.split(",");
+      const getCountry = draggedLocation.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
@@ -527,14 +533,15 @@ function LocationPage() {
     ) {
       //
 
-      let draggedLogation = "";
-      if (address?.toLowerCase() === selected.address.toLowerCase()) {
-        draggedLogation = currentLocation.address;
+      let draggedLocation = "";
+
+      if (!isDrag) {
+        draggedLocation = selected.address;
       } else {
-        draggedLogation = address;
+        draggedLocation = address;
       }
 
-      const getCountry = selected.address.split(",");
+      const getCountry = draggedLocation.split(",");
       const lastElem = getCountry[getCountry.length - 1];
       const findCountry = lastElem?.split(" ");
       let forCondition = findCountry[findCountry.length - 1];
@@ -551,7 +558,7 @@ function LocationPage() {
         servicePlaceCheck(forCondition.trim());
       }
     }
-  }, [localStorage, address, placeChanged, location?.state]);
+  }, [localStorage, address, placeChanged, location?.state, isDrag]);
 
   const servicePlaceCheck = (fullAddress) => {
     let countriesName = [];
@@ -576,6 +583,7 @@ function LocationPage() {
 
   const onPlaceChanged = async () => {
     setPlaceChanged(true);
+    setIsDrag(false);
 
     if (autocomplete) {
       const lat = autocomplete.getPlace().geometry.location.lat();
@@ -627,6 +635,7 @@ function LocationPage() {
       const lat = await mapRef?.current?.center?.lat();
       const lng = await mapRef?.current?.center?.lng();
       if (lat && lng) {
+        setIsDrag(true);
         getAdd(lat, lng);
       }
     }
@@ -650,9 +659,14 @@ function LocationPage() {
   useEffect(() => {
     if (token === null) {
       if (selectedAddress?.area_id) {
+        const restaurantName = resturantsData.find(
+          (item) => item.id === selectedAddress.restaurant_id
+        );
+
         const storeAddress = {
           ...selectedAddress,
           addNewAddress: true,
+          restaurantName: restaurantName.name_en,
         };
 
         sessionStorage.setItem("storeAddress", JSON.stringify(storeAddress));
@@ -687,6 +701,8 @@ function LocationPage() {
             address,
             lat: center.lat,
             lng: center.lng,
+            areaName: selectedAddress.name_en,
+            restaurantId: selectedAddress.restaurant_id,
           };
 
           addLocationGuest(fullAddress);
