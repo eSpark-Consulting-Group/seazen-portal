@@ -109,7 +109,7 @@ export const returnMatchedDataToAddAddress = (
     );
 
     // Sort branches based on distance in ascending order
-    branches?.slice()?.sort((a, b) => {
+    branches = branches?.slice()?.sort((a, b) => {
       const distanceA = calculateDistance(lat, lng, +a.latitude, +a.longitude);
       const distanceB = calculateDistance(lat, lng, +b.latitude, +b.longitude);
       return distanceA - distanceB;
@@ -139,6 +139,7 @@ export const returnMatchedDataToAddAddress = (
             ) <= 2 &&
             branch.restaurant_id === area.restaurant_id
           ) {
+            console.log(area);
             matchingArea = area;
             break; // Stop searching if a match is found
           }
