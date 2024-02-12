@@ -102,18 +102,18 @@ export const returnMatchedDataToAddAddress = (
 ) => {
   let matchingArea = null;
 
+  // Sort branches based on distance in ascending order
+  branches = branches?.slice()?.sort((a, b) => {
+    const distanceA = calculateDistance(lat, lng, +a.latitude, +a.longitude);
+    const distanceB = calculateDistance(lat, lng, +b.latitude, +b.longitude);
+    return distanceA - distanceB;
+  });
+
   // Loop through each component's long_name
   for (const component of nameArray) {
     const addressLongNameNormalized = removeDiacritics(
       component.long_name.toLowerCase().replace(/\s/g, "")
     );
-
-    // Sort branches based on distance in ascending order
-    branches = branches?.slice()?.sort((a, b) => {
-      const distanceA = calculateDistance(lat, lng, +a.latitude, +a.longitude);
-      const distanceB = calculateDistance(lat, lng, +b.latitude, +b.longitude);
-      return distanceA - distanceB;
-    });
 
     // Calculate distance for each branch and check for a match
     for (const branch of branches) {
@@ -133,13 +133,9 @@ export const returnMatchedDataToAddAddress = (
           );
 
           if (
-            calculateLevenshteinDistance(
-              addressLongNameNormalized,
-              areaNameNormalized
-            ) <= 2 &&
+            addressLongNameNormalized === areaNameNormalized &&
             branch.restaurant_id === area.restaurant_id
           ) {
-            console.log(area);
             matchingArea = area;
             break; // Stop searching if a match is found
           }

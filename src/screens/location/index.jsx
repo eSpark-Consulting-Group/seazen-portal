@@ -343,7 +343,8 @@ function LocationPage() {
           component.types.includes("sublocality_level_1") ||
           component.types.includes("sublocality") ||
           component.types.includes("natural_feature") ||
-          component.types.includes("route")
+          component.types.includes("route") ||
+          component.types.includes("neighborhood")
       );
 
       const addressHasAdminAreaLevel1 =
@@ -407,7 +408,7 @@ function LocationPage() {
 
         setAddressComponents(results[0]);
 
-        if (location.state.toCurrent !== undefined && !isDrag) {
+        if (location?.state?.toCurrent !== undefined && !isDrag) {
           const getCountry = address.split(",");
           const lastElem = getCountry[getCountry.length - 1];
           const findCountry = lastElem?.split(" ");
