@@ -36,7 +36,7 @@ const HomeBannerSlider = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      if (country && restaurantBanner.length == 0) {
+      if (country) {
         getAllRestaurantsBanner(country?.id)
           .then((res) => {
             dispatch(getRestaurantsBanner(res.data));
@@ -47,6 +47,7 @@ const HomeBannerSlider = () => {
       }
     }, 1000);
   }, [country]);
+
   return (
     <div className="slick-slider-wrapper">
       <Slider {...settings}>
