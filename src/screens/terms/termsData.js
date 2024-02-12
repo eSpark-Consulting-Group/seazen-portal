@@ -26,7 +26,7 @@ export const termsContent = {
           id: 2.3,
           sub_heading: "“Us”, “Our”, “We”",
           sub_detail:
-            "Shall mean SeazenGroup, OrderSeazen and any affiliate owned directly or indirectly by SeazenGroup.",
+            "Shall mean Seazen Group, OrderSeazen and any affiliate owned directly or indirectly by Seazen Hospitality for Restaurant Management & Catering Company W.LL..",
         },
         {
           id: 2.4,
@@ -147,7 +147,7 @@ export const termsContent = {
           sub_heading: "Delivery Minimum Order",
           sub_detail:
             "A minimum order value is required for delivery orders. This value may vary based on the user’s location and the specific brand from which the order is placed. Minimum order requirements will be clearly stated during the order process.",
-          last_bold: "(There is no minimum order value for Qatar)",
+          last_bold: "(There is no minimum order value for Qatar and Kuwait)",
         },
         {
           id: 7.4,
@@ -249,7 +249,7 @@ export const termsContent = {
           id: 9.6,
           sub_heading: "Liability",
           sub_detail:
-            "OrderSeazen and/or SEAZEN GROUP's liability for catering services is limited to the provision of food and related services as agreed. We are not liable for indirect damages or losses. OrderSeazen and/or SEAZEN GROUP holds no liability for circumstances beyond its control affecting the catering service, which may include, but not limited to; heavy traffic, road blocks, motor accidents, power shutdown, or natural disasters.",
+            "Our liability for catering services is limited to the provision of food and related services as agreed. We are not liable for indirect damages or losses. We hold no liability for circumstances beyond its control affecting the catering service, which may include, but not limited to; heavy traffic, road blocks, motor accidents, power shutdown, or natural disasters.",
         },
       ],
     },
@@ -299,7 +299,7 @@ export const termsContent = {
         {
           id: 11.4,
           sub_detail:
-            "In general, Users undertake, by way of example without limitation",
+            "In general, Users undertake, by way of example without limitation:",
           child_sub_data: [
             {
               id: 1,
@@ -309,7 +309,7 @@ export const termsContent = {
             {
               id: 2,
               child_sub_detail:
-                "To refrain from infringing industrial and intellectual property rights or the personal data protection legislation of OrderSeazen and SeazenGroup;",
+                "To refrain from infringing industrial and intellectual property rights or the personal data protection legislation of our businesses and affiliates;",
             },
             {
               id: 3,
@@ -319,7 +319,7 @@ export const termsContent = {
             {
               id: 4,
               child_sub_detail:
-                "To refrain from introducing computer viruses, corrupted files or any other software that may cause damage or alterations to SeazenGroup or third parties’ contents or systems;",
+                "To refrain from introducing computer viruses, corrupted files or any other software that may cause damage or alterations to us or third parties’ contents or systems;",
             },
           ],
         },
@@ -339,13 +339,13 @@ export const termsContent = {
           id: 13.1,
           sub_heading: "Ownership",
           sub_detail:
-            "All content on OrderSeazen, including trademarks, logos, and service marks, is the property of SEAZEN GROUP or its licensors and is protected by intellectual property laws.",
+            "All content on OrderSeazen, including trademarks, logos, and service marks, is the property of us or our licensors and is protected by intellectual property laws.",
         },
         {
           id: 13.2,
           sub_heading: "Use of Content",
           sub_detail:
-            "Users may not reproduce, distribute, or otherwise use any Content without express written permission by SEAZEN GROUP.",
+            "Users may not reproduce, distribute, or otherwise use any Content without express written permission by us.",
         },
       ],
     },
@@ -357,7 +357,7 @@ export const termsContent = {
           id: 14.1,
           sub_heading: "Limitation of Liability",
           sub_detail:
-            "SEAZEN GROUP will not be liable for any indirect, incidental, special, consequential, or punitive damages arising from the use of the Service.",
+            "We will not be liable for any indirect, incidental, special, consequential, or punitive damages arising from the use of the Service.",
         },
         {
           id: 14.2,
@@ -371,13 +371,13 @@ export const termsContent = {
       id: 15,
       heading: "Indemnification",
       detail:
-        "Users agree to indemnify and hold harmless SEAZEN GROUP and its affiliates, officers, agents, employees, and partners from any claim or demand made by any third party due to or arising out of the User's use of the Service.",
+        "Users agree to indemnify and hold harmless us and our affiliates, officers, agents, employees, and partners from any claim or demand made by any third party due to or arising out of the User's use of the Service.",
     },
     {
       id: 16,
       heading: "Changes to Terms",
       detail:
-        "SEAZEN GROUP reserves the right to modify these Terms and Conditions at any time. Continued use of the Service following such changes will indicate your acknowledgment and agreement to be bound by the revised terms.",
+        "We reserves the right to modify these Terms and Conditions at any time. Continued use of the Service following such changes will indicate your acknowledgment and agreement to be bound by the revised terms.",
     },
     {
       id: 17,

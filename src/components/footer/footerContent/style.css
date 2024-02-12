@@ -1,12 +1,14 @@
 .footer-style {
   text-align: left;
-  font: normal normal 600 16px Titillium Web !important;
+  font: normal normal 600 14px Titillium Web !important;
   letter-spacing: 0px;
   color: #1f2933;
   opacity: 1;
-  font-size: 18px;
   padding-top: 10px;
-  padding-left: 10px;
+  /* padding-left: 10px; */
+  width: 300px;
+  display: block;
+  line-height: 16px;
 }
 
 .terms-style {
@@ -15,7 +17,7 @@
   letter-spacing: 0px;
   color: #959fa8;
   opacity: 1;
-  padding-left: 10px;
+  /* padding-left: 10px; */
   cursor: pointer;
 }
 

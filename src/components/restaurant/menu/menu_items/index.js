@@ -93,7 +93,7 @@ const MenuItems = ({ itemCategoryList }) => {
                     <Dropdown.Item
                       key={category.id}
                       onClick={() => {
-                        scrollToElement(category?.id, index);
+                        scrollToElement(index + 1, index);
                       }}
                     >
                       {category?.name_en}
@@ -103,7 +103,7 @@ const MenuItems = ({ itemCategoryList }) => {
                     <Dropdown.Item
                       key={`menu_category_drop_${index}`}
                       onClick={() => {
-                        scrollToElement(category.id, index);
+                        scrollToElement(index + 1, index);
                       }}
                     >
                       {category}

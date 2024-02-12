@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
 
-import FooterSection from "../footerTextBox/footerSection";
+// import FooterSection from "../footerTextBox/footerSection";
 
 import { paths } from "../../../routes/paths";
 
@@ -16,7 +16,10 @@ export const Footer = (props) => {
       <div className="footer-container">
         <div className="footer-text">
           {/* <p>5% VAT is included in all prices</p> */}
-          <h2 className="footer-style">© 2024 Seazen Group Co.</h2>
+          <h2 className="footer-style">
+            Seazen Hospitality for Restaurant Management & Catering Company
+            W.LL.
+          </h2>
         </div>
         <p className="terms-style">
           <span

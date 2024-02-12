@@ -121,7 +121,7 @@ function CartPage() {
   const [restaurantLogo, setRestaurantLogo] = React.useState("");
   const [restaurantName, setRestaurantName] = React.useState("");
   const [deliveryPrice, setDeliveryPrice] = React.useState("0");
-  const [promoCode, setPromoCode] = React.useState("");
+  const [promoCode, setPromoCode] = React.useState("orderseazen25");
   const [promoDiscount, setPromoDiscount] = React.useState({});
   const [paymentMethod, setPaymentMethod] = React.useState("CASH");
   // const [discount, setDiscount] = React.useState(0);
@@ -144,6 +144,7 @@ function CartPage() {
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
   const [isActive, setIsActive] = useState(false);
+  const [addDefaultCode, setAddDefaultCode] = useState(false);
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
@@ -266,6 +267,12 @@ function CartPage() {
     }
   };
 
+  useEffect(() => {
+    if (!addDefaultCode && cart.length > 0) {
+      handleDialogOpen();
+    }
+  }, [cart]);
+
   // Function to handle opening the dialog
   const handleDialogOpen = () => {
     applyPromoCode(
@@ -281,12 +288,12 @@ function CartPage() {
           return;
         }
         setPromoDiscount(res.data);
+        setAddDefaultCode(true);
       })
       .catch((err) => {
         setDialogOpen(true);
       });
   };
-
   const { data: branchesAndHoursResponse, isSuccess } = useQuery({
     queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, cart[0]?.restaurant_id],
     queryFn: () => {
