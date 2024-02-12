@@ -877,7 +877,7 @@ const Home = () => {
       <div style={{ padding: "8px" }}>
         <Navbar
           profile
-          searchIcon
+          // searchIcon
           setOpenAddressPopup={setOpenAddressToChoose}
           logo
           cartIcon
