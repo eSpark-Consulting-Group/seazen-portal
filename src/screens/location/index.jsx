@@ -78,6 +78,7 @@ const defaultMapOptions = {
   panControl: true,
   zoomControl: false,
   overviewMapControl: true,
+  // scrollwheel: false,
 };
 
 const lib = ["places"];
@@ -693,6 +694,14 @@ function LocationPage() {
       country_id,
       delivery_charge_area_id: selectedAreaId,
     };
+
+    const filterAreas = allAreas?.filter(
+      (area) => area?.restaurant_id === selectedAddress?.restaurant_id
+    );
+
+    if (localStorage.getItem("restaurantID") === null) {
+      dispatch(getAreas(filterAreas));
+    }
 
     getBranchByArea(selectedAddress.restaurant_id, object, dispatch)
       .then((res) => {

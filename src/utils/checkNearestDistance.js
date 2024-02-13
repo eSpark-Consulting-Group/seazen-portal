@@ -136,7 +136,11 @@ export const returnMatchedDataToAddAddress = (
             addressLongNameNormalized === areaNameNormalized &&
             branch.restaurant_id === area.restaurant_id
           ) {
-            matchingArea = area;
+            matchingArea = {
+              ...area,
+              latitude: lat,
+              longitude: lng,
+            };
             break; // Stop searching if a match is found
           }
         }

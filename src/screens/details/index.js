@@ -41,11 +41,13 @@ import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHo
 import {
   getBranchHours,
   getResturants,
+  getResturantsDetails,
   setBranchID,
 } from "../../store/reducers/resturantsSlice";
 import getAllRestaurants from "../../api/home/getAllRestaurants";
 import { GET_ALL_RESTAURANTS_QUERY_KEY } from "../../api/home/getAllRestaurantsBanner";
 import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
+import getRestaurantDetails from "../../api/restaurant/getRestaurantDetails";
 
 import {
   updateCartItem,
@@ -76,6 +78,7 @@ export const Details = () => {
   const resturantsData = useSelector(
     (state) => state.resturants.resturantsData
   );
+  const restDetail = useSelector((state) => state.resturants.restaurantDetail);
   // const nearbyRestaurants = useSelector(
   //   (state) => state.resturants.nearbyRestaurants
   // );
@@ -87,6 +90,22 @@ export const Details = () => {
   const restaurant_id = localStorage.getItem("restaurantID");
   const selected = JSON.parse(localStorage?.getItem("selected"));
   const currentLocation = JSON.parse(localStorage.getItem("location"));
+
+  const restaurantDetails = () => {
+    getRestaurantDetails(restaurant_id, country?.id)
+      .then((data) => {
+        dispatch(getResturantsDetails(data.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    if (restaurant_id && country?.id) {
+      restaurantDetails();
+    }
+  }, [restaurant_id, country]);
 
   useEffect(() => {
     const country_id = JSON.parse(localStorage.getItem("country")).id;
@@ -1245,6 +1264,21 @@ export const Details = () => {
     }
     return false;
   };
+
+  useEffect(() => {
+    const contentDiv = document.querySelector(".content-section");
+
+    if (contentDiv && restDetail?.main_big_image) {
+      const oldBackground = window.getComputedStyle(contentDiv).backgroundImage;
+      contentDiv.style.backgroundImage = `url('${restDetail?.main_big_image}'), ${oldBackground}`;
+    } else {
+      contentDiv.style.backgroundImage = "";
+    }
+
+    return () => {
+      contentDiv.style.backgroundImage = "";
+    };
+  }, [restDetail]);
 
   return (
     <>

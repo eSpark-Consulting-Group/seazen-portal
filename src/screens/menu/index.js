@@ -39,6 +39,7 @@ import getBranchesAndHours from "../../api/restaurant/branches/getBranchesAndHou
 import getBranchByArea from "../../api/restaurant/branches/getBranchByArea.js";
 import cartList from "../../api/cart/cartList.js";
 import getAllArea from "../../api/address/areas.js";
+import getAllAddress from "../../api/address/getAddress.js";
 
 import {
   getResturantsDetails,
@@ -50,6 +51,7 @@ import { closeReorderModal } from "../../store/reducers/orderSlice.js";
 import { addToCart } from "../../store/reducers/cartSlice.js";
 import { addSelectedAddress } from "../../store/reducers/userLocationSlice.js";
 import { getAddress, getAreas } from "../../store/reducers/addressSlice.js";
+import { setToLoad } from "../../store/reducers/loaderSlice.js";
 
 import {
   flattenArray,
@@ -62,8 +64,6 @@ import { cartListWithQuery } from "../../utils/carlistApiCall.js";
 import { paths } from "../../routes/paths.jsx";
 
 import "./style.css";
-import { setToLoad } from "../../store/reducers/loaderSlice.js";
-import getAllAddress from "../../api/address/getAddress.js";
 
 const Menu = () => {
   const navigate = useNavigate();
@@ -75,8 +75,8 @@ const Menu = () => {
   const country = useSelector((state) => state.auth.country);
   const reorder = useSelector((state) => state.order.reorder);
   const cart = useSelector((state) => state.cart.cart);
-  const allAreas = useSelector((state) => state.address.allAreas);
-  const addressData = useSelector((state) => state.address.addressData);
+  // const allAreas = useSelector((state) => state.address.allAreas);
+  // const addressData = useSelector((state) => state.address.addressData);
   const branchHours = useSelector((state) => state.resturants.branchHours);
   const restaurantDetail = useSelector(
     (state) => state.resturants.restaurantDetail

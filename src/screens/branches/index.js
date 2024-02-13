@@ -1,17 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+
+import { CircularProgress } from "@mui/material";
+
 import { useQuery } from "@tanstack/react-query";
+
 import BranchHeader from "../../components/branches-hours/headerBranch";
 import BranchContent from "../../components/branches-hours/content";
 import RestaurantInfo from "../../components/branches-hours/branch";
-import "./style.css";
 import { Footer } from "../../components/footer/footerContent";
+
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../api/restaurant/branches/getBranchesAndHours";
-import { CircularProgress } from "@mui/material";
+
+import "./style.css";
 
 export const Branches = () => {
   const [branchesAndHours, setBranchesAndHours] = React.useState(null);
+
+  const restaurantDetail = useSelector(
+    (state) => state.resturants.restaurantDetail
+  );
 
   const {
     data: branchesAndHoursResponse,
@@ -55,6 +65,21 @@ export const Branches = () => {
       }
     },
   });
+
+  useEffect(() => {
+    const contentDiv = document.querySelector(".content-section");
+
+    if (contentDiv && restaurantDetail?.main_big_image) {
+      const oldBackground = window.getComputedStyle(contentDiv).backgroundImage;
+      contentDiv.style.backgroundImage = `url('${restaurantDetail?.main_big_image}'), ${oldBackground}`;
+    } else {
+      contentDiv.style.backgroundImage = "";
+    }
+
+    return () => {
+      contentDiv.style.backgroundImage = "";
+    };
+  }, [restaurantDetail]);
 
   return (
     <div className="branches-screen-container">

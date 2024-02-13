@@ -1,13 +1,10 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  useDispatch,
-  // useSelector,
-} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 
-// import Select from "react-select";
+import Select from "react-select";
 
 import { RequestType, geocode, setKey } from "react-geocode";
 
@@ -19,8 +16,8 @@ import { OfficeAdress } from "../../components/address/forms/officeForm";
 import AddressTypeSelector from "../../components/address/addressButton";
 import MyAddresses from "../../components/header/myAdresses";
 
-// import { ReactComponent as Dropdown } from "../../assets/icons/dropdown.svg";
-// import { ReactComponent as ErrorDropdown } from "../../assets/icons/error-icon.svg";
+import { ReactComponent as Dropdown } from "../../assets/icons/dropdown.svg";
+import { ReactComponent as ErrorDropdown } from "../../assets/icons/error-icon.svg";
 
 import {
   checkIfIncludesPlus,
@@ -28,22 +25,20 @@ import {
   isArabicCountryMCC,
 } from "../../utils/numberCheck";
 
-// import { selectStyles } from "./selectStyles";
+import { selectStyles } from "./selectStyles";
 
 import { paths } from "../../routes/paths";
 
 import addAddressApiCall from "../../api/address/addAddress";
 import updateAddressApiCall from "../../api/address/updateAddress";
 import getAllAddress from "../../api/address/getAddress";
-// import getAllArea from "../../api/address/areas";
+import getAllArea from "../../api/address/areas";
 
-import {
-  // getAreas,
-  getAddress,
-} from "../../store/reducers/addressSlice";
+import { getAreas, getAddress } from "../../store/reducers/addressSlice";
 import { addSelectedAddress } from "../../store/reducers/userLocationSlice";
 
 import "./style.css";
+import { calculateDistance } from "../../utils/checkNearestDistance";
 
 const toastList = new Set();
 const MAX_TOAST = 1;
@@ -97,7 +92,7 @@ const AddressForm = () => {
   const isAfterNewLocation = JSON.parse(
     sessionStorage?.getItem("storeAddress")
   );
-  // const allAreas = useSelector((state) => state.address.allAreas);
+  const allAreas = useSelector((state) => state.address.allAreas);
 
   const [addressType, setAddressType] = useState("house"); // Default to 'house'
   const [address, setAddress] = useState({
@@ -161,7 +156,7 @@ const AddressForm = () => {
     countryCodeErr: false,
   });
   const [clickEv, setClickEv] = useState(false);
-  // const [area, setArea] = useState(null);
+  const [area, setArea] = useState(null);
 
   useLayoutEffect(() => {
     if (location?.state?.edit) {
@@ -208,11 +203,38 @@ const AddressForm = () => {
         longitude: location?.state?.latlng.lng.toString(),
       });
       setAddressType(state?.address_type?.toLowerCase());
-      // setArea({
-      //   label: state?.delivery_charge_area_info.name_en,
-      //   value: state?.delivery_charge_area_info.id,
-      //   zone_id: state?.delivery_zone_info?.id,
-      // });
+      setArea({
+        label: state?.delivery_charge_area_info.name_en,
+        value: state?.delivery_charge_area_info.id,
+        zone_id: state?.delivery_zone_info?.id,
+      });
+    } else {
+      setArea({
+        label:
+          isAfterNewLocation !== null &&
+          isAfterNewLocation?.addNewAddress === true
+            ? isAfterNewLocation?.name_en
+            : (selectedAddress === null ||
+                selectedAddress?.name_en === undefined) &&
+              location?.state?.selectedAddress?.name_en === undefined
+            ? location?.state.name
+            : location?.state?.selectedAddress?.name_en !== undefined &&
+              location?.state?.selectedAddress?.name_en,
+        value:
+          isAfterNewLocation !== null &&
+          isAfterNewLocation?.addNewAddress === true
+            ? isAfterNewLocation?.area_id
+            : selectedAddress === null || selectedAddress?.area_id === undefined
+            ? location?.state?.selectedAddress?.area_id
+            : selectedAddress?.area_id,
+        zone_id:
+          isAfterNewLocation !== null &&
+          isAfterNewLocation?.addNewAddress === true
+            ? isAfterNewLocation?.zone_id
+            : selectedAddress === null || selectedAddress?.zone_id === undefined
+            ? location?.state?.selectedAddress?.zone_id
+            : selectedAddress?.zone_id,
+      });
     }
   }, [location?.state?.edit]);
 
@@ -512,6 +534,7 @@ const AddressForm = () => {
 
     if (addressType === "house") {
       if (
+        address.delivery_charge_area_id !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.house_no !== ""
@@ -522,6 +545,7 @@ const AddressForm = () => {
     }
     if (addressType === "apartment") {
       if (
+        address.delivery_charge_area_id !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.building !== "" &&
@@ -534,6 +558,7 @@ const AddressForm = () => {
     }
     if (addressType === "office") {
       if (
+        address.delivery_charge_area_id !== "" &&
         address.block !== "" &&
         address.street !== "" &&
         address.building !== "" &&
@@ -611,6 +636,7 @@ const AddressForm = () => {
       if (addressType === "house") {
         setErrorState((prevState) => ({
           ...prevState,
+          areaErr: address.delivery_charge_area_id === "" ? true : false,
           blockErr: address.block === "" ? true : false,
           streetErr: address.street === "" ? true : false,
           houseNoErr: address.house_no === "" ? true : false,
@@ -618,6 +644,7 @@ const AddressForm = () => {
       } else if (addressType === "apartment") {
         setErrorState((prevState) => ({
           ...prevState,
+          areaErr: address.delivery_charge_area_id === "" ? true : false,
           blockErr: address.block === "" ? true : false,
           streetErr: address.street === "" ? true : false,
           buildingErr: address.building === "" ? true : false,
@@ -627,6 +654,7 @@ const AddressForm = () => {
       } else if (addressType === "office") {
         setErrorState((prevState) => ({
           ...prevState,
+          areaErr: address.delivery_charge_area_id === "" ? true : false,
           blockErr: address.block === "" ? true : false,
           streetErr: address.street === "" ? true : false,
           buildingErr: address.building === "" ? true : false,
@@ -647,23 +675,76 @@ const AddressForm = () => {
     }
   };
 
-  // const selectHandler = (selectedOption) => {
-  //   setArea(selectedOption);
-  //   setAddress((address) => ({
-  //     ...address,
-  //     delivery_charge_area_id: selectedOption.value,
-  //     delivery_zone_id: selectedOption.zone_id,
-  //   }));
-  // };
+  const selectHandler = (selectedOption) => {
+    const findSelectedArea = allAreas.find((area) => {
+      if (
+        area.zone_id === selectedOption?.zone_id &&
+        area.area_id === selectedOption.value
+      ) {
+        return area;
+      }
+    });
 
-  // const groupedOptions = allAreas.map((zone) => ({
-  //   label: zone.name_en,
-  //   options: zone.areas.map((area) => ({
-  //     label: area.name_en,
-  //     value: area.area_id,
-  //     zone_id: zone.zone_id,
-  //   })),
-  // }));
+    const distance = calculateDistance(
+      isAfterNewLocation !== null && isAfterNewLocation?.addNewAddress === true
+        ? isAfterNewLocation?.latitude
+        : location?.state?.selectedAddress?.latitude,
+      isAfterNewLocation !== null && isAfterNewLocation?.addNewAddress === true
+        ? isAfterNewLocation?.longitude
+        : location?.state?.selectedAddress?.longitude,
+      +findSelectedArea?.latitude,
+      +findSelectedArea?.longitude
+    );
+
+    const radius = +process.env.REACT_APP_DISTANCE_RADIUS;
+
+    if (distance > radius) {
+      if (toastList.size < MAX_TOAST) {
+        const id = toast.error(`Please select area less than ${radius} km`, {
+          onClose: () => toastList.delete(id),
+        });
+        toastList.add(id);
+      }
+
+      return;
+    }
+
+    setArea({
+      label: selectedOption?.label?.split("-")[0],
+      value: selectedOption?.value,
+      zone_id: selectedOption?.zone_id,
+    });
+    setAddress((address) => ({
+      ...address,
+      delivery_charge_area_id: selectedOption.value,
+      delivery_zone_id: selectedOption.zone_id,
+    }));
+  };
+
+  const groupedOptions = allAreas?.map((zone) => {
+    // const distance = calculateDistance(
+    //   isAfterNewLocation !== null && isAfterNewLocation?.addNewAddress === true
+    //     ? isAfterNewLocation?.latitude
+    //     : location?.state?.selectedAddress?.latitude,
+    //   isAfterNewLocation !== null && isAfterNewLocation?.addNewAddress === true
+    //     ? isAfterNewLocation?.longitude
+    //     : location?.state?.selectedAddress?.longitude,
+    //   +zone?.latitude,
+    //   +zone?.longitude
+    // );
+
+    return {
+      label: zone.zone_en,
+      options: [
+        {
+          // label: `${zone.name_en}-${parseInt(distance)} km`,
+          label: zone.name_en,
+          value: zone.area_id,
+          zone_id: zone.zone_id,
+        },
+      ],
+    };
+  });
 
   return (
     <>
@@ -725,7 +806,7 @@ const AddressForm = () => {
 
           {location?.state?.edit ? null : (
             <div className="container-style px-3">
-              <input
+              {/* <input
                 className={`form-style m-0 disabled-input`}
                 type="text"
                 name="Area"
@@ -740,20 +821,26 @@ const AddressForm = () => {
                     : location?.state?.selectedAddress?.name_en
                 }
                 disabled={true}
+              /> */}
+              <Select
+                value={area}
+                onChange={selectHandler}
+                options={groupedOptions}
+                isSearchable
+                placeholder="Areas"
+                components={{
+                  DropdownIndicator: errorState?.areaErr
+                    ? ErrorDropdown
+                    : Dropdown,
+                }}
+                formatGroupLabel={(data) => (
+                  <div>
+                    <strong>{data.label}</strong>
+                  </div>
+                )}
+                styles={selectStyles(errorState)}
+                // menuIsOpen={true} // Keep the dropdown open
               />
-              {/* <Select
-              value={area}
-              onChange={selectHandler}
-              options={groupedOptions}
-              isSearchable
-              placeholder="Areas"
-              components={{
-                DropdownIndicator: errorState?.areaErr
-                  ? ErrorDropdown
-                  : Dropdown,
-              }}
-              styles={selectStyles(errorState)}
-            /> */}
             </div>
           )}
 

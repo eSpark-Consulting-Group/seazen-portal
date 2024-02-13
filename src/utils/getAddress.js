@@ -96,15 +96,7 @@ export const flattenArray = (allAreas) => {
     zone.areas.forEach((area) => {
       const combinedItem = {
         ...zoneDetails,
-        area_id: area.area_id,
-        country_id: area.country_id,
-        restaurant_id: area.restaurant_id,
-        branch_id: area.branch_id,
-        name_en: area.name_en,
-        name_ar: area.name_ar,
-        delivery_charges: area.delivery_charges,
-        delivery_time: area.delivery_time,
-        minimum_order_amount: area.minimum_order_amount,
+        ...area,
       };
       result.push(combinedItem);
     });
