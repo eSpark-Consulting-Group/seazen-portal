@@ -470,59 +470,60 @@ const MenuCardListContainer = ({
                       />
                     </div>
                   )}
-                  {listState?.map((val, index) => {
-                    // const names = itemCategoryList?.find(
-                    //   (item) => +item.id == +val
-                    // )?.name_en;
+                  {listState?.length &&
+                    listState?.map((val, index) => {
+                      // const names = itemCategoryList?.find(
+                      //   (item) => +item.id == +val
+                      // )?.name_en;
 
-                    return (
-                      <>
-                        <div
-                          id={index + 1}
-                          className="card_list_title"
-                          style={{
-                            marginTop: index == 0 ? "-3px" : "16px",
-                            height: "27px",
-                          }}
-                        >
-                          {val?.name_en}
-                        </div>{" "}
-                        {categoriesWiseList[val?.id].map((item, index) => {
-                          if (item.branch_status) {
-                            return (
-                              <MenuCard
-                                allData={item}
-                                key={index}
-                                locationDeliver={locationDeliver}
-                                resturantId={resturantId}
-                                restaurantBranchHours={restaurantBranchHours}
-                                restaurantDetail={restaurantDetail}
-                                foodItem={item.name_en}
-                                foodIngredients={item.description_en}
-                                foodPrice={item.price}
-                                foodImage={item.image}
-                                id={item.id}
-                                restaurant_id={item.restaurant_id}
-                                showSubTractButton={
-                                  item.has_extras === false &&
-                                  item.has_variants === false &&
-                                  item.has_options === false
-                                }
-                                setOpenModal={setOpenModal}
-                                setSelectedItemToDeliver={
-                                  setSelectedItemToDeliver
-                                }
-                                setNotDeliver={setNotDeliver}
-                                setRestaurantOpen={setRestaurantOpen}
-                                setOpenAddressPopup={setOpenAddressPopup}
-                                setRestaurantIsOpen={setRestaurantIsOpen}
-                              />
-                            );
-                          }
-                        })}
-                      </>
-                    );
-                  })}
+                      return (
+                        <>
+                          <div
+                            id={index + 1}
+                            className="card_list_title"
+                            style={{
+                              marginTop: index == 0 ? "-3px" : "16px",
+                              height: "27px",
+                            }}
+                          >
+                            {val?.name_en}
+                          </div>{" "}
+                          {categoriesWiseList[val?.id]?.map((item, index) => {
+                            if (item.branch_status) {
+                              return (
+                                <MenuCard
+                                  allData={item}
+                                  key={index}
+                                  locationDeliver={locationDeliver}
+                                  resturantId={resturantId}
+                                  restaurantBranchHours={restaurantBranchHours}
+                                  restaurantDetail={restaurantDetail}
+                                  foodItem={item.name_en}
+                                  foodIngredients={item.description_en}
+                                  foodPrice={item.price}
+                                  foodImage={item.image}
+                                  id={item.id}
+                                  restaurant_id={item.restaurant_id}
+                                  showSubTractButton={
+                                    item.has_extras === false &&
+                                    item.has_variants === false &&
+                                    item.has_options === false
+                                  }
+                                  setOpenModal={setOpenModal}
+                                  setSelectedItemToDeliver={
+                                    setSelectedItemToDeliver
+                                  }
+                                  setNotDeliver={setNotDeliver}
+                                  setRestaurantOpen={setRestaurantOpen}
+                                  setOpenAddressPopup={setOpenAddressPopup}
+                                  setRestaurantIsOpen={setRestaurantIsOpen}
+                                />
+                              );
+                            }
+                          })}
+                        </>
+                      );
+                    })}
                 </Stack>
               )}
             </>

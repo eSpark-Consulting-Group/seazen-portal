@@ -133,7 +133,8 @@ export const returnMatchedDataToAddAddress = (
           );
 
           if (
-            addressLongNameNormalized === areaNameNormalized &&
+            (addressLongNameNormalized === areaNameNormalized ||
+              addressLongNameNormalized === area.name_ar) &&
             branch.restaurant_id === area.restaurant_id
           ) {
             matchingArea = {

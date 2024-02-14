@@ -61,7 +61,7 @@ import "./style.css";
 
 const containerStyle = {
   width: "100%",
-  height: "90vh",
+  height: "calc(100vh - 170px)",
   marginTop: "0",
 };
 
@@ -76,9 +76,13 @@ const defaultMapOptions = {
   clickableIcons: false,
   draggable: true,
   panControl: true,
-  zoomControl: false,
+  zoomControl: true,
+  zoomControlOptions: {
+    position: window.google && window.google.maps.ControlPosition.RIGHT_BOTTOM,
+  },
   overviewMapControl: true,
-  // scrollwheel: false,
+  scrollwheel: false,
+  gestureHandling: "greedy",
 };
 
 const lib = ["places"];
@@ -106,6 +110,7 @@ function LocationPage() {
     // eslint-disable-next-line no-undef
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     libraries: lib,
+    language: "en",
   });
 
   const [isDeliveryZones, setIsDeliveryZones] = useState(false);
@@ -977,6 +982,7 @@ function LocationPage() {
                 className="autocomplete"
                 onLoad={onLoad}
                 onPlaceChanged={onPlaceChanged}
+                // bounds={kuwaitBounds} // Set bounds to Kuwait
               >
                 <div className="dp-fl">
                   <input
@@ -1087,7 +1093,9 @@ function LocationPage() {
               notOperational && (
                 <Box className="info-window-box">
                   <Typography variant="h5">
-                    {localStorage?.getItem("restaurantName") !== null
+                    {location?.state?.restaurantName !== undefined
+                      ? location?.state?.restaurantName
+                      : localStorage?.getItem("restaurantName") !== null
                       ? `${localStorage?.getItem("restaurantName")} dosen't`
                       : "We don't"}{" "}
                     deliver to this area
@@ -1111,8 +1119,9 @@ function LocationPage() {
           position: "absolute",
           bottom: 0,
           width: "100%",
-          p: 3,
+          p: "18px 24px 24px",
           backgroundColor: "background.paper",
+          maxHeight: "170px",
         }}
       >
         <Typography fontWeight="semi-bold" gutterBottom>
