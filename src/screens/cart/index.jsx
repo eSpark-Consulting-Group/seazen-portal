@@ -123,7 +123,7 @@ function CartPage() {
   const [deliveryPrice, setDeliveryPrice] = React.useState("0");
   const [promoCode, setPromoCode] = React.useState("orderseazen25");
   const [promoDiscount, setPromoDiscount] = React.useState({});
-  const [paymentMethod, setPaymentMethod] = React.useState("CASH");
+  const [paymentMethod, setPaymentMethod] = React.useState("KNET");
   // const [discount, setDiscount] = React.useState(0);
   // const DISCOUNT_AMOUNT = Number(0).toFixed(3);
   // const DELIVERY_CHARGE = Number(0).toFixed(3);
@@ -1414,21 +1414,21 @@ function CartPage() {
               <Typography variant="body1">{`KWD ${getGrandTotal()}`}</Typography>
             </Stack>
 
-            <Stack direction="row" justifyContent="space-between" spacing={1}>
+            <Stack direction="row" justifyContent="space-around" spacing={1}>
               {[
-                {
-                  icon: (
-                    <SvgIcon
-                      fontSize="large"
-                      inheritViewBox
-                      component={DollarIcon}
-                      sx={{
-                        mb: 1,
-                      }}
-                    />
-                  ),
-                  name: "CASH",
-                },
+                // {
+                //   icon: (
+                //     <SvgIcon
+                //       fontSize="large"
+                //       inheritViewBox
+                //       component={DollarIcon}
+                //       sx={{
+                //         mb: 1,
+                //       }}
+                //     />
+                //   ),
+                //   name: "CASH",
+                // },
                 {
                   icon: (
                     <SvgIcon
