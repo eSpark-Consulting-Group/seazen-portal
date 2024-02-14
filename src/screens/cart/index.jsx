@@ -329,6 +329,8 @@ function CartPage() {
     }
   };
 
+  console.log(cart);
+
   const checkoutHandler = (event) => {
     let pushedWithDistance = [];
 
@@ -389,7 +391,7 @@ function CartPage() {
 
                       const data = {
                         ...checkoutData,
-                        branch_id: forCurrent[i].id,
+                        branch_id: cart[0].branch_id,
                         discount_price: getDiscountAmount(),
                       };
 
@@ -423,7 +425,7 @@ function CartPage() {
                 } else {
                   const data = {
                     ...checkoutData,
-                    branch_id: forCurrent[i].id,
+                    branch_id: cart[0].branch_id,
                     discount_price: getDiscountAmount(),
                   };
 
