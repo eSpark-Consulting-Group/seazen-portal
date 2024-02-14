@@ -501,7 +501,11 @@ const AddressForm = () => {
                 });
               } else {
                 navigate(
-                  `${paths.menu}/restaurant/${location?.state?.selectedAddress?.restaurant_id}/delivery`
+                  `${paths.menu}/restaurant/${
+                    restaurantID === null
+                      ? location?.state?.selectedAddress?.restaurant_id
+                      : restaurantID
+                  }/delivery`
                 );
               }
             } else if (location?.state?.fromHome !== undefined) {
