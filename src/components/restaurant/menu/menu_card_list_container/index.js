@@ -295,10 +295,10 @@ const MenuCardListContainer = ({
   };
 
   useEffect(() => {
-    if (branchHours?.length === 0) {
+    if (id) {
       fetchBranchHours();
     }
-  }, [branchHours]);
+  }, [id]);
 
   useEffect(() => {
     let pushedWithDistance = [];

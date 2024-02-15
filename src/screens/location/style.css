@@ -306,3 +306,9 @@
     bottom: 23%;
   }
 }
+
+@media screen and (max-height: 700px) {
+  .recenter-div {
+    bottom: 28%;
+  }
+}

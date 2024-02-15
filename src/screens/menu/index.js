@@ -237,10 +237,10 @@ const Menu = () => {
   });
 
   useEffect(() => {
-    if (restaurantDetail?.main_big_image === undefined) {
+    if (restaurant_id !== null) {
       restaurantDetails();
     }
-  }, [country]);
+  }, [country, restaurant_id]);
 
   useEffect(() => {
     if (location?.state?.addFromDetail === undefined) {

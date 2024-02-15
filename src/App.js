@@ -11,9 +11,11 @@ import RouteProvider from "./routes/routes";
 
 import countryList from "./api/common/getAllCountries";
 import getAllArea from "./api/address/areas";
+import getAllRestaurants from "./api/home/getAllRestaurants";
 
 import { getAreas } from "./store/reducers/addressSlice";
 import { addCountry, allCountries } from "./store/reducers/authSlice";
+import { getResturants } from "./store/reducers/resturantsSlice";
 
 // import { savingAreaIdForMatchingArea } from "./utils/checkOperationalArea";
 import { flattenArray } from "./utils/getAddress";
@@ -37,7 +39,7 @@ function App() {
   const restaurantData = useSelector(
     (state) => state.resturants.resturantsData
   );
-  const toLoad = useSelector((state) => state.toLoad.toLoad);
+  // const toLoad = useSelector((state) => state.toLoad.toLoad);
 
   const dispatch = useDispatch();
 
@@ -58,6 +60,12 @@ function App() {
 
         // if (restaurant_id !== null || branch_id !== null) {
         fetchAllAreas();
+        if (
+          location.pathname !== "/" &&
+          location.pathname.includes("restaurant")
+        ) {
+          fetchRestaurants(countryByCode);
+        }
         // }
       })
       .catch((err) => {
@@ -66,11 +74,22 @@ function App() {
   };
 
   const fetchAllAreas = () => {
+    console.log("second");
     getAllArea()
       .then((res) => {
         const flattenedArray = flattenArray(res.data);
 
         dispatch(getAreas(flattenedArray));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const fetchRestaurants = (countryByCode) => {
+    getAllRestaurants(countryByCode?.id)
+      .then((res) => {
+        dispatch(getResturants(res?.data));
       })
       .catch((err) => {
         console.log(err);
@@ -94,6 +113,9 @@ function App() {
 
   useEffect(() => {
     setPageTitle();
+  }, [currentURL, restaurantData, restaurantId]);
+
+  useEffect(() => {
     // Additional logic for page-specific CSS
     if (
       currentURL.pathname === "/menu/restaurant/1/delivery" ||
