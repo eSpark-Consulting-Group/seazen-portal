@@ -39,6 +39,7 @@ import LocationRed from "../../assets/icons/location-red.png";
 
 import getAllArea from "../../api/address/areas";
 import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
+import getAllRestaurants from "../../api/home/getAllRestaurants";
 
 // import { savingAreaIdForMatchingArea } from "../../utils/checkOperationalArea";
 // import { removeDiacritics } from "./stringCheck";
@@ -46,6 +47,7 @@ import { flattenArray } from "../../utils/getAddress";
 import { returnMatchedDataToAddAddress } from "../../utils/checkNearestDistance";
 
 import { getAreas } from "../../store/reducers/addressSlice";
+import { getResturants } from "../../store/reducers/resturantsSlice";
 
 import { paths } from "../../routes/paths";
 
@@ -82,7 +84,8 @@ const defaultMapOptions = {
   },
   overviewMapControl: true,
   scrollwheel: false,
-  gestureHandling: "greedy",
+  gestureHandling: "cooperative", // Disable double click zoom
+  disableDoubleClickZoom: true,
 };
 
 const lib = ["places"];
@@ -104,6 +107,7 @@ function LocationPage() {
   // const restaurantID = JSON.parse(localStorage.getItem("restaurantID"));
   // const branchId = JSON.parse(localStorage.getItem("branchId"));
   const token = localStorage.getItem("token");
+  const country_id = JSON.parse(localStorage.getItem("country"))?.id;
 
   const { isLoaded } = useLoadScript({
     id: "google-map-script",
@@ -115,6 +119,22 @@ function LocationPage() {
 
   const [isDeliveryZones, setIsDeliveryZones] = useState(false);
   const [autocomplete, setAutocomplete] = useState(null);
+
+  useEffect(() => {
+    if (resturantsData?.length === 0) {
+      fetchRestaurants(country_id);
+    }
+  }, []);
+
+  const fetchRestaurants = (countryId) => {
+    getAllRestaurants(countryId)
+      .then((res) => {
+        dispatch(getResturants(res?.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   // const { refetch: emptyState } = useQuery({
   //   queryKey: [GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY, branchHours.length === 0],
@@ -666,21 +686,21 @@ function LocationPage() {
   useEffect(() => {
     if (token === null) {
       if (selectedAddress?.area_id) {
-        const restaurantName = resturantsData.find(
-          (item) => item.id === selectedAddress.restaurant_id
+        const restaurantName = resturantsData?.find(
+          (item) => item?.id === selectedAddress?.restaurant_id
         );
 
         const storeAddress = {
           ...selectedAddress,
           addNewAddress: true,
-          restaurantName: restaurantName.name_en,
-          restaurantId: selectedAddress.restaurant_id,
+          restaurantName: restaurantName?.name_en,
+          restaurantId: selectedAddress?.restaurant_id,
         };
 
         sessionStorage.setItem("storeAddress", JSON.stringify(storeAddress));
       }
     }
-  }, [token, selectedAddress]);
+  }, [token, selectedAddress, resturantsData]);
 
   const addLocationGuest = (address) => {
     localStorage.setItem("location", JSON.stringify(address));
@@ -689,11 +709,9 @@ function LocationPage() {
   const confirmLocation = () => {
     setdisableButton(true);
 
-    const restaurantName = resturantsData.find(
-      (item) => item.id === selectedAddress.restaurant_id
+    const restaurantName = resturantsData?.find(
+      (item) => item?.id === selectedAddress?.restaurant_id
     );
-
-    const country_id = JSON.parse(localStorage.getItem("country"))?.id;
 
     const object = {
       country_id,
@@ -715,11 +733,11 @@ function LocationPage() {
         if (token === null) {
           const fullAddress = {
             address,
-            lat: center.lat,
-            lng: center.lng,
-            areaName: selectedAddress.name_en,
-            restaurantId: selectedAddress.restaurant_id,
-            restaurantName: restaurantName.name_en,
+            lat: center?.lat,
+            lng: center?.lng,
+            areaName: selectedAddress?.name_en,
+            restaurantId: selectedAddress?.restaurant_id,
+            restaurantName: restaurantName?.name_en,
           };
 
           addLocationGuest(fullAddress);

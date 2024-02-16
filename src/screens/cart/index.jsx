@@ -145,6 +145,7 @@ function CartPage() {
   const [maxTime, setMaxTime] = useState(dayjs());
   const [isActive, setIsActive] = useState(false);
   const [addDefaultCode, setAddDefaultCode] = useState(false);
+  const [isPaymentDone, setIsPaymentDone] = useState(false);
 
   // Function to handle closing the dialog
   const handleDialogClose = () => {
@@ -329,10 +330,10 @@ function CartPage() {
     }
   };
 
-  console.log(cart);
-
   const checkoutHandler = (event) => {
     let pushedWithDistance = [];
+
+    setIsPaymentDone(true);
 
     event.preventDefault();
     setIsActive(true);
@@ -408,6 +409,7 @@ function CartPage() {
                             //     toastList.add(id);
                             //   }
                           } else {
+                            setIsPaymentDone(false);
                             const checkoutRedirectUrl =
                               res.data?.payment_methods[0].redirect_url;
                             window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
@@ -440,6 +442,7 @@ function CartPage() {
                         //     toastList.add(id);
                         //   }
                       } else {
+                        setIsPaymentDone(false);
                         const checkoutRedirectUrl =
                           res.data?.payment_methods[0].redirect_url;
                         window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
@@ -448,6 +451,8 @@ function CartPage() {
                     .catch((err) => {
                       console.log(err);
                     });
+
+                  break;
                 }
               } else {
                 setNotDeliver(true);
@@ -688,12 +693,13 @@ function CartPage() {
       selectedAdd !== null && selectedAdd.delivery_charges !== undefined
         ? Number(selectedAdd?.delivery_charges)
         : 0,
-    promo_code: "Test1",
+    promo_code: promoCode,
     comments: specialIns,
     delivery_schedule: {
       date: pickDate?.split("-")[0],
       time: pickTime,
     },
+    // schedul_later: isAsap === "true" ? false : true,
   };
 
   const handlerFunc = (ampm, date) => {
@@ -1496,6 +1502,7 @@ function CartPage() {
             size="large"
             className={isActive ? "pay-now-button" : ""}
             onTouchStart={(e) => checkoutHandler(e)}
+            disabled={isPaymentDone}
           >
             Pay Now
           </Button>

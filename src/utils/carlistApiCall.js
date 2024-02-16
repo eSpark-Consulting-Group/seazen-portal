@@ -77,7 +77,13 @@ export const cartListApiHit = (
     });
 };
 
-export const cartListWithQuery = (branchHours, dispatch, addToCart, res) => {
+export const cartListWithQuery = (
+  branchHours,
+  dispatch,
+  addToCart,
+  res,
+  cart
+) => {
   res.data.map((val) => {
     if (branchHours?.length) {
       const findRestaurant = branchHours?.find(
@@ -137,7 +143,9 @@ export const cartListWithQuery = (branchHours, dispatch, addToCart, res) => {
       obj.has_variants === false && delete obj.has_variants;
       obj.variants === null && delete obj.variants;
 
-      dispatch(addToCart(obj));
+      if (cart?.length === 0) {
+        dispatch(addToCart(obj));
+      }
 
       sessionStorage.setItem("cartEmpty", true);
     }

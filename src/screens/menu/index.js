@@ -265,7 +265,7 @@ const Menu = () => {
       if (res.status === "Error") {
         sessionStorage.setItem("cartEmpty", true);
       } else {
-        cartListWithQuery(branchHours, dispatch, addToCart, res);
+        cartListWithQuery(branchHours, dispatch, addToCart, res, cart);
       }
     },
     enabled:

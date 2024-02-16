@@ -74,7 +74,6 @@ function App() {
   };
 
   const fetchAllAreas = () => {
-    console.log("second");
     getAllArea()
       .then((res) => {
         const flattenedArray = flattenArray(res.data);
