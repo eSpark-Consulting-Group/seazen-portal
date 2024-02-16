@@ -101,11 +101,18 @@ function App() {
 
   const setPageTitle = () => {
     let title = "The Delivery Service for your favorite Restaurant";
-    if (currentURL.pathname.includes("restaurant") && restaurantData?.length) {
+
+    if (
+      currentURL.pathname.includes("restaurant") &&
+      restaurantData?.length !== 0 &&
+      restaurantId !== null
+    ) {
       title =
         restaurantData?.find((val) => val.id == restaurantId)?.name_en +
         " " +
         "Menu";
+    } else {
+      title = "The Delivery Service for your favorite Restaurant";
     }
     document.title = title;
   };

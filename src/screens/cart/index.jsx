@@ -55,11 +55,13 @@ import getBranchesAndHours, {
 import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHours";
 // import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import deliveryPriceApi from "../../api/common/getDeliveryCharges";
+import getAllRestaurants from "../../api/home/getAllRestaurants";
 
 import { addComment, addToCart } from "../../store/reducers/cartSlice";
 // import { setThemeColor } from "../../store/reducers/themeSlice";
 import {
   getBranchHours,
+  getResturants,
   // getNearByRest,
 } from "../../store/reducers/resturantsSlice";
 
@@ -82,6 +84,7 @@ function CartPage() {
   const [searchParams] = useSearchParams();
 
   const token = localStorage.getItem("token");
+  const countryId = JSON.stringify(localStorage.getItem("country"));
   const restaurantId = localStorage.getItem("restaurantID");
   // const brId = localStorage.getItem("branchId");
 
@@ -97,15 +100,31 @@ function CartPage() {
 
   useEffect(() => {
     if (cart?.length > 0) {
-      const findrestaurantName = resturantsData.find(
+      const findrestaurantName = resturantsData?.find(
         (item) => item.id === cart[0].restaurant_id
       );
 
       localStorage.setItem("branchId", cart[0].branch_id);
       localStorage.setItem("restaurantID", cart[0].restaurant_id);
-      localStorage.setItem("restaurantName", findrestaurantName.name_en);
+      localStorage.setItem("restaurantName", findrestaurantName?.name_en);
     }
-  }, [cart, localStorage, resturantsData]);
+  }, [cart, resturantsData]);
+
+  useEffect(() => {
+    if (resturantsData?.length === 0) {
+      fetchRestaurants();
+    }
+  }, [resturantsData]);
+
+  const fetchRestaurants = () => {
+    getAllRestaurants(countryId?.id)
+      .then((res) => {
+        dispatch(getResturants(res?.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const pickDate = localStorage.getItem("pickDate");
   const isAsap = localStorage.getItem("isAsap");
@@ -333,11 +352,10 @@ function CartPage() {
   const checkoutHandler = (event) => {
     let pushedWithDistance = [];
 
-    setIsPaymentDone(true);
-
     event.preventDefault();
     setIsActive(true);
     setUserTrusted(true);
+    setIsPaymentDone(true);
     localStorage.setItem("redirectPermission", "allowed");
 
     const selectedAddress = selectedAdd;
@@ -363,6 +381,7 @@ function CartPage() {
 
         if (distance > 50) {
           setNotDeliver(true);
+          setIsPaymentDone(false);
         } else {
           if (paymentMethod === "KNET") {
             const filterRestaurant = branchHours.filter(
@@ -371,6 +390,7 @@ function CartPage() {
 
             if (filterRestaurant?.length === 0) {
               setNotDeliver(true);
+              setIsPaymentDone(false);
             } else {
               if (selectedAddress?.name_en) {
                 setNotDeliver(false);
@@ -399,6 +419,8 @@ function CartPage() {
                       checkout(data, token)
                         .then((res) => {
                           if (res?.success === "error") {
+                            setIsPaymentDone(false);
+
                             //   const parsedError = res?.message
                             //     ?.split(":")[1]
                             //     ?.trim();
@@ -410,18 +432,21 @@ function CartPage() {
                             //   }
                           } else {
                             setIsPaymentDone(false);
+
                             const checkoutRedirectUrl =
                               res.data?.payment_methods[0].redirect_url;
                             window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
                           }
                         })
                         .catch((err) => {
+                          setIsPaymentDone(false);
                           console.log(err);
                         });
 
                       break;
                     } else if (findStatus[0].openingStatus === "Close") {
                       setRestaurantOpen(true);
+                      setIsPaymentDone(false);
                     }
                   }
                 } else {
@@ -434,6 +459,8 @@ function CartPage() {
                   checkout(data, token)
                     .then((res) => {
                       if (res?.success === "error") {
+                        setIsPaymentDone(false);
+
                         //   const parsedError = res?.message?.split(":")[1]?.trim();
                         //   if (toastList.size < MAX_TOAST) {
                         //     const id = toast.error(parsedError, {
@@ -443,12 +470,14 @@ function CartPage() {
                         //   }
                       } else {
                         setIsPaymentDone(false);
+
                         const checkoutRedirectUrl =
                           res.data?.payment_methods[0].redirect_url;
                         window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
                       }
                     })
                     .catch((err) => {
+                      setIsPaymentDone(false);
                       console.log(err);
                     });
 
@@ -456,6 +485,7 @@ function CartPage() {
                 }
               } else {
                 setNotDeliver(true);
+                setIsPaymentDone(false);
               }
             }
           }
@@ -699,7 +729,7 @@ function CartPage() {
       date: pickDate?.split("-")[0],
       time: pickTime,
     },
-    // schedul_later: isAsap === "true" ? false : true,
+    schedule_later: isAsap === "true" ? "0" : "1",
   };
 
   const handlerFunc = (ampm, date) => {
