@@ -613,18 +613,18 @@ const AddressForm = () => {
         checkNumberLength(address.mobile_number) &&
         isArabicCountryMCC(address.country_code)
       ) {
-        // apiCallFunc();
+        apiCallFunc();
       }
     } else {
-      // apiCallFunc();
+      apiCallFunc();
     }
   };
 
   const apiCallFunc = () => {
     if (location?.state?.edit) {
-      // updateApiCall();
+      updateApiCall();
     } else {
-      // apiCall();
+      apiCall();
     }
   };
 
