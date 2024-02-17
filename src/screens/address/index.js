@@ -141,7 +141,7 @@ const AddressForm = () => {
     floor: "",
     apartment_no: "",
     company_name: "",
-    country_code: "",
+    country_code: "+965",
     mobile_number: "",
     address_type: addressType,
     latitude: location?.state?.latlng.lat?.toString(),
@@ -194,7 +194,7 @@ const AddressForm = () => {
         company_name: state.company_name ? state.company_name : "",
         country_code: state.phone_country_code
           ? parseInt(state.phone_country_code)
-          : "",
+          : "+965",
         mobile_number: state.phone_no ? parseInt(state.phone_no) : "",
         address_type: state?.address_type
           ? state.address_type.toLowerCase()
@@ -613,18 +613,18 @@ const AddressForm = () => {
         checkNumberLength(address.mobile_number) &&
         isArabicCountryMCC(address.country_code)
       ) {
-        apiCallFunc();
+        // apiCallFunc();
       }
     } else {
-      apiCallFunc();
+      // apiCallFunc();
     }
   };
 
   const apiCallFunc = () => {
     if (location?.state?.edit) {
-      updateApiCall();
+      // updateApiCall();
     } else {
-      apiCall();
+      // apiCall();
     }
   };
 
