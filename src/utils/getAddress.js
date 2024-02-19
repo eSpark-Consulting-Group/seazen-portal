@@ -1,10 +1,12 @@
-import { RequestType, geocode, setKey } from "react-geocode";
+import { RequestType, geocode, setKey, setLanguage } from "react-geocode";
 
 export const getFullAddress = (latitude, longitude, setFullAddress) => {
   setKey(process.env.REACT_APP_GOOGLE_API_KEY);
+  setLanguage("en");
 
   geocode(RequestType.LATLNG, `${latitude},${longitude}`, {
     enable_address_descriptor: true,
+    language: "en",
   })
     .then(({ results }) => {
       const address = results[0].formatted_address;

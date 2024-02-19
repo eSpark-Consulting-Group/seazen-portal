@@ -11,6 +11,7 @@ const API_ENDPOINTS = {
       return `/restaurant/${restaurantId}/branches?language=${language}`;
     },
     GET_BRANCH_BY_AREA: "/find-branch-by-delivery-area",
+    GET_BRANCH_BY_AREA_ID: "/branch-id-from-delivery-areas",
   },
   USER: {
     EMAIL_LOGIN: "/email-login",

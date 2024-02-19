@@ -22,7 +22,8 @@ import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHo
 import countryList from "../../api/common/getAllCountries";
 import cartList from "../../api/cart/cartList";
 import getAllArea from "../../api/address/areas";
-import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
+// import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
+import getBranchByAreaId from "../../api/restaurant/branches/getBranchIdBasedOnAreaId";
 
 import { addCountry } from "../../store/reducers/authSlice";
 import { addToCart } from "../../store/reducers/cartSlice";
@@ -31,7 +32,7 @@ import {
   removeCategoryItemList,
   removeCategoryList,
   removeResturantsDetails,
-  setBranchID,
+  // setBranchID,
 } from "../../store/reducers/resturantsSlice";
 import { getAreas } from "../../store/reducers/addressSlice";
 import { addSelectedAddress } from "../../store/reducers/userLocationSlice";
@@ -281,22 +282,28 @@ const Home = () => {
   };
 
   const onChooseFullAddress = (item) => {
-    if (item?.delivery_charge_area_info.id) {
-      const object = {
-        country_id: JSON.parse(localStorage.getItem("country"))?.id,
-        delivery_charge_area_id: item?.delivery_charge_area_info.id,
-      };
+    // if (item?.delivery_charge_area_info.id) {
+    // const object = {
+    //   country_id: JSON.parse(localStorage.getItem("country"))?.id,
+    //   delivery_charge_area_id: item?.delivery_charge_area_info.id,
+    // };
+    // getBranchByArea(cart[0]?.restaurant_id, object, dispatch)
+    //   .then((res) => {
+    //     if (res?.data?.length === 0) {
+    //       getBranchIdNearToLocation();
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    // }
 
-      getBranchByArea(cart[0]?.restaurant_id, object, dispatch)
-        .then((res) => {
-          if (res?.data?.length === 0) {
-            getBranchIdNearToLocation();
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    getBranchByAreaId(
+      cart[0]?.restaurant_id,
+      JSON.parse(localStorage.getItem("country"))?.id,
+      item?.delivery_charge_area_name_en,
+      dispatch
+    );
 
     selectChooseAddress(
       item,
@@ -312,55 +319,55 @@ const Home = () => {
     );
   };
 
-  const getBranchIdNearToLocation = () => {
-    const pushedDistanceWithDetail = [];
+  // const getBranchIdNearToLocation = () => {
+  //   const pushedDistanceWithDetail = [];
 
-    const filterBranch = branchHours?.data?.filter(
-      (rest) => rest.restaurant_id === cart[0]?.restaurant_id
-    );
+  //   const filterBranch = branchHours?.data?.filter(
+  //     (rest) => rest.restaurant_id === cart[0]?.restaurant_id
+  //   );
 
-    let fromLocation;
-    if (userSelected === null && userLocation !== null) {
-      fromLocation = userLocation;
-    } else if (userSelected !== null && userLocation !== null) {
-      fromLocation = userSelected;
-    }
+  //   let fromLocation;
+  //   if (userSelected === null && userLocation !== null) {
+  //     fromLocation = userLocation;
+  //   } else if (userSelected !== null && userLocation !== null) {
+  //     fromLocation = userSelected;
+  //   }
 
-    if (branchHours?.data.length && filterBranch?.length) {
-      for (const filtBranch of filterBranch) {
-        const distance = getDistanceFromLatLonInKm(
-          +filtBranch?.latitude,
-          +filtBranch?.longitude,
-          fromLocation?.lat || 29.3140728,
-          fromLocation?.lng || 47.68022
-        );
+  //   if (branchHours?.data.length && filterBranch?.length) {
+  //     for (const filtBranch of filterBranch) {
+  //       const distance = getDistanceFromLatLonInKm(
+  //         +filtBranch?.latitude,
+  //         +filtBranch?.longitude,
+  //         fromLocation?.lat || 29.3140728,
+  //         fromLocation?.lng || 47.68022
+  //       );
 
-        if (distance < 50) {
-          pushedDistanceWithDetail.push({
-            ...filtBranch,
-            distance: distance,
-          });
+  //       if (distance < 50) {
+  //         pushedDistanceWithDetail.push({
+  //           ...filtBranch,
+  //           distance: distance,
+  //         });
 
-          setDistancesLessThan50(pushedDistanceWithDetail);
-        }
-      }
-    }
-  };
+  //         setDistancesLessThan50(pushedDistanceWithDetail);
+  //       }
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    // Find the smallest distance and associated location
-    const smallestDistance = Math.min(
-      ...distancesLessThan50.map((item) => item.distance)
-    );
-    const smallestDistanceLocation = distancesLessThan50.find(
-      (item) => item.distance === smallestDistance
-    );
+  // useEffect(() => {
+  //   // Find the smallest distance and associated location
+  //   const smallestDistance = Math.min(
+  //     ...distancesLessThan50.map((item) => item.distance)
+  //   );
+  //   const smallestDistanceLocation = distancesLessThan50.find(
+  //     (item) => item.distance === smallestDistance
+  //   );
 
-    if (smallestDistanceLocation) {
-      localStorage.setItem("branchId", smallestDistanceLocation.id);
-      dispatch(setBranchID(smallestDistanceLocation.id));
-    }
-  }, [localStorage, distancesLessThan50]);
+  //   if (smallestDistanceLocation) {
+  //     localStorage.setItem("branchId", smallestDistanceLocation.id);
+  //     dispatch(setBranchID(smallestDistanceLocation.id));
+  //   }
+  // }, [localStorage, distancesLessThan50]);
 
   useEffect(() => {
     let pushedWithDistance = [];

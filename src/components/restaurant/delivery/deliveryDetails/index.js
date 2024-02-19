@@ -41,7 +41,7 @@ import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../../../api/restaurant/branches/getBranchesAndHours";
 // import getNearByRestaurants from "../../../../api/restaurant/getNearByRestaurant";
-import getBranchByArea from "../../../../api/restaurant/branches/getBranchByArea";
+// import getBranchByArea from "../../../../api/restaurant/branches/getBranchByArea";
 import getListItemByCategory from "../../../../api/restaurant/getListItemsByCategory";
 import getItemCategoryList from "../../../../api/restaurant/getItemCategoryList";
 
@@ -54,7 +54,7 @@ import {
   getCategoryItemList,
   getCategoryList,
   // getNearByRest,
-  setBranchID,
+  // setBranchID,
   toggleCategoryListLoading,
 } from "../../../../store/reducers/resturantsSlice";
 import { addSelectedAddress } from "../../../../store/reducers/userLocationSlice";
@@ -62,6 +62,7 @@ import { addSelectedAddress } from "../../../../store/reducers/userLocationSlice
 import { paths } from "../../../../routes/paths";
 
 import "./style.css";
+import getBranchByAreaId from "../../../../api/restaurant/branches/getBranchIdBasedOnAreaId";
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
@@ -148,7 +149,7 @@ const DeliveryDetails = (props) => {
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
   const [disableMenu, setDisableMenu] = useState(false);
-  const [distancesLessThan50, setDistancesLessThan50] = useState([]);
+  // const [distancesLessThan50, setDistancesLessThan50] = useState([]);
   const [restName, setRestName] = useState("");
 
   const { id: restaurant_id } = useParams();
@@ -444,77 +445,77 @@ const DeliveryDetails = (props) => {
     }
   }, [fullAddress]);
 
-  const getBranchIdNearToLocation = () => {
-    const pushedDistanceWithDetail = [];
+  // const getBranchIdNearToLocation = () => {
+  //   const pushedDistanceWithDetail = [];
 
-    if (branchesAndHoursResponse?.length) {
-      for (const branchData of branchesAndHoursResponse) {
-        const resLat = +branchData?.latitude;
-        const resLng = +branchData?.longitude;
+  //   if (branchesAndHoursResponse?.length) {
+  //     for (const branchData of branchesAndHoursResponse) {
+  //       const resLat = +branchData?.latitude;
+  //       const resLng = +branchData?.longitude;
 
-        let fromLocation;
-        if (selected === null && currentLocation !== null) {
-          fromLocation = currentLocation;
-        } else if (selected !== null && currentLocation !== null) {
-          fromLocation = selected;
-        }
+  //       let fromLocation;
+  //       if (selected === null && currentLocation !== null) {
+  //         fromLocation = currentLocation;
+  //       } else if (selected !== null && currentLocation !== null) {
+  //         fromLocation = selected;
+  //       }
 
-        if (fromLocation !== null && latlng === null) {
-          const distance = getDistanceFromLatLonInKm(
-            resLat,
-            resLng,
-            fromLocation?.lat || 29.3140728,
-            fromLocation?.lng || 47.68022
-          );
+  //       if (fromLocation !== null && latlng === null) {
+  //         const distance = getDistanceFromLatLonInKm(
+  //           resLat,
+  //           resLng,
+  //           fromLocation?.lat || 29.3140728,
+  //           fromLocation?.lng || 47.68022
+  //         );
 
-          if (distance < 50) {
-            pushedDistanceWithDetail.push({
-              ...branchData,
-              distance: distance,
-            });
+  //         if (distance < 50) {
+  //           pushedDistanceWithDetail.push({
+  //             ...branchData,
+  //             distance: distance,
+  //           });
 
-            setDistancesLessThan50(pushedDistanceWithDetail);
-          }
-        }
+  //           setDistancesLessThan50(pushedDistanceWithDetail);
+  //         }
+  //       }
 
-        if (fromLocation !== null && latlng !== null) {
-          const distance = getDistanceFromLatLonInKm(
-            resLat,
-            resLng,
-            fromLocation?.lat || 29.3140728,
-            fromLocation?.lng || 47.68022
-          );
+  //       if (fromLocation !== null && latlng !== null) {
+  //         const distance = getDistanceFromLatLonInKm(
+  //           resLat,
+  //           resLng,
+  //           fromLocation?.lat || 29.3140728,
+  //           fromLocation?.lng || 47.68022
+  //         );
 
-          if (distance < 50) {
-            pushedDistanceWithDetail.push({
-              ...branchData,
-              distance: distance,
-            });
+  //         if (distance < 50) {
+  //           pushedDistanceWithDetail.push({
+  //             ...branchData,
+  //             distance: distance,
+  //           });
 
-            setDistancesLessThan50(pushedDistanceWithDetail);
-          }
-        }
-      }
-    }
-  };
+  //           setDistancesLessThan50(pushedDistanceWithDetail);
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    // Find the smallest distance and associated location
-    const smallestDistance = Math.min(
-      ...distancesLessThan50.map((item) => item.distance)
-    );
-    const smallestDistanceLocation = distancesLessThan50.find(
-      (item) => item.distance === smallestDistance
-    );
+  // useEffect(() => {
+  //   // Find the smallest distance and associated location
+  //   const smallestDistance = Math.min(
+  //     ...distancesLessThan50.map((item) => item.distance)
+  //   );
+  //   const smallestDistanceLocation = distancesLessThan50.find(
+  //     (item) => item.distance === smallestDistance
+  //   );
 
-    if (smallestDistanceLocation) {
-      localStorage.setItem("branchId", smallestDistanceLocation.id);
-      dispatch(setBranchID(smallestDistanceLocation.id));
+  //   if (smallestDistanceLocation) {
+  //     localStorage.setItem("branchId", smallestDistanceLocation.id);
+  //     dispatch(setBranchID(smallestDistanceLocation.id));
 
-      fetchAllCategories();
-      fetchAllItems(smallestDistanceLocation?.id);
-    }
-  }, [localStorage, distancesLessThan50]);
+  //     fetchAllCategories();
+  //     fetchAllItems(smallestDistanceLocation?.id);
+  //   }
+  // }, [localStorage, distancesLessThan50]);
 
   const toggleDropdown = () => {
     setOpendropdown(true);
@@ -615,18 +616,30 @@ const DeliveryDetails = (props) => {
     const country_id = JSON.parse(localStorage.getItem("country"))?.id;
 
     if (!Array.isArray(address?.delivery_charge_area_info)) {
-      const object = {
-        country_id,
-        delivery_charge_area_id: address?.delivery_charge_area_info.id,
-      };
+      // const object = {
+      //   country_id,
+      //   delivery_charge_area_id: address?.delivery_charge_area_info.id,
+      // };
 
-      getBranchByArea(restaurant_id, object, dispatch)
+      getBranchByAreaId(
+        restaurant_id,
+        country_id,
+        address.delivery_charge_area_name_en,
+        dispatch
+      )
         .then((res) => {
+          if (Array.isArray(res.data)) {
+            setLocationDeliver(true);
+          }
+
           setDisableMenu(false);
           setOpendropdown(false);
 
           getUserAddress(address.latitude, address.longitude);
           setAddressID(address.id);
+
+          fetchAllCategories();
+          fetchAllItems(address?.delivery_charge_area_info?.branch_id);
 
           setDeliveryCharge(
             address?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
@@ -648,19 +661,25 @@ const DeliveryDetails = (props) => {
             address?.delivery_charge_area_info.id
           );
 
-          if (res?.data?.length === 0) {
-            getBranchIdNearToLocation();
-          } else {
-            fetchAllCategories();
-            fetchAllItems(res.data?.branch_id);
-          }
+          // if (res?.data?.length === 0) {
+          //   getBranchIdNearToLocation();
+          // } else {
+          //   fetchAllCategories();
+          //   fetchAllItems(res.data?.branch_id);
+          // }
 
           // fetchNearbyRestaurant(address.latitude, address.longitude);
         })
         .catch((err) => {
+          getUserAddress(address.latitude, address.longitude);
+          setAddressID(address.id);
+
           setDisableMenu(false);
+          setOpendropdown(false);
           console.log(err);
         });
+
+      // getBranchByArea(restaurant_id, object, dispatch)
     } else {
       getUserAddress(address.latitude, address.longitude);
       setAddressID(address.id);

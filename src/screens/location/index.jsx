@@ -6,7 +6,7 @@ import { GoogleMap, useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 // import { useQuery } from "@tanstack/react-query";
 
-import { setKey, geocode, RequestType } from "react-geocode";
+import { setKey, geocode, RequestType, setLanguage } from "react-geocode";
 
 // import usePlacesAutocomplete, {
 //   getGeocode,
@@ -38,8 +38,9 @@ import LocationGreen from "../../assets/icons/location-green.png";
 import LocationRed from "../../assets/icons/location-red.png";
 
 import getAllArea from "../../api/address/areas";
-import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
+// import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
 import getAllRestaurants from "../../api/home/getAllRestaurants";
+import getBranchByAreaId from "../../api/restaurant/branches/getBranchIdBasedOnAreaId";
 
 // import { savingAreaIdForMatchingArea } from "../../utils/checkOperationalArea";
 // import { removeDiacritics } from "./stringCheck";
@@ -426,8 +427,12 @@ function LocationPage() {
   const getAdd = async (latitude, longitude) => {
     // eslint-disable-next-line no-undef
     setKey(process.env.REACT_APP_GOOGLE_API_KEY);
+    setLanguage("en");
+    // setLocationType("RANGE_INTERPOLATED");
     geocode(RequestType.LATLNG, `${+latitude},${+longitude}`, {
       enable_address_descriptor: true,
+      language: "en",
+      // location_type: "RANGE_INTERPOLATED",
     })
       .then(({ results }) => {
         const address = results[0].formatted_address;
@@ -713,10 +718,10 @@ function LocationPage() {
       (item) => item?.id === selectedAddress?.restaurant_id
     );
 
-    const object = {
-      country_id,
-      delivery_charge_area_id: selectedAreaId,
-    };
+    // const object = {
+    //   country_id,
+    //   delivery_charge_area_id: selectedAreaId,
+    // };
 
     const filterAreas = allAreas?.filter(
       (area) => area?.restaurant_id === selectedAddress?.restaurant_id
@@ -726,8 +731,19 @@ function LocationPage() {
       dispatch(getAreas(filterAreas));
     }
 
-    getBranchByArea(selectedAddress.restaurant_id, object, dispatch)
+    getBranchByAreaId(
+      selectedAddress?.restaurant_id,
+      country_id,
+      selectedAddress?.name_en,
+      dispatch
+    )
       .then((res) => {
+        // getBranchByAreaId(
+        //   selectedAddress.restaurant_id,
+        //   country_id,
+        //   selectedAddress?.name_en,
+        //   dispatch
+        // )
         setdisableButton(false);
 
         if (token === null) {

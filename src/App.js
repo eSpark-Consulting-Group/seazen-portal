@@ -2,7 +2,7 @@ import React, { useEffect, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 
-import { setKey, geocode, RequestType } from "react-geocode";
+import { setKey, geocode, RequestType, setLanguage } from "react-geocode";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,7 +17,7 @@ import { getAreas } from "./store/reducers/addressSlice";
 import { addCountry, allCountries } from "./store/reducers/authSlice";
 import { getResturants } from "./store/reducers/resturantsSlice";
 
-// import { savingAreaIdForMatchingArea } from "./utils/checkOperationalArea";
+import { saveMatchedAreaName } from "./utils/checkOperationalArea";
 import { flattenArray } from "./utils/getAddress";
 
 import "./App.css";
@@ -29,10 +29,10 @@ const LazyChatScript = React.lazy(() =>
 function App() {
   const currentURL = useLocation();
 
-  const userLocation = localStorage.getItem("location");
+  // const userLocation = localStorage.getItem("location");
   const restaurantId = localStorage.getItem("restaurantID");
 
-  // const allAreas = useSelector((state) => state.address.allAreas);
+  const allAreas = useSelector((state) => state.address.allAreas);
   const countryCode = useSelector(
     (state) => state.auth.user.mobile_country_code
   );
@@ -146,50 +146,63 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (JSON.parse(userLocation) === null) {
-      // eslint-disable-next-line no-undef
-      setKey(process.env.REACT_APP_GOOGLE_API_KEY);
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            let addToStorage = {
-              lat: "",
-              lng: "",
-              address: "",
-            };
-            geocode(
-              RequestType.LATLNG,
-              `${position.coords.latitude},${position.coords.longitude}`,
-              {
-                enable_address_descriptor: true,
+    // if (JSON.parse(userLocation) === null) {
+    // eslint-disable-next-line no-undef
+    setKey(process.env.REACT_APP_GOOGLE_API_KEY);
+    setLanguage("en");
+    // setLocationType("APPROXIMATE");
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          let addToStorage = {
+            lat: "",
+            lng: "",
+            address: "",
+          };
+
+          geocode(
+            RequestType.LATLNG,
+            `${position.coords.latitude},${position.coords.longitude}`,
+            {
+              enable_address_descriptor: true,
+            }
+          )
+            .then(({ results }) => {
+              const address = results[0].formatted_address;
+              const lat = results[0].geometry.location.lat;
+              const lng = results[0].geometry.location.lng;
+
+              const localityComponents = results[0].address_components.filter(
+                (component) =>
+                  component.types.includes("locality") ||
+                  component.types.includes("sublocality_level_1") ||
+                  component.types.includes("sublocality") ||
+                  component.types.includes("natural_feature") ||
+                  component.types.includes("route") ||
+                  component.types.includes("neighborhood")
+              );
+
+              if (allAreas.length > 0) {
+                saveMatchedAreaName(localityComponents, allAreas);
               }
-            )
-              .then(({ results }) => {
-                const address = results[0].formatted_address;
-                const lat = results[0].geometry.location.lat;
-                const lng = results[0].geometry.location.lng;
 
-                // if (allAreas.length > 0) {
-                //   savingAreaIdForMatchingArea(results[0], allAreas);
-                // }
+              addToStorage = {
+                lat: lat,
+                lng: lng,
+                address: address,
+              };
 
-                addToStorage = {
-                  lat: lat,
-                  lng: lng,
-                  address: address,
-                };
-
-                localStorage.setItem("location", JSON.stringify(addToStorage));
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          },
-          () => {}
-        );
-      }
+              localStorage.setItem("location", JSON.stringify(addToStorage));
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        },
+        () => {}
+      );
     }
-  }, []);
+    // }
+  }, [allAreas]);
 
   return (
     <>

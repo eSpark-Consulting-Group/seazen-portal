@@ -29,22 +29,22 @@ import { DialogComponent } from "../../components/dialog/index.js";
 import SelectLocation from "../../components/dialog/selectLocation.js";
 import ReOrderCard from "../../components/ReOrderCard/index.jsx";
 
-import getRestaurantDetails, {
-  GET_RESTAURANT_DETAILS_QUERY_KEY,
-} from "../../api/restaurant/getRestaurantDetails";
+import getRestaurantDetails from // GET_RESTAURANT_DETAILS_QUERY_KEY,
+"../../api/restaurant/getRestaurantDetails";
 import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantBranchHours.js";
-import getBranchesAndHours from "../../api/restaurant/branches/getBranchesAndHours.js";
-import getBranchByArea from "../../api/restaurant/branches/getBranchByArea.js";
+// import getBranchesAndHours from "../../api/restaurant/branches/getBranchesAndHours.js";
+// import getBranchByArea from "../../api/restaurant/branches/getBranchByArea.js";
 import cartList from "../../api/cart/cartList.js";
 import getAllArea from "../../api/address/areas.js";
 import getAllAddress from "../../api/address/getAddress.js";
+import getBranchByAreaId from "../../api/restaurant/branches/getBranchIdBasedOnAreaId.js";
 
 import {
   getResturantsDetails,
-  removeBranchID,
-  setBranchID,
+  // removeBranchID,
+  // setBranchID,
 } from "../../store/reducers/resturantsSlice.js";
 import { setThemeColor } from "../../store/reducers/themeSlice.js";
 import { closeReorderModal } from "../../store/reducers/orderSlice.js";
@@ -99,6 +99,7 @@ const Menu = () => {
   const token = localStorage?.getItem("token");
   const restaurantID = localStorage?.getItem("restaurantID");
   const branchId = localStorage?.getItem("branchId");
+  const matchingArea = JSON.parse(localStorage?.getItem("matchingArea"));
 
   const [openModal, setOpenModal] = useState(false);
   const [notDeliver, setNotDeliver] = useState(false);
@@ -115,11 +116,11 @@ const Menu = () => {
   const [branchesAndHoursResponse, setBranchesAndHoursResponse] = useState();
   const [delivery_charges, setDeliveryCharge] = useState();
   const [delivery_time, setDeliveryTime] = useState();
-  const [minOrderAmount, setMinOrderAmount] = useState();
+  // const [minOrderAmount, setMinOrderAmount] = useState();
   const [name_en, setNameEn] = useState();
   const [restName, setRestName] = useState();
   const [orderAmFromDelivery, setOrderAmFromDelivery] = useState();
-  const [distancesLessThan50, setDistancesLessThan50] = useState([]);
+  // const [distancesLessThan50, setDistancesLessThan50] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchAllAreas = () => {
@@ -154,8 +155,27 @@ const Menu = () => {
     setIsLoading(true);
     getRestaurantDetails(restaurant_id, country?.id)
       .then((data) => {
-        setIsLoading(false);
         dispatch(getResturantsDetails(data.data));
+        if (matchingArea?.area_name_en !== undefined) {
+          setBranchIdByAreaSpecific(data.data.id);
+        } else {
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const setBranchIdByAreaSpecific = (restaurantId) => {
+    getBranchByAreaId(
+      restaurantId,
+      country?.id,
+      matchingArea?.area_name_en,
+      dispatch
+    )
+      .then((res) => {
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -196,32 +216,38 @@ const Menu = () => {
     }
 
     const country_id = JSON.parse(localStorage.getItem("country"))?.id;
-    const area_id = localStorage.getItem("area_id");
+    // const area_id = localStorage.getItem("area_id");
 
-    if (area_id !== null && country_id !== null && restaurant_id) {
-      const object = {
+    if (
+      country_id !== null &&
+      restaurant_id &&
+      matchingArea?.area_name_en !== undefined
+    ) {
+      // const object = {
+      //   country_id,
+      //   delivery_charge_area_id: area_id,
+      // };
+
+      getBranchByAreaId(
+        restaurant_id,
         country_id,
-        delivery_charge_area_id: area_id,
-      };
-
-      getBranchByArea(restaurant_id, object, dispatch).then((res) => {
-        if (res.data?.length === 0) {
-          if (branchesAndHoursResponse?.data?.length && restaurantDetail) {
-            getBranchIdNearToLocation();
-          }
-        }
-      });
-    } else {
-      if (branchesAndHoursResponse?.data?.length && restaurantDetail) {
-        getBranchIdNearToLocation();
-      }
+        matchingArea?.area_name_en,
+        dispatch
+      );
+      // getBranchByArea(restaurant_id, object, dispatch).then((res) => {
+      //   if (res.data?.length === 0) {
+      //     if (branchesAndHoursResponse?.data?.length && restaurantDetail) {
+      //       getBranchIdNearToLocation();
+      //     }
+      //   }
+      // });
     }
-  }, [
-    restaurant_id,
-    localStorage,
-    restaurantDetail,
-    branchesAndHoursResponse?.data,
-  ]);
+    // else {
+    //   if (branchesAndHoursResponse?.data?.length && restaurantDetail) {
+    //     getBranchIdNearToLocation();
+    //   }
+    // }
+  }, [restaurant_id, localStorage]);
 
   const {
     data: restaurantBranchHours,
@@ -315,20 +341,27 @@ const Menu = () => {
   };
 
   const chooseAddress = (item) => {
-    const object = {
-      country_id: JSON.parse(localStorage.getItem("country"))?.id,
-      delivery_charge_area_id: item?.delivery_charge_area_info.id,
-    };
+    // const object = {
+    //   country_id: JSON.parse(localStorage.getItem("country"))?.id,
+    //   delivery_charge_area_id: item?.delivery_charge_area_info.id,
+    // };
 
-    getBranchByArea(restaurant_id, object, dispatch)
-      .then((res) => {
-        if (res?.data?.length === 0) {
-          getBranchIdNearToLocation();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    getBranchByAreaId(
+      restaurant_id,
+      JSON.parse(localStorage.getItem("country"))?.id,
+      item.delivery_charge_area_name_en,
+      dispatch
+    );
+
+    // getBranchByArea(restaurant_id, object, dispatch)
+    //   .then((res) => {
+    //     if (res?.data?.length === 0) {
+    //       getBranchIdNearToLocation();
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
 
     selectChooseAddress(
       item,
@@ -476,68 +509,68 @@ const Menu = () => {
     }
   };
 
-  const getBranchIdNearToLocation = () => {
-    const pushedDistanceWithDetail = [];
+  // const getBranchIdNearToLocation = () => {
+  //   const pushedDistanceWithDetail = [];
 
-    const currentLocation = JSON.parse(localStorage.getItem("location"));
-    const selectedLoc = JSON.parse(localStorage.getItem("selected"));
-    if (restaurantDetail?.name_en) {
-      localStorage.setItem("restaurantName", restaurantDetail?.name_en);
-    }
+  //   const currentLocation = JSON.parse(localStorage.getItem("location"));
+  //   const selectedLoc = JSON.parse(localStorage.getItem("selected"));
+  //   if (restaurantDetail?.name_en) {
+  //     localStorage.setItem("restaurantName", restaurantDetail?.name_en);
+  //   }
 
-    const filterBranch = branchesAndHoursResponse?.data?.filter(
-      (rest) => rest.restaurant_id === restaurantDetail?.id
-    );
+  //   const filterBranch = branchesAndHoursResponse?.data?.filter(
+  //     (rest) => rest.restaurant_id === restaurantDetail?.id
+  //   );
 
-    let fromLocation;
-    if (selectedLoc === null && currentLocation !== null) {
-      fromLocation = currentLocation;
-    } else if (selectedLoc !== null && currentLocation !== null) {
-      fromLocation = selectedLoc;
-    }
+  //   let fromLocation;
+  //   if (selectedLoc === null && currentLocation !== null) {
+  //     fromLocation = currentLocation;
+  //   } else if (selectedLoc !== null && currentLocation !== null) {
+  //     fromLocation = selectedLoc;
+  //   }
 
-    if (branchesAndHoursResponse?.data.length && filterBranch?.length) {
-      for (const filtBranch of filterBranch) {
-        const resLat = +filtBranch?.latitude;
-        const resLng = +filtBranch?.longitude;
+  //   if (branchesAndHoursResponse?.data.length && filterBranch?.length) {
+  //     for (const filtBranch of filterBranch) {
+  //       const resLat = +filtBranch?.latitude;
+  //       const resLng = +filtBranch?.longitude;
 
-        const distance = getDistanceFromLatLonInKm(
-          resLat,
-          resLng,
-          fromLocation?.lat || 29.3140728,
-          fromLocation?.lng || 47.68022
-        );
+  //       const distance = getDistanceFromLatLonInKm(
+  //         resLat,
+  //         resLng,
+  //         fromLocation?.lat || 29.3140728,
+  //         fromLocation?.lng || 47.68022
+  //       );
 
-        // Check if any distance is less than 50
-        if (distance < 50) {
-          pushedDistanceWithDetail.push({
-            ...filtBranch,
-            distance: distance,
-          });
+  //       // Check if any distance is less than 50
+  //       if (distance < 50) {
+  //         pushedDistanceWithDetail.push({
+  //           ...filtBranch,
+  //           distance: distance,
+  //         });
 
-          setDistancesLessThan50(pushedDistanceWithDetail);
-        }
-      }
-    }
-  };
+  //         setDistancesLessThan50(pushedDistanceWithDetail);
+  //       }
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    // Find the smallest distance and associated location
-    const smallestDistance = Math.min(
-      ...distancesLessThan50.map((item) => item.distance)
-    );
-    const smallestDistanceLocation = distancesLessThan50.find(
-      (item) => item.distance === smallestDistance
-    );
+  // useEffect(() => {
+  //   // Find the smallest distance and associated location
+  //   const smallestDistance = Math.min(
+  //     ...distancesLessThan50.map((item) => item.distance)
+  //   );
+  //   const smallestDistanceLocation = distancesLessThan50.find(
+  //     (item) => item.distance === smallestDistance
+  //   );
 
-    if (smallestDistanceLocation) {
-      localStorage.setItem("branchId", smallestDistanceLocation.id);
-      dispatch(setBranchID(smallestDistanceLocation.id));
-    } else {
-      localStorage.removeItem("branchId");
-      dispatch(removeBranchID());
-    }
-  }, [localStorage, distancesLessThan50]);
+  //   if (smallestDistanceLocation) {
+  //     localStorage.setItem("branchId", smallestDistanceLocation.id);
+  //     dispatch(setBranchID(smallestDistanceLocation.id));
+  //   } else {
+  //     localStorage.removeItem("branchId");
+  //     dispatch(removeBranchID());
+  //   }
+  // }, [localStorage, distancesLessThan50]);
 
   return (
     <div className={isLoading ? "with-progress" : ""}>

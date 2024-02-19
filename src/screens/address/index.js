@@ -6,7 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import Select from "react-select";
 
-import { RequestType, geocode, setKey } from "react-geocode";
+import {
+  RequestType,
+  geocode,
+  setKey,
+  setLanguage,
+  setLocationType,
+} from "react-geocode";
 
 import { toast } from "react-toastify";
 
@@ -67,8 +73,12 @@ const AddressForm = () => {
       const getAdd = async (latitude, longitude) => {
         // eslint-disable-next-line no-undef
         setKey(process.env.REACT_APP_GOOGLE_API_KEY);
+        setLanguage("en");
+        // setLocationType("APPROXIMATE");
         geocode(RequestType.LATLNG, `${latitude},${longitude}`, {
           enable_address_descriptor: true,
+          language: "en",
+          // location_type: "APPROXIMATE",
         })
           .then(({ results }) => {
             const address = results[0].formatted_address;
