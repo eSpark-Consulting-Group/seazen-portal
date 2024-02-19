@@ -23,6 +23,7 @@ import { AddressesButton } from "../../components/adressList/addressesButton";
 import getAllAddress from "../../api/address/getAddress";
 import deleteAddressApiCall from "../../api/address/deleteAddress";
 // import getBranchByArea from "../../api/restaurant/branches/getBranchByArea";
+import getBranchByAreaId from "../../api/restaurant/branches/getBranchIdBasedOnAreaId";
 
 import { getAddress } from "../../store/reducers/addressSlice";
 import { addSelectedAddress } from "../../store/reducers/userLocationSlice";
@@ -36,6 +37,8 @@ import "./style.css";
 const App = () => {
   const isToken = localStorage.getItem("token");
   const userSelected = localStorage.getItem("selected");
+  const country = JSON.parse(localStorage.getItem("country"));
+  const restaurantID = localStorage.getItem("restaurantID");
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -46,7 +49,7 @@ const App = () => {
     (state) => state.resturants.resturantsData
   );
 
-  const [cardData, setCardData] = useState([]);
+  // const [cardData, setCardData] = useState([]);
   const [open, setOpen] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState({});
@@ -61,7 +64,21 @@ const App = () => {
   const [delivery_time, setDeliveryTime] = useState();
   const [name_en, setNameEn] = useState();
   const [restName, setRestName] = useState();
-  const [minOrderAmount, setMinOrderAmount] = useState();
+  // const [minOrderAmount, setMinOrderAmount] = useState();
+  const [filteredNew, setFilteredNew] = useState([]);
+
+  useEffect(() => {
+    if (restaurantID !== null) {
+      const filtereForRestaurant = addressData?.filter(
+        (address) =>
+          address.delivery_charge_area_info?.restaurant_id === +restaurantID
+      );
+
+      setFilteredNew(filtereForRestaurant);
+    } else {
+      setFilteredNew(addressData);
+    }
+  }, [addressData, restaurantID]);
 
   const addRestauantName = (id) => {
     const restName = resturantsData?.find((rest) => rest.id === id);
@@ -98,27 +115,42 @@ const App = () => {
   });
 
   const selectCurrentAddress = (item) => {
-    setSelectedId(item.id);
-    setSelectedAddress(item);
+    getBranchByAreaId(
+      item.delivery_charge_area_info?.restaurant_id,
+      country.id,
+      item?.delivery_charge_area_name_en,
+      dispatch
+    )
+      .then(() => {
+        setSelectedId(item.id);
+        setSelectedAddress(item);
 
-    setDeliveryCharge(
-      item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
-    );
-    setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
-    // setMinOrderAmount(item?.delivery_charge_area_info?.minimum_order_amount);
-    setNameEn(item.delivery_charge_area_info?.name_en);
-    setRestName(
-      addRestauantName(item.delivery_charge_area_info?.restaurant_id)
-    );
+        setDeliveryCharge(
+          item?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
+        );
+        setDeliveryTime(item?.delivery_charge_area_info?.delivery_time);
+        // setMinOrderAmount(item?.delivery_charge_area_info?.minimum_order_amount);
+        setNameEn(item.delivery_charge_area_info?.name_en);
+        setRestName(
+          addRestauantName(item.delivery_charge_area_info?.restaurant_id)
+        );
 
-    localStorage.setItem("area_id", item?.delivery_charge_area_info.id);
+        localStorage.setItem("area_id", item?.delivery_charge_area_info.id);
 
-    const selectedAddress = {
-      lat: +item.latitude,
-      lng: +item.longitude,
-    };
+        const selectedAddress = {
+          lat: +item.latitude,
+          lng: +item.longitude,
+        };
 
-    getFullAddress(selectedAddress.lat, selectedAddress.lng, setFullAddress);
+        getFullAddress(
+          selectedAddress.lat,
+          selectedAddress.lng,
+          setFullAddress
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -284,8 +316,8 @@ const App = () => {
         ))
       ) : (
         <div className="parent-address">
-          {addressData?.length ? (
-            addressData?.map((data) => (
+          {filteredNew?.length ? (
+            filteredNew?.map((data) => (
               <div key={data.id}>
                 <Card
                   iconUrl={
