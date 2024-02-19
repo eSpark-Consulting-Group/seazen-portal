@@ -1220,8 +1220,8 @@ function CartPage() {
             <div className="scrollableContainer" id="scrollableContainer">
               <Stack spacing={2}>
                 <Typography variant="h5">
-                  Your Items
-                  {cartItems.length > 0 ? ` (s)` : ""}
+                  Your Item
+                  {cartItems.length > 0 ? `(s)` : ""}
                 </Typography>
 
                 {cartItems.length > 0 ? (
