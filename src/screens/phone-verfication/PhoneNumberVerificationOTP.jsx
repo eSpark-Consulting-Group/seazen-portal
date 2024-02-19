@@ -20,8 +20,9 @@ import getUserInfo from "../../api/customer/getUserInfo";
 import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
 import addToCartApiCall from "../../api/cart/addToCart";
-import { addToCart } from "../../store/reducers/cartSlice";
+import { addToCart, resetCart } from "../../store/reducers/cartSlice";
 import { addUserInfo } from "../../store/reducers/authSlice";
+import logout from "../../api/customer/logout";
 
 const MODAL_INFO_TYPE = {
   INVALID_OTP: "invalid-otp",
@@ -40,6 +41,7 @@ function PhoneNumberVerificationOTP() {
   const [otp, setOtp] = React.useState("");
   const [mobileCountryCode, setMobileCountryCode] = React.useState("");
   const [mobileNumber, setMobileNumber] = React.useState("");
+  const sessionTimeout = 3600;
 
   const handleChange = (otp) => {
     setOtp(otp);
@@ -49,6 +51,21 @@ function PhoneNumberVerificationOTP() {
     mutationFn: verifyOTP,
     onSuccess: (data) => {
       localStorage.setItem("token", data.data.token);
+      setTimeout(() => {
+        logout(data.data.token)
+          .then(() => {
+            localStorage.removeItem("token");
+            sessionStorage.removeItem("cartEmpty");
+            dispatch(resetCart());
+            window.alert("Your session has expired. Please log in again.");
+            navigate(paths.phone_verification_index, {
+              state: { register: true },
+            });
+          })
+          .catch((e) => {
+            console.error(e);
+          });
+      }, sessionTimeout * 1000);
 
       getUserInfo(data.data.token).then((res) => {
         const { first_name, last_name } = res.data;
