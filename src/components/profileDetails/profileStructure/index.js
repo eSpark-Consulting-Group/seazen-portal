@@ -19,6 +19,7 @@ import "./style.css";
 import logout from "../../../api/customer/logout";
 import { useDispatch } from "react-redux";
 import { resetCart } from "../../../store/reducers/cartSlice";
+import clearCart from "../../../api/cart/clearCart";
 
 const ProfileStructure = ({
   name,
@@ -39,15 +40,22 @@ const ProfileStructure = ({
 
   const handleLogoutConfirm = () => {
     const token = localStorage.getItem("token");
-    logout(token)
-      .then(() => {
-        localStorage.removeItem("token");
-        sessionStorage.removeItem("cartEmpty");
-        dispatch(resetCart());
-        navigate("/");
+
+    clearCart(token)
+      .then((res) => {
+        logout(token)
+          .then(() => {
+            localStorage.removeItem("token");
+            sessionStorage.removeItem("cartEmpty");
+            dispatch(resetCart());
+            navigate("/");
+          })
+          .catch((e) => {
+            console.error(e);
+          });
       })
-      .catch((e) => {
-        console.error(e);
+      .catch((err) => {
+        console.log(err);
       });
 
     setOpenLogoutDialog(false);

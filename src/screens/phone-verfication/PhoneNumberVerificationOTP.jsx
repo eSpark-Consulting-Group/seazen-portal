@@ -20,8 +20,9 @@ import getUserInfo from "../../api/customer/getUserInfo";
 import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
 import addToCartApiCall from "../../api/cart/addToCart";
-import { addToCart } from "../../store/reducers/cartSlice";
+import { addToCart, resetCart } from "../../store/reducers/cartSlice";
 import { addUserInfo } from "../../store/reducers/authSlice";
+import clearCart from "../../api/cart/clearCart";
 
 const MODAL_INFO_TYPE = {
   INVALID_OTP: "invalid-otp",
@@ -45,10 +46,23 @@ function PhoneNumberVerificationOTP() {
     setOtp(otp);
   };
 
+  const clearCartItems = (token) => {
+    dispatch(resetCart());
+    clearCart(token)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const { mutate: verifyOtp } = useMutation({
     mutationFn: verifyOTP,
     onSuccess: (data) => {
       localStorage.setItem("token", data.data.token);
+
+      clearCartItems(data.data.token);
 
       getUserInfo(data.data.token).then((res) => {
         const { first_name, last_name } = res.data;
