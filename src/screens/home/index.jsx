@@ -74,10 +74,10 @@ const Home = () => {
     dispatch(removeCategoryItemList());
     dispatch(removeCategoryList());
 
-    localStorage.removeItem("restaurantID");
-    localStorage.removeItem("branchId");
-    localStorage.removeItem("restaurantName");
-    localStorage.removeItem("menuDetailId");
+    // localStorage.removeItem("restaurantID");
+    // localStorage.removeItem("branchId");
+    // localStorage.removeItem("restaurantName");
+    // localStorage.removeItem("menuDetailId");
   }, [cart, resturantsData]);
 
   // const { refetch } = useQuery({
