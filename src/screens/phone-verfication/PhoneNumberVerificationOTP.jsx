@@ -22,6 +22,7 @@ import "./style.css";
 import addToCartApiCall from "../../api/cart/addToCart";
 import { addToCart, resetCart } from "../../store/reducers/cartSlice";
 import { addUserInfo } from "../../store/reducers/authSlice";
+import clearCart from "../../api/cart/clearCart";
 import logout from "../../api/customer/logout";
 
 const MODAL_INFO_TYPE = {
@@ -47,6 +48,17 @@ function PhoneNumberVerificationOTP() {
     setOtp(otp);
   };
 
+  const clearCartItems = (token) => {
+    dispatch(resetCart());
+    clearCart(token)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const { mutate: verifyOtp } = useMutation({
     mutationFn: verifyOTP,
     onSuccess: (data) => {
@@ -66,6 +78,8 @@ function PhoneNumberVerificationOTP() {
             console.error(e);
           });
       }, sessionTimeout * 1000);
+
+      clearCartItems(data.data.token);
 
       getUserInfo(data.data.token).then((res) => {
         const { first_name, last_name } = res.data;

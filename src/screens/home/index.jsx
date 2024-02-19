@@ -79,21 +79,21 @@ const Home = () => {
     localStorage.removeItem("menuDetailId");
   }, [cart, resturantsData]);
 
-  const { refetch } = useQuery({
-    queryKey: [token],
-    queryFn: () => cartList(token),
-    onSuccess: (res) => {
-      if (res?.status === "Error") {
-        sessionStorage.setItem("cartEmpty", true);
-      } else {
-        cartListWithQuery(branchHours, dispatch, addToCart, res, cart);
-      }
-    },
-    enabled:
-      !!token &&
-      sessionStorage.getItem("cartEmpty") === null &&
-      branchHours?.length > 0,
-  });
+  // const { refetch } = useQuery({
+  //   queryKey: [token],
+  //   queryFn: () => cartList(token),
+  //   onSuccess: (res) => {
+  //     if (res?.status === "Error") {
+  //       sessionStorage.setItem("cartEmpty", true);
+  //     } else {
+  //       cartListWithQuery(branchHours, dispatch, addToCart, res, cart);
+  //     }
+  //   },
+  //   enabled:
+  //     !!token &&
+  //     sessionStorage.getItem("cartEmpty") === null &&
+  //     branchHours?.length > 0,
+  // });
 
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [addressId, setAddressID] = useState();
