@@ -37,6 +37,8 @@ import {
   // , MobileTimePicker
 } from "@mui/x-date-pickers";
 
+import { DialogComponent } from "../../../../components/dialog/notDeliver.js";
+
 import getBranchesAndHours, {
   GET_BRANCHES_AND_HOURS_QUERY_KEY,
 } from "../../../../api/restaurant/branches/getBranchesAndHours";
@@ -44,6 +46,7 @@ import getBranchesAndHours, {
 // import getBranchByArea from "../../../../api/restaurant/branches/getBranchByArea";
 import getListItemByCategory from "../../../../api/restaurant/getListItemsByCategory";
 import getItemCategoryList from "../../../../api/restaurant/getItemCategoryList";
+import getBranchByAreaId from "../../../../api/restaurant/branches/getBranchIdBasedOnAreaId";
 
 import {
   getDistanceFromLatLonInKm,
@@ -62,7 +65,6 @@ import { addSelectedAddress } from "../../../../store/reducers/userLocationSlice
 import { paths } from "../../../../routes/paths";
 
 import "./style.css";
-import getBranchByAreaId from "../../../../api/restaurant/branches/getBranchIdBasedOnAreaId";
 
 const StyledOuterContainer = styled("div")(({ theme }) => ({
   backgroundColor: lighten(theme.palette.themeColor.light, 0.9), // Apply the background color
@@ -149,6 +151,8 @@ const DeliveryDetails = (props) => {
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
   const [disableMenu, setDisableMenu] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectAddressNotDeliver, setSelectAddressNotDeliver] = useState(false);
   // const [distancesLessThan50, setDistancesLessThan50] = useState([]);
   const [restName, setRestName] = useState("");
 
@@ -303,18 +307,18 @@ const DeliveryDetails = (props) => {
     );
 
     if (smallestDistanceLocation) {
-      if (addressData?.length > 0) {
-        if (
-          (selected !== null || currentLocation?.name_en !== undefined) &&
-          fromLocation?.name_en === undefined
-        ) {
-          setLocationDeliver(true);
-        } else {
-          setLocationDeliver(false);
-        }
-      } else {
-        setLocationDeliver(false);
-      }
+      // if (addressData?.length > 0) {
+      //   if (
+      //     (selected !== null || currentLocation?.name_en !== undefined) &&
+      //     fromLocation?.name_en === undefined
+      //   ) {
+      //     setLocationDeliver(true);
+      //   } else {
+      //     setLocationDeliver(false);
+      //   }
+      // } else {
+      //   setLocationDeliver(false);
+      // }
 
       if (fromLocation && fromLocation.address) {
         setUserLocation(truncateString(fromLocation?.address, 15));
@@ -323,6 +327,25 @@ const DeliveryDetails = (props) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (!isDropdownOpen) {
+      const checkInDelivers = allAreas.filter((area) => {
+        return (
+          area.name_en === selected?.name_en &&
+          area.restaurant_id === restaurant_id
+        );
+      });
+
+      if (checkInDelivers.length === 0) {
+        setLocationDeliver(true);
+      } else {
+        setLocationDeliver(true);
+      }
+    } else {
+      setLocationDeliver(false);
+    }
+  }, [isDropdownOpen, allAreas, selected, restaurant_id]);
 
   const getUserAddress = (lat, lng) => {
     getFullAddress(lat, lng, setFullAddress);
@@ -610,8 +633,41 @@ const DeliveryDetails = (props) => {
     }
   };
 
+  const commonStateSets = (
+    address,
+    branch_id,
+    delivery_charges,
+    delivery_time,
+    name_en,
+    minimum_order_amount,
+    restaurant_id,
+    area_id
+  ) => {
+    setDisableMenu(false);
+    setOpendropdown(false);
+
+    getUserAddress(address.latitude, address.longitude);
+    setAddressID(address.id);
+
+    fetchAllCategories();
+    fetchAllItems(branch_id);
+
+    setDeliveryCharge(delivery_charges?.split(" ")[1]);
+    setDeliveryTime(delivery_time);
+    // setMinOrderAmount(
+    //   address?.delivery_charge_area_info?.minimum_order_amount
+    // );
+
+    setNameEn(name_en);
+    setOrderAmFromDelivery(minimum_order_amount);
+    setRestName(addRestauantName(restaurant_id));
+
+    localStorage.setItem("area_id", area_id);
+  };
+
   const onSelectLocatiom = (address) => {
     setDisableMenu(true);
+    setIsDropdownOpen(true);
 
     const country_id = JSON.parse(localStorage.getItem("country"))?.id;
 
@@ -621,6 +677,17 @@ const DeliveryDetails = (props) => {
       //   delivery_charge_area_id: address?.delivery_charge_area_info.id,
       // };
 
+      const checkInDelivers = allAreas.filter((area) => {
+        return (
+          area.name_en === address.delivery_charge_area_name_en &&
+          area.restaurant_id === address.delivery_charge_area_info.restaurant_id
+        );
+      });
+
+      if (checkInDelivers?.length === 0) {
+        setLocationDeliver(true);
+      }
+
       getBranchByAreaId(
         restaurant_id,
         country_id,
@@ -629,36 +696,36 @@ const DeliveryDetails = (props) => {
       )
         .then((res) => {
           if (Array.isArray(res.data)) {
-            setLocationDeliver(true);
+            // setLocationDeliver(true);
+
+            setSelectAddressNotDeliver(true);
+
+            setDisableMenu(false);
+            setOpendropdown(false);
+
+            // commonStateSets(
+            //   address,
+            //   address.delivery_charge_area_info.branch_id,
+            //   address.delivery_charge_area_info.delivery_charges,
+            //   address.delivery_charge_area_info.delivery_time,
+            //   address.delivery_charge_area_name_en,
+            //   address.delivery_charge_area_info.minimum_order_amount,
+            //   address.delivery_charge_area_info.restaurant_id,
+            //   address.delivery_charge_area_info.area_id
+            // );
+
+            return;
           }
 
-          setDisableMenu(false);
-          setOpendropdown(false);
-
-          getUserAddress(address.latitude, address.longitude);
-          setAddressID(address.id);
-
-          fetchAllCategories();
-          fetchAllItems(address?.delivery_charge_area_info?.branch_id);
-
-          setDeliveryCharge(
-            address?.delivery_charge_area_info?.delivery_charges?.split(" ")[1]
-          );
-          setDeliveryTime(address?.delivery_charge_area_info?.delivery_time);
-          // setMinOrderAmount(
-          //   address?.delivery_charge_area_info?.minimum_order_amount
-          // );
-          setNameEn(address?.delivery_charge_area_info?.name_en);
-          setOrderAmFromDelivery(
-            address?.delivery_charge_area_info?.minimum_order_amount
-          );
-          setRestName(
-            addRestauantName(address?.delivery_charge_area_info?.restaurant_id)
-          );
-
-          localStorage.setItem(
-            "area_id",
-            address?.delivery_charge_area_info.id
+          commonStateSets(
+            address,
+            res.data.branch_id,
+            res.data.delivery_charges,
+            res.data.delivery_time,
+            res.data.name_en,
+            res.data.minimum_order_amount,
+            res.data.restaurant_id,
+            res.data.area_id
           );
 
           // if (res?.data?.length === 0) {
@@ -671,11 +738,12 @@ const DeliveryDetails = (props) => {
           // fetchNearbyRestaurant(address.latitude, address.longitude);
         })
         .catch((err) => {
-          getUserAddress(address.latitude, address.longitude);
-          setAddressID(address.id);
+          // getUserAddress(address.latitude, address.longitude);
+          // setAddressID(address.id);
 
-          setDisableMenu(false);
           setOpendropdown(false);
+          setDisableMenu(false);
+
           console.log(err);
         });
 
@@ -764,11 +832,7 @@ const DeliveryDetails = (props) => {
                   padding: "0",
                 }}
               >
-                {token !== null &&
-                selected !== null &&
-                restaurantDetail?.name_en !== selected?.restaurantName
-                  ? "Select Address"
-                  : userLocation}{" "}
+                {userLocation}{" "}
                 <StyledOuterContainerIcon className="dropdown_icon_container">
                   <img src="/assets/img/dropdown.svg" alt="chevron_down_icon" />
                 </StyledOuterContainerIcon>
@@ -805,58 +869,52 @@ const DeliveryDetails = (props) => {
                 </Dropdown.Item>
 
                 {addressData?.length ? (
-                  addressData
-                    ?.filter(
-                      (address) =>
-                        address?.delivery_charge_area_info?.restaurant_id ===
-                        +localStorage?.getItem("restaurantID")
-                    )
-                    ?.map((address) => {
-                      return (
-                        <Dropdown.Item
-                          onClick={() => {
-                            onSelectLocatiom(address);
-                            localStorage.setItem("selectCurrent", false);
-                          }}
+                  addressData?.map((address) => {
+                    return (
+                      <Dropdown.Item
+                        onClick={() => {
+                          onSelectLocatiom(address);
+                          localStorage.setItem("selectCurrent", false);
+                        }}
+                        style={{
+                          textTransform: "capitalize",
+                        }}
+                        key={address.id}
+                        disabled={disableMenu}
+                      >
+                        {address.address_label !== ""
+                          ? address.address_label
+                          : address.address_type}{" "}
+                        {address?.address_type === "house"
+                          ? truncateString(
+                              `(Build: ${address?.building}, Bl: ${address?.block}, Str: ${address?.street})`,
+                              18
+                            )
+                          : address?.address_type === "office"
+                          ? truncateString(
+                              `(Comp: ${address?.company_name}, Bl: ${address?.block}, Floor: ${address?.floor})`,
+                              18
+                            )
+                          : truncateString(
+                              `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
+                              18
+                            )}
+                        <span
                           style={{
-                            textTransform: "capitalize",
+                            fontSize: 13,
                           }}
-                          key={address.id}
-                          disabled={disableMenu}
                         >
-                          {address.address_label !== ""
-                            ? address.address_label
-                            : address.address_type}{" "}
-                          {address?.address_type === "house"
-                            ? truncateString(
-                                `(Build: ${address?.building}, Bl: ${address?.block}, Str: ${address?.street})`,
-                                18
-                              )
-                            : address?.address_type === "office"
-                            ? truncateString(
-                                `(Comp: ${address?.company_name}, Bl: ${address?.block}, Floor: ${address?.floor})`,
-                                18
-                              )
-                            : truncateString(
-                                `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
-                                18
-                              )}
-                          <span
-                            style={{
-                              fontSize: 13,
-                            }}
-                          >
-                            {selected !== null &&
-                              currentLocation !== null &&
-                              parseFloat(selected?.lat) ===
-                                parseFloat(currentLocation?.lat) &&
-                              parseFloat(selected?.lng) ===
-                                parseFloat(currentLocation?.lng) &&
-                              "(current location)"}
-                          </span>
-                        </Dropdown.Item>
-                      );
-                    })
+                          {selected !== null &&
+                            currentLocation !== null &&
+                            parseFloat(selected?.lat) ===
+                              parseFloat(currentLocation?.lat) &&
+                            parseFloat(selected?.lng) ===
+                              parseFloat(currentLocation?.lng) &&
+                            "(current location)"}
+                        </span>
+                      </Dropdown.Item>
+                    );
+                  })
                 ) : (
                   <Dropdown.Item
                     style={{
@@ -1142,6 +1200,12 @@ const DeliveryDetails = (props) => {
             </Button>
           </div>
         </Dialog>
+
+        <DialogComponent
+          notDeliver={selectAddressNotDeliver}
+          setNotDeliver={setSelectAddressNotDeliver}
+          restaurantDetail={restaurantDetail}
+        />
       </StyledOuterContainer>
     </>
   );

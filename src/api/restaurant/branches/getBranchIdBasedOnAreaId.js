@@ -18,8 +18,10 @@ const getBranchByAreaId = async (
 
     // Check the response status code.
     if (response.status === 200) {
-      localStorage.setItem("branchId", response.data.data.branch_id);
-      dispatch(setBranchID(response.data.data.branch_id));
+      if (!Array.isArray(response?.data?.data)) {
+        localStorage.setItem("branchId", response.data.data.branch_id);
+        dispatch(setBranchID(response.data.data.branch_id));
+      }
 
       return response.data;
     } else {

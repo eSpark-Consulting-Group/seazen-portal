@@ -25,7 +25,11 @@ const RouteProvider = () => {
       dispatch(isLoaded());
       getAllAddress(isToken).then((res) => {
         if (res.success === "ok") {
-          dispatch(getAddress(res.data));
+          const filterAddress = res.data.filter(
+            (address) => !Array.isArray(address.delivery_charge_area_info)
+          );
+
+          dispatch(getAddress(filterAddress));
         }
       });
     }

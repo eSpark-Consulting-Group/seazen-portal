@@ -641,7 +641,11 @@ const AddressForm = () => {
   const { refetch: fetchFunction } = useQuery({
     queryFn: () => getAllAddress(token),
     onSuccess: (data) => {
-      dispatch(getAddress(data.data));
+      const filterAddress = data.data.filter(
+        (address) => !Array.isArray(address.delivery_charge_area_info)
+      );
+
+      dispatch(getAddress(filterAddress));
     },
     enabled:
       !!token &&

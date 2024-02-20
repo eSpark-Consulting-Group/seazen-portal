@@ -65,20 +65,6 @@ const App = () => {
   const [name_en, setNameEn] = useState();
   const [restName, setRestName] = useState();
   // const [minOrderAmount, setMinOrderAmount] = useState();
-  const [filteredNew, setFilteredNew] = useState([]);
-
-  useEffect(() => {
-    if (restaurantID !== null) {
-      const filtereForRestaurant = addressData?.filter(
-        (address) =>
-          address.delivery_charge_area_info?.restaurant_id === +restaurantID
-      );
-
-      setFilteredNew(filtereForRestaurant);
-    } else {
-      setFilteredNew(addressData);
-    }
-  }, [addressData, restaurantID]);
 
   const addRestauantName = (id) => {
     const restName = resturantsData?.find((rest) => rest.id === id);
@@ -90,7 +76,12 @@ const App = () => {
     setIsloading(true);
     getAllAddress(isToken).then((res) => {
       if (res.success === "ok") {
-        dispatch(getAddress(res.data));
+        const filterAddress = res.data.filter(
+          (address) => !Array.isArray(address.delivery_charge_area_info)
+        );
+
+        dispatch(getAddress(filterAddress));
+
         setIsloading(false);
         setDeleteAdd(false);
         setOpen(false);
@@ -105,7 +96,11 @@ const App = () => {
   const { refetch } = useQuery({
     queryFn: () => getAllAddress(isToken),
     onSuccess: (data) => {
-      dispatch(getAddress(data.data));
+      const filterAddress = data.data.filter(
+        (address) => !Array.isArray(address.delivery_charge_area_info)
+      );
+
+      dispatch(getAddress(filterAddress));
 
       setIsloading(false);
       setDeleteAdd(false);
@@ -164,14 +159,11 @@ const App = () => {
         name_en,
         restaurantName: restName,
       };
-
       localStorage.setItem("selected", JSON.stringify(addToStorage));
       dispatch(addSelectedAddress(addToStorage));
-
       if (location?.state?.path === "/cart") {
         navigate(paths.cart, { state: { back: "back-to-cart" } });
       }
-
       if (
         location?.state?.path === "/profile" ||
         location?.state?.path === "/address"
@@ -316,8 +308,8 @@ const App = () => {
         ))
       ) : (
         <div className="parent-address">
-          {filteredNew?.length ? (
-            filteredNew?.map((data) => (
+          {addressData?.length ? (
+            addressData?.map((data) => (
               <div key={data.id}>
                 <Card
                   iconUrl={
