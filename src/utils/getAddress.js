@@ -95,7 +95,7 @@ export const flattenArray = (allAreas) => {
       zone_ar: zone.name_ar,
     };
 
-    zone.areas.forEach((area) => {
+    zone.areas?.forEach((area) => {
       const combinedItem = {
         ...zoneDetails,
         ...area,

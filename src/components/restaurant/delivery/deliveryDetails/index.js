@@ -329,7 +329,7 @@ const DeliveryDetails = (props) => {
   };
 
   useEffect(() => {
-    if (!isDropdownOpen) {
+    if (!isDropdownOpen && token !== null && selected !== null) {
       const checkInDelivers = allAreas.filter((area) => {
         return (
           area.name_en === selected?.name_en &&
@@ -340,10 +340,8 @@ const DeliveryDetails = (props) => {
       if (checkInDelivers.length === 0) {
         setLocationDeliver(true);
       } else {
-        setLocationDeliver(true);
+        setLocationDeliver(false);
       }
-    } else {
-      setLocationDeliver(false);
     }
   }, [isDropdownOpen, allAreas, selected, restaurant_id]);
 
