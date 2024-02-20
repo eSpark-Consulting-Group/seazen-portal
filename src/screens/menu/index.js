@@ -41,6 +41,7 @@ import getAllAddress from "../../api/address/getAddress.js";
 import getBranchByAreaId from "../../api/restaurant/branches/getBranchIdBasedOnAreaId.js";
 
 import {
+  getBranchHours,
   getResturantsDetails,
   setBranchID,
   // removeBranchID,
@@ -266,6 +267,7 @@ const Menu = () => {
     queryFn: () => getRestaurantBranchHours(restaurant_id),
     onSuccess: (res) => {
       setBranchesAndHoursResponse(res);
+      dispatch(getBranchHours(res?.data));
     },
   });
 

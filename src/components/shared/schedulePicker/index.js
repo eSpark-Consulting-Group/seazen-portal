@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-// import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -43,6 +43,8 @@ const SchedulePicker = (props) => {
   const [minTime, setMinTime] = useState(dayjs());
   const [maxTime, setMaxTime] = useState(dayjs());
 
+  const branchHours = useSelector((state) => state.resturants.branchHours);
+
   useEffect(() => {
     if (localStorage.getItem("isAsap") === null) {
       localStorage.setItem("isAsap", isAsap);
@@ -70,6 +72,7 @@ const SchedulePicker = (props) => {
         restaurant_id === undefined ? popularDishRestId : restaurant_id
       );
     },
+    enabled: location.pathname.includes("menu-item-details"),
   });
 
   const onDateSelected = () => {

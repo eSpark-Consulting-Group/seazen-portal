@@ -406,15 +406,15 @@ const DeliveryDetails = (props) => {
     localStorage.setItem("isAsap", true);
   };
 
-  const { data: branchesAndHoursResponse, isSuccess } = useQuery({
-    queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, restaurant_id],
-    queryFn: () => {
-      return getBranchesAndHours(restaurant_id);
-    },
-  });
+  // const { data: branchesAndHoursResponse, isSuccess } = useQuery({
+  //   queryKey: [GET_BRANCHES_AND_HOURS_QUERY_KEY, restaurant_id],
+  //   queryFn: () => {
+  //     return getBranchesAndHours(restaurant_id);
+  //   },
+  // });
 
-  const timeByDate = branchesAndHoursResponse?.data
-    ?.find((val) => (val.id = branchId))
+  const timeByDate = branchHours
+    ?.find((val) => +val.id === +branchId)
     ?.branch_hours?.find((val) => {
       return val.week_day == pickDay;
     });

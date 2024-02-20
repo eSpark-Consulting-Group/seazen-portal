@@ -58,9 +58,11 @@ const DeliveryConditionalComponent = ({
       categoryList?.length === 0 ||
       +restaurantId != categoryList[0]?.restaurant_id
     ) {
-      fetchAllItems();
+      if (categoryList.length === 0) {
+        fetchAllItems();
+      }
     }
-  }, [branchId]);
+  }, [categoryList, branchId]);
 
   const fetchAllItems = () => {
     if (branchId != null) {
@@ -85,8 +87,10 @@ const DeliveryConditionalComponent = ({
       categories?.length === 0 ||
       resturantId != categories[0]?.restaurant_id
     )
-      fetchAllCategories();
-  }, [branchId]);
+      if (categories.length === 0) {
+        fetchAllCategories();
+      }
+  }, [branchId, categories]);
 
   const fetchAllCategories = () => {
     getItemCategoryList(resturantId)

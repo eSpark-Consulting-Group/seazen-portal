@@ -294,19 +294,19 @@ const MenuCardListContainer = ({
   //   }
   // }, [localStorage, distancesLessThan50]);
 
-  const fetchBranchHours = () => {
-    getRestaurantBranchHours(id).then((res) => {
-      if (res.status === "ok") {
-        dispatch(getBranchHours(res?.data));
-      }
-    });
-  };
+  // const fetchBranchHours = () => {
+  //   getRestaurantBranchHours(id).then((res) => {
+  //     if (res.status === "ok") {
+  //       dispatch(getBranchHours(res?.data));
+  //     }
+  //   });
+  // };
 
-  useEffect(() => {
-    if (id) {
-      fetchBranchHours();
-    }
-  }, [id]);
+  // useEffect(() => {
+  //   if (id) {
+  //     fetchBranchHours();
+  //   }
+  // }, [id]);
 
   useEffect(() => {
     let pushedWithDistance = [];
