@@ -333,7 +333,7 @@ const DeliveryDetails = (props) => {
       const checkInDelivers = allAreas.filter((area) => {
         return (
           area.name_en === selected?.name_en &&
-          area.restaurant_id === restaurant_id
+          area.restaurant_id === +restaurant_id
         );
       });
 
