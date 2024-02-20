@@ -29,8 +29,7 @@ import { DialogComponent } from "../../components/dialog/index.js";
 import SelectLocation from "../../components/dialog/selectLocation.js";
 import ReOrderCard from "../../components/ReOrderCard/index.jsx";
 
-import getRestaurantDetails from // GET_RESTAURANT_DETAILS_QUERY_KEY,
-"../../api/restaurant/getRestaurantDetails";
+import getRestaurantDetails from "../../api/restaurant/getRestaurantDetails"; // GET_RESTAURANT_DETAILS_QUERY_KEY,
 import getRestaurantBranchHours, {
   GET_RESTAURANT_BRANCH_HOUR_QUERY_KEY,
 } from "../../api/restaurant/getRestaurantBranchHours.js";
@@ -43,6 +42,7 @@ import getBranchByAreaId from "../../api/restaurant/branches/getBranchIdBasedOnA
 
 import {
   getResturantsDetails,
+  setBranchID,
   // removeBranchID,
   // setBranchID,
 } from "../../store/reducers/resturantsSlice.js";
@@ -241,13 +241,16 @@ const Menu = () => {
       //     }
       //   }
       // });
+    } else {
+      if (branchesAndHoursResponse?.data?.length > 0) {
+        localStorage.setItem("branchId", branchesAndHoursResponse?.data[0]?.id);
+        dispatch(setBranchID(branchesAndHoursResponse?.data[0]?.id));
+      }
+      //   if (branchesAndHoursResponse?.data?.length && restaurantDetail) {
+      //     getBranchIdNearToLocation();
+      //   }
     }
-    // else {
-    //   if (branchesAndHoursResponse?.data?.length && restaurantDetail) {
-    //     getBranchIdNearToLocation();
-    //   }
-    // }
-  }, [restaurant_id, localStorage]);
+  }, [restaurant_id, localStorage, branchesAndHoursResponse?.data]);
 
   const {
     data: restaurantBranchHours,

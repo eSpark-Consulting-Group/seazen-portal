@@ -61,6 +61,7 @@ import { paths } from "../../routes/paths";
 // } from "../../store/reducers/resturantsSlice";
 
 import "./style.css";
+import { saveMatchedAreaName } from "../../utils/checkOperationalArea";
 
 const containerStyle = {
   width: "100%",
@@ -204,6 +205,7 @@ function LocationPage() {
   const [clicked, setClicked] = useState(false);
   const [placeChanged, setPlaceChanged] = useState(false);
   const [addressComponents, setAddressComponents] = useState([]);
+  const [addressComponentsToCheck, setAddressComponentsToCheck] = useState([]);
   const [notOperational, setNotOperational] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState({});
   const [disableButton, setdisableButton] = useState(false);
@@ -382,6 +384,8 @@ function LocationPage() {
         );
 
       if (localityComponents.length > 0) {
+        setAddressComponentsToCheck(localityComponents);
+
         if (branches.length > 0) {
           returnMatchedDataToAddAddress(
             localityComponents,
@@ -398,6 +402,8 @@ function LocationPage() {
           );
         }
       } else if (addressHasAdminAreaLevel1.length > 0) {
+        setAddressComponentsToCheck(addressHasAdminAreaLevel1);
+
         if (branches.length > 0) {
           returnMatchedDataToAddAddress(
             addressHasAdminAreaLevel1,
@@ -757,6 +763,8 @@ function LocationPage() {
           };
 
           addLocationGuest(fullAddress);
+
+          saveMatchedAreaName(addressComponentsToCheck, allAreas);
 
           if (location?.state?.guestUser) {
             if (location?.state?.path === "menu/restaurant") {
