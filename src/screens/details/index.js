@@ -54,6 +54,7 @@ import {
   updateCartItem,
   addToCart,
   resetCart,
+  removeFromCart,
 } from "../../store/reducers/cartSlice";
 import { addSelectedAddress } from "../../store/reducers/userLocationSlice";
 
@@ -66,6 +67,7 @@ import {
 import { paths } from "../../routes/paths";
 
 import "./style.css";
+import deleteCart from "../../api/cart/deleteCartItem";
 
 export const Details = () => {
   const { id } = useParams();
@@ -833,14 +835,28 @@ export const Details = () => {
         cart_id,
       };
 
-      dispatch(updateCartItem(ItemDataObject));
-      addToCartApiHandler(ItemDataObject);
+      if (quantity === 0) {
+        deleteCart(
+          {
+            cart_id,
+            item_id: ItemDataObject.id,
+            item_code,
+          },
+          token
+        );
+        dispatch(removeFromCart(ItemDataObject.id));
+      } else {
+        dispatch(updateCartItem(ItemDataObject));
+        addToCartApiHandler(ItemDataObject);
+      }
 
       if (editingFromCart) {
-        navigate(paths.cart);
+        navigate(paths.cart, {
+          state: { ...location?.state, editedFromCart: true },
+        });
       } else {
         navigate(`${paths.menu}/restaurant/${+restaurant_id}/delivery`, {
-          state: { addFromDetail: true },
+          state: { addFromDetail: true, ...location?.state },
         });
       }
     } else {

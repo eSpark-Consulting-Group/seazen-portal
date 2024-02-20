@@ -99,17 +99,17 @@ function CartPage() {
   const comment = useSelector((state) => state.cart.comment);
   const country = useSelector((state) => state.auth.country);
 
-  useEffect(() => {
-    if (cart?.length > 0) {
-      const findrestaurantName = resturantsData?.find(
-        (item) => item.id === cart[0].restaurant_id
-      );
+  // useEffect(() => {
+  //   if (cart?.length > 0) {
+  //     const findrestaurantName = resturantsData?.find(
+  //       (item) => item.id === cart[0]?.restaurant_id
+  //     );
 
-      localStorage.setItem("branchId", cart[0].branch_id);
-      localStorage.setItem("restaurantID", cart[0].restaurant_id);
-      localStorage.setItem("restaurantName", findrestaurantName?.name_en);
-    }
-  }, [cart, resturantsData]);
+  // localStorage.setItem("branchId", cart[0]?.branch_id);
+  // localStorage.setItem("restaurantID", cart[0]?.restaurant_id);
+  // localStorage.setItem("restaurantName", findrestaurantName?.name_en);
+  // }
+  // }, [cart, resturantsData]);
 
   useEffect(() => {
     if (resturantsData?.length === 0) {
@@ -178,13 +178,13 @@ function CartPage() {
       allAreas.find(
         (area) =>
           area.name_en === selectedAdd?.name_en &&
-          area.restaurant_id === +cart[0].restaurant_id
+          area.restaurant_id === +cart[0]?.restaurant_id
       )?.delivery_charges !== undefined
         ? allAreas
             .find(
               (area) =>
                 area.name_en === selectedAdd?.name_en &&
-                area.restaurant_id === +cart[0].restaurant_id
+                area.restaurant_id === +cart[0]?.restaurant_id
             )
             ?.delivery_charges?.split(" ")[1]
         : selectedAdd?.delivery_charges?.split(" ")[1];
@@ -223,13 +223,21 @@ function CartPage() {
     }
   }, [location?.state?.back]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (location?.state?.back === "back-to-cart") {
-      setTimeout(() => {
-        navigate(location.pathname, { replace: true });
+      // Wait for 5 seconds then navigate, removing the 'back' property
+      const timeoutId = setTimeout(() => {
+        navigate(location.pathname, {
+          state: { ...location.state, back: undefined },
+        });
       }, 5000);
+
+      // Clear timeout to prevent the navigation if the component unmounts or the dependency changes
+      return () => clearTimeout(timeoutId);
     }
   }, [location?.state?.back]);
+
+  console.log("STATE", location?.state);
 
   useLayoutEffect(() => {
     if (cartItems !== undefined && cartItems?.length > 0) {
@@ -356,7 +364,7 @@ function CartPage() {
     },
   });
 
-  const branchId = localStorage.getItem("branchId");
+  const branchId = cart[0]?.branch_id;
 
   const timeByDate = branchesAndHoursResponse?.data
     ?.find((val) => (val.id = branchId))
@@ -419,8 +427,8 @@ function CartPage() {
           if (paymentMethod === "KNET") {
             const filterRestaurant = branchHours.filter(
               (branch) =>
-                branch.restaurant_id === cart[0].restaurant_id &&
-                branch.id === cart[0].branch_id
+                branch.restaurant_id === cart[0]?.restaurant_id &&
+                branch.id === cart[0]?.branch_id
             );
 
             if (filterRestaurant?.length === 0) {
@@ -457,7 +465,7 @@ function CartPage() {
 
                         const data = {
                           ...checkoutData,
-                          branch_id: cart[0].branch_id,
+                          branch_id: cart[0]?.branch_id,
                           discount_price: getDiscountAmount(),
                         };
 
@@ -497,7 +505,7 @@ function CartPage() {
                   } else {
                     const data = {
                       ...checkoutData,
-                      branch_id: cart[0].branch_id,
+                      branch_id: cart[0]?.branch_id,
                       discount_price: getDiscountAmount(),
                     };
                     checkout(data, token)
@@ -573,8 +581,8 @@ function CartPage() {
   const asapHandler = () => {
     const filterRestaurant = branchHours.filter(
       (branch) =>
-        branch.restaurant_id === cart[0].restaurant_id &&
-        branch.id === cart[0].branch_id
+        branch.restaurant_id === cart[0]?.restaurant_id &&
+        branch.id === cart[0]?.branch_id
     );
 
     for (let i = 0; i < filterRestaurant?.length; i++) {
@@ -840,13 +848,13 @@ function CartPage() {
       allAreas.find(
         (area) =>
           area.name_en === selectedAdd?.name_en &&
-          area.restaurant_id === +cart[0].restaurant_id
+          area.restaurant_id === +cart[0]?.restaurant_id
       )?.delivery_time !== undefined
         ? allAreas
             .find(
               (area) =>
                 area.name_en === selectedAdd?.name_en &&
-                area.restaurant_id === +cart[0].restaurant_id
+                area.restaurant_id === +cart[0]?.restaurant_id
             )
             ?.delivery_time?.trim()
             ?.split(" ")[0]
@@ -854,6 +862,8 @@ function CartPage() {
 
     return deliveryTime;
   };
+
+  console.log(location?.state);
 
   return (
     <Stack
@@ -894,8 +904,11 @@ function CartPage() {
             ) {
               navigate(location?.state?.back);
             } else if (
-              (location?.state?.noAddress && cart?.length !== 0) ||
-              (location?.state?.fromMenu !== undefined && cart?.length !== 0)
+              (location?.state?.noAddress &&
+                (cart?.length !== 0 || cart?.length === 0)) ||
+              (location?.state?.fromMenu !== undefined &&
+                (cart?.length !== 0 || cart?.length === 0)) ||
+              location?.state?.editedFromCart !== undefined
             ) {
               const preserevedRestaurantID = localStorage.getItem(
                 "preserevedRestaurantID"
@@ -905,6 +918,8 @@ function CartPage() {
                 preserevedRestaurantID === null &&
                 cart[0]?.restaurant_id === +restaurantId
                   ? cart[0]?.restaurant_id
+                  : restaurantId !== null
+                  ? restaurantId
                   : preserevedRestaurantID;
 
               navigate(`${paths.menu}/restaurant/${navigateId}/delivery`);
@@ -915,13 +930,13 @@ function CartPage() {
               navigate(paths.home);
             } else if (
               location?.state?.fromDetail !== undefined &&
-              cart?.length !== 0 &&
+              (cart?.length !== 0 || cart?.length === 0) &&
               location?.state?.detailPath
             ) {
               navigate(location?.state?.detailPath, {
                 state: {
                   ...location?.state,
-                  branch_id: localStorage.getItem("branchId"),
+                  branch_id: cart[0]?.branch_id,
                 },
               });
             } else {
@@ -1041,8 +1056,8 @@ function CartPage() {
               }}
               onClick={() => {
                 const initialState = {
-                  restaurant_id: cart[0].restaurant_id,
-                  branch_id: cart[0].branch_id,
+                  restaurant_id: cart[0]?.restaurant_id,
+                  branch_id: cart[0]?.branch_id,
                   restaurantName,
                   path: location.pathname,
                 };
@@ -1639,7 +1654,54 @@ function CartPage() {
                 }}
                 variant="contained"
                 size="large"
-                onClick={() => navigate(location?.state?.back || -1)}
+                onClick={() => {
+                  if (
+                    location?.state?.back &&
+                    location?.state?.fromHome === undefined &&
+                    location?.state?.fromMenu === undefined &&
+                    location?.state?.fromDetail === undefined
+                  ) {
+                    navigate(location?.state?.back);
+                  } else if (
+                    (location?.state?.noAddress &&
+                      (cart?.length !== 0 || cart?.length === 0)) ||
+                    (location?.state?.fromMenu !== undefined &&
+                      (cart?.length !== 0 || cart?.length === 0)) ||
+                    location?.state?.editedFromCart !== undefined
+                  ) {
+                    const preserevedRestaurantID = localStorage.getItem(
+                      "preserevedRestaurantID"
+                    );
+
+                    const navigateId =
+                      preserevedRestaurantID === null &&
+                      cart[0]?.restaurant_id === +restaurantId
+                        ? cart[0]?.restaurant_id
+                        : restaurantId !== null
+                        ? restaurantId
+                        : preserevedRestaurantID;
+
+                    navigate(`${paths.menu}/restaurant/${navigateId}/delivery`);
+                  } else if (
+                    location?.state?.fromHome !== undefined ||
+                    location?.state?.backToCart !== undefined
+                  ) {
+                    navigate(paths.home);
+                  } else if (
+                    location?.state?.fromDetail !== undefined &&
+                    (cart?.length !== 0 || cart?.length === 0) &&
+                    location?.state?.detailPath
+                  ) {
+                    navigate(location?.state?.detailPath, {
+                      state: {
+                        ...location?.state,
+                        branch_id: cart[0]?.branch_id,
+                      },
+                    });
+                  } else {
+                    navigate(-1);
+                  }
+                }}
               >
                 Back
               </Button>

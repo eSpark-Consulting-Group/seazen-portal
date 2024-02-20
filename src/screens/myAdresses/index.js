@@ -162,7 +162,9 @@ const App = () => {
       localStorage.setItem("selected", JSON.stringify(addToStorage));
       dispatch(addSelectedAddress(addToStorage));
       if (location?.state?.path === "/cart") {
-        navigate(paths.cart, { state: { back: "back-to-cart" } });
+        navigate(paths.cart, {
+          state: { back: "back-to-cart", ...location?.state },
+        });
       }
       if (
         location?.state?.path === "/profile" ||

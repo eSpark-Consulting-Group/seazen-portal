@@ -327,11 +327,13 @@ const AddressForm = () => {
           let addToStorage = {
             lat: location?.state?.latlng?.lat,
             lng: location?.state?.latlng?.lng,
-            address: location?.state?.selectedAddress?.address,
+            address: checkInSessionTrue
+              ? isAfterNewLocation?.address
+              : location?.state?.selectedAddress?.address,
             addressId: res?.data?.id,
           };
 
-          if (location?.state?.selectedAddress?.name_en) {
+          if (location?.state?.selectedAddress?.name_en || checkInSessionTrue) {
             addToStorage = {
               ...addToStorage,
               delivery_time: checkInSessionTrue
@@ -348,7 +350,9 @@ const AddressForm = () => {
               name_en: checkInSessionTrue
                 ? isAfterNewLocation?.name_en
                 : location?.state?.selectedAddress?.name_en,
-              restaurantName: location?.state?.selectedAddress?.restaurantName,
+              restaurantName: checkInSessionTrue
+                ? isAfterNewLocation?.restaurantName
+                : location?.state?.selectedAddress?.restaurantName,
             };
           }
 
@@ -359,7 +363,7 @@ const AddressForm = () => {
             const storeAddress = {
               ...isAfterNewLocation,
               addNewAddress: false,
-              restaurantName: location?.state?.selectedAddress?.restaurantName,
+              restaurantName: isAfterNewLocation?.restaurantName,
             };
 
             sessionStorage.setItem(

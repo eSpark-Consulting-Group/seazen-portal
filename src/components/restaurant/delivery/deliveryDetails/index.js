@@ -684,6 +684,8 @@ const DeliveryDetails = (props) => {
 
       if (checkInDelivers?.length === 0) {
         setLocationDeliver(true);
+      } else {
+        setLocationDeliver(false);
       }
 
       getBranchByAreaId(
@@ -897,7 +899,7 @@ const DeliveryDetails = (props) => {
                               `(Apar: ${address?.apartment_no}, Bl: ${address?.block}, Str: ${address?.street})`,
                               18
                             )}
-                        <span
+                        {/* <span
                           style={{
                             fontSize: 13,
                           }}
@@ -909,7 +911,7 @@ const DeliveryDetails = (props) => {
                             parseFloat(selected?.lng) ===
                               parseFloat(currentLocation?.lng) &&
                             "(current location)"}
-                        </span>
+                        </span> */}
                       </Dropdown.Item>
                     );
                   })
