@@ -108,7 +108,7 @@ function App() {
       restaurantId !== null
     ) {
       title =
-        restaurantData?.find((val) => val.id == restaurantId)?.name_en +
+        restaurantData?.find((val) => val.id == +restaurantId)?.name_en +
         " " +
         "Menu";
     } else {

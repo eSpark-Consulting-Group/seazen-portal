@@ -257,7 +257,7 @@ export const Details = () => {
       });
     } else {
       const forCurrent = branchHours?.filter(
-        (rest) => rest.restaurant_id === restaurantId
+        (rest) => rest.restaurant_id === +restaurantId
       );
 
       calculateDistance(forCurrent);

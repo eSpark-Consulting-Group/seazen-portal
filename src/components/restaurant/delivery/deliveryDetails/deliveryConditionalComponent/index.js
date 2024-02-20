@@ -56,7 +56,7 @@ const DeliveryConditionalComponent = ({
     if (
       !categoryLoading ||
       categoryList?.length === 0 ||
-      restaurantId != categoryList[0]?.restaurant_id
+      +restaurantId != categoryList[0]?.restaurant_id
     ) {
       fetchAllItems();
     }
