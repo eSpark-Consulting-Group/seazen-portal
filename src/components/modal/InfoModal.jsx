@@ -35,6 +35,7 @@ export default function InfoModal(props) {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            margin:"78px"
           },
 
           "@media (max-width: 500px)": {
