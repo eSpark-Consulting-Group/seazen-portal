@@ -695,7 +695,9 @@ function CartPage() {
   };
 
   useEffect(() => {
-    cartRefetch();
+    if (token !== null) {
+      cartRefetch();
+    }
     getRestaurantLogo(cart[0]?.restaurant_id);
   }, [country]);
 
@@ -718,6 +720,7 @@ function CartPage() {
     if (cart.length == 0) {
       setTimeout(() => {
         setIsLoading(true);
+
         cartList(token)
           .then((res) => {
             const resData = res.data.map((val) => {
