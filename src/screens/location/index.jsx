@@ -752,6 +752,8 @@ function LocationPage() {
         // )
         setdisableButton(false);
 
+        saveMatchedAreaName(addressComponentsToCheck, allAreas);
+
         if (token === null) {
           const fullAddress = {
             address,
@@ -763,8 +765,6 @@ function LocationPage() {
           };
 
           addLocationGuest(fullAddress);
-
-          saveMatchedAreaName(addressComponentsToCheck, allAreas);
 
           if (location?.state?.guestUser) {
             if (location?.state?.path === "menu/restaurant") {

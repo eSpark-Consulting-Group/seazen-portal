@@ -310,9 +310,7 @@ const AddressForm = () => {
 
         const area_id = checkInSessionTrue
           ? isAfterNewLocation?.area_id
-          : selectedAddress === null
-          ? location?.state?.selectedAddress?.area_id
-          : selectedAddress?.area_id;
+          : location?.state?.selectedAddress?.area_id;
 
         if (area_id) {
           localStorage.setItem("area_id", area_id);
@@ -390,7 +388,10 @@ const AddressForm = () => {
               navigate(paths.cart, {
                 state: { fromDetail: location?.state?.fromDetail },
               });
-            } else if (checkInSessionFalse) {
+            } else if (
+              checkInSessionFalse &&
+              location?.state?.addFromDropdown === undefined
+            ) {
               navigate(paths.cart, {});
             } else {
               navigate(
@@ -811,14 +812,8 @@ const AddressForm = () => {
               onClick={() =>
                 navigate(paths.location, {
                   state: {
-                    name: location?.state?.name,
-                    latlng: location?.state?.latlng,
                     editLocation: true,
-                    path: location?.state?.path,
-                    fromHome: location?.state?.fromHome,
-                    fromMenu: location?.state?.fromMenu,
-                    fromDetail: location?.state?.fromDetail,
-                    detailPath: location?.state?.detailPath,
+                    ...location?.state,
                   },
                 })
               }

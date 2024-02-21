@@ -51,6 +51,12 @@ export const selectChooseAddress = (
   setRestName(addRestauantName(item?.delivery_charge_area_info?.restaurant_id));
 
   localStorage.setItem("area_id", item?.delivery_charge_area_info.id);
+  const matchingArea = {
+    area_name_en: item.delivery_charge_area_info.name_en,
+    area_name_ar: item.delivery_charge_area_info.name_ar,
+  };
+
+  localStorage.setItem("matchingArea", JSON.stringify(matchingArea));
 
   getFullAddress(lat, lng, setFunction);
 };

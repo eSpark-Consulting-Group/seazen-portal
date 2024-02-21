@@ -567,7 +567,8 @@ const MenuCardListContainer = ({
             localStorage.getItem("token") === null
               ? navigate(paths.cart)
               : isAfterNewLocation !== null &&
-                isAfterNewLocation?.addNewAddress === true
+                isAfterNewLocation?.addNewAddress === true &&
+                cart?.length > 0
               ? navigate(paths.address, {
                   state: {
                     latlng: {

@@ -143,6 +143,18 @@ const Home = () => {
             );
           }
 
+          localStorage.setItem(
+            "area_id",
+            addressData[i]?.delivery_charge_area_info.id
+          );
+
+          const matchingArea = {
+            area_name_en: addressData[i]?.delivery_charge_area_info.name_en,
+            area_name_ar: addressData[i]?.delivery_charge_area_info.name_ar,
+          };
+
+          localStorage.setItem("matchingArea", JSON.stringify(matchingArea));
+
           getFullAddress(
             +addressData[i].latitude,
             +addressData[i].longitude,

@@ -57,7 +57,11 @@ import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHo
 import deliveryPriceApi from "../../api/common/getDeliveryCharges";
 import getAllRestaurants from "../../api/home/getAllRestaurants";
 
-import { addComment, addToCart } from "../../store/reducers/cartSlice";
+import {
+  addComment,
+  addToCart,
+  updateCartItemQuantity,
+} from "../../store/reducers/cartSlice";
 // import { setThemeColor } from "../../store/reducers/themeSlice";
 import {
   getBranchHours,
@@ -73,6 +77,7 @@ import {
 import { paths } from "../../routes/paths";
 
 import "./style.css";
+import updateCartApiCall from "../../api/cart/updateCart";
 
 // const toastList = new Set();
 // const MAX_TOAST = 1;
@@ -99,17 +104,17 @@ function CartPage() {
   const comment = useSelector((state) => state.cart.comment);
   const country = useSelector((state) => state.auth.country);
 
-  // useEffect(() => {
-  //   if (cart?.length > 0) {
-  //     const findrestaurantName = resturantsData?.find(
-  //       (item) => item.id === cart[0]?.restaurant_id
-  //     );
+  useEffect(() => {
+    if (cart?.length > 0) {
+      const findrestaurantName = resturantsData?.find(
+        (item) => item.id === cart[0]?.restaurant_id
+      );
 
-  // localStorage.setItem("branchId", cart[0]?.branch_id);
-  // localStorage.setItem("restaurantID", cart[0]?.restaurant_id);
-  // localStorage.setItem("restaurantName", findrestaurantName?.name_en);
-  // }
-  // }, [cart, resturantsData]);
+      // localStorage.setItem("branchId", cart[0]?.branch_id);
+      localStorage.setItem("restaurantID", cart[0]?.restaurant_id);
+      localStorage.setItem("restaurantName", findrestaurantName?.name_en);
+    }
+  }, [cart, resturantsData]);
 
   useEffect(() => {
     if (resturantsData?.length === 0) {
@@ -237,8 +242,6 @@ function CartPage() {
     }
   }, [location?.state?.back]);
 
-  console.log("STATE", location?.state);
-
   useLayoutEffect(() => {
     if (cartItems !== undefined && cartItems?.length > 0) {
       if (branchHours?.length === 0) {
@@ -247,6 +250,7 @@ function CartPage() {
         const forCurrent = branchHours?.filter(
           (rest) => rest.restaurant_id === cart[0]?.restaurant_id
         );
+
         checkBranchHours(forCurrent);
       }
     }
@@ -321,12 +325,78 @@ function CartPage() {
           location?.state?.back === "back-to-cart"
         ) {
           setNotDeliver(true);
+
+          setIsLoading(false);
         } else {
-          setNotDeliver(false);
+          if (cart?.length > 0) {
+            if (location?.state?.back === "back-to-cart") {
+              if (+localStorage.getItem("branchId") !== cart[0]?.branch_id) {
+                setIsLoading(true); // Start loader here
+
+                handleUpdateObjects();
+                setNotDeliver(false);
+              }
+            }
+          } else {
+            setNotDeliver(false);
+          }
         }
       } else {
         setNotDeliver(true);
+        setIsLoading(false);
       }
+    }
+  };
+
+  const updateObject = async (updateDataForApi) => {
+    try {
+      // Call your API to update the updateDataForApi
+      await updateCartApiCall(updateDataForApi, token);
+
+      dispatch(
+        updateCartItemQuantity({
+          itemCode: updateDataForApi.item_code,
+          quantity: updateDataForApi.quantity,
+          branch_id: updateDataForApi?.branch_id,
+        })
+      );
+    } catch (error) {
+      console.error("Error updating", error);
+    }
+  };
+
+  const handleUpdateObjects = async () => {
+    try {
+      // Iterate over each object in the cart and update them
+      for (const object of cart) {
+        const sideVariant = object.variants?.sideVariant[0]?.variantId;
+        const sizeVariant = object.variants?.sizeVariant?.variantId;
+        const toppingVariant = object.variants?.toppingVariant[0]?.variantId;
+        const customVariant = object.variants?.customVariant[0]?.variantId;
+
+        const updateDataForApi = {
+          item_code: object.item_code,
+          cart_id: object.cart_id,
+          item_id: object.id,
+          branch_id: +localStorage.getItem("branchId"),
+          topping_variant_id: toppingVariant || null,
+          side_variant_id: sideVariant || null,
+          size_variant_id: sizeVariant || null,
+          custom_variant_id: customVariant || null,
+          quantity: object.quantity,
+          size_variant: object.variants?.sizeVariant,
+          topping_variant: object.variants?.toppingVariant,
+          custom_variant: object.variants?.customVariant,
+          side_variant: object.variants?.sideVariant,
+        };
+
+        await updateObject(updateDataForApi);
+      }
+
+      setIsLoading(false); // All objects have been updated, stop loader here
+    } catch (error) {
+      console.error("Error updating objects:", error);
+      setIsLoading(false); // Stop loader in case of error
     }
   };
 
@@ -409,6 +479,13 @@ function CartPage() {
         (rest) => rest.restaurant_id === +cart[0]?.restaurant_id
       );
 
+      if (forCurrent?.length === 0) {
+        setNotDeliver(true);
+        setIsPaymentDone(false);
+
+        return;
+      }
+
       for (let i = 0; i < forCurrent?.length; i++) {
         const resLat = +forCurrent[i]?.latitude;
         const resLng = +forCurrent[i]?.longitude;
@@ -445,6 +522,7 @@ function CartPage() {
 
                 if (checkInDelivers.length === 0) {
                   setNotDeliver(true);
+                  setIsPaymentDone(false);
                 } else {
                   setNotDeliver(false);
 
@@ -863,8 +941,6 @@ function CartPage() {
     return deliveryTime;
   };
 
-  console.log(location?.state);
-
   return (
     <Stack
       sx={{
@@ -918,7 +994,8 @@ function CartPage() {
                 preserevedRestaurantID === null &&
                 cart[0]?.restaurant_id === +restaurantId
                   ? cart[0]?.restaurant_id
-                  : restaurantId !== null
+                  : restaurantId !== null &&
+                    +restaurantId === +preserevedRestaurantID
                   ? restaurantId
                   : preserevedRestaurantID;
 
@@ -971,7 +1048,7 @@ function CartPage() {
         </div>
       </Stack>
 
-      {cartItems && cartItems.length > 0 ? (
+      {cartItems && cartItems.length > 0 && !isLoading ? (
         <React.Fragment>
           <Stack
             direction="row"
@@ -1621,7 +1698,7 @@ function CartPage() {
       ) : (
         <>
           {" "}
-          {!isLoading ? (
+          {!isLoading && cart.length === 0 ? (
             <Stack justifyContent="center" alignItems="center" sx={{ pt: 15 }}>
               <Typography variant="h5" fontWeight={500}>
                 Your cart is empty
@@ -1677,7 +1754,8 @@ function CartPage() {
                       preserevedRestaurantID === null &&
                       cart[0]?.restaurant_id === +restaurantId
                         ? cart[0]?.restaurant_id
-                        : restaurantId !== null
+                        : restaurantId !== null &&
+                          +restaurantId === +preserevedRestaurantID
                         ? restaurantId
                         : preserevedRestaurantID;
 

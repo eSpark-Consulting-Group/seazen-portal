@@ -41,7 +41,7 @@ const cartSlice = createSlice({
     },
 
     updateCartItemQuantity: (state, action) => {
-      const { itemCode, quantity } = action.payload;
+      const { itemCode, quantity, branch_id } = action.payload;
       const itemIndex = state.cart.findIndex(
         (cartItem) => cartItem.item_code === itemCode
       );
@@ -51,6 +51,9 @@ const cartSlice = createSlice({
         const pricePerItem = itemTotalPrice / state.cart[itemIndex].quantity;
         state.cart[itemIndex].totalPrice = pricePerItem * quantity;
         state.cart[itemIndex].quantity = quantity;
+        if (branch_id !== undefined) {
+          state.cart[itemIndex].branch_id = branch_id;
+        }
       }
 
       if (quantity < 1) {

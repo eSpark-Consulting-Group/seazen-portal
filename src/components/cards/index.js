@@ -277,98 +277,105 @@ const BasicCard = (props) => {
         id="parent-of-all"
       >
         {restaurantsData.map((restaurant, index) => {
-          return (
-            <div
-              key={index}
-              className={`restaurantCards restaurantCard-large ${
-                selectedText !== "Delivery" &&
-                (restaurant?.dinein_status || restaurant?.pickup_status)
-                  ? getCardClassName(images[index].service)
-                  : !restaurant?.delivery_status || !restaurant.catering_status
-                  ? "delivery-false"
-                  : ""
-              } ${
-                selectedText === "Catering" &&
-                selectedText !== "Dine In" &&
-                selectedText !== "Delivery" &&
-                selectedText !== "Pickup" &&
-                typesState.catering
-                  ? "catering-border"
-                  : ""
-              }`}
-              id="when-deliver"
-            >
-              <Card
-                sx={{
-                  width: "100%",
-                  borderRadius: "10px",
-                  boxShadow: "none",
-                  border: "none",
-                  maxHeight: "98%",
-                  position: "relative",
-                }}
-                className="restaurantCards"
-                onClick={() => {
-                  if (selectedText !== "") {
-                    dispatch(
-                      setSelectedService(
-                        serviceSelect(restaurant, selectedText)
-                      )
-                    );
-                  }
-
-                  goToRestaurantMenuPage(restaurant.id);
-                }}
+          if (restaurant?.id !== 4) {
+            return (
+              <div
+                key={index}
+                className={`restaurantCards restaurantCard-large ${
+                  selectedText !== "Delivery" &&
+                  (restaurant?.dinein_status || restaurant?.pickup_status)
+                    ? getCardClassName(images[index].service)
+                    : !restaurant?.delivery_status ||
+                      !restaurant.catering_status
+                    ? "delivery-false"
+                    : ""
+                } ${
+                  selectedText === "Catering" &&
+                  selectedText !== "Dine In" &&
+                  selectedText !== "Delivery" &&
+                  selectedText !== "Pickup" &&
+                  typesState.catering
+                    ? "catering-border"
+                    : ""
+                }`}
+                id="when-deliver"
               >
-                <img
-                  className="restaurantCard-img"
-                  src={restaurant?.image}
-                  alt={`${restaurant?.name_en}`}
-                />
-                <div
-                  className={`svg-container ${
-                    clickedButtonIndex !== null
-                      ? "expanded expanded-width"
-                      : "collapsed"
-                  }`}
+                <Card
+                  sx={{
+                    width: "100%",
+                    borderRadius: "10px",
+                    boxShadow: "none",
+                    border: "none",
+                    maxHeight: "98%",
+                    position: "relative",
+                  }}
+                  className="restaurantCards"
+                  onClick={() => {
+                    if (selectedText !== "") {
+                      dispatch(
+                        setSelectedService(
+                          serviceSelect(restaurant, selectedText)
+                        )
+                      );
+                    }
+
+                    goToRestaurantMenuPage(restaurant.id);
+                  }}
                 >
-                  <div className="inner-svg-container" id="inner-svg-container">
-                    {restaurant.catering_status && (
-                      <div className="icon-row">
-                        <img
-                          className={
-                            selectedText === "Catering" &&
-                            selectedText !== "Dine In" &&
-                            selectedText !== "Delivery" &&
-                            selectedText !== "Pickup"
-                              ? "catering-bg"
-                              : ""
-                          }
-                          src={icons["catering_status"]?.image}
-                          // alt={`Icon ${i + 1}`}
-                          style={{ width: "12px", height: "11px" }}
-                        />
-                      </div>
-                    )}
-                    {restaurant.delivery_status && (
-                      <div className="icon-row" id="icon-row">
-                        <img
-                          className="icons"
-                          src={icons["delivery_status"]?.image}
-                          style={{ width: iconWidth, height: iconHeight }}
-                          id="deliver-icon"
-                        />
-                      </div>
-                    )}
-                    {restaurant.dinein_status &&
-                      getServicesIcon("dinein_status")}
-                    {restaurant.pickup_status &&
-                      getServicesIcon("pickup_status")}
+                  <img
+                    className="restaurantCard-img"
+                    src={restaurant?.image}
+                    alt={`${restaurant?.name_en}`}
+                  />
+                  <div
+                    className={`svg-container ${
+                      clickedButtonIndex !== null
+                        ? "expanded expanded-width"
+                        : "collapsed"
+                    }`}
+                  >
+                    <div
+                      className="inner-svg-container"
+                      id="inner-svg-container"
+                    >
+                      {restaurant.catering_status && (
+                        <div className="icon-row">
+                          <img
+                            className={
+                              selectedText === "Catering" &&
+                              selectedText !== "Dine In" &&
+                              selectedText !== "Delivery" &&
+                              selectedText !== "Pickup"
+                                ? "catering-bg"
+                                : ""
+                            }
+                            src={icons["catering_status"]?.image}
+                            // alt={`Icon ${i + 1}`}
+                            style={{ width: "12px", height: "11px" }}
+                          />
+                        </div>
+                      )}
+                      {restaurant.delivery_status && (
+                        <div className="icon-row" id="icon-row">
+                          <img
+                            className="icons"
+                            src={icons["delivery_status"]?.image}
+                            style={{ width: iconWidth, height: iconHeight }}
+                            id="deliver-icon"
+                          />
+                        </div>
+                      )}
+                      {restaurant.dinein_status &&
+                        getServicesIcon("dinein_status")}
+                      {restaurant.pickup_status &&
+                        getServicesIcon("pickup_status")}
+                    </div>
                   </div>
-                </div>
-              </Card>
-            </div>
-          );
+                </Card>
+              </div>
+            );
+          }
+
           // } else {
           //   return (
           //     <div

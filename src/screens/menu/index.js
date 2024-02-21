@@ -220,6 +220,10 @@ const Menu = () => {
       localStorage.setItem("restaurantID", restaurant_id);
     }
 
+    if (restaurantDetail?.name_en) {
+      localStorage.setItem("restaurantName", restaurantDetail?.name_en);
+    }
+
     const country_id = JSON.parse(localStorage.getItem("country"))?.id;
     // const area_id = localStorage.getItem("area_id");
 
@@ -238,7 +242,15 @@ const Menu = () => {
         country_id,
         matchingArea?.area_name_en,
         dispatch
-      );
+      ).then((res) => {
+        if (Array.isArray(res.data)) {
+          localStorage.setItem(
+            "branchId",
+            branchesAndHoursResponse?.data[0]?.id
+          );
+          dispatch(setBranchID(branchesAndHoursResponse?.data[0]?.id));
+        }
+      });
       // getBranchByArea(restaurant_id, object, dispatch).then((res) => {
       //   if (res.data?.length === 0) {
       //     if (branchesAndHoursResponse?.data?.length && restaurantDetail) {

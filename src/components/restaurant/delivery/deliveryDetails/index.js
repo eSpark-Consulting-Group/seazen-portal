@@ -717,6 +717,13 @@ const DeliveryDetails = (props) => {
             return;
           }
 
+          const matchingArea = {
+            area_name_en: res.data.name_en,
+            area_name_ar: res.data.name_ar,
+          };
+
+          localStorage.setItem("matchingArea", JSON.stringify(matchingArea));
+
           commonStateSets(
             address,
             res.data.branch_id,
