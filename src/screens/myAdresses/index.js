@@ -111,7 +111,9 @@ const App = () => {
 
   const selectCurrentAddress = (item) => {
     getBranchByAreaId(
-      item.delivery_charge_area_info?.restaurant_id,
+      location?.state?.path === "/cart"
+        ? +restaurantID
+        : item.delivery_charge_area_info?.restaurant_id,
       country.id,
       item?.delivery_charge_area_name_en,
       dispatch
