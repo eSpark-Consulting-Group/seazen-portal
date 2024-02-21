@@ -294,48 +294,48 @@ const MenuCard = (props) => {
       const currentLocation = JSON.parse(localStorage.getItem("location"));
       const selected = JSON.parse(localStorage.getItem("selected"));
 
-      if (addressData?.length > 0 && selected === null) {
-        setOpenAddressPopup(true);
-      } else {
-        for (let i = 0; i < restaurantBranchHours?.data?.length; i++) {
-          let fromLocation;
-          if (selected === null && currentLocation !== null) {
-            fromLocation = currentLocation;
-          } else if (selected !== null && currentLocation !== null) {
-            fromLocation = selected;
+      // if (addressData?.length > 0 && selected === null) {
+      //   setOpenAddressPopup(true);
+      // } else {
+      for (let i = 0; i < restaurantBranchHours?.data?.length; i++) {
+        let fromLocation;
+        if (selected === null && currentLocation !== null) {
+          fromLocation = currentLocation;
+        } else if (selected !== null && currentLocation !== null) {
+          fromLocation = selected;
+        }
+
+        const resLat = +restaurantBranchHours?.data[i]?.latitude;
+        const resLng = +restaurantBranchHours?.data[i]?.longitude;
+
+        const distance = getDistanceFromLatLonInKm(
+          resLat,
+          resLng,
+          fromLocation?.lat || 29.3140728,
+          fromLocation?.lng || 47.68022
+        );
+
+        if (distance > 50) {
+          if (allData.id === id) {
+            setSelectedItemToDeliver(allData);
           }
+          setOpenModal(true);
+        } else {
+          setRestaurantIsOpen(false);
+          setOpenModal(false);
+          navigate(paths.details + "/" + id, {
+            state: {
+              id: id,
+              branch_id: allData.branch_id,
+              locationDeliver: locationDeliver,
+            },
+          });
 
-          const resLat = +restaurantBranchHours?.data[i]?.latitude;
-          const resLng = +restaurantBranchHours?.data[i]?.longitude;
-
-          const distance = getDistanceFromLatLonInKm(
-            resLat,
-            resLng,
-            fromLocation?.lat || 29.3140728,
-            fromLocation?.lng || 47.68022
-          );
-
-          if (distance > 50) {
-            if (allData.id === id) {
-              setSelectedItemToDeliver(allData);
-            }
-            setOpenModal(true);
-          } else {
-            setRestaurantIsOpen(false);
-            setOpenModal(false);
-            navigate(paths.details + "/" + id, {
-              state: {
-                id: id,
-                branch_id: allData.branch_id,
-                locationDeliver: locationDeliver,
-              },
-            });
-
-            break;
-          }
+          break;
         }
       }
     }
+    // }
   }
 
   // const checkWithBranchIdDeliverZones = (allDistancesLessThan50) => {

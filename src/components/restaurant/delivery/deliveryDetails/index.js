@@ -317,7 +317,7 @@ const DeliveryDetails = (props) => {
       //     setLocationDeliver(false);
       //   }
       // } else {
-      //   setLocationDeliver(false);
+      setLocationDeliver(false);
       // }
 
       if (fromLocation && fromLocation.address) {

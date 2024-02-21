@@ -991,11 +991,13 @@ function CartPage() {
               );
 
               const navigateId =
+                cart?.length > 0 &&
                 preserevedRestaurantID === null &&
                 cart[0]?.restaurant_id === +restaurantId
                   ? cart[0]?.restaurant_id
                   : restaurantId !== null &&
-                    +restaurantId === +preserevedRestaurantID
+                    (+restaurantId === +preserevedRestaurantID ||
+                      preserevedRestaurantID === null)
                   ? restaurantId
                   : preserevedRestaurantID;
 
@@ -1751,11 +1753,13 @@ function CartPage() {
                     );
 
                     const navigateId =
+                      cart?.length > 0 &&
                       preserevedRestaurantID === null &&
                       cart[0]?.restaurant_id === +restaurantId
                         ? cart[0]?.restaurant_id
                         : restaurantId !== null &&
-                          +restaurantId === +preserevedRestaurantID
+                          (+restaurantId === +preserevedRestaurantID ||
+                            preserevedRestaurantID === null)
                         ? restaurantId
                         : preserevedRestaurantID;
 
