@@ -239,10 +239,13 @@ const DeliveryDetails = (props) => {
 
   useEffect(() => {
     let pushedWithDistance = [];
+    let num = 0;
+
     if (restaurantBranchHours?.data?.length) {
       for (let i = 0; i < restaurantBranchHours?.data?.length; i++) {
         const resLat = +restaurantBranchHours?.data[i]?.latitude;
         const resLng = +restaurantBranchHours?.data[i]?.longitude;
+        num++;
 
         let fromLocation;
         if (selected === null && currentLocation !== null) {
@@ -268,6 +271,7 @@ const DeliveryDetails = (props) => {
             });
 
             checkWithBranchIdDeliverZones(pushedWithDistance, fromLocation);
+            break;
           }
         }
 
@@ -288,6 +292,7 @@ const DeliveryDetails = (props) => {
             });
 
             checkWithBranchIdDeliverZones(pushedWithDistance, fromLocation);
+            break;
           }
         }
       }

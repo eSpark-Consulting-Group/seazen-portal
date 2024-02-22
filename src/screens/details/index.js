@@ -298,6 +298,8 @@ export const Details = () => {
           });
 
           checkWithBranchIdDeliverZones(pushedWithDistance);
+
+          break;
         }
       }
     }
@@ -426,6 +428,7 @@ export const Details = () => {
       }
     });
   };
+
   React.useEffect(() => {
     const cartItem = checkIfItemIsInCart();
     if (cartItem) {
@@ -555,6 +558,7 @@ export const Details = () => {
         ?.quantity || 0
     );
   };
+
   const getCustomQuantity = (option) => {
     return (
       customVariant.find((item) => item.name_en === option?.name_en)
@@ -652,6 +656,7 @@ export const Details = () => {
       return prevToppingVariant; // No change if topping doesn't exist
     });
   };
+
   const handleRemoveCustomQuantity = (option) => {
     setCustomVariant((prevCustomVariant) => {
       // Find the index of the Custom with the same name_en
@@ -1166,6 +1171,8 @@ export const Details = () => {
               pushedWithDistance,
               filterBranch
             );
+
+            break;
           }
         }
       }
