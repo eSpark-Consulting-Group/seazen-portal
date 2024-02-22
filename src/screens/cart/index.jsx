@@ -558,7 +558,6 @@ function CartPage() {
                           .then((res) => {
                             if (res?.success === "error") {
                               setIsPaymentDone(false);
-
                               //   const parsedError = res?.message
                               //     ?.split(":")[1]
                               //     ?.trim();
@@ -569,7 +568,7 @@ function CartPage() {
                               //     toastList.add(id);
                               //   }
                             } else {
-                              setIsPaymentDone(false);
+                              // setIsPaymentDone(false);
 
                               const checkoutRedirectUrl =
                                 res.data?.payment_methods[0].redirect_url;
@@ -605,7 +604,7 @@ function CartPage() {
                           //     toastList.add(id);
                           //   }
                         } else {
-                          setIsPaymentDone(false);
+                          // setIsPaymentDone(false);
                           const checkoutRedirectUrl =
                             res.data?.payment_methods[0].redirect_url;
                           window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
@@ -1696,16 +1695,27 @@ function CartPage() {
             </Stack>
           </Stack>
 
-          <Button
-            onClick={(e) => checkoutHandler(e)}
-            variant="contained"
-            size="large"
-            className={isActive ? "pay-now-button" : ""}
-            onTouchStart={(e) => checkoutHandler(e)}
-            disabled={isPaymentDone}
-          >
-            Pay Now
-          </Button>
+          {isPaymentDone ? (
+            <Button
+              variant="contained"
+              size="large"
+              className={isActive ? "pay-now-button" : ""}
+              disabled={isPaymentDone}
+            >
+              Processing Checkout
+            </Button>
+          ) : (
+            <Button
+              onClick={(e) => checkoutHandler(e)}
+              variant="contained"
+              size="large"
+              className={isActive ? "pay-now-button" : ""}
+              // onTouchStart={(e) => checkoutHandler(e)}
+              disabled={isPaymentDone}
+            >
+              Pay Now
+            </Button>
+          )}
         </React.Fragment>
       ) : (
         <>
