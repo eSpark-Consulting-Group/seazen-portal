@@ -1302,12 +1302,16 @@ export const Details = () => {
     return false;
   };
 
+  const melenzaneImagePath = "/assets/img/melenzane.png";
+
   useEffect(() => {
     const contentDiv = document.querySelector(".content-section");
+    let oldBackground = window.getComputedStyle(contentDiv).backgroundImage;
 
-    if (contentDiv && restDetail?.main_big_image) {
-      const oldBackground = window.getComputedStyle(contentDiv).backgroundImage;
-      contentDiv.style.backgroundImage = `url('${restDetail?.main_big_image}'), ${oldBackground}`;
+    if (contentDiv && restaurantDetail?.main_big_image) {
+      contentDiv.style.backgroundImage = `url('${restaurantDetail?.main_big_image}'), ${oldBackground}`;
+    } else if (restaurantDetail?.name_en === "Melenzane") {
+      contentDiv.style.backgroundImage = `url('${melenzaneImagePath}'), ${oldBackground}`;
     } else {
       contentDiv.style.backgroundImage = "";
     }
@@ -1315,7 +1319,7 @@ export const Details = () => {
     return () => {
       contentDiv.style.backgroundImage = "";
     };
-  }, [restDetail]);
+  }, [restaurantDetail]);
 
   return (
     <>

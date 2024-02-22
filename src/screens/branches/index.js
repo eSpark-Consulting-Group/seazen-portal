@@ -66,12 +66,16 @@ export const Branches = () => {
     },
   });
 
+  const melenzaneImagePath = "/assets/img/melenzane.png";
+
   useEffect(() => {
     const contentDiv = document.querySelector(".content-section");
+    let oldBackground = window.getComputedStyle(contentDiv).backgroundImage;
 
     if (contentDiv && restaurantDetail?.main_big_image) {
-      const oldBackground = window.getComputedStyle(contentDiv).backgroundImage;
       contentDiv.style.backgroundImage = `url('${restaurantDetail?.main_big_image}'), ${oldBackground}`;
+    } else if (restaurantDetail?.name_en === "Melenzane") {
+      contentDiv.style.backgroundImage = `url('${melenzaneImagePath}'), ${oldBackground}`;
     } else {
       contentDiv.style.backgroundImage = "";
     }
@@ -80,7 +84,6 @@ export const Branches = () => {
       contentDiv.style.backgroundImage = "";
     };
   }, [restaurantDetail]);
-
   return (
     <div className="branches-screen-container">
       <BranchHeader />

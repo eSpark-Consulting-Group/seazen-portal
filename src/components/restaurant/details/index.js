@@ -58,13 +58,17 @@ const RestaurantDetails = ({ restaurantDetail, orderAmFromDelivery }) => {
     <div className="details_outer_container px-3 px-sm-4">
       <div className="details_inner_div w-100">
         <div className="logo_info_container">
-          {restaurantDetail?.name_en === "Trapani" && (
+          {/* {restaurantDetail?.name_en === "Trapani" && (
             <img src="/assets/img/Trapani_logo.svg" alt="restaurant_logo" />
-          )}
+          )} */}
           {/* {restaurantDetail?.name_en === "Masgouf" && (
             <img src={restaurantDetail?.logo} alt="restaurant_logo" />
           )} */}
-          {getLogoSrc() && <img src={getLogoSrc()} alt="restaurant_logo" />}
+          {restaurantDetail?.logo && (
+            <div className="restaurant_logo_div">
+              <img src={restaurantDetail?.logo} alt="restaurant_logo" />
+            </div>
+          )}
           {/* {restaurantDetail?.name_en === "Grove" && (
             <img src={restaurantDetail?.logo} alt="restaurant_logo" />
           )} */}
