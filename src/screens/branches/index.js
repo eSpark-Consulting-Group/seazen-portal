@@ -74,8 +74,6 @@ export const Branches = () => {
 
     if (contentDiv && restaurantDetail?.main_big_image) {
       contentDiv.style.backgroundImage = `url('${restaurantDetail?.main_big_image}'), ${oldBackground}`;
-    } else if (restaurantDetail?.name_en === "Melenzane") {
-      contentDiv.style.backgroundImage = `url('${melenzaneImagePath}'), ${oldBackground}`;
     } else {
       contentDiv.style.backgroundImage = "";
     }

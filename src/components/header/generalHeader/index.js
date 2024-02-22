@@ -30,8 +30,21 @@ const Navbar = (props) => {
 
     if (contentDiv && restaurantDetail?.main_big_image) {
       contentDiv.style.backgroundImage = `url('${restaurantDetail?.main_big_image}'), ${oldBackground}`;
-    } else if (restaurantDetail?.name_en === "Melenzane") {
-      contentDiv.style.backgroundImage = `url('${melenzaneImagePath}'), ${oldBackground}`;
+    } else {
+      contentDiv.style.backgroundImage = "";
+    }
+
+    return () => {
+      contentDiv.style.backgroundImage = "";
+    };
+  }, [restaurantDetail]);
+
+  useEffect(() => {
+    const contentDiv = document.querySelector(".content-section");
+    let oldBackground = window.getComputedStyle(contentDiv).backgroundImage;
+
+    if (contentDiv && restaurantDetail?.main_big_image) {
+      contentDiv.style.backgroundImage = `url('${restaurantDetail?.main_big_image}'), ${oldBackground}`;
     } else {
       contentDiv.style.backgroundImage = "";
     }
@@ -57,7 +70,9 @@ const Navbar = (props) => {
       className="Nav_Image_Container"
       style={{
         backgroundImage: `url(${
-          restaurantDetail?.cover_page_image || defaultImagePath
+          restaurantDetail?.name_en === "Melenzane"
+            ? melenzaneImagePath
+            : restaurantDetail?.cover_page_image || defaultImagePath
         })`,
       }}
     >
