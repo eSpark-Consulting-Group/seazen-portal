@@ -248,7 +248,9 @@ function CartPage() {
         getBranchHoursApiCall();
       } else {
         const forCurrent = branchHours?.filter(
-          (rest) => rest.restaurant_id === cart[0]?.restaurant_id
+          (rest) =>
+            rest.restaurant_id === cart[0]?.restaurant_id &&
+            +rest.id === +cart[0]?.branch_id
         );
 
         checkBranchHours(forCurrent);
@@ -258,7 +260,9 @@ function CartPage() {
 
   const getBranchHoursApiCall = () => {
     getRestaurantBranchHours(cart[0]?.restaurant_id).then((res) => {
-      checkBranchHours(res.data);
+      const filtered = res.data((elem) => elem.id === cart[0]?.branch_id);
+
+      checkBranchHours(filtered);
       dispatch(getBranchHours(res.data));
     });
   };
@@ -293,6 +297,7 @@ function CartPage() {
             });
 
             checkWithBranchIdDeliverZones(pushedWithDistance, selectedAddress);
+            break;
           }
         }
       }
