@@ -250,7 +250,7 @@ function CartPage() {
         const forCurrent = branchHours?.filter(
           (rest) =>
             rest.restaurant_id === cart[0]?.restaurant_id &&
-            +rest.id === +cart[0]?.branch_id
+            +rest.id === +localStorage.getItem("branchId")
         );
 
         checkBranchHours(forCurrent);
@@ -260,7 +260,9 @@ function CartPage() {
 
   const getBranchHoursApiCall = () => {
     getRestaurantBranchHours(cart[0]?.restaurant_id).then((res) => {
-      const filtered = res.data((elem) => elem.id === cart[0]?.branch_id);
+      const filtered = res.data(
+        (elem) => elem.id === +localStorage.getItem("branchId")
+      );
 
       checkBranchHours(filtered);
       dispatch(getBranchHours(res.data));
@@ -510,7 +512,7 @@ function CartPage() {
             const filterRestaurant = branchHours.filter(
               (branch) =>
                 branch.restaurant_id === cart[0]?.restaurant_id &&
-                branch.id === cart[0]?.branch_id
+                branch.id === +localStorage.getItem("branchId")
             );
 
             if (filterRestaurant?.length === 0) {
@@ -548,7 +550,7 @@ function CartPage() {
 
                         const data = {
                           ...checkoutData,
-                          branch_id: cart[0]?.branch_id,
+                          branch_id: +localStorage.getItem("branchId"),
                           discount_price: getDiscountAmount(),
                         };
 
@@ -588,7 +590,7 @@ function CartPage() {
                   } else {
                     const data = {
                       ...checkoutData,
-                      branch_id: cart[0]?.branch_id,
+                      branch_id: +localStorage.getItem("branchId"),
                       discount_price: getDiscountAmount(),
                     };
                     checkout(data, token)
@@ -665,7 +667,7 @@ function CartPage() {
     const filterRestaurant = branchHours.filter(
       (branch) =>
         branch.restaurant_id === cart[0]?.restaurant_id &&
-        branch.id === cart[0]?.branch_id
+        branch.id === +localStorage.getItem("branchId")
     );
 
     for (let i = 0; i < filterRestaurant?.length; i++) {
