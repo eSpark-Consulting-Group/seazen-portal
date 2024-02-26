@@ -89,7 +89,7 @@ function PhoneNumberVerificationOTP() {
           const cartItem = location?.state?.ItemDataObject;
           const token = data.data.token;
 
-          // dispatch(addToCart(cartItem));
+          dispatch(addToCart(cartItem));
           addToCartApiHandler(cartItem, token);
         }
 
@@ -98,7 +98,7 @@ function PhoneNumberVerificationOTP() {
           const inCart = location?.state?.addtoCart;
           const token = data.data.token;
 
-          // dispatch(addToCart(inCart));
+          dispatch(addToCart(inCart));
           addToCartApiCall(cartItemDataForApi, token)
             .then((res) => {})
             .catch((err) => {

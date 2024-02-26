@@ -289,37 +289,37 @@ const Menu = () => {
     }
   }, [country, restaurant_id]);
 
-  useEffect(() => {
-    if (location?.state?.addFromDetail === undefined) {
-      if (sessionStorage.getItem("cartEmpty") === null) {
-        if (token !== null) {
-          if (cart?.length === 0 && branchHours?.length) {
-            fetchFunction();
-          }
-        }
-      }
-    }
-  }, [cart, token, branchHours]);
+  // useEffect(() => {
+  //   if (location?.state?.addFromDetail === undefined) {
+  //     if (sessionStorage.getItem("cartEmpty") === null) {
+  //       if (token !== null) {
+  //         if (cart?.length === 0 && branchHours?.length) {
+  //           fetchFunction();
+  //         }
+  //       }
+  //     }
+  //   }
+  // }, [cart, token, branchHours]);
 
-  const { refetch: fetchFunction } = useQuery({
-    queryKey: [
-      token,
-      sessionStorage.getItem("cartEmpty") === null,
-      location?.state?.addFromDetail === undefined,
-    ],
-    queryFn: () => cartList(token),
-    onSuccess: (res) => {
-      if (res.status === "Error") {
-        sessionStorage.setItem("cartEmpty", true);
-      } else {
-        cartListWithQuery(branchHours, dispatch, addToCart, res, cart);
-      }
-    },
-    enabled:
-      !!token &&
-      sessionStorage.getItem("cartEmpty") === null &&
-      location?.state?.addFromDetail === undefined,
-  });
+  // const { refetch: fetchFunction } = useQuery({
+  //   queryKey: [
+  //     token,
+  //     sessionStorage.getItem("cartEmpty") === null,
+  //     location?.state?.addFromDetail === undefined,
+  //   ],
+  //   queryFn: () => cartList(token),
+  //   onSuccess: (res) => {
+  //     if (res.status === "Error") {
+  //       sessionStorage.setItem("cartEmpty", true);
+  //     } else {
+  //       cartListWithQuery(branchHours, dispatch, addToCart, res, cart);
+  //     }
+  //   },
+  //   enabled:
+  //     !!token &&
+  //     sessionStorage.getItem("cartEmpty") === null &&
+  //     location?.state?.addFromDetail === undefined,
+  // });
 
   // const fetchBranches = () => {
   //   getBranchesAndHours(restaurant_id)
