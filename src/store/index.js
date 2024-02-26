@@ -7,7 +7,7 @@ import rootReducer from "./reducers";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "theme", "cart", "location", "resturants"],
+  whitelist: [ "theme", "resturants", "cart"],
 };
 
 const logger = createLogger({

@@ -187,6 +187,10 @@ export const Details = () => {
     (state) => state.resturants.resturantsData
   );
 
+  const restaurantsDetail = useSelector(
+    (state) => state.resturants.resturantsDetail
+  );
+
   const { search } = useLocation();
 
   const {
@@ -884,22 +888,6 @@ export const Details = () => {
     // dispatch(addExtraToppings({ id: id, extraToppings: toppingVariant }));
     // dispatch(addExtraSides({ id: id, extraSides: sideVariant }));
   };
-
-  const openNotDelivered = () => {
-    const { data } = menuItemDetails;
-
-    const hasSizeVariant = data?.variants.find(
-      (val) => val.variant_type == "size"
-    );
-
-    if (hasSizeVariant && !sizeVariant) {
-      setErrorShow(true);
-      return;
-    }
-
-    createAndAddState(data);
-  };
-
   const createAndAddState = (data) => {
     var ItemDataObject = {
       id: data?.id,
@@ -948,7 +936,7 @@ export const Details = () => {
     setNotDeliver(true);
   };
 
-  const moveToLocation = () => {
+  const openNotDelivered = () => {
     const { data } = menuItemDetails;
 
     const hasSizeVariant = data?.variants.find(
@@ -960,7 +948,7 @@ export const Details = () => {
       return;
     }
 
-    createAndAddWithNavigation(data);
+    createAndAddState(data);
   };
 
   const createAndAddWithNavigation = (data) => {
@@ -992,7 +980,7 @@ export const Details = () => {
     };
 
     const restaurantIdForRedirect = localStorage?.getItem("restaurantID");
-    const findName = resturantsData?.find(
+    const findName = restaurantsDetail?.find(
       (restaurant) => restaurant.id === +restaurantIdForRedirect
     );
 
@@ -1014,6 +1002,21 @@ export const Details = () => {
         state: sharedState,
       });
     }
+  };
+
+  const moveToLocation = () => {
+    const { data } = menuItemDetails;
+
+    const hasSizeVariant = data?.variants.find(
+      (val) => val.variant_type == "size"
+    );
+
+    if (hasSizeVariant && !sizeVariant) {
+      setErrorShow(true);
+      return;
+    }
+
+    createAndAddWithNavigation(data);
   };
 
   const handleClose = () => {

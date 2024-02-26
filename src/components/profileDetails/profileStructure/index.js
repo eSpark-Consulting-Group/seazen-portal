@@ -20,6 +20,7 @@ import logout from "../../../api/customer/logout";
 import { useDispatch } from "react-redux";
 import { resetCart } from "../../../store/reducers/cartSlice";
 import clearCart from "../../../api/cart/clearCart";
+import { clearAddressList } from "../../../store/reducers/addressSlice";
 
 const ProfileStructure = ({
   name,
@@ -45,9 +46,10 @@ const ProfileStructure = ({
       .then((res) => {
         logout(token)
           .then(() => {
-            localStorage.removeItem("token");
+            localStorage.clear();
             sessionStorage.removeItem("cartEmpty");
             dispatch(resetCart());
+            dispatch(clearAddressList());
             navigate("/");
           })
           .catch((e) => {

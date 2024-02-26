@@ -31,6 +31,9 @@ const addressSlice = createSlice({
     storeAreaDetail: (state, { payload }) => {
       state.areaData = payload;
     },
+    clearAddressList: (state) =>{
+      state.addressData = [];
+    }
   },
 });
 
@@ -40,6 +43,7 @@ export const {
   addAddressDetail,
   getAreas,
   storeAreaDetail,
+  clearAddressList
 } = addressSlice.actions;
 
 export default addressSlice.reducer;

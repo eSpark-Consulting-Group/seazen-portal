@@ -48,9 +48,9 @@ export const Branches = () => {
                 " - " +
                 branch.branch_hours[0].to_time,
               weekendHours:
-                branch.branch_hours[branch.branch_hours.length - 1].from_time +
+                branch.branch_hours[branch.branch_hours.length - 2].from_time +
                 " - " +
-                branch.branch_hours[branch.branch_hours.length - 1].to_time,
+                branch.branch_hours[branch.branch_hours.length - 2].to_time,
             });
           } else {
             branchesAndHours.push({
