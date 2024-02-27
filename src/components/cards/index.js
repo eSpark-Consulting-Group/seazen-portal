@@ -197,9 +197,7 @@ const BasicCard = (props) => {
         {newRestaurantData
           .sort((restaurantA, restaurantB) => restaurantA.display_order - restaurantB.display_order)
           .map((restaurant, index) => {
-            /*Temporary condition to hide restaurant from landing page */
             return (
-              restaurant.id !== 3 && (
                 <div
                   key={index}
                   className={`restaurantCards restaurantCard-large ${
@@ -295,7 +293,6 @@ const BasicCard = (props) => {
                   </Card>
                 </div>
               )
-            );
           })}
       </div>
     </div>
