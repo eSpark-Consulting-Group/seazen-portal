@@ -120,21 +120,21 @@ const DeliveryDetails = (props) => {
     }
   };
 
-  const returnLocation = () => {
-    let location = "";
-    if (currentLocation === null && selected === null) {
-      location = "No Address";
-    } else if (selected === null && currentLocation !== null) {
-      location = truncateString(currentLocation?.address, 15);
-    } else if (selected !== null && currentLocation !== null) {
-      location = truncateString(selected?.address, 15);
-    }
+  // const returnLocation = () => {
+  //   let location = "";
+  //   if (currentLocation === null && selected === null) {
+  //     location = "No Address";
+  //   } else if (selected === null && currentLocation !== null) {
+  //     location = truncateString(currentLocation?.address, 15);
+  //   } else if (selected !== null && currentLocation !== null) {
+  //     location = truncateString(selected?.address, 15);
+  //   }
 
-    return location;
-  };
+  //   return location;
+  // };
 
   const [latlng, setLatlng] = useState(null);
-  const [userLocation, setUserLocation] = useState(returnLocation());
+  const [userLocation, setUserLocation] = useState();
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
   const [openDropdown, setOpendropdown] = useState(false);
   const [isDeliveryDropDown, setIsDeliveryDropDown] = useState(false);
@@ -162,6 +162,35 @@ const DeliveryDetails = (props) => {
     const restName = resturantsData?.find((rest) => rest.id === id);
 
     return restName?.name_en;
+  };
+
+  const locationLabelName = () => {
+    let text = "";
+    const truncLoc = truncateString(currentLocation?.address, 15);
+
+    if (token !== null) {
+      if (currentLocation !== null) {
+        text = truncLoc;
+      }
+      if (selected !== null) {
+        text = truncateString(selected?.address, 15);
+      }
+      if (selected === null && currentLocation === null) {
+        if (addressData.length) {
+          text = "Select Address";
+        } else {
+          text = "Add Address";
+        }
+      }
+    } else {
+      if (currentLocation !== null) {
+        text = truncLoc;
+      } else {
+        text = "Add Address";
+      }
+    }
+
+    return text;
   };
 
   useEffect(() => {
@@ -202,40 +231,9 @@ const DeliveryDetails = (props) => {
     }
   }, [branchHours, restaurantDetail]);
 
-  const locationLabelName = () => {
-    let text = "";
-    const truncLoc = truncateString(currentLocation?.address, 15);
-
-    if (
-      localStorage.getItem("locatPermission") === "denied" ||
-      localStorage.getItem("locatPermission") === "granted" ||
-      localStorage.getItem("locatPermission") === "prompt"
-    ) {
-      if (token !== null) {
-        if (currentLocation !== null) {
-          text = truncLoc;
-        }
-        if (selected !== null) {
-          text = truncateString(selected?.address, 15);
-        }
-        if (selected === null && currentLocation === null) {
-          if (addressData.length) {
-            text = "Select Address";
-          } else {
-            text = "Add Address";
-          }
-        }
-      } else {
-        if (currentLocation !== null) {
-          text = truncLoc;
-        } else {
-          text = "Add Address";
-        }
-      }
-    }
-
-    return text;
-  };
+  useEffect(() => {
+    setUserLocation(locationLabelName());
+  }, []);
 
   useEffect(() => {
     let pushedWithDistance = [];
