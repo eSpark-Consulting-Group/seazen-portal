@@ -23,6 +23,7 @@ const Navbar = (props) => {
 
   const defaultImagePath = "/assets/img/menu_background_image.png";
   const melenzaneImagePath = "/assets/img/melenzane.png";
+  const trapaniImagePath = "/assets/img/trapani.jpeg";
 
   useEffect(() => {
     const contentDiv = document.querySelector(".content-section");
@@ -72,6 +73,8 @@ const Navbar = (props) => {
         backgroundImage: `url(${
           restaurantDetail?.name_en === "Melenzane"
             ? melenzaneImagePath
+            : restaurantDetail?.name_en === "Trapani"
+            ? trapaniImagePath
             : restaurantDetail?.cover_page_image || defaultImagePath
         })`,
       }}
