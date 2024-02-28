@@ -83,25 +83,69 @@ const SchedulePicker = (props) => {
 
   const branchId = localStorage.getItem("branchId");
 
-  const timeByDate = branchesAndHoursResponse?.data
-    ?.find((val) => (val.id = branchId))
-    ?.branch_hours?.find((val) => {
-      return val.week_day == pickDay;
-    });
+  const branchabc = [
+    {
+      week_day: "Sunday",
+      from_time: "13:00",
+      to_time: "01:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Monday",
+      from_time: "13:00",
+      to_time: "01:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Tuesday",
+      from_time: "13:00",
+      to_time: "01:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Wednesday",
+      from_time: "13:00",
+      to_time: "22:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Thursday",
+      from_time: "13:00",
+      to_time: "23:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Friday",
+      from_time: "13:00",
+      to_time: "01:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Saturday",
+      from_time: "13:00",
+      to_time: "01:00",
+      openingStatus: "Open",
+    },
+  ];
+
+  // const timeByDate = branchesAndHoursResponse?.data
+  //   ?.find((val) => (val.id = branchId))
+  //   ?.branch_hours?.find((val) => {
+  //     return val.week_day == pickDay;
+  //   });
+  const timeByDate = branchabc?.find((val) => {
+    return val.week_day == pickDay;
+  });
 
   const getSingleDigitHour = (fullTime) => {
+    console.log(fullTime, "fullTime");
     let Hour;
     Hour =
       fullTime?.split(":")[0][0] == "0"
         ? fullTime?.split(":")[0][1]
         : fullTime?.split(":")[0];
 
-    if (fullTime?.includes("AM")) {
-      return parseInt(Hour);
-    }
-    if (fullTime?.includes("PM")) {
-      return parseInt(Hour) + 12;
-    }
+    return parseInt(Hour);
   };
 
   const handlerFunc = (ampm, date) => {
@@ -116,22 +160,14 @@ const SchedulePicker = (props) => {
         selectedTime
           .set("hour", getSingleDigitHour(timeByDate?.to_time))
           .set("minute", 0)
-          .add(1, "day")
       );
     }
     if (ampm == "am") {
-      setMinTime(
-        selectedTime
-          .subtract(1, "day")
-          .set("hour", getSingleDigitHour(timeByDate?.from_time))
-          .set("minute", 0)
-      );
+      setMinTime(selectedTime.set("hour", 0).set("minute", 0));
       setMaxTime(
         selectedTime
-          .subtract(1, "day")
           .set("hour", getSingleDigitHour(timeByDate?.to_time))
           .set("minute", 0)
-          .add(1, "day")
       );
     }
   };

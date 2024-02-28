@@ -455,18 +455,14 @@ function CartPage() {
   }, [cart]);
 
   const getSingleDigitHour = (fullTime) => {
+    console.log(fullTime, "fullTime");
     let Hour;
     Hour =
       fullTime?.split(":")[0][0] == "0"
         ? fullTime?.split(":")[0][1]
         : fullTime?.split(":")[0];
 
-    if (fullTime?.includes("AM")) {
-      return parseInt(Hour);
-    }
-    if (fullTime?.includes("PM")) {
-      return parseInt(Hour) + 12;
-    }
+    return parseInt(Hour);
   };
 
   const checkoutHandler = (event) => {
@@ -878,7 +874,7 @@ function CartPage() {
       setMinTime(
         selectedTime
           .set("hour", getSingleDigitHour(timeByDate?.from_time))
-          .set("minute", 0)
+          .set("minute", 30)
       );
       setMaxTime(
         selectedTime
@@ -892,7 +888,7 @@ function CartPage() {
         selectedTime
           .subtract(1, "day")
           .set("hour", getSingleDigitHour(timeByDate?.from_time))
-          .set("minute", 0)
+          .set("minute", 30)
       );
       setMaxTime(
         selectedTime
