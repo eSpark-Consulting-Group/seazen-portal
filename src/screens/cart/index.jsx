@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 
-// import { toast } from "react-toastify";
+import _ from "lodash";
+
+import { toast } from "react-toastify";
 // import { useTheme } from "@mui/material";
 import {
   Box,
@@ -56,10 +58,13 @@ import getRestaurantBranchHours from "../../api/restaurant/getRestaurantBranchHo
 // import getNearByRestaurants from "../../api/restaurant/getNearByRestaurant";
 import deliveryPriceApi from "../../api/common/getDeliveryCharges";
 import getAllRestaurants from "../../api/home/getAllRestaurants";
+import updateCartApiCall from "../../api/cart/updateCart";
 
 import {
   addComment,
   addToCart,
+  getCartListOfUser,
+  resetCart,
   updateCartItemQuantity,
 } from "../../store/reducers/cartSlice";
 // import { setThemeColor } from "../../store/reducers/themeSlice";
@@ -77,10 +82,9 @@ import {
 import { paths } from "../../routes/paths";
 
 import "./style.css";
-import updateCartApiCall from "../../api/cart/updateCart";
 
-// const toastList = new Set();
-// const MAX_TOAST = 1;
+const toastList = new Set();
+const MAX_TOAST = 1;
 
 function CartPage() {
   const navigate = useNavigate();
@@ -94,6 +98,7 @@ function CartPage() {
   // const brId = localStorage.getItem("branchId");
 
   const cart = useSelector((state) => state.cart.cart);
+  const cartListOfUser = useSelector((state) => state.cart.cartList);
   const allAreas = useSelector((state) => state.address.allAreas);
 
   const branchHours = useSelector((state) => state.resturants.branchHours);
@@ -455,7 +460,6 @@ function CartPage() {
   }, [cart]);
 
   const getSingleDigitHour = (fullTime) => {
-    console.log(fullTime, "fullTime");
     let Hour;
     Hour =
       fullTime?.split(":")[0][0] == "0"
@@ -550,29 +554,50 @@ function CartPage() {
                           discount_price: getDiscountAmount(),
                         };
 
-                        checkout(data, token)
+                        cartList(token)
                           .then((res) => {
-                            if (res?.success === "error") {
-                              setIsPaymentDone(false);
-                              //   const parsedError = res?.message
-                              //     ?.split(":")[1]
-                              //     ?.trim();
-                              //   if (toastList.size < MAX_TOAST) {
-                              //     const id = toast.error(parsedError, {
-                              //       onClose: () => toastList.delete(id),
-                              //     });
-                              //     toastList.add(id);
-                              //   }
-                            } else {
-                              // setIsPaymentDone(false);
+                            if (_.isEqual(cartListOfUser, res.data)) {
+                              checkout(data, token)
+                                .then((res) => {
+                                  if (res?.success === "error") {
+                                    setIsPaymentDone(false);
+                                    //   const parsedError = res?.message
+                                    //     ?.split(":")[1]
+                                    //     ?.trim();
+                                    //   if (toastList.size < MAX_TOAST) {
+                                    //     const id = toast.error(parsedError, {
+                                    //       onClose: () => toastList.delete(id),
+                                    //     });
+                                    //     toastList.add(id);
+                                    //   }
+                                  } else {
+                                    // setIsPaymentDone(false);
 
-                              const checkoutRedirectUrl =
-                                res.data?.payment_methods[0].redirect_url;
-                              window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                                    const checkoutRedirectUrl =
+                                      res.data?.payment_methods[0].redirect_url;
+                                    window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                                  }
+                                })
+                                .catch((err) => {
+                                  setIsPaymentDone(false);
+                                  console.log(err);
+                                });
+                            } else {
+                              setIsPaymentDone(false);
+                              if (toastList.size < MAX_TOAST) {
+                                const id = toast.error(
+                                  "Something Went Wrong, Please refresh your page",
+                                  {
+                                    onClose: () => toastList.delete(id),
+                                  }
+                                );
+                                toastList.add(id);
+                              }
                             }
                           })
                           .catch((err) => {
                             setIsPaymentDone(false);
+
                             console.log(err);
                           });
 
@@ -588,26 +613,51 @@ function CartPage() {
                       branch_id: +localStorage.getItem("branchId"),
                       discount_price: getDiscountAmount(),
                     };
-                    checkout(data, token)
+
+                    cartList(token)
                       .then((res) => {
-                        if (res?.success === "error") {
-                          setIsPaymentDone(false);
-                          //   const parsedError = res?.message?.split(":")[1]?.trim();
-                          //   if (toastList.size < MAX_TOAST) {
-                          //     const id = toast.error(parsedError, {
-                          //       onClose: () => toastList.delete(id),
-                          //     });
-                          //     toastList.add(id);
-                          //   }
+                        if (_.isEqual(cartListOfUser, res.data)) {
+                          checkout(data, token)
+                            .then((res) => {
+                              if (res?.success === "error") {
+                                setIsPaymentDone(false);
+                                //   const parsedError = res?.message
+                                //     ?.split(":")[1]
+                                //     ?.trim();
+                                //   if (toastList.size < MAX_TOAST) {
+                                //     const id = toast.error(parsedError, {
+                                //       onClose: () => toastList.delete(id),
+                                //     });
+                                //     toastList.add(id);
+                                //   }
+                              } else {
+                                // setIsPaymentDone(false);
+
+                                const checkoutRedirectUrl =
+                                  res.data?.payment_methods[0].redirect_url;
+                                window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                              }
+                            })
+                            .catch((err) => {
+                              setIsPaymentDone(false);
+                              console.log(err);
+                            });
                         } else {
-                          // setIsPaymentDone(false);
-                          const checkoutRedirectUrl =
-                            res.data?.payment_methods[0].redirect_url;
-                          window.location.href = checkoutRedirectUrl; // '_blank' opens the URL in a new tab
+                          setIsPaymentDone(false);
+                          if (toastList.size < MAX_TOAST) {
+                            const id = toast.error(
+                              "Something Went Wrong, Please refresh your page",
+                              {
+                                onClose: () => toastList.delete(id),
+                              }
+                            );
+                            toastList.add(id);
+                          }
                         }
                       })
                       .catch((err) => {
                         setIsPaymentDone(false);
+
                         console.log(err);
                       });
 
@@ -697,9 +747,9 @@ function CartPage() {
   };
 
   useEffect(() => {
-    if (token !== null) {
-      cartRefetch();
-    }
+    // if (token !== null) {
+    //   cartRefetch();
+    // }
     getRestaurantLogo(cart[0]?.restaurant_id);
   }, [country]);
 
@@ -717,6 +767,68 @@ function CartPage() {
       }
     }, 500);
   };
+
+  const { refetch: fetchCartList } = useQuery({
+    queryKey: [token],
+    queryFn: () => {
+      return cartList(token);
+    },
+    onSuccess: (res) => {
+      dispatch(getCartListOfUser(res.data));
+      dispatch(resetCart());
+
+      const resData = res.data.map((val) => {
+        const findRestaurant = branchHours?.find((branch) => {
+          return branch.id === val?.branch_id;
+        });
+
+        const obj = {
+          id: val?.item_id,
+          itemName: val?.menu_item_name_en,
+          discountedPrice: "",
+          price: val?.unit_price,
+          quantity: val.quantity,
+          variants: {
+            sizeVariant: {
+              ...val?.size_variant[0],
+              variantId: val.size_variant_id,
+            },
+            toppingVariant: val?.topping_variant?.map((value) => ({
+              ...value,
+              variantId: val.topping_variant_id,
+            })),
+            customVariant: val?.custom_variant?.map((value) => ({
+              ...value,
+              variantId: val.custom_variant_id,
+            })),
+            sideVariant: val?.side_variant?.map((value) => ({
+              ...value,
+              variantId: val.side_variant_id,
+            })),
+          },
+          totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
+          specialInstructions: val.specialInstructions,
+          itemImage: val?.menu_item_image,
+          hasVariants: val?.hasVariants,
+          restaurant_id: findRestaurant.restaurant_id,
+          branch_id: val.branch_id,
+          item_code: val.item_code,
+          cart_id: val.cart_id,
+        };
+
+        dispatch(addToCart(obj));
+
+        return obj;
+      });
+      setCartItems(resData);
+    },
+  });
+
+  useEffect(() => {
+    if (token) {
+      fetchCartList();
+    }
+  }, [fetchCartList, token, branchHours]);
 
   const cartRefetch = () => {
     if (cart.length == 0) {

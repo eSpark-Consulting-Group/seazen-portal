@@ -8,6 +8,7 @@ const cartSlice = createSlice({
     totalItems: 0,
     totalQuantity: 0,
     comment: "",
+    cartList: [],
   },
 
   reducers: {
@@ -166,6 +167,10 @@ const cartSlice = createSlice({
         state.cart.splice(itemIndex, 1);
       }
     },
+
+    getCartListOfUser: (state, action) => {
+      state.cartList = action.payload;
+    },
   },
 });
 
@@ -182,6 +187,7 @@ export const {
   updateCartInfo,
   resetCart,
   addComment,
+  getCartListOfUser,
 } = cartSlice.actions;
 
 export const selectCart = (state) => state.cart;

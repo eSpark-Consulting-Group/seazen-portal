@@ -426,7 +426,11 @@ export const Details = () => {
   const checkIfItemIsInCart = () => {
     return cart.find((item) => {
       if (item.has_variants) {
-        return item?.item_code === location.state?.item_code;
+        if (location.state?.item_code) {
+          return item?.item_code === location.state?.item_code;
+        } else {
+          return item.id === +id;
+        }
       } else {
         return item.id === +id;
       }
