@@ -89,7 +89,7 @@ function PhoneNumberVerificationOTP() {
           const cartItem = location?.state?.ItemDataObject;
           const token = data.data.token;
 
-          dispatch(addToCart(cartItem));
+          // dispatch(addToCart(cartItem));
           addToCartApiHandler(cartItem, token);
         }
 
@@ -98,9 +98,11 @@ function PhoneNumberVerificationOTP() {
           const inCart = location?.state?.addtoCart;
           const token = data.data.token;
 
-          dispatch(addToCart(inCart));
+          // dispatch(addToCart(inCart));
           addToCartApiCall(cartItemDataForApi, token)
-            .then((res) => {})
+            .then((res) => {
+              dispatch(addToCart({ ...inCart, cart_id: res?.data?.cart_id }));
+            })
             .catch((err) => {
               console.log(err);
             });
@@ -192,7 +194,9 @@ function PhoneNumberVerificationOTP() {
     };
 
     addToCartApiCall(cartItemDataForApi, token)
-      .then((res) => {})
+      .then((res) => {
+        dispatch(addToCart({ ...cartItem, cart_id: res?.data?.cart_id }));
+      })
       .catch((err) => {
         console.log(err);
       });

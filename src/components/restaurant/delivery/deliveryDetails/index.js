@@ -155,6 +155,7 @@ const DeliveryDetails = (props) => {
   const [selectAddressNotDeliver, setSelectAddressNotDeliver] = useState(false);
   // const [distancesLessThan50, setDistancesLessThan50] = useState([]);
   const [restName, setRestName] = useState("");
+  const [timeByDate, setTimeByDate] = useState();
 
   const { id: restaurant_id } = useParams();
 
@@ -416,25 +417,67 @@ const DeliveryDetails = (props) => {
   //   },
   // });
 
-  const timeByDate = branchHours
-    ?.find((val) => +val.id === +branchId)
-    ?.branch_hours?.find((val) => {
+  const branchabc = [
+    {
+      week_day: "Sunday",
+      from_time: "13:00",
+      to_time: "01:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Monday",
+      from_time: "13:00",
+      to_time: "01:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Tuesday",
+      from_time: "13:00",
+      to_time: "01:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Wednesday",
+      from_time: "13:00",
+      to_time: "02:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Thursday",
+      from_time: "13:00",
+      to_time: "23:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Friday",
+      from_time: "13:00",
+      to_time: "01:00",
+      openingStatus: "Open",
+    },
+    {
+      week_day: "Saturday",
+      from_time: "13:00",
+      to_time: "01:00",
+      openingStatus: "Open",
+    },
+  ];
+
+  useEffect(() => {
+    const time_by_date = branchabc?.find((val) => {
       return val.week_day == pickDay;
     });
 
-  const getSingleDigitHour = (fullTime) => {
+    setTimeByDate(time_by_date);
+  }, [pickDay]);
+
+  const getSingleDigitHour = (fullTime, isAm) => {
     let Hour;
     Hour =
       fullTime?.split(":")[0][0] == "0"
         ? fullTime?.split(":")[0][1]
         : fullTime?.split(":")[0];
 
-    if (fullTime?.includes("AM")) {
-      return parseInt(Hour);
-    }
-    if (fullTime?.includes("PM")) {
-      return parseInt(Hour) + 12;
-    }
+    return parseInt(Hour);
   };
 
   const onDateSelected = () => {
@@ -601,38 +644,60 @@ const DeliveryDetails = (props) => {
   const Overlay = () => {
     return <div className="overlay"></div>;
   };
-
   const handlerFunc = (ampm, date) => {
     const selectedTime = dayjs(date);
+    console.log(timeByDate, "timeByDatetimeByDate");
+    console.log(selectedTime.get("date"), "timeByDatetimeByDate");
     if (ampm == "pm") {
+      setPickDay(selectedTime.format("dddd"));
+
       setMinTime(
         selectedTime
           .set("hour", getSingleDigitHour(timeByDate?.from_time))
           .set("minute", 0)
       );
-      setMaxTime(
-        selectedTime
-          .set("hour", getSingleDigitHour(timeByDate?.to_time))
-          .set("minute", 0)
-          .add(1, "day")
-      );
+      if (getSingleDigitHour(timeByDate?.to_time) < 12) {
+        setMaxTime(selectedTime.set("hour", 12).set("minute", 0));
+      } else {
+        setMaxTime(
+          selectedTime
+            .set("hour", getSingleDigitHour(timeByDate?.to_time))
+            .set("minute", 0)
+        );
+      }
+      console.log(selectedTime, "innnerrr");
     }
     if (ampm == "am") {
-      setMinTime(
-        selectedTime
-          .subtract(1, "day")
-          .set("hour", getSingleDigitHour(timeByDate?.from_time))
-          .set("minute", 0)
-      );
-      setMaxTime(
-        selectedTime
-          .subtract(1, "day")
-          .set("hour", getSingleDigitHour(timeByDate?.to_time))
-          .set("minute", 0)
-          .add(1, "day")
-      );
+      setPickDay(selectedTime.subtract(1, "day").format("dddd"));
+      if (getSingleDigitHour(timeByDate?.to_time) < 12) {
+        console.log(timeByDate, "selectedTimeselectedTime");
+        setMinTime(selectedTime.set("hour", 0).set("minute", 0));
+        setMaxTime(
+          selectedTime
+            .set("hour", getSingleDigitHour(timeByDate?.to_time))
+            .set("minute", 0)
+        );
+      } else {
+        setMinTime(selectedTime.set("hour", 0).set("minute", 0));
+        setMaxTime(selectedTime.set("hour", 0).set("minute", 0));
+      }
     }
   };
+  // console.log(timeByDate, "timeByDate");
+  const setDefaultDateAndTime = () => {
+    // const currentDate = new Date();
+    const defaultDate = dayjs();
+    setPickDay(defaultDate.format("dddd"));
+    handlerFunc(defaultDate.format("a"), defaultDate.format("YYYY-MM-DD"));
+    console.log(dayjs(), "datedate");
+    return defaultDate;
+  };
+
+  console.log(minTime.format("hh"), maxTime.format("hh"), "minTime, maxTime");
+
+  useEffect(() => {
+    setDefaultDateAndTime();
+  }, []);
 
   const commonStateSets = (
     address,
@@ -1064,9 +1129,11 @@ const DeliveryDetails = (props) => {
             }}
             minTime={minTime}
             maxTime={maxTime}
+            defaultValue={() => dayjs()}
             disablePast
             ampm={true}
             onChange={(date, e, ew) => {
+              console.log(date, "ewewewew");
               handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
               setPickDay(date.format("dddd"));
               date.preventDefault();
