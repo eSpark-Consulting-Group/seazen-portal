@@ -83,56 +83,91 @@ const SchedulePicker = (props) => {
 
   const branchId = localStorage.getItem("branchId");
 
-  const timeByDate = branchesAndHoursResponse?.data
-    ?.find((val) => (val.id = branchId))
-    ?.branch_hours?.find((val) => {
-      return val.week_day == pickDay;
-    });
+  const getSelectedObject = (day) => {
+    return branchesAndHoursResponse?.data
+      ?.find((val) => (val.id = branchId))
+      ?.branch_hours?.find((val) => {
+        return val.week_day == day;
+      });
+  };
 
-  const getSingleDigitHour = (fullTime) => {
+  // const timeByDate = branchesAndHoursResponse?.data
+  //   ?.find((val) => (val.id = branchId))
+  //   ?.branch_hours?.find((val) => {
+  //     return val.week_day == pickDay;
+  //   });
+
+  const getSingleDigit24Hour = (fullTime) => {
     let Hour;
     Hour =
       fullTime?.split(":")[0][0] == "0"
         ? fullTime?.split(":")[0][1]
         : fullTime?.split(":")[0];
 
-    if (fullTime?.includes("AM")) {
-      return parseInt(Hour);
-    }
-    if (fullTime?.includes("PM")) {
-      return parseInt(Hour) + 12;
-    }
+    return parseInt(Hour);
+  };
+
+  const getSingleDigitMinutes = (fullTime) => {
+    let minutes;
+    minutes = fullTime?.split(":")[1];
+
+    return parseInt(minutes);
   };
 
   const handlerFunc = (ampm, date) => {
     const selectedTime = dayjs(date);
+
+    const beforeDate = selectedTime.subtract(1, "day").format("dddd");
+    const currentDate = selectedTime.format("dddd");
+
     if (ampm == "pm") {
       setMinTime(
         selectedTime
-          .set("hour", getSingleDigitHour(timeByDate?.from_time))
-          .set("minute", 0)
+          .set(
+            "hour",
+            getSingleDigit24Hour(getSelectedObject(currentDate)?.from_time)
+          )
+          .set(
+            "minute",
+            getSingleDigitMinutes(getSelectedObject(currentDate)?.from_time) +
+              45
+          )
       );
-      setMaxTime(
-        selectedTime
-          .set("hour", getSingleDigitHour(timeByDate?.to_time))
-          .set("minute", 0)
-          .add(1, "day")
-      );
+
+      if (getSingleDigit24Hour(getSelectedObject(currentDate)?.to_time) < 12) {
+        setMaxTime(selectedTime.set("hour", 24).set("minute", 0));
+      } else {
+        setMaxTime(
+          selectedTime
+            .set(
+              "hour",
+              getSingleDigit24Hour(getSelectedObject(currentDate)?.to_time)
+            )
+            .set(
+              "minute",
+              getSingleDigitMinutes(getSelectedObject(currentDate)?.to_time)
+            )
+        );
+      }
     }
+
     if (ampm == "am") {
-      setMinTime(
-        selectedTime
-          .subtract(1, "day")
-          .set("hour", getSingleDigitHour(timeByDate?.from_time))
-          .set("minute", 0)
-      );
-      setMaxTime(
-        selectedTime
-          .subtract(1, "day")
-          .set("hour", getSingleDigitHour(timeByDate?.to_time))
-          .set("minute", 0)
-          .add(1, "day")
-      );
+      if (getSingleDigit24Hour(getSelectedObject(beforeDate).to_time) < 12) {
+        setMinTime(selectedTime.set("hour", 0).set("minute", 0));
+
+        setMaxTime(
+          selectedTime
+            .set(
+              "hour",
+              getSingleDigit24Hour(getSelectedObject(beforeDate).to_time)
+            )
+            .set("minute", 0)
+        );
+      } else {
+        setMinTime(selectedTime.hour(12).minute(0));
+
+        setMaxTime(selectedTime.hour(12).minute(0));
+      }
     }
   };
 
@@ -147,9 +182,11 @@ const SchedulePicker = (props) => {
         maxTime={maxTime}
         disablePast
         ampm={true}
+        defaultValue={() => dayjs()}
         onChange={(date, e, ew) => {
           handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
           setPickDay(date.format("dddd"));
+
           date.preventDefault();
         }}
         onClose={() => {
