@@ -120,21 +120,21 @@ const DeliveryDetails = (props) => {
     }
   };
 
-  // const returnLocation = () => {
-  //   let location = "";
-  //   if (currentLocation === null && selected === null) {
-  //     location = "No Address";
-  //   } else if (selected === null && currentLocation !== null) {
-  //     location = truncateString(currentLocation?.address, 15);
-  //   } else if (selected !== null && currentLocation !== null) {
-  //     location = truncateString(selected?.address, 15);
-  //   }
+  const returnLocation = () => {
+    let location = "";
+    if (currentLocation === null && selected === null) {
+      location = "No Address";
+    } else if (selected === null && currentLocation !== null) {
+      location = truncateString(currentLocation?.address, 15);
+    } else if (selected !== null && currentLocation !== null) {
+      location = truncateString(selected?.address, 15);
+    }
 
-  //   return location;
-  // };
+    return location;
+  };
 
   const [latlng, setLatlng] = useState(null);
-  const [userLocation, setUserLocation] = useState();
+  const [userLocation, setUserLocation] = useState(returnLocation());
   const restaurantTheme = useSelector((state) => state.theme.themeColor);
   const [openDropdown, setOpendropdown] = useState(false);
   const [isDeliveryDropDown, setIsDeliveryDropDown] = useState(false);
@@ -155,7 +155,6 @@ const DeliveryDetails = (props) => {
   const [selectAddressNotDeliver, setSelectAddressNotDeliver] = useState(false);
   // const [distancesLessThan50, setDistancesLessThan50] = useState([]);
   const [restName, setRestName] = useState("");
-  const [timeByDate, setTimeByDate] = useState();
 
   const { id: restaurant_id } = useParams();
 
@@ -163,35 +162,6 @@ const DeliveryDetails = (props) => {
     const restName = resturantsData?.find((rest) => rest.id === id);
 
     return restName?.name_en;
-  };
-
-  const locationLabelName = () => {
-    let text = "";
-    const truncLoc = truncateString(currentLocation?.address, 15);
-
-    if (token !== null) {
-      if (currentLocation !== null) {
-        text = truncLoc;
-      }
-      if (selected !== null) {
-        text = truncateString(selected?.address, 15);
-      }
-      if (selected === null && currentLocation === null) {
-        if (addressData.length) {
-          text = "Select Address";
-        } else {
-          text = "Add Address";
-        }
-      }
-    } else {
-      if (currentLocation !== null) {
-        text = truncLoc;
-      } else {
-        text = "Add Address";
-      }
-    }
-
-    return text;
   };
 
   useEffect(() => {
@@ -232,9 +202,40 @@ const DeliveryDetails = (props) => {
     }
   }, [branchHours, restaurantDetail]);
 
-  useEffect(() => {
-    setUserLocation(locationLabelName());
-  }, []);
+  const locationLabelName = () => {
+    let text = "";
+    const truncLoc = truncateString(currentLocation?.address, 15);
+
+    if (
+      localStorage.getItem("locatPermission") === "denied" ||
+      localStorage.getItem("locatPermission") === "granted" ||
+      localStorage.getItem("locatPermission") === "prompt"
+    ) {
+      if (token !== null) {
+        if (currentLocation !== null) {
+          text = truncLoc;
+        }
+        if (selected !== null) {
+          text = truncateString(selected?.address, 15);
+        }
+        if (selected === null && currentLocation === null) {
+          if (addressData.length) {
+            text = "Select Address";
+          } else {
+            text = "Add Address";
+          }
+        }
+      } else {
+        if (currentLocation !== null) {
+          text = truncLoc;
+        } else {
+          text = "Add Address";
+        }
+      }
+    }
+
+    return text;
+  };
 
   useEffect(() => {
     let pushedWithDistance = [];
@@ -417,67 +418,25 @@ const DeliveryDetails = (props) => {
   //   },
   // });
 
-  const branchabc = [
-    {
-      week_day: "Sunday",
-      from_time: "13:00",
-      to_time: "01:00",
-      openingStatus: "Open",
-    },
-    {
-      week_day: "Monday",
-      from_time: "13:00",
-      to_time: "01:00",
-      openingStatus: "Open",
-    },
-    {
-      week_day: "Tuesday",
-      from_time: "13:00",
-      to_time: "01:00",
-      openingStatus: "Open",
-    },
-    {
-      week_day: "Wednesday",
-      from_time: "13:00",
-      to_time: "02:00",
-      openingStatus: "Open",
-    },
-    {
-      week_day: "Thursday",
-      from_time: "13:00",
-      to_time: "23:00",
-      openingStatus: "Open",
-    },
-    {
-      week_day: "Friday",
-      from_time: "13:00",
-      to_time: "01:00",
-      openingStatus: "Open",
-    },
-    {
-      week_day: "Saturday",
-      from_time: "13:00",
-      to_time: "01:00",
-      openingStatus: "Open",
-    },
-  ];
-
-  useEffect(() => {
-    const time_by_date = branchabc?.find((val) => {
+  const timeByDate = branchHours
+    ?.find((val) => +val.id === +branchId)
+    ?.branch_hours?.find((val) => {
       return val.week_day == pickDay;
     });
 
-    setTimeByDate(time_by_date);
-  }, [pickDay]);
-
-  const getSingleDigitHour = (fullTime, isAm) => {
+  const getSingleDigitHour = (fullTime) => {
     let Hour;
     Hour =
       fullTime?.split(":")[0][0] == "0"
         ? fullTime?.split(":")[0][1]
         : fullTime?.split(":")[0];
 
-    return parseInt(Hour);
+    if (fullTime?.includes("AM")) {
+      return parseInt(Hour);
+    }
+    if (fullTime?.includes("PM")) {
+      return parseInt(Hour) + 12;
+    }
   };
 
   const onDateSelected = () => {
@@ -644,60 +603,38 @@ const DeliveryDetails = (props) => {
   const Overlay = () => {
     return <div className="overlay"></div>;
   };
+
   const handlerFunc = (ampm, date) => {
     const selectedTime = dayjs(date);
-    console.log(timeByDate, "timeByDatetimeByDate");
-    console.log(selectedTime.get("date"), "timeByDatetimeByDate");
     if (ampm == "pm") {
-      setPickDay(selectedTime.format("dddd"));
-
       setMinTime(
         selectedTime
           .set("hour", getSingleDigitHour(timeByDate?.from_time))
           .set("minute", 0)
       );
-      if (getSingleDigitHour(timeByDate?.to_time) < 12) {
-        setMaxTime(selectedTime.set("hour", 12).set("minute", 0));
-      } else {
-        setMaxTime(
-          selectedTime
-            .set("hour", getSingleDigitHour(timeByDate?.to_time))
-            .set("minute", 0)
-        );
-      }
-      console.log(selectedTime, "innnerrr");
+      setMaxTime(
+        selectedTime
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
     }
     if (ampm == "am") {
-      setPickDay(selectedTime.subtract(1, "day").format("dddd"));
-      if (getSingleDigitHour(timeByDate?.to_time) < 12) {
-        console.log(timeByDate, "selectedTimeselectedTime");
-        setMinTime(selectedTime.set("hour", 0).set("minute", 0));
-        setMaxTime(
-          selectedTime
-            .set("hour", getSingleDigitHour(timeByDate?.to_time))
-            .set("minute", 0)
-        );
-      } else {
-        setMinTime(selectedTime.set("hour", 0).set("minute", 0));
-        setMaxTime(selectedTime.set("hour", 0).set("minute", 0));
-      }
+      setMinTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.from_time))
+          .set("minute", 0)
+      );
+      setMaxTime(
+        selectedTime
+          .subtract(1, "day")
+          .set("hour", getSingleDigitHour(timeByDate?.to_time))
+          .set("minute", 0)
+          .add(1, "day")
+      );
     }
   };
-  // console.log(timeByDate, "timeByDate");
-  const setDefaultDateAndTime = () => {
-    // const currentDate = new Date();
-    const defaultDate = dayjs();
-    setPickDay(defaultDate.format("dddd"));
-    handlerFunc(defaultDate.format("a"), defaultDate.format("YYYY-MM-DD"));
-    console.log(dayjs(), "datedate");
-    return defaultDate;
-  };
-
-  console.log(minTime.format("hh"), maxTime.format("hh"), "minTime, maxTime");
-
-  useEffect(() => {
-    setDefaultDateAndTime();
-  }, []);
 
   const commonStateSets = (
     address,
@@ -1129,11 +1066,9 @@ const DeliveryDetails = (props) => {
             }}
             minTime={minTime}
             maxTime={maxTime}
-            defaultValue={() => dayjs()}
             disablePast
             ampm={true}
             onChange={(date, e, ew) => {
-              console.log(date, "ewewewew");
               handlerFunc(date.format("a"), date.format("YYYY-MM-DD"));
               setPickDay(date.format("dddd"));
               date.preventDefault();
