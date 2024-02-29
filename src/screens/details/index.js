@@ -426,11 +426,11 @@ export const Details = () => {
   const checkIfItemIsInCart = () => {
     return cart.find((item) => {
       if (item.has_variants) {
-        if (location.state?.item_code) {
-          return item?.item_code === location.state?.item_code;
-        } else {
-          return item.id === +id;
-        }
+        // if (location.state?.item_code) {
+        return item?.item_code === location.state?.item_code;
+        // } else {
+        //   return item.id === +id;
+        // }
       } else {
         return item.id === +id;
       }
@@ -1304,15 +1304,16 @@ export const Details = () => {
   };
 
   const buttonDisableHandle = () => {
-    if (menuItemDetails?.data.has_variants) {
-      // if (customCount < 1) {
-      //   return true;
-      // }
+    // * When Size variants comes
+    // if (menuItemDetails?.data.has_variants) {
+    //   // if (customCount < 1) {
+    //   //   return true;
+    //   // }
 
-      if (sizeVariant) {
-        return true;
-      }
-    }
+    //   if (sizeVariant) {
+    //     return true;
+    //   }
+    // }
     return false;
   };
 

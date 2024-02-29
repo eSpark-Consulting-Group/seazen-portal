@@ -73,8 +73,6 @@ const Navbar = (props) => {
         backgroundImage: `url(${
           restaurantDetail?.name_en === "Melenzane"
             ? melenzaneImagePath
-            : restaurantDetail?.name_en === "Trapani"
-            ? trapaniImagePath
             : restaurantDetail?.cover_page_image || defaultImagePath
         })`,
       }}

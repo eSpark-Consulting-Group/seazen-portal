@@ -768,6 +768,20 @@ function CartPage() {
     }, 500);
   };
 
+  const calculateCustomVariantTotal = (customVariantData) => {
+    const eachCustomTotal = customVariantData
+      .map((custom, index) => {
+        return custom.quantity && Number(custom.unit_price) * custom.quantity;
+      })
+      .filter((item) => !!item);
+    const sum = eachCustomTotal.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+
+    return sum;
+  };
+
   const { refetch: fetchCartList } = useQuery({
     queryKey: [token],
     queryFn: () => {
@@ -797,19 +811,28 @@ function CartPage() {
               ...value,
               variantId: val.topping_variant_id,
             })),
-            customVariant: val?.custom_variant?.map((value) => ({
-              ...value,
-              variantId: val.custom_variant_id,
-            })),
+            customVariant: val?.custom_variant
+              ?.map((value) => {
+                if (value.quantity > 0) {
+                  return {
+                    ...value,
+                    variantId: val.custom_variant_id,
+                  };
+                }
+              })
+              .filter((item) => !!item),
             sideVariant: val?.side_variant?.map((value) => ({
               ...value,
               variantId: val.side_variant_id,
             })),
           },
-          totalPrice: Number(val.quantity * val.unit_price).toFixed(3),
+          totalPrice: Number(
+            val.quantity * val.unit_price +
+              calculateCustomVariantTotal(val?.custom_variant) * val.quantity
+          ).toFixed(3),
           specialInstructions: val.specialInstructions,
           itemImage: val?.menu_item_image,
-          hasVariants: val?.hasVariants,
+          has_variants: val?.custom_variant?.length > 0 ? true : false, // Might add more variants to check
           restaurant_id: findRestaurant.restaurant_id,
           branch_id: val.branch_id,
           item_code: val.item_code,

@@ -240,7 +240,7 @@ function CartItem(props) {
 
   const getExtraItemNames = () => {
     let extraItemNames = [];
-    const returnName = cartItem?.variants?.customVariant.map((variant) => {
+    const returnName = cartItem?.variants?.customVariant?.map((variant) => {
       return { name: variant.name_en, quantity: variant.quantity };
     });
 

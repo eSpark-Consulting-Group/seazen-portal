@@ -24,6 +24,7 @@ import { addToCart, resetCart } from "../../store/reducers/cartSlice";
 import { addUserInfo } from "../../store/reducers/authSlice";
 import clearCart from "../../api/cart/clearCart";
 import logout from "../../api/customer/logout";
+import { clearAddressList } from "../../store/reducers/addressSlice";
 
 const MODAL_INFO_TYPE = {
   INVALID_OTP: "invalid-otp",
@@ -66,9 +67,13 @@ function PhoneNumberVerificationOTP() {
       setTimeout(() => {
         logout(data.data.token)
           .then(() => {
+            dispatch(resetCart());
+            dispatch(clearAddressList());
+
+            localStorage.clear();
             localStorage.removeItem("token");
             sessionStorage.removeItem("cartEmpty");
-            dispatch(resetCart());
+
             window.alert("Your session has expired. Please log in again.");
             navigate(paths.phone_verification_index, {
               state: { register: true },
