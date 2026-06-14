@@ -79,7 +79,7 @@
     "@tanstack/eslint-plugin-query": "^4.34.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
+    "eslint-plugin-react-refresh": "^0.5.2",
     "react-error-overlay": "^6.0.9",
     "redux-devtools-extension": "^2.13.9"
   }
