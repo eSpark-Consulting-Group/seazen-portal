@@ -23,7 +23,7 @@
     "formik": "^2.4.9",
     "framer-motion": "^12.40.0",
     "lodash": "^4.17.21",
-    "mui-one-time-password-input": "^2.0.0",
+    "mui-one-time-password-input": "^7.0.0",
     "react": "^19.2.7",
     "react-bootstrap": "^2.8.0",
     "react-dom": "^19.2.7",
